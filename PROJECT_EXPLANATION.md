@@ -4,6 +4,36 @@ This document explains exactly how the **Backend** and **Frontend** are connecte
 
 ---
 
+## ❓ The Big Question: How do Two Separate Folders Connect?
+
+You asked a very important question: *"How does the `server` folder connect to the `client` folder if they are two separate projects?"*
+
+You are absolutely right—they ARE two completely different projects! 
+- **`client`** is a React application running entirely in the user's **Web Browser**.
+- **`server`** is a Node.js application running on a **Computer/Server** in the background.
+
+**So how do they talk?** They don't share files or folders. They communicate over the **Network** (the internet or your local WiFi) using a universal language called **HTTP** (Hypertext Transfer Protocol).
+
+### The Secret is in the "Ports"
+Imagine your computer is a massive apartment building. 
+- The `client` (React) lives in **Apartment 3000** (`localhost:3000`).
+- The `server` (Node) lives in **Apartment 5001** (`localhost:5001`).
+
+1. **The Request:** When someone opens the React site at Apartment 3000, React realizes it needs data. It picks up the phone (using **Axios**) and dials the number for exactly where the data lives: `http://localhost:5001/api/profile`. 
+ *(This URL is defined in `client/src/config.js`!)*
+
+2. **The CORS Door:** Normally, browsers are very strict. Being in Apartment 3000, the browser doesn't want to blindly trust Apartment 5001. This is a security measure. So, in the `server` folder, we installed `cors` (Cross-Origin Resource Sharing). This tells the Node server: *"Yes, requests from Apartment 3000 are safe, let them in!"*
+
+3. **The Response:** The Node server looks up the DB, formats the answer, and sends a package containing purely text (JSON) back to React on the "phone".
+
+They never touch each other's code. They simply send text messages back and forth through specific URLs and Ports!
+
+---
+
+This document explains exactly how the **Backend** and **Frontend** are connected and the deep technical flow of your project.
+
+---
+
 ## 🏗️ 1. Project Architecture (MERN)
 The project is built using the **MERN Stack**:
 - **M**ongoDB: NoSQL Database to store your resume/portfolio data.
