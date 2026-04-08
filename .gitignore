@@ -4,9 +4,11 @@ client/node_modules/
 server/node_modules/
 
 # Environment Variables
-# client/.env
-server/.env.MONGO_URI
-# server/.env
+# Allow client .env because it only contains public API URLs
+!client/.env
+
+# Ignore server .env to protect sensitive MONGO_URI
+server/.env
 
 # Build outputs
 client/dist/

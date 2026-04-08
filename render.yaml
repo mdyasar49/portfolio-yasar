@@ -1,0 +1,30 @@
+# Exported from Render on 2026-04-08T15:46:34Z
+version: "1"
+projects:
+- name: My project
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: mern-portfolio-yasar-1
+      runtime: static
+      repo: https://github.com/mdyasar49/mern-portfolio-yasar
+      buildCommand: npm run build
+      staticPublishPath: build
+      autoDeployTrigger: commit
+      rootDir: client
+    - type: web
+      name: mern-portfolio-yasar
+      runtime: node
+      repo: https://github.com/mdyasar49/mern-portfolio-yasar
+      plan: free
+      envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: PORT
+        sync: false
+      region: oregon
+      buildCommand: npm install
+      startCommand: npm start
+      autoDeployTrigger: commit
+      rootDir: server
