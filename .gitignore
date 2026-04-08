@@ -4,9 +4,9 @@ client/node_modules/
 server/node_modules/
 
 # Environment Variables
-.env
-client/.env
-server/.env
+# client/.env
+server/.env.MONGO_URI
+# server/.env
 
 # Build outputs
 client/dist/

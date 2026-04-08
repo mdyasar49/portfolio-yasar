@@ -25,20 +25,56 @@ const Header = () => {
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
+  const scrollToSection = (sectionId) => {
+    if (location.pathname === '/') {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If we are on another page, navigate to home and then hash handles it
+      // or we can just let RouterLink do its thing, but for smooth we need home
+    }
+    setMobileOpen(false);
+  };
+
+  const handleLogoClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const renderNavButton = (item) => {
-    const isActive = location.pathname === item.path;
     const isAnchor = item.type === 'anchor';
     
+    if (isAnchor && location.pathname === '/') {
+      return (
+        <Button 
+          key={item.name} 
+          onClick={() => scrollToSection(item.name.toLowerCase())}
+          sx={{ 
+            color: 'text.primary',
+            px: 3,
+            fontWeight: 500,
+            '&:hover': { color: 'primary.light', bgcolor: 'transparent' }
+          }}
+        >
+          {item.name}
+        </Button>
+      );
+    }
+
     return (
       <Button 
         key={item.name} 
-        component={isAnchor ? 'a' : RouterLink} 
-        to={!isAnchor ? item.path : undefined}
-        href={isAnchor ? item.path.replace('/', '') : undefined}
+        component={RouterLink} 
+        to={item.path}
+        onClick={() => setMobileOpen(false)}
         sx={{ 
-          color: isActive ? 'primary.light' : 'text.primary',
+          color: location.pathname === item.path ? 'primary.light' : 'text.primary',
           px: 3,
-          fontWeight: isActive ? 700 : 500,
+          fontWeight: location.pathname === item.path ? 700 : 500,
           '&:hover': { color: 'primary.light', bgcolor: 'transparent' }
         }}
       >
@@ -71,6 +107,7 @@ const Header = () => {
             <Box 
               component={RouterLink} 
               to="/" 
+              onClick={handleLogoClick}
               sx={{ 
                 textDecoration: 'none',
                 display: 'flex',
@@ -139,13 +176,12 @@ const Header = () => {
               <ListItem 
                 key={item.name} 
                 button 
-                onClick={handleDrawerToggle} 
-                component={item.type === 'link' ? RouterLink : 'a'} 
-                to={item.type === 'link' ? item.path : undefined} 
-                href={item.type === 'anchor' ? item.path.replace('/', '') : undefined}
+                onClick={() => item.type === 'anchor' ? scrollToSection(item.name.toLowerCase()) : setMobileOpen(false)} 
+                component={item.type === 'anchor' && location.pathname === '/' ? 'div' : RouterLink} 
+                to={item.path} 
                 sx={{ borderRadius: 2, mb: 1, '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.1)' } }}
               >
-                <ListItemText primary={item.name} sx={{ '& .MuiTypography-root': { fontWeight: 600 } }} />
+                <ListItemText primary={item.name} sx={{ '& .MuiTypography-root': { fontWeight: 600, color: 'white' } }} />
               </ListItem>
             ))}
           </List>

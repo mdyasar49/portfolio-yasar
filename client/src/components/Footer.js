@@ -3,6 +3,7 @@ import { Box, Typography, Container, IconButton, Stack, Divider } from '@mui/mat
 import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu } from 'lucide-react';
 
 const Footer = ({ socials, name }) => {
+  if (!socials) return null;
   return (
     <Box 
       component="footer" 

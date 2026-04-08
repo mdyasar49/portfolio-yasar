@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Projects = ({ projects }) => {
   const [selectedProject, setSelectedProject] = useState(null);
 
+  if (!projects || !Array.isArray(projects)) return null;
+
   const handleOpen = (project) => setSelectedProject(project);
   const handleClose = () => setSelectedProject(null);
 

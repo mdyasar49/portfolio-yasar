@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Grid, Paper, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import { Send } from 'lucide-react';
+import API_BASE_URL from '../config';
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -12,7 +13,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5001/api/contact', formData);
+      await axios.post(`${API_BASE_URL}/contact`, formData);
       setStatus({ open: true, severity: 'success', message: 'Message sent successfully!' });
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (err) {

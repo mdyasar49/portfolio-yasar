@@ -5,12 +5,41 @@
  */
 import React, { useState, useEffect } from 'react';
 import { ThemeProvider, CssBaseline, Box, CircularProgress, Typography, Button } from '@mui/material';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import theme from './theme';
+import API_BASE_URL from './config';
 import Header from './components/Header';
 import Portfolio from './pages/Portfolio';
 import Resume from './pages/Resume';
+
+// Helper component to reset scroll position on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+// Helper component to handle scrolling to hash on navigation
+const ScrollToHash = () => {
+  const { hash, pathname } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      const id = hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [hash, pathname]);
+
+  return null;
+};
 
 const App = () => {
   const [profile, setProfile] = useState(null);
@@ -19,7 +48,7 @@ const App = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('https://mern-portfolio-yasar.onrender.com/api/profile');
+        const response = await axios.get(`${API_BASE_URL}/profile`);
         if (response.data) {
           setProfile(response.data);
         }
@@ -62,6 +91,8 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
+        <ScrollToTop />
+        <ScrollToHash />
         <Header />
         <Box sx={{ pt: 10 }}>
           <Routes>

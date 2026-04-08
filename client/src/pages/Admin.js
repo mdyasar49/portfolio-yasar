@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Container, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip } from '@mui/material';
 import axios from 'axios';
+import API_BASE_URL from '../config';
 
 const Admin = () => {
   const [messages, setMessages] = useState([]);
@@ -8,7 +9,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/contacts');
+        const response = await axios.get(`${API_BASE_URL}/contacts`);
         setMessages(response.data);
       } catch (err) {
         console.error('Error fetching messages:', err);

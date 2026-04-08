@@ -1,57 +1,84 @@
-# 🚀 Premium MERN Stack Portfolio
+# 💎 Luxury MERN Stack Portfolio - A. Mohamed Yasar
 
-[![NPM Version](https://img.shields.io/badge/npm-10.x-red.svg)](https://www.npmjs.com/)
-[![React Version](https://img.shields.io/badge/react-18.x-blue.svg)](https://reactjs.org/)
-[![Node Version](https://img.shields.io/badge/node-20.x-green.svg)](https://nodejs.org/)
+[![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue.svg)](https://www.mongodb.com/mern-stack)
+[![Render](https://img.shields.io/badge/Deployment-Render-green.svg)](https://render.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A high-end, recruiter-ready portfolio application designed for maximum visual impact and smooth user experience. This project demonstrates proficiency across the entire MERN stack, featuring a dynamic 3D parallax design, robust backend integration, and a sophisticated MongoDB data layer.
+A ultra-premium, recruiter-focused portfolio application designed with high-end aesthetics and modern engineering principles. This project showcases a full-stack implementation with a focus on immersive user experience (UX) and robust data management.
 
-## 🛠️ Tech Stack & Tools
+---
 
-| Layer | Technologies |
-|---|---|
-| **Frontend** | **React.js**, **Material UI (MUI)**, Framer Motion |
-| **Backend** | **Node.js**, **Express.js** |
-| **Database** | **MongoDB** (with Mongoose) |
-| **Styling** | Vanilla CSS, Glassmorphism, Modern Typography |
+## 🔗 Live Demo & Links
 
-## ✨ Key Features
+- **🚀 Live Portfolio:** [https://mern-portfolio-yasar-1.onrender.com](https://mern-portfolio-yasar-1.onrender.com)
+- **⚡ Backend API:** [https://mern-portfolio-yasar.onrender.com/api/profile](https://mern-portfolio-yasar.onrender.com/api/profile)
 
-- **💎 3D Parallax Resume:** A high-end visual experience for showcasing professional history.
-- **📱 Fully Responsive:** Optimized for everything from ultra-wide monitors to mobile devices.
-- **Backend API:** Fast and secure data delivery using Node/Express.
-- **Dynamic Content:** All portfolio data (projects, skills, etc.) is managed via MongoDB.
-- **Micro-Animations:** Subtle, premium interactions using Framer Motion.
+---
 
-## 🚀 Getting Started
+## ✨ Premium Features
 
-### 1. Prerequisites
-- Node.js (v18+)
-- MongoDB Atlas account or local MongoDB
-- A modern browser
+- **🌀 3D Parallax Resume Engine:** An interactive, motion-driven resume previewer built with Framer Motion and custom CSS architecture.
+- **🌒 Glassmorphic UI:** Deeply integrated theme with glassmorphism effects, vibrant gradients, and premium Material UI components.
+- **📊 Dynamic Data Orchestration:** Content is served dynamically via a RESTful API, allowing for real-time updates without redeployment.
+- **📱 Fluid Responsiveness:** Meticulously crafted for all screen sizes, from mobile devices to 4K monitors.
+- **🛡️ Secure Communication:** Integrated contact form with backend validation and automated messaging logic.
 
-### 2. Installation & Setup
+---
 
-**Clone the repository:**
+## 🛠️ Technology Stack
+
+### Frontend (Client)
+- **React.js 18:** Component-based architecture.
+- **Material UI (MUI):** Premium component library.
+- **Framer Motion:** High-end animations and 3D transitions.
+- **Vite:** Next-generation frontend tooling for lightning-fast HMR.
+
+### Backend (Server)
+- **Node.js & Express.js:** Fast, unopinionated web framework.
+- **MongoDB & Mongoose:** Scalable NoSQL database layer with structured schema.
+- **Axios:** For seamless API handling.
+
+---
+
+## 📁 Repository Structure
+
+```text
+├── client/              # React + Vite Frontend
+│   ├── src/             # Source files
+│   ├── public/          # Static assets (including Resume HTML)
+│   └── .env             # Environment configuration
+├── server/              # Node.js + Express Backend
+│   ├── models/          # Mongoose Schemas
+│   ├── routes/          # API Endpoints
+│   ├── data.json        # Fallback/Seed data
+│   └── index.js         # Entry point
+└── README.md            # Documentation
+```
+
+---
+
+## 🚀 Local Development
+
+### 1. Clone & Install
 ```bash
 git clone https://github.com/mdyasar49/mern-portfolio-yasar.git
 cd mern-portfolio-yasar
 ```
 
-**Setup Backend:**
+### 2. Backend Setup
 ```bash
 cd server
 npm install
-# Create a .env file and add your MONGO_URI
+# Create .env with: PORT=5001, MONGO_URI=your_mongodb_uri
 npm start
 ```
 
-**Setup Frontend:**
+### 3. Frontend Setup
 ```bash
 cd ../client
 npm install
-npm start
+# Create .env with: VITE_API_BASE_URL=http://localhost:5001/api
+npm run dev
 ```
 
 ---
@@ -59,10 +86,10 @@ npm start
 ## 👤 Author
 
 **A. Mohamed Yasar**
-*Full-Stack MERN Developer*
+*Full-Stack Engineer | React.js Specialist*
 
-- [LinkedIn](https://www.linkedin.com/in/mohamedyasar)
-- [GitHub](https://github.com/mdyasar49)
+- **LinkedIn:** [Mohamed Yasar](https://linkedin.com/in/mohamed-yasar-4674ba223)
+- **GitHub:** [@mdyasar49](https://github.com/mdyasar49)
 
 ---
-Developed with ❤️ by A. Mohamed Yasar
+Developed with ✨ by A. Mohamed Yasar

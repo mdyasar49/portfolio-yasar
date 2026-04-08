@@ -2,6 +2,8 @@ import React from 'react';
 import { Box, Typography, Card, CardContent, Stack } from '@mui/material';
 
 const Experience = ({ experience }) => {
+  if (!experience || !Array.isArray(experience)) return null;
+
   return (
     <Box id="experience" sx={{ py: 10 }}>
       <Typography variant="h2" gutterBottom sx={{ mb: 6 }}>

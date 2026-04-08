@@ -3,6 +3,7 @@ import { Box, Typography, Grid, Paper, Stack, Chip } from '@mui/material';
 import { motion } from 'framer-motion';
 
 const About = ({ profile }) => {
+  if (!profile) return null;
   return (
     <Box id="about" sx={{ py: 10 }}>
       <motion.div
@@ -18,7 +19,7 @@ const About = ({ profile }) => {
           {/* ... existing content ... */}
           <Grid item xs={12} md={7}>
             <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem' }}>
-              {profile.summary}
+              {profile?.summary}
             </Typography>
             <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem' }}>
               Currently strengthening backend development skills by learning Core Java, Spring Boot, and Python basics. 
@@ -35,17 +36,25 @@ const About = ({ profile }) => {
               </Box>
             </Stack>
 
-            <Typography variant="h6" color="primary.light" sx={{ mb: 1 }}>Soft Skills</Typography>
-            <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 4 }}>
-              {profile.softSkills.map((skill) => (
-                <Chip key={skill} label={skill} size="small" variant="outlined" sx={{ color: 'text.primary', borderColor: 'primary.main' }} />
-              ))}
-            </Stack>
+            {profile?.softSkills && (
+              <>
+                <Typography variant="h6" color="primary.light" sx={{ mb: 1 }}>Soft Skills</Typography>
+                <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 4 }}>
+                  {profile.softSkills.map((skill) => (
+                    <Chip key={skill} label={skill} size="small" variant="outlined" sx={{ color: 'text.primary', borderColor: 'primary.main' }} />
+                  ))}
+                </Stack>
+              </>
+            )}
 
-            <Typography variant="h6" color="primary.light" sx={{ mb: 1 }}>Additional Information</Typography>
-            <Typography variant="body2" color="text.secondary"><b>Availability:</b> {profile.additionalInfo.availability}</Typography>
-            <Typography variant="body2" color="text.secondary"><b>Languages:</b> {profile.additionalInfo.languages.join(', ')}</Typography>
-            <Typography variant="body2" color="text.secondary"><b>Work Preference:</b> {profile.additionalInfo.workPreference}</Typography>
+            {profile?.additionalInfo && (
+              <>
+                <Typography variant="h6" color="primary.light" sx={{ mb: 1 }}>Additional Information</Typography>
+                <Typography variant="body2" color="text.secondary"><b>Availability:</b> {profile.additionalInfo?.availability}</Typography>
+                <Typography variant="body2" color="text.secondary"><b>Languages:</b> {profile.additionalInfo?.languages?.join(', ')}</Typography>
+                <Typography variant="body2" color="text.secondary"><b>Work Preference:</b> {profile.additionalInfo?.workPreference}</Typography>
+              </>
+            )}
           </Grid>
           <Grid item xs={12} md={5}>
             <Paper elevation={0} sx={{ 

@@ -45,11 +45,13 @@ const SkillCategory = ({ title, skills, icon: Icon, delay }) => (
 );
 
 const Skills = ({ skills }) => {
+  if (!skills) return null;
+
   const categories = [
-    { title: 'Frontend Mastery', skills: skills.frontend, icon: Layout },
-    { title: 'Backend Logic', skills: skills.backend, icon: Database },
-    { title: 'Data Architecture', skills: skills.database, icon: Code2 },
-    { title: 'DevOps & Tools', skills: skills.tools, icon: Terminal },
+    { title: 'Frontend Mastery', skills: skills.frontend || [], icon: Layout },
+    { title: 'Backend Logic', skills: skills.backend || [], icon: Database },
+    { title: 'Data Architecture', skills: skills.database || [], icon: Code2 },
+    { title: 'DevOps & Tools', skills: skills.tools || [], icon: Terminal },
   ];
 
   return (

@@ -120,7 +120,8 @@
 
     <script>
         async function fetchProfile() {
-            const resp = await fetch('http://localhost:5001/api/profile');
+            const apiUrl = 'https://mern-portfolio-yasar.onrender.com/api/profile';
+            const resp = await fetch(apiUrl);
             const data = await resp.json();
             renderResume(data);
         }

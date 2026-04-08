@@ -18,12 +18,12 @@ const Portfolio = ({ profile, loading }) => {
   return (
     <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh', scrollBehavior: 'smooth' }}>
       <Container maxWidth="lg" sx={{ pt: 8 }}>
-        <Hero profile={profile} />
-        <About profile={profile} />
-        <Skills skills={profile.technicalSkills} />
-        <Experience experience={profile.experience} />
-        <Projects projects={profile.projects} />
-        <Education education={profile.education} />
+        {profile && <Hero profile={profile} />}
+        {profile && <About profile={profile} />}
+        {profile?.technicalSkills && <Skills skills={profile.technicalSkills} />}
+        {profile?.experience && <Experience experience={profile.experience} />}
+        {profile?.projects && <Projects projects={profile.projects} />}
+        {profile?.education && <Education education={profile.education} />}
       </Container>
       <Footer socials={profile.socials} name={profile.name} />
     </Box>

@@ -4,6 +4,8 @@ import { GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Education = ({ education }) => {
+  if (!education || !Array.isArray(education)) return null;
+
   return (
     <Box id="education" sx={{ py: 10 }}>
       <Typography variant="h2" gutterBottom sx={{ mb: 6 }}>
