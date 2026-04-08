@@ -1,3 +1,8 @@
+/**
+ * [MongoDB Data Model: Profile]
+ * This file uses Mongoose to define the schema for your portfolio profile.
+ * MongoDB provides the flexible, document-based storage for your resume data.
+ */
 const mongoose = require('mongoose');
 
 const ExperienceSchema = new mongoose.Schema({

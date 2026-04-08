@@ -1,14 +1,13 @@
 /**
- * [React.js & Material UI Frontend]
- * This is your main presentation layer.
- * Using React hooks for dynamic data fetching and Material UI for styling.
+ * [React.js Frontend Architecture]
+ * This is the main presentation layer. It uses React.js to manage the state
+ * of the application and high-quality Material UI components for the design.
  */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { ThemeProvider, CssBaseline, Box, CircularProgress, Typography, Button } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import theme from './theme';
-import API_BASE_URL from './config';
+import theme from './theme/index';
+import useProfile from './hooks/useProfile';
 import Header from './components/Header';
 import Portfolio from './pages/Portfolio';
 import Resume from './pages/Resume';
@@ -42,24 +41,7 @@ const ScrollToHash = () => {
 };
 
 const App = () => {
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/profile`);
-        if (response.data) {
-          setProfile(response.data);
-        }
-      } catch (err) {
-        console.error('Error fetching profile:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
+  const { profile, loading, error } = useProfile();
 
   if (loading) {
     return (
@@ -72,14 +54,14 @@ const App = () => {
     );
   }
 
-  if (!profile) {
+  if (error || !profile) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default', textAlign: 'center', p: 4 }}>
-          <Typography variant="h3" color="error" gutterBottom>Database Connection Error</Typography>
+          <Typography variant="h3" color="error" gutterBottom> Connection Error</Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            The backend server is running but cannot connect to MongoDB, or the data has not been seeded.
+            {error ? 'The backend server could not be reached.' : 'The backend server is running but data has not been seeded.'}
           </Typography>
           <Button variant="contained" onClick={() => window.location.reload()}>Retry Connection</Button>
         </Box>

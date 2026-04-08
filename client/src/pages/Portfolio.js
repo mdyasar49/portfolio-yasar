@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Container } from '@mui/material';
+import SEO from '../components/SEO';
 import Hero from '../components/Hero';
 import About from '../components/About';
 import Skills from '../components/Skills';
@@ -17,6 +18,10 @@ const Portfolio = ({ profile, loading }) => {
 
   return (
     <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh', scrollBehavior: 'smooth' }}>
+      <SEO 
+        title="Portfolio" 
+        description={profile?.summary || "Full Stack Engineer Portfolio"} 
+      />
       <Container maxWidth="lg" sx={{ pt: 8 }}>
         {profile && <Hero profile={profile} />}
         {profile && <About profile={profile} />}

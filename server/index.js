@@ -1,12 +1,15 @@
 /**
- * MERN Stack Application: Portfolio Server
- * Core Technologies: Node.js, Express.js, MongoDB
- * Developer: A. Mohamed Yasar
- * [Node.js Server Environment]
+ * [Node.js Server Entry Point]
+ * This file initializes the server environment, connects to the MongoDB database,
+ * and starts the Express.js application listener.
  */
 const app = require('./app');
 const connectDB = require('./config/db');
 require('dotenv').config();
+const validateEnv = require('./config/envValidator');
+
+// Validate Environment before starting
+validateEnv();
 
 const PORT = process.env.PORT || 5001;
 

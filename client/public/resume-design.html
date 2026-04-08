@@ -6,55 +6,7 @@
     <title>Luxury Resume Template</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary: #0F172A; --accent: #6366F1; --gold: #D4AF37; --bg: #FFFFFF; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; color: #334155; }
-        h1, h2, h3, .heading { font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
-        
-        .resume-page { width: 210mm; min-height: 297mm; display: grid; grid-template-columns: 260px 1fr; background: white; }
-        
-        /* Premium Sidebar */
-        .sidebar { background-color: var(--primary); color: white; padding: 60px 35px; border-right: 2px solid #F1F5F9; }
-        .sidebar-title { font-size: 0.7rem; font-weight: 900; color: var(--accent); letter-spacing: 3px; margin-bottom: 25px; display: flex; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
-        .contact-box { margin-bottom: 45px; }
-        .contact-item { font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-bottom: 15px; font-weight: 400; }
-        .contact-item b { display: block; color: white; font-size: 0.8rem; margin-top: 2px; }
-        
-        .skill-section { margin-bottom: 40px; }
-        .skill-group { margin-bottom: 25px; }
-        .skill-group-label { font-size: 0.65rem; font-weight: 800; color: rgba(255,255,255,0.4); margin-bottom: 10px; text-transform: uppercase; }
-        .skill-tag { display: inline-block; font-size: 0.65rem; border: 1px solid rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; margin: 0 4px 6px 0; background: rgba(255,255,255,0.03); color: white; }
-
-        /* Main Content */
-        .main { padding: 60px 50px; }
-        .luxury-header { border-bottom: 4px solid var(--primary); padding-bottom: 30px; margin-bottom: 40px; }
-        .luxury-header h1 { font-size: 3.5rem; font-weight: 900; color: var(--primary); margin: 0; line-height: 0.9; letter-spacing: -2px; }
-        .luxury-header .title-badge { display: inline-block; background: var(--accent); color: white; padding: 6px 15px; font-size: 0.8rem; font-weight: 800; margin-top: 15px; border-radius: 2px; }
-        
-        .luxury-summary { border-left: 3px solid #E2E8F0; padding-left: 20px; font-size: 0.9rem; font-style: italic; line-height: 1.7; color: #475569; }
-        
-        .section-label { font-size: 1.2rem; font-weight: 900; color: var(--primary); margin: 40px 0 25px 0; position: relative; display: flex; align-items: center; gap: 15px; }
-        .section-label::after { content: ''; flex-grow: 1; height: 1px; background: #E2E8F0; }
-        
-        .history-item { margin-bottom: 35px; }
-        .history-header { display: flex; justify-content: space-between; align-items: baseline; }
-        .history-role { font-size: 1.15rem; font-weight: 800; color: var(--primary); }
-        .history-date { font-size: 0.8rem; font-weight: 900; color: var(--accent); }
-        .history-company { font-size: 1rem; font-weight: 600; color: #64748B; margin: 4px 0 12px 0; }
-        
-        .timeline-bullet { list-style: none; padding-left: 20px; border-left: 2px solid #F1F5F9; margin-left: 5px; }
-        .timeline-bullet li { font-size: 0.9rem; line-height: 1.6; margin-bottom: 10px; position: relative; }
-        .timeline-bullet li::before { content: ''; position: absolute; left: -24px; top: 10px; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
-
-        .edu-box { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .edu-card { background: #F8FAFC; padding: 20px; border-radius: 8px; border: 1px solid #F1F5F9; }
-        .edu-card b { display: block; font-size: 0.95rem; color: var(--primary); margin-bottom: 5px; }
-        .edu-card span { font-size: 0.8rem; font-weight: 600; color: var(--accent); }
-
-        @media print {
-            .resume-page { width: 210mm; min-height: 297mm; box-shadow: none; border: none; }
-        }
-    </style>
+    <link rel="stylesheet" href="/resume-design.css">
 </head>
 <body>
     <div id="loading" class="text-center py-20 text-indigo-500 font-bold uppercase tracking-widest text-xs">Architecting Luxury Resume...</div>
@@ -118,51 +70,6 @@
         </main>
     </div>
 
-    <script>
-        async function fetchProfile() {
-            const apiUrl = 'https://mern-portfolio-yasar.onrender.com/api/profile';
-            const resp = await fetch(apiUrl);
-            const data = await resp.json();
-            renderResume(data);
-        }
-
-        function renderResume(p) {
-            document.getElementById('user-name').innerText = p.name;
-            document.getElementById('user-title').innerText = p.title;
-            document.getElementById('user-summary').innerText = p.summary;
-
-            document.getElementById('skills-front').innerHTML = p.technicalSkills.frontend.map(s => `<span class="skill-tag">${s}</span>`).join('');
-            document.getElementById('skills-back').innerHTML = p.technicalSkills.backend.map(s => `<span class="skill-tag">${s}</span>`).join('');
-            document.getElementById('skills-db').innerHTML = p.technicalSkills.database.map(s => `<span class="skill-tag">${s}</span>`).join('');
-
-            document.getElementById('experience-list').innerHTML = p.experience.map(exp => `
-                <div class="history-item">
-                    <div class="history-header">
-                        <span class="history-role">${exp.role}</span>
-                        <span class="history-date">${exp.period}</span>
-                    </div>
-                    <div class="history-company">${exp.company}</div>
-                    <ul class="timeline-bullet">
-                        ${exp.description.map(d => `<li>${d}</li>`).join('')}
-                    </ul>
-                </div>
-            `).join('');
-
-            document.getElementById('education-list').innerHTML = p.education.map(edu => `
-                <div class="edu-card">
-                    <b>${edu.degree}</b>
-                    <span>${edu.institution} | ${edu.year}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('languages-list').innerHTML = p.additionalInfo.languages.map(l => `<div>${l.toUpperCase()}</div>`).join('');
-            document.getElementById('availability-info').innerText = p.additionalInfo.availability.toUpperCase();
-
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('resumeContent').classList.remove('hidden');
-        }
-
-        fetchProfile();
-    </script>
+    <script src="/resume-design.js"></script>
 </body>
 </html>

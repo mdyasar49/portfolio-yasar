@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import SEO from '../components/SEO';
 
 const Resume = () => {
   // 3D Parallax Logic
@@ -42,11 +43,11 @@ const Resume = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        perspective: '1500px', // For 3D depth
-        p: 6
+        perspective: '1500px',
+        p: { xs: 2, sm: 4, md: 6 }
       }}
     >
-      {/* Layered Cosmic Background */}
+      <SEO title="Professional Resume" description="High-end professional resume of A. Mohamed Yasar" />
       <Box sx={{
         position: 'fixed',
         top: '-10%',
@@ -93,15 +94,18 @@ const Resume = () => {
           rotateX, 
           rotateY, 
           zIndex: 10,
-          transformStyle: "preserve-3d"
+          transformStyle: "preserve-3d",
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center'
         }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <Box sx={{ 
-          width: '210mm', 
-          height: '297mm', 
+          width: { xs: '95vw', sm: '85vw', md: '210mm' }, 
+          height: { xs: '80vh', sm: '85vh', md: '297mm' }, 
           backgroundColor: 'white',
           borderRadius: 2,
           position: 'relative',
