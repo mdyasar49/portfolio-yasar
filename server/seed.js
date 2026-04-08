@@ -1,0 +1,107 @@
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const Profile = require('./models/Profile');
+
+dotenv.config();
+
+const fullProfile = {
+  name: "A. MOHAMED YASAR",
+  title: "Full Stack Engineer | React.js | REST APIs | SQL",
+  email: "mohamedyasar081786@gmail.com",
+  phone: "+91-9025943184",
+  location: "Chennai, Tamil Nadu, India",
+  summary: "Software Engineer with 2.5+ years of experience developing and maintaining web applications. Skilled in React.js, REST API integration, and SQL databases, with hands-on experience in building responsive UI components and integrating backend services.",
+  technicalSkills: {
+    frontend: ["React.js", "Redux", "JavaScript (ES6+)", "HTML5", "CSS3", "Material UI"],
+    backend: ["REST APIs", "Node.js", "Express.js", "Java", "Spring Boot", "Python"],
+    database: ["MySQL", "SQL Server", "MongoDB"],
+    tools: ["Git", "GitHub", "Postman", "VS Code"]
+  },
+  experience: [
+    {
+      role: "Software Engineer / Frontend Developer",
+      company: "Bytes and Binaries Software Solutions",
+      companyUrl: "https://www.bytesandbinaries.com/",
+      period: "July 2023 – March 2026",
+      description: [
+        "Developed high-performance UI components using React.js and Material UI.",
+        "Integrated complex business logic across full-stack repositories.",
+        "Managed end-to-end data flow validation and optimized SQL queries.",
+        "Led UI/UX workflow improvements and supported deployments."
+      ]
+    }
+  ],
+  projects: [
+    {
+      name: "Job Planner / Job Management System",
+      type: "Company Project (Bytes and Binaries)",
+      technologies: ["React.js", "Redux", "Material UI", "REST APIs", "MySQL"],
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
+      link: "https://jobplanner.com.au/",
+      github: "#",
+      description: ["Job Management System built with React and MySQL."]
+    },
+    {
+      name: "TaskFlow Pro",
+      type: "Open Source / Personal",
+      technologies: ["React.js", "Material UI", "Framer Motion"],
+      image: "https://images.unsplash.com/photo-1540350394557-8d14678e7f91?auto=format&fit=crop&q=80&w=800",
+      link: "https://github.com/mdyasar49/taskflow-pro",
+      github: "https://github.com/mdyasar49/taskflow-pro",
+      description: ["High-performance Task Management Dashboard."]
+    },
+    {
+        name: "Exam Results Analyzer",
+        type: "Open Source / Personal",
+        technologies: ["JavaScript", "HTML5", "CSS3"],
+        image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+        link: "https://github.com/mdyasar49/exam-results",
+        github: "https://github.com/mdyasar49/exam-results",
+        description: ["Automated score calculation and performance analytics tool."]
+    }
+  ],
+  education: [
+    {
+      degree: "Master of Computer Applications (MCA)",
+      institution: "M.I.E.T Arts and Science College, Tiruchirappalli",
+      institutionUrl: "https://www.mietarts.org/",
+      year: "2025"
+    },
+    {
+      degree: "Bachelor of Computer Applications (BCA)",
+      institution: "Jamal Mohamed College, Tiruchirappalli",
+      institutionUrl: "https://jmc.edu/",
+      year: "2023"
+    }
+  ],
+  certifications: ["C Programming", "Programming Techniques", "Web Designing", "PC Hardware & Troubleshooting"],
+  softSkills: ["Problem Solving", "Analytical Thinking", "Communication", "Team Collaboration", "Adaptability"],
+  additionalInfo: {
+    availability: "Immediate Joiner",
+    workPreference: "Willing to work from office | Rotational shifts",
+    languages: ["English", "Tamil"]
+  },
+  socials: {
+    linkedin: "https://linkedin.com/in/mohamed-yasar-4674ba223",
+    github: "https://github.com/mdyasar49",
+    twitter: "https://x.com/mdyasar_49",
+    instagram: "https://www.instagram.com/mdyasar_49/",
+    facebook: "https://www.facebook.com/share/1DHDLRaGBB/"
+  }
+};
+
+const seedDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB for Seeding...");
+    await Profile.deleteMany({});
+    await Profile.create(fullProfile);
+    console.log("Database Seeded Successfully! Portfolio is now live with Backend Data.");
+    process.exit();
+  } catch (err) {
+    console.error("Seeding Error:", err);
+    process.exit(1);
+  }
+};
+
+seedDB();
