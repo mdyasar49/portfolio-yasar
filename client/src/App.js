@@ -19,7 +19,7 @@ const App = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/api/profile');
+        const response = await axios.get('https://mern-portfolio-yasar.onrender.com/api/profile');
         if (response.data) {
           setProfile(response.data);
         }
