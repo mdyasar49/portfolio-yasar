@@ -1,20 +1,28 @@
-# Dependencies
+# 🧩 MERN Stack Development Node.js & React
 node_modules/
-client/node_modules/
-server/node_modules/
+dist/
+build/
+.DS_Store
+Thumbs.db
 
-# Environment Variables
-server/.env.MONGO_URI
+# 🛡️ Environment Configuration
+# We ignore the server .env because it contains your private MONGO_URI.
+# To share the structure, use server/.env.example instead.
+server/.env
+*.local
+*.secret
 
-# Build outputs
-client/dist/
-client/build/
+# 🌐 Frontend Environment
+# We allow client/.env because it only contains the public backend URL.
+!client/.env
 
-# Debug logs
+# 📊 Logging & Debugging
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.eslintcache
 
-# OS files
-.DS_Store
-Thumbs.db
+# 🛠️ Tooling
+.vscode/
+.idea/
+.env.MONGO_URI
