@@ -8,7 +8,7 @@ server/node_modules/
 !client/.env
 
 # Ignore server .env to protect sensitive MONGO_URI
-server/.env
+server/.env.MONGO_URI
 
 # Build outputs
 client/dist/
