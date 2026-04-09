@@ -16,14 +16,24 @@ const getLocalData = () => {
     }
 };
 
+const mongoose = require('mongoose');
+
 /**
  * @desc    Get complete portfolio profile
  * @route   GET /api/profile
  * @access  Public
  */
 exports.getProfile = asyncHandler(async (req, res, next) => {
-    // 1. Try to fetch from MongoDB first
-    let profile = await Profile.findOne();
+    let profile = null;
+
+    // 1. Try to fetch from MongoDB first ONLY if connected
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+        try {
+            profile = await Profile.findOne();
+        } catch (error) {
+            console.error("MongoDB Query Error:", error.message);
+        }
+    }
     
     if (!profile) {
         // 2. Fallback to Local JSON
