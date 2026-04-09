@@ -6,18 +6,17 @@
 
 // 1. Robust Environment Variable Extraction
 const getEnvVar = (name) => {
+    // Attempt CRA (Node/Process) style
+    try {
+        if (typeof process !== 'undefined' && process.env) {
+            return process.env[name];
+        }
+    } catch (e) { /* Fallback */ }
+
     // Attempt Vite style
     try {
         if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[name]) {
             return import.meta.env[name];
-        }
-    } catch (e) { /* Fallback */ }
-
-    // Attempt CRA (Node/Process) style
-    try {
-        if (typeof process !== 'undefined' && process.env) {
-            const craName = name.startsWith('VITE_') ? name.replace('VITE_', 'REACT_APP_') : name;
-            return process.env[craName] || process.env[name];
         }
     } catch (e) { /* Fallback */ }
 
@@ -26,12 +25,12 @@ const getEnvVar = (name) => {
 
 // 2. API Base URL Resolution
 // Prioritizes environment variables, falls back to Production Render URL
-export const API_BASE_URL = getEnvVar('VITE_API_BASE_URL') || 'https://mern-portfolio-yasar.onrender.com/api';
+export const API_BASE_URL = getEnvVar('REACT_APP_API_BASE_URL') || getEnvVar('VITE_API_BASE_URL') || 'https://mern-portfolio-yasar.onrender.com/api';
 
 // 3. Global Environment Flags
 export const IS_PRODUCTION = 
-    (typeof import.meta !== 'undefined' && import.meta.env?.PROD) || 
-    (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production');
+    (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') ||
+    (typeof import.meta !== 'undefined' && import.meta.env?.PROD);
 
 // 4. Default Export (Mainly for API URL)
 export default API_BASE_URL;
