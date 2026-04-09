@@ -10,7 +10,7 @@ const SkillCategory = ({ title, skills, icon: Icon, delay }) => (
     transition={{ duration: 0.5, delay }}
     viewport={{ once: true }}
   >
-    <Paper className="glass" sx={{ p: 4, height: '100%', borderRadius: 6, transition: '0.4s all' }}>
+    <Paper className="glass-panel" sx={{ p: 4, height: '100%', borderRadius: 6, transition: '0.4s all' }}>
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
         <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'rgba(99, 102, 241, 0.1)', color: 'primary.light' }}>
           <Icon size={24} />

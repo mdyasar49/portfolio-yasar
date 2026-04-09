@@ -5,7 +5,7 @@
  */
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, List, ListItem, ListItemText, useScrollTrigger, Container } from '@mui/material';
-import { Menu as MenuIcon, X } from 'lucide-react';
+import { Menu as MenuIcon, X, ServerCog } from 'lucide-react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 const Header = () => {
@@ -21,6 +21,7 @@ const Header = () => {
     { name: 'Skills', path: '/#skills', type: 'anchor' },
     { name: 'Projects', path: '/#projects', type: 'anchor' },
     { name: 'Resume', path: '/resume', type: 'link' },
+    { name: 'Documentation', path: '/architecture', type: 'link' },
   ];
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -93,12 +94,12 @@ const Header = () => {
           transform: 'translateX(-50%)',
           width: trigger ? 'auto' : '100%',
           maxWidth: trigger ? '900px' : '100%',
-          bgcolor: trigger ? 'rgba(17, 24, 39, 0.8)' : 'transparent',
-          backdropFilter: trigger ? 'blur(16px)' : 'none',
+          bgcolor: trigger ? 'rgba(10, 10, 15, 0.7)' : 'transparent',
+          backdropFilter: trigger ? 'blur(24px) saturate(150%)' : 'none',
           borderRadius: trigger ? 100 : 0,
-          border: trigger ? '1px solid rgba(255,255,255,0.08)' : 'none',
+          border: trigger ? '1px solid rgba(255,255,255,0.05)' : 'none',
           transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: trigger ? '0 10px 40px rgba(0,0,0,0.5)' : 'none',
+          boxShadow: trigger ? '0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)' : 'none',
         }}
         elevation={0}
       >
@@ -121,12 +122,13 @@ const Header = () => {
                 <Typography 
                   variant="h3" 
                   sx={{ 
-                    fontWeight: 900, 
-                    letterSpacing: -2,
-                    background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+                    fontWeight: 900,
+                    fontFamily: 'Syncopate', 
+                    letterSpacing: -1,
+                    background: 'linear-gradient(270deg, #ff3366, #ff9933)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.3))'
+                    filter: 'drop-shadow(0 0 15px rgba(255, 51, 102, 0.5))'
                   }}
                 >
                   MY
@@ -134,25 +136,12 @@ const Header = () => {
                 <Box sx={{ 
                   width: 8, 
                   height: 8, 
-                  bgcolor: '#ec4899', 
+                  bgcolor: '#33ccff', 
                   borderRadius: '50%',
-                  ml: 0.5,
-                  boxShadow: '0 0 15px #ec4899'
+                  ml: 1,
+                  boxShadow: '0 0 15px #33ccff'
                 }} />
               </Box>
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  color: 'text.secondary', 
-                  fontSize: '0.65rem', 
-                  letterSpacing: 1, 
-                  fontWeight: 600,
-                  mt: -0.5,
-                  opacity: 0.8
-                }}
-              >
-                REACT • NODE • MONGODB
-              </Typography>
             </Box>
             
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>

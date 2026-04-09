@@ -23,7 +23,7 @@ const About = ({ profile }) => {
             </Typography>
             <Typography variant="body1" paragraph color="text.secondary" sx={{ fontSize: '1.1rem' }}>
               Currently strengthening backend development skills by learning Core Java, Spring Boot, and Python basics. 
-              I am also deepening my expertise in the MERN stack with TypeScript to build robust, scalable applications.
+              I am also deepening my expertise in modern full stack architecture with TypeScript to build robust, scalable applications.
             </Typography>
             <Stack direction="row" spacing={4} sx={{ mt: 4, mb: 4 }}>
               <Box>
@@ -57,34 +57,23 @@ const About = ({ profile }) => {
             )}
           </Grid>
           <Grid item xs={12} md={5}>
-            <Paper elevation={0} sx={{ 
+            <Paper className="glass-panel" elevation={0} sx={{ 
               p: 2, 
-              bgcolor: 'primary.light', 
-              borderRadius: 4, 
+              borderRadius: 6, 
               position: 'relative',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 20,
-                left: 20,
-                right: -20,
-                bottom: -20,
-                border: '2px solid',
-                borderColor: 'primary.light',
-                borderRadius: 4,
-                zIndex: -1
-              }
+              overflow: 'hidden'
             }}>
               <Box sx={{ 
                 height: 400, 
                 width: '100%', 
-                bgcolor: 'background.paper', 
-                borderRadius: 2,
+                background: 'linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(236,72,153,0.2) 100%)', 
+                borderRadius: 4,
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                boxShadow: 'inset 0 0 50px rgba(0,0,0,0.8)'
               }}>
-                <Typography variant="h1" color="primary.light" sx={{ opacity: 0.1 }}>MY</Typography>
+                <Typography variant="h1" className="hero-gradient-text" sx={{ opacity: 0.8, fontSize: '8rem' }}>MY</Typography>
               </Box>
             </Paper>
           </Grid>

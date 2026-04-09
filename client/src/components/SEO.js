@@ -13,7 +13,7 @@ const SEO = ({ title, description }) => {
     // Update Description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
-      metaDescription.setAttribute('content', description || 'MERN Stack Developer Portfolio');
+      metaDescription.setAttribute('content', description || 'Full Stack Engineer Portfolio');
     }
   }, [title, description]);
 

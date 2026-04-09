@@ -37,11 +37,13 @@ const Footer = ({ socials, name }) => {
             variant="h4" 
             sx={{ 
               fontWeight: 900, 
+              fontFamily: 'Syncopate',
               letterSpacing: -1.5,
-              background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
+              background: 'linear-gradient(270deg, #ff3366, #ff9933)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 2
+              mb: 2,
+              filter: 'drop-shadow(0 0 15px rgba(255, 51, 102, 0.5))'
             }}
           >
             MD YASAR
@@ -104,7 +106,7 @@ const Footer = ({ socials, name }) => {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Cpu size={14} color="#6366f1" />
               <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: 0.5 }}>
-                POWERED BY MERN STACK
+                POWERED BY FULL STACK EXPERTISE
               </Typography>
             </Box>
           </Box>

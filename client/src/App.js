@@ -12,6 +12,8 @@ import Header from './components/Header';
 import Portfolio from './pages/Portfolio';
 import Resume from './pages/Resume';
 
+import Documentation from './pages/Documentation';
+
 // Helper component to reset scroll position on route change
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -80,6 +82,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Portfolio profile={profile} loading={loading} />} />
             <Route path="/resume" element={<Resume profile={profile} />} />
+            <Route path="/architecture" element={<Documentation profile={profile} />} />
           </Routes>
         </Box>
       </Router>
