@@ -17,63 +17,128 @@ const Projects = ({ projects }) => {
         Professional <Box component="span" sx={{ color: 'primary.light' }}>Catalog</Box>
       </Typography>
 
-      <Grid container spacing={5}>
+      <Grid container spacing={6}>
         {projects.map((project, index) => (
-          <Grid item xs={12} md={6} key={index}>
+          <Grid item xs={12} lg={6} key={index}>
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ y: -10 }}
+              transition={{ duration: 0.6, delay: index * 0.1, type: 'spring', stiffness: 100 }}
+              viewport={{ once: true, margin: "-50px" }}
+              whileHover="hover"
               style={{ height: '100%' }}
             >
-              <Card className="glass" sx={{ 
+              <Card sx={{ 
                 height: '100%', 
                 display: 'flex', 
                 flexDirection: 'column', 
-                borderRadius: 5,
-                background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.8) 0%, rgba(10, 25, 47, 0.9) 100%)',
-                position: 'relative'
-              }}>
-                <Box sx={{ position: 'relative', overflow: 'hidden', height: 260 }}>
-                  <CardMedia
-                    component="img"
-                    height="100%"
-                    image={project.image}
-                    alt={project.name}
-                    sx={{ transition: '0.8s transform cubic-bezier(0.4, 0, 0.2, 1)', '&:hover': { transform: 'scale(1.1) rotate(1deg)' } }}
-                  />
+                borderRadius: 4,
+                bgcolor: 'rgba(15, 23, 42, 0.4)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(148, 163, 184, 0.1)',
+                position: 'relative',
+                overflow: 'visible', // allows glow to overflow
+                '&::before': {
+                  content: '""',
+                  position: 'absolute',
+                  inset: -1,
+                  background: 'linear-gradient(180deg, rgba(99, 102, 241, 0.5) 0%, rgba(236, 72, 153, 0.5) 100%)',
+                  borderRadius: 'inherit',
+                  zIndex: -1,
+                  opacity: 0,
+                  transition: 'opacity 0.4s ease-in-out',
+                },
+              }}
+              component={motion.div}
+              variants={{
+                hover: { 
+                  y: -10,
+                  scale: 1.02,
+                  boxShadow: '0 20px 40px -10px rgba(99,102,241,0.2)',
+                  transition: { duration: 0.3 }
+                }
+              }}
+              onHoverStart={(e) => {
+                e.target.closest('.MuiCard-root').style.setProperty('--glow-opacity', '1');
+              }}
+              onHoverEnd={(e) => {
+                e.target.closest('.MuiCard-root').style.setProperty('--glow-opacity', '0');
+              }}
+              >
+                <Box sx={{ 
+                  position: 'absolute', inset: -1, borderRadius: 'inherit', zIndex: -1,
+                  background: 'linear-gradient(45deg, #6366f1, #ec4899)', opacity: 'var(--glow-opacity, 0)',
+                  transition: 'opacity 0.3s ease', filter: 'blur(20px)'
+                }} />
+                
+                <Box sx={{ position: 'relative', overflow: 'hidden', height: 300, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
+                  <motion.div style={{ height: '100%', width: '100%' }}
+                    variants={{ hover: { scale: 1.1 } }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="100%"
+                      image={project.image}
+                      alt={project.name}
+                      sx={{ objectFit: 'cover' }}
+                    />
+                  </motion.div>
+                  <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(15,23,42,1) 0%, transparent 100%)' }} />
                   {project.type.includes('Company') && (
-                    <Box sx={{ position: 'absolute', top: 20, right: 20, bgcolor: 'primary.main', px: 2, py: 0.5, borderRadius: 10, boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)' }}>
-                      <Typography variant="caption" sx={{ fontWeight: 800, color: 'white' }}>OFFICIAL</Typography>
+                    <Box sx={{ position: 'absolute', top: 20, right: 20, bgcolor: 'rgba(99, 102, 241, 0.9)', backdropFilter: 'blur(4px)', px: 2, py: 0.5, borderRadius: 10, border: '1px solid rgba(255,255,255,0.2)' }}>
+                      <Typography variant="caption" sx={{ fontWeight: 800, color: 'white', letterSpacing: 1 }}>OFFICIAL</Typography>
                     </Box>
                   )}
                 </Box>
 
-                <CardContent sx={{ p: 5, flexGrow: 1 }}>
-                  <Typography variant="h3" sx={{ mb: 2, fontWeight: 800 }}>{project.name}</Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 4, lineHeight: 1.7, fontSize: '1rem' }}>{project.description[0]}</Typography>
-                  <Stack direction="row" flexWrap="wrap" gap={1.5} sx={{ mb: 4 }}>
+                <CardContent sx={{ p: 4, pt: 1, flexGrow: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1, bgcolor: '#0f172a' }}>
+                  <Typography variant="h4" sx={{ mb: 2, fontWeight: 800, background: 'linear-gradient(90deg, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                    {project.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 4, lineHeight: 1.8, color: '#94a3b8', fontSize: '1.05rem' }}>
+                    {project.description[0]}
+                  </Typography>
+                  
+                  <Box sx={{ mb: 4, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                     {project.technologies.map((tech) => (
-                      <Chip key={tech} label={tech} size="small" sx={{ backgroundColor: 'rgba(255,255,255,0.03)', color: 'primary.light', fontWeight: 600, border: '1px solid rgba(255,255,255,0.05)' }} />
+                      <Chip key={tech} label={tech} size="small" 
+                        sx={{ 
+                          bgcolor: 'rgba(99, 102, 241, 0.1)', 
+                          color: '#818cf8', 
+                          fontWeight: 600, 
+                          borderRadius: 2,
+                          border: '1px solid rgba(99, 102, 241, 0.2)',
+                          transition: 'all 0.2s ease',
+                          '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.2)', transform: 'translateY(-2px)' }
+                        }} 
+                      />
                     ))}
-                  </Stack>
-                  <Stack direction="row" spacing={2} sx={{ mt: 'auto' }}>
+                  </Box>
+
+                  <Box sx={{ mt: 'auto', pt: 2, borderTop: '1px solid rgba(148,163,184,0.1)' }}>
                     <Button 
-                      variant="outlined" 
-                      startIcon={project.github === '#' ? <Lock size={18} /> : <Github size={18} />} 
+                      fullWidth
+                      variant="text" 
                       onClick={() => handleOpen(project)} 
-                      sx={{ flex: 1 }}
+                      sx={{ 
+                        color: 'white',
+                        py: 1.5,
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        fontWeight: 600,
+                        justifyContent: 'space-between',
+                        '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' }
+                      }}
                     >
-                      {project.github === '#' ? 'Private Code' : 'Source'}
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                        {project.github === '#' ? <Lock size={20} color="#ec4899" /> : <Github size={20} color="#818cf8" />}
+                        <span>{project.github === '#' ? 'View Private Logic' : 'View Source Code'}</span>
+                      </Box>
+                      <motion.div variants={{ hover: { x: 5 } }}>→</motion.div>
                     </Button>
-                    {project.link && (
-                      <Button variant="contained" startIcon={<ExternalLink size={18} />} href={project.link} target="_blank" sx={{ flex: 1 }}>
-                        Live Demo
-                      </Button>
-                    )}
-                  </Stack>
+                  </Box>
                 </CardContent>
               </Card>
             </motion.div>
