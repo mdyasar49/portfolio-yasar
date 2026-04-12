@@ -1,11 +1,9 @@
 /**
  * [Node.js Server Entry Point]
- * This file initializes the server environment, connects to the MongoDB database,
- * and starts the Express.js application listener.
  */
+require('dotenv').config(); // MUST be first to load environment variables
 const app = require('./app');
 const connectDB = require('./config/db');
-require('dotenv').config();
 const validateEnv = require('./config/envValidator');
 
 // Validate Environment before starting
