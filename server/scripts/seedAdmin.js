@@ -17,7 +17,7 @@ const seedAdmin = async () => {
         
         // Configuration: [CHANGE THESE LOCALLY OR DURING PROMPT]
         const username = 'admin'; 
-        const password = 'your_initial_secure_password'; 
+        const password = 'admin'; 
 
         const exists = await Admin.findOne({ username });
         if (exists) {
