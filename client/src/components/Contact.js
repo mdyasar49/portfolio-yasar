@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Stack, Container, Grid, CircularProgress, Alert, Snackbar } from '@mui/material';
+import { Box, Typography, TextField, Button, Stack, Container, Grid, CircularProgress, Alert, Snackbar, useMediaQuery, useTheme } from '@mui/material';
 import { Send, Mail, Terminal, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { submitContact } from '../services/api';
 
 const Contact = () => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
@@ -141,8 +143,8 @@ const Contact = () => {
                 autoHideDuration={6000} 
                 onClose={handleClose} 
                 anchorOrigin={{ 
-                    vertical: { xs: 'top', sm: 'bottom' }, 
-                    horizontal: { xs: 'center', sm: 'right' } 
+                    vertical: isMobile ? 'top' : 'bottom', 
+                    horizontal: isMobile ? 'center' : 'right' 
                 }}
             >
                 <Alert onClose={handleClose} severity={status.type} sx={{ width: '100%', bgcolor: '#02040a', color: 'white', border: `1px solid ${status.type === 'success' ? '#00ffcc' : '#ff3366'}`, borderRadius: 2 }}>
