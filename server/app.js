@@ -13,23 +13,32 @@ const app = express();
 
 // Middlewares (Express.js)
 app.use(logger);
-// 1. CORS Whitelist Security (Uses .env configuration)
-// .filter(Boolean) removes undefined/null entries if CLIENT_URL is not set
+
+// 1. CORS Whitelist — reads from CLIENT_URL env var (supports comma-separated values)
+// Example: CLIENT_URL=https://mern-portfolio-yasar-1.onrender.com
+const rawClientUrl = process.env.CLIENT_URL || '';
 const allowedOrigins = [
-  'http://localhost:3000',                              // Local Client
-  process.env.CLIENT_URL                               // Live Production Client (from .env)
+  'http://localhost:3000',                              // Local dev client
+  ...rawClientUrl.split(',').map(u => u.trim())        // Production client(s) from .env
 ].filter(Boolean);
+
+// Log allowed origins at startup so you can verify the env var is being read
+console.log(`🔐 [CORS] Allowed origins: ${allowedOrigins.join(', ')}`);
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, Postman, server-to-server)
+    // Allow requests with no origin (Postman, curl, server-to-server calls)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('⚠️ [Security Error]: Access Denied by CORS Policy.'));
+      console.warn(`⚠️  [CORS] Blocked request from: ${origin}`);
+      console.warn(`   Allowed: ${allowedOrigins.join(', ')}`);
+      console.warn(`   Fix: Add this origin to CLIENT_URL in server/.env or Render dashboard.`);
+      callback(new Error(`CORS: Origin ${origin} is not allowed.`));
     }
-  }
+  },
+  credentials: true
 }));
 
 // 2. Direct Browser Access Protection (Applied to ALL endpoints)
