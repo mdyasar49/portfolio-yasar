@@ -1,373 +1,387 @@
-# 🏗️ Project Explanation — MERN Elite Portfolio v2.0
+# Project Explanation — MERN Stack Portfolio
 
-> **இந்த document பத்தி:** இந்த portfolio project-ஐ **நான் (Yasar) personally build பண்ணினேன்** — MERN Stack கத்துக்கணும்னு ஆரம்பிச்சு, real-world full-stack architecture follow பண்ணி develop பண்ணேன். இங்க — இந்த project-ஐ எப்படி install பண்றது, frontend & backend எப்படி connect ஆகுது, ஏன் இந்த structure use பண்ணினேன் — எல்லாத்தையும் explain பண்றேன்.
-
----
-
-## 1. 🧩 Why Two Separate Projects? (ஏன் இரண்டு தனி folders?)
-
-இந்த portfolio-ல **`client/`** (React) மற்றும் **`server/`** (Node/Express) என்று **இரண்டு தனி projects** இருக்கு — இரண்டும் தனித்தனியா run ஆகும், தனித்தனியா deploy ஆகும்.
-
-நான் இந்த structure-ஐ follow பண்ணதுக்கு reason:
-
-| Simple HTML Approach | MERN Stack (இந்த project) |
-|:---------------------|:--------------------------|
-| HTML files browser-ல directly open ஆகும் | React browser-ல run ஆகும் (port 3000) |
-| No backend needed | Express server separately run ஆகும் (port 5001) |
-| Data is hardcoded in HTML | Data MongoDB-ல இருக்கும், API வழியா வருது |
-| Single file, no separation | Clean separation: UI logic vs data logic |
-
-**ஏன் இப்படி பண்ணினேன்?**
-- Frontend-ஐ மட்டும் update பண்ண backend-ஐ touch பண்ண வேண்டியதில்லை.
-- Backend-ஐ மட்டும் change பண்ண frontend-ஐ touch பண்ண வேண்டியதில்லை.
-- Companies-ல இப்படித்தான் build பண்றாங்க — இதை நேரடியா practice பண்றதுக்காக இந்த structure follow பண்ணினேன்.
+> **Who wrote this?** I am A. Mohamed Yasar. I built this project myself while learning the MERN Stack. This document explains everything about the project in plain English — what it is, why I structured it this way, how to set it up, and how the frontend and backend actually talk to each other.
 
 ---
 
-## 2. 🔗 How Frontend & Backend Connect — Full Flow
+## 1. What Is This Project and Why Did I Build It?
 
-```
-செய்பவன் (User)
-     │
-     │  Browser-ல http://localhost:3000 திறக்கிறான்
-     ▼
-┌──────────────────────────────┐
-│     React App (client/)      │  ← Port 3000
-│                              │
-│  useEffect() runs on load    │
-│  → calls portfolioService.js │
-│  → axios.get("/api/profile") │
-└──────────┬───────────────────┘
-           │
-           │  HTTP GET Request
-           │  http://localhost:5001/api/profile
-           │
-           ▼
-┌──────────────────────────────┐
-│  Express Server (server/)    │  ← Port 5001
-│                              │
-│  app.js → portfolioRoutes.js │
-│  → portfolioController.js    │
-└──────────┬───────────────────┘
-           │
-     ┌─────┴─────┐
-     │           │
-     ▼           ▼
-MongoDB      data.json
-(if online)  (if offline)
-     │           │
-     └─────┬─────┘
-           │
-           │  JSON Response
-           │  { success: true, data: {...} }
-           │
-           ▼
-┌──────────────────────────────┐
-│     React App (client/)      │
-│                              │
-│  setState(data)              │
-│  → Component re-renders      │
-│  → UI updates with new data  │
-└──────────────────────────────┘
-```
+This is my personal portfolio website, but it is not a simple HTML file. I built it as a **full-stack MERN application** — which means it has a real backend server, a real database, and a frontend that fetches data from the backend through API calls.
+
+**Why go through all this trouble for a portfolio?**
+
+Because I wanted to practice how real projects are built. In a real company, the frontend team and the backend team work on completely separate codebases. They communicate only via APIs. I wanted to experience that same workflow from scratch — so I built my own portfolio this way.
+
+The result is a project where:
+- The **frontend** (React) handles the UI and what users see.
+- The **backend** (Node + Express) handles data, logic, and the database.
+- They **never share files** — they only communicate over HTTP.
 
 ---
 
-## 3. 📁 What Each File Does — Explained Simply
+## 2. Why Are There Two Separate Folders? (`client/` and `server/`)
 
-### Backend (`server/`) Files
+When you clone this project, you will see two main folders:
 
-#### `index.js` — Entry Point
-```javascript
-// server/index.js
-// இது server-ஐ start பண்றது — just 5-10 lines
-// Port-ல listen பண்றது, app.js-ஐ import பண்றது
-require('dotenv').config();          // .env file read பண்றது
-const app = require('./app');       // Express app import
-connectDB();                        // MongoDB connect பண்றது
-app.listen(PORT, ...);              // Server start பண்றது
+```
+mern-portfolio-yasar/
+├── client/    ← This is the React Frontend
+└── server/    ← This is the Node.js Backend
 ```
 
-#### `app.js` — Express Configuration
-```javascript
-// server/app.js
-// All middlewares & routes register பண்றது
-app.use(cors({...}));               // CORS security — யாரு call பண்ணலாம்னு decide பண்றது
-app.use(express.json());            // Request body-ஐ JSON-ஆ parse பண்றது
-app.use('/api', portfolioRoutes);   // All routes /api prefix-ல இருக்கு
+They are **two completely separate projects**. Each has its own `package.json`, its own `node_modules`, and its own `.env` file. You install them separately and run them separately.
+
+This separation is called a **decoupled architecture**. It is the industry standard.
+
+| If they were in one project | Because they are in two projects |
+|:----------------------------|:---------------------------------|
+| Frontend change breaks backend | Frontend and backend are independent |
+| Hard to deploy separately | Each can be deployed to a different host |
+| Code gets messy fast | Clean boundary between UI logic and data logic |
+| You cannot swap the frontend | You could replace React with Vue and the backend stays the same |
+
+The `client/` folder does not know anything about how the server works internally. It only knows one thing: the **URL** of the API. That URL is stored in `client/.env`:
+
+```
+REACT_APP_API_BASE_URL=http://localhost:5001
 ```
 
-#### `routes/portfolioRoutes.js` — URL Mapping
-```javascript
-// server/routes/portfolioRoutes.js
-// URL ↔ Controller function-ஐ connect பண்றது
-router.get('/profile', portfolioController.getProfile);
-// GET /api/profile → getProfile() function call ஆகும்
-
-router.get('/visitors', portfolioController.getVisitors);
-// GET /api/visitors → getVisitors() function call ஆகும்
-```
-
-#### `controllers/portfolioController.js` — Business Logic
-```javascript
-// server/controllers/portfolioController.js
-// Actual data fetch பண்றது இங்கதான் நடக்கும்
-
-exports.getProfile = async (req, res) => {
-    if (mongoose.connection.readyState === 1) {
-        // MongoDB connected → database-ல இருந்து data எடு
-        const profile = await Profile.findOne();
-        res.json({ success: true, data: profile });
-    } else {
-        // MongoDB offline → data.json-ல இருந்து data எடு
-        const data = require('../data.json');
-        res.json({ success: true, data: data });
-    }
-};
-```
-
-#### `data.json` — Local Fallback Data
-```json
-// server/data.json
-// MongoDB இல்லாம use பண்ண — portfolio info hardcoded இங்க இருக்கு
-{
-  "name": "A. Mohamed Yasar",
-  "title": "MERN Stack Developer",
-  "skills": [...],
-  "projects": [...]
-}
-```
+Similarly, the `server/` folder does not know what React does. It just receives requests and sends back JSON responses.
 
 ---
 
-### Frontend (`client/`) Files
+## 3. How the Frontend and Backend Talk to Each Other
 
-#### `src/index.js` — Entry Point
-```javascript
-// client/src/index.js
-// React app-ஐ HTML-ல mount பண்றது
-ReactDOM.render(<App />, document.getElementById('root'));
-// public/index.html-ல இருக்கற <div id="root"> இங்க React inject ஆகும்
+This is the most important thing to understand.
+
+### The Short Answer
+The React frontend uses **Axios** to send an **HTTP GET request** to the Express backend. The backend processes it, fetches data from MongoDB (or a local JSON file), and sends back a **JSON response**. React receives that JSON and renders it on screen.
+
+### The Full Step-by-Step Flow
+
+```
+1. User opens http://localhost:3000 in the browser
+
+2. React app loads (client/src/index.js → App.js → Portfolio.js)
+
+3. Inside Portfolio.js, a useEffect() hook runs on page load:
+       getProfile()   ← this calls portfolioService.js
+
+4. portfolioService.js sends the actual HTTP request:
+       axios.get("http://localhost:5001/api/profile")
+
+5. The Express server (running at port 5001) receives the request
+       app.js → portfolioRoutes.js → portfolioController.js
+
+6. portfolioController.js checks if MongoDB is connected:
+       ├── YES → fetches from MongoDB Atlas
+       └── NO  → reads from server/data.json (fallback)
+
+7. Express sends back JSON:
+       { success: true, data: { name: "Yasar", skills: [...], ... } }
+
+8. Axios in React receives that JSON
+
+9. React calls setState() with the new data
+
+10. The component re-renders and shows the portfolio on screen
 ```
 
-#### `src/App.js` — Router Setup
-```javascript
-// client/src/App.js
-// Pages-ஐ URL-க்கு map பண்றது
-<Routes>
-  <Route path="/"          element={<Portfolio />} />   // Home page
-  <Route path="/resume"    element={<Resume />} />       // Resume page
-  <Route path="/docs"      element={<Documentation />} /> // Docs page
-</Routes>
-```
+Nothing is hardcoded in the React component. All data comes from the backend.
 
-#### `src/config.js` — API URL Configuration
-```javascript
-// client/src/config.js
-// Backend URL-ஐ .env-ல இருந்து எடுக்கிறது
+### The Code Path
+
+**client/src/config.js** — reads the backend URL from `.env`
+```js
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-// → "http://localhost:5001" (development)
-// → "https://your-api.onrender.com" (production)
+// In development: "http://localhost:5001"
+// In production:  "https://your-api.onrender.com"
 ```
 
-#### `src/services/` — API Call Functions
-```javascript
-// client/src/services/portfolioService.js
+**client/src/services/portfolioService.js** — makes the actual API call
+```js
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 
-// Backend-ஐ call பண்ணற functions இங்க இருக்கு
 export const getProfile = () =>
     axios.get(`${API_BASE_URL}/api/profile`);
 
-export const getVisitors = () =>
+export const getVisitorCount = () =>
     axios.get(`${API_BASE_URL}/api/visitors`);
 ```
 
-#### `src/pages/Portfolio.js` — Main Page
-```javascript
-// client/src/pages/Portfolio.js
-// User பார்க்கற main page
-useEffect(() => {
-    getProfile().then(res => setProfileData(res.data));
-    // Component load ஆகும்போது automatically API call ஆகும்
-}, []);
+**server/routes/portfolioRoutes.js** — maps the URL to a function
+```js
+router.get('/profile', portfolioController.getProfile);
+router.get('/visitors', portfolioController.getVisitors);
+```
+
+**server/controllers/portfolioController.js** — does the actual work
+```js
+exports.getProfile = async (req, res) => {
+    if (mongoose.connection.readyState === 1) {
+        // MongoDB is online — get data from the database
+        const profile = await Profile.findOne();
+        return res.json({ success: true, data: profile });
+    }
+    // MongoDB is offline — use the local JSON file instead
+    const data = require('../data.json');
+    res.json({ success: true, data });
+};
+```
+
+That is the complete connection. A request travels: **React → Axios → Express Router → Controller → MongoDB or JSON → Response → React**.
+
+---
+
+## 4. How to Install and Run This Project
+
+### What You Need
+
+- **Node.js v18 or higher** — download from [nodejs.org](https://nodejs.org/)
+- **npm** — comes automatically with Node.js
+- **MongoDB Atlas account** — optional. If you do not have one, the project still works using the local `data.json` fallback.
+
+---
+
+### Step 1 — Clone the Repository
+
+```bash
+git clone https://github.com/mdyasar49/mern-portfolio-yasar.git
+cd mern-portfolio-yasar
 ```
 
 ---
 
-## 4. 🛡️ Security — CORS Explained
+### Step 2 — Install and Configure the Backend
 
-**CORS (Cross-Origin Resource Sharing)** — ஒரு website மட்டும் உங்கள் API-ஐ use பண்ணலாம்னு restrict பண்றது.
+Go into the server folder and install its dependencies:
 
-```javascript
-// server/app.js - CORS whitelist
+```bash
+cd server
+npm install
+```
+
+Create a `.env` file in the `server/` folder with these values:
+
+```
+PORT=5001
+MONGO_URI=your_mongodb_atlas_connection_string_here
+CLIENT_URL=http://localhost:3000
+NODE_ENV=development
+```
+
+**What each variable does:**
+
+| Variable | Purpose |
+|:---------|:--------|
+| `PORT` | The port number the Express server listens on |
+| `MONGO_URI` | The connection string for your MongoDB Atlas database |
+| `CLIENT_URL` | The React app's URL — used by CORS to allow requests from it |
+| `NODE_ENV` | Set to `development` locally, `production` when deployed |
+
+> **No MongoDB Atlas account?** Just leave `MONGO_URI` blank. The server will fail to connect, print a warning, and automatically use `server/data.json` for all data. You will not lose any functionality for local development.
+
+---
+
+### Step 3 — Install and Configure the Frontend
+
+Open a new terminal (keep the server folder separate), then:
+
+```bash
+cd client
+npm install
+```
+
+Create a `.env` file in the `client/` folder:
+
+```
+REACT_APP_API_BASE_URL=http://localhost:5001
+```
+
+**Why `REACT_APP_` prefix?**
+
+Create React App (CRA) only exposes environment variables that start with `REACT_APP_` to the browser. This is a security rule — it prevents you from accidentally leaking server secrets into the bundled frontend code.
+
+> **Important:** If you change anything in `.env`, you must **stop and restart** `npm start`. React reads `.env` values only at startup and bakes them into the bundle. Changes while running are ignored.
+
+---
+
+## 5. How to Run the Project (Day to Day)
+
+You must run **two terminals at the same time**. The backend and frontend are separate processes.
+
+### Terminal 1 — Start the Backend Server
+
+```bash
+cd server
+npm run dev
+```
+
+This runs the server with `nodemon`, which automatically restarts it whenever you save a file. You should see:
+
+```
+[Server] Listening on port 5001
+[MongoDB] Connected to Atlas
+```
+
+Or if MongoDB is unavailable:
+
+```
+[Server] Listening on port 5001
+[MongoDB] Offline. Using local data.json fallback.
+```
+
+---
+
+### Terminal 2 — Start the React Frontend
+
+```bash
+cd client
+npm start
+```
+
+React compiles the app and opens it in your browser automatically:
+
+```
+Compiled successfully!
+Local:  http://localhost:3000
+```
+
+Once both are running, open **http://localhost:3000**. The React app will call `http://localhost:5001/api/profile` in the background and load all the portfolio data.
+
+---
+
+## 6. What Each Important File Does
+
+### Backend (`server/`)
+
+| File | What it does |
+|:-----|:-------------|
+| `index.js` | Entry point. Starts the Express server, connects to MongoDB. |
+| `app.js` | Sets up Express: registers middleware (CORS, JSON parsing, logging) and mounts routes. |
+| `routes/portfolioRoutes.js` | Maps API URLs to controller functions. |
+| `controllers/portfolioController.js` | Contains the actual logic: fetch from MongoDB or fall back to `data.json`. |
+| `models/` | Mongoose schemas — defines the structure of documents stored in MongoDB. |
+| `middleware/` | Custom middleware: request logger, CORS handler, error handler. |
+| `config/db.js` | Handles the MongoDB Atlas connection with error handling. |
+| `data.json` | Static copy of portfolio data. Used when MongoDB is offline. |
+| `stats.json` | Tracks visitor count locally when MongoDB is offline. |
+| `.env` | Secret config values (not committed to Git). |
+
+### Frontend (`client/`)
+
+| File | What it does |
+|:-----|:-------------|
+| `src/index.js` | Entry point. Mounts the React app into `public/index.html`. |
+| `src/App.js` | Sets up React Router — maps URLs to page components. |
+| `src/config.js` | Reads the backend API URL from `.env` and exports it. |
+| `src/services/` | Axios functions that call the backend. Used by pages and hooks. |
+| `src/pages/` | Full-page components: Portfolio, Resume, Documentation. |
+| `src/components/` | Reusable UI pieces: Navbar, skill cards, project cards, etc. |
+| `src/theme/` | MUI (Material UI) dark theme configuration. |
+| `.env` | Frontend-specific config (API URL). Not committed to Git. |
+
+---
+
+## 7. The Hybrid Data Strategy (MongoDB + JSON Fallback)
+
+The backend is designed to never crash the portfolio, even if MongoDB goes offline.
+
+```
+Server starts
+    │
+    ▼
+Tries to connect to MongoDB Atlas
+    │
+    ├── SUCCESS → All data requests go to MongoDB
+    │
+    └── FAILED (wrong URI / no internet / Atlas free tier sleeping)
+              │
+              ▼
+         Falls back to server/data.json
+         → All API responses still work
+         → Visitor count is saved to stats.json locally
+         → Portfolio is 100% functional
+```
+
+**Why this matters:** MongoDB Atlas free tier clusters go to sleep after 5 minutes of inactivity. Without a fallback, the portfolio would show a blank page when a recruiter visits. With the fallback, it always works.
+
+---
+
+## 8. CORS — Why It Is Configured and What It Does
+
+CORS (Cross-Origin Resource Sharing) is a browser security rule. If the React app (at `localhost:3000`) tries to call an API at a different origin (`localhost:5001`), the browser blocks it — unless the server explicitly allows it.
+
+I configured CORS in `server/app.js` to only allow requests from known frontend origins:
+
+```js
 const allowedOrigins = [
-    'http://localhost:3000',   // Dev-ல உங்கள் React app
-    process.env.CLIENT_URL     // Production-ல deployed React app
+    'http://localhost:3000',   // Local development
+    process.env.CLIENT_URL     // Production deployed frontend
 ];
 ```
 
-இதனால context:
-- **`http://localhost:3000`** (உங்கள் React) → ✅ Allowed
-- **Direct browser access** (e.g. `http://localhost:5001/api/profile` directly) → ❌ Blocked with 403 error
-- **Another website** trying to call your API → ❌ Blocked
+This means:
+- React app at `localhost:3000` → ✅ Allowed
+- Someone else's website trying to call my API → ❌ Blocked
+- Postman or curl (server-to-server) → ✅ Allowed (no browser CORS restriction)
 
 ---
 
-## 5. 🗄️ Hybrid Data Strategy — MongoDB + JSON Fallback
+## 9. How the Resume PDF Generation Works
+
+The Resume page generates a downloadable PDF entirely inside the browser — no server involved.
 
 ```
-Server Starts
-     │
-     ▼
-Try connecting to MongoDB Atlas
-     │
-     ├── ✅ Connection SUCCESS
-     │         │
-     │         ▼
-     │   mongoose.connection.readyState === 1
-     │   → All reads/writes go to MongoDB
-     │
-     └── ❌ Connection FAILED (wrong URI / no internet / free tier sleeping)
-               │
-               ▼
-         Falls back to server/data.json
-         → Portfolio still works 100%
-         → Visitor count saved to stats.json locally
+1. React fetches profile data from /api/profile
+2. The Resume component renders a hidden, print-optimized HTML template
+3. The user clicks "Download PDF"
+4. html2pdf.js captures the rendered HTML as a canvas image
+5. It converts the canvas to a PDF
+6. The browser triggers a file download as "resume.pdf"
 ```
 
-**ஏன் இந்த approach?**
-- MongoDB Atlas free tier 5 minutes-க்கு ஒரு முறை sleep ஆகிடும்.
-- Production-ல portfolio always online-ஆ இருக்கணும்.
-- Recruiters எந்த நேரத்திலும் பார்க்கணும் → fallback guarantee பண்றது.
+Custom `@media print` CSS ensures the PDF uses A4 dimensions and clean typography. Because it is generated from real data fetched from the API, updating the portfolio updates the resume automatically.
 
 ---
 
-## 6. 🌐 Environment Variables — Why They Matter
-
-### Backend `server/.env`
-```bash
-PORT=5001              # Server எந்த port-ல run ஆகணும்
-MONGO_URI=mongodb+...  # MongoDB Atlas connection string
-CLIENT_URL=http://...  # CORS-ல allow பண்ண வேண்டிய frontend URL
-NODE_ENV=development   # development / production mode
-```
-
-### Frontend `client/.env`
-```bash
-REACT_APP_API_BASE_URL=http://localhost:5001  # Backend-ஐ எங்க தேடணும்
-```
-
-> **`REACT_APP_` prefix ஏன்?**
-> Create React App only reads env variables that START with `REACT_APP_`. இது security feature — server-side .env secrets browser-ல expose ஆகாம இருக்க.
-
-> **⚠️ Important Rule:** `.env` change பண்ணா `npm start` (React) அல்லது `npm run dev` (Node) restart பண்ணணும். React .env values-ஐ **build time-ல** bake பண்றது, runtime-ல இல்லை.
-
----
-
-## 7. 📐 Full Architecture Diagram
-
-```
-                    MERN Portfolio — System Overview
-                    ══════════════════════════════════
-
-    ┌─────────────────────────────────────────────────────────┐
-    │                   CLIENT  (port 3000)                    │
-    │                                                         │
-    │   public/index.html  ←  React injects here             │
-    │                                                         │
-    │   src/                                                  │
-    │     index.js       ← App mount point                   │
-    │     App.js         ← React Router (page routing)       │
-    │     config.js      ← Reads API URL from .env           │
-    │     services/      ← Axios calls to backend            │
-    │     pages/         ← Portfolio, Resume, Documentation  │
-    │     components/    ← Navbar, Cards, Sections, etc.     │
-    │     theme/         ← MUI dark theme configuration      │
-    └───────────────────────────┬─────────────────────────────┘
-                                │
-                    HTTP Request│(Axios)
-                    GET /api/...│
-                                ▼
-    ┌─────────────────────────────────────────────────────────┐
-    │                  SERVER  (port 5001)                    │
-    │                                                         │
-    │   index.js         ← Start server, connect DB          │
-    │   app.js           ← Express setup, CORS, routes       │
-    │   routes/          ← URL → Controller mapping          │
-    │   controllers/     ← Business logic, data fetching     │
-    │   models/          ← Mongoose schemas                  │
-    │   middleware/      ← CORS, logger, error handler       │
-    │                                                         │
-    │           ┌──────────────────────────┐                 │
-    │           │  Data Source (Dynamic)   │                 │
-    │           │  ┌──────────┐ ┌────────┐ │                 │
-    │           │  │ MongoDB  │ │data.   │ │                 │
-    │           │  │  Atlas   │ │json   │ │                 │
-    │           │  │(primary) │ │(fallb.)│ │                 │
-    │           │  └──────────┘ └────────┘ │                 │
-    │           └──────────────────────────┘                 │
-    └─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 8. 📦 Development Workflow — Day-to-Day
+## 10. Development Workflow — How to Add New Content
 
 ### Adding a New Section to the Portfolio
 
-1. **Add data** → Update `server/data.json` (and MongoDB if connected)
-2. **Add API route** (if needed) → `server/routes/portfolioRoutes.js`
+1. **Add the data** → Update `server/data.json` (and your MongoDB document if connected)
+2. **Add a route** (if needed) → `server/routes/portfolioRoutes.js`
 3. **Add controller logic** (if needed) → `server/controllers/portfolioController.js`
-4. **Add API service call** → `client/src/services/portfolioService.js`
+4. **Add the service call** → `client/src/services/portfolioService.js`
 5. **Build the UI component** → `client/src/components/`
 6. **Use it in a page** → `client/src/pages/Portfolio.js`
 
-### Debugging Connection Issues
+### Common Issues and How to Fix Them
 
-| Problem | Check This |
-|:--------|:-----------|
-| `REACT_APP_API_BASE_URL is NOT defined` | Is `client/.env` created? Did you restart `npm start`? |
-| `Network Error` / API not reachable | Is `npm run dev` running in `server/`? Is port 5001 available? |
-| `MongoDB offline, using fallback` | Is `MONGO_URI` in `server/.env` correct? |
-| Page shows no data | Check browser console for errors, check server terminal output |
-
----
-
-## 9. 🚀 Resume Engine — How PDF Generation Works
-
-The **Resume page** (`client/src/pages/Resume.js`) generates a downloadable PDF directly in the browser.
-
-```
-React fetches profile data from /api/profile
-         ↓
-Renders a hidden print-optimized HTML template
-         ↓
-html2pdf.js captures the rendered HTML
-         ↓
-Converts it to a PDF using canvas rendering
-         ↓
-Triggers browser download as "resume.pdf"
-```
-
-**No server involvement** — 100% client-side PDF generation.
-Custom `@media print` CSS ensures A4 layout, correct fonts, and ATS-friendly structure.
+| Problem | What to Check |
+|:--------|:--------------|
+| API call fails with "Network Error" | Is the backend (`npm run dev`) running in the `server/` folder? Is something else using port 5001? |
+| React shows no data | Open browser DevTools (F12) → Console tab. Check for errors. |
+| `REACT_APP_API_BASE_URL` is undefined | Is `client/.env` created? Did you restart `npm start` after creating it? |
+| MongoDB says offline | Is `MONGO_URI` in `server/.env` correct? The portfolio will still work via fallback. |
+| CORS error in browser | Is `CLIENT_URL` in `server/.env` set to the correct frontend URL? |
 
 ---
 
-## 10. 📈 What I Plan to Add Next
+## 11. What I Plan to Add Next
 
-இந்த project ongoing-ஆ improve பண்றேன். நான் personally add பண்ண plan பண்றவை:
+These are features I plan to build myself as I continue improving this project:
 
-| Feature | Status | என்ன பண்ண போறேன் |
-|:--------|:-------|:------------------|
-| Admin Panel | 🔮 Planned | `data.json` edit பண்றதுக்கு பதிலா UI வழியா portfolio content update பண்ண |
-| Analytics Dashboard | 🔮 Planned | Visitor count-ஐ chart-ஆ visualize பண்ண |
-| Dark/Light Toggle | 🔮 Planned | User-ஆல theme switch பண்ண option |
-| Contact Form | 🔮 Planned | Portfolio-ல இருந்தே மக்கள் directly message அனுப்ப |
+| Feature | Status | Plan |
+|:--------|:-------|:-----|
+| Admin Panel | Planned | A protected UI to edit portfolio content without touching `data.json` directly |
+| Analytics Dashboard | Planned | Visualize visitor count over time with a chart |
+| Dark / Light Toggle | Planned | Let the user switch between dark and light mode |
+| Contact Form | Planned | Allow visitors to send me a message directly from the portfolio |
 
 ---
 
-*இந்த project-ஐ நான் — **A. Mohamed Yasar** — personally build பண்ணினேன், MERN Stack கத்துக்கணும்னு ஆசைப்பட்டு.*
-*GitHub: [@mdyasar49](https://github.com/mdyasar49)*
+*This project was built by me — **A. Mohamed Yasar** — to learn full-stack development with the MERN stack and to understand how real-world projects are structured.*
+
+**GitHub:** [@mdyasar49](https://github.com/mdyasar49)
