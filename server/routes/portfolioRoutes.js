@@ -1,9 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const portfolioController = require('../controllers/portfolioController');
+const contactController = require('../controllers/contactController');
 
 // [GET /api/profile]
 router.get('/profile', portfolioController.getProfile);
+
+// [POST /api/contact] - Contact Dispatch Protocol
+router.post('/contact', contactController.submitContactForm);
 
 // [GET /api/visitors]
 router.get('/visitors', portfolioController.getVisitors);

@@ -20,6 +20,7 @@ const Header = () => {
     { name: 'About', path: '/#about', type: 'anchor' },
     { name: 'Skills', path: '/#skills', type: 'anchor' },
     { name: 'Projects', path: '/#projects', type: 'anchor' },
+    { name: 'Contact', path: '/#contact', type: 'anchor' },
     { name: 'Resume', path: '/resume', type: 'link' },
     { name: 'Documentation', path: '/architecture', type: 'link' },
   ];
