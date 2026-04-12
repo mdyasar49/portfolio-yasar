@@ -15,7 +15,7 @@ projects:
       rootDir: client
       envVars:
       - key: REACT_APP_API_BASE_URL
-        value: https://mern-portfolio-yasar-1.onrender.com/api
+        value: https://mern-portfolio-yasar.onrender.com/api
     - type: web
       name: mern-portfolio-yasar
       runtime: node
@@ -24,6 +24,8 @@ projects:
       envVars:
       - key: MONGO_URI
         sync: false
+      - key: PORT
+        value: 10000
       - key: NODE_ENV
         value: production
       - key: CLIENT_URL
