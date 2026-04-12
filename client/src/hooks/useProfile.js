@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getProfile } from '../services/api';
+import localData from '../data.json'; // Bundled fallback for [Instant_Load]
 
 /**
  * Custom Hook: useProfile
@@ -7,48 +8,54 @@ import { getProfile } from '../services/api';
  * Returns: profile, loading, error, errorType, retry
  */
 const useProfile = () => {
-    const [profile, setProfile]     = useState(null);
-    const [loading, setLoading]     = useState(true);
+    // 1. Initialize with local bundled data for [INSTANT_ZERO_WAIT_LOAD]
+    const [profile, setProfile]     = useState(localData);
+    const [loading, setLoading]     = useState(false); // No primary loader needed for zero-wait
     const [error, setError]         = useState(null);
-    const [errorType, setErrorType] = useState(null); // 'network' | 'server' | 'notfound' | 'unknown'
+    const [errorType, setErrorType] = useState(null);
+    const [isRealTime, setIsRealTime] = useState(false); // Tracks if data is from server
 
     const fetchProfileData = useCallback(async () => {
-        setLoading(true);
+        // We don't set loading=true here to prevent flickering; we use localData initially
         setError(null);
-        setErrorType(null);
 
         try {
-            const data = await getProfile();
-            if (data) setProfile(data);
+            // Add a timeout to the fetch so we don't wait forever on Render sleep
+            const fetchPromise = getProfile();
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('TIMEOUT')), 5000)
+            );
+
+            const data = await Promise.race([fetchPromise, timeoutPromise]);
+            
+            if (data) {
+                setProfile(data);
+                setIsRealTime(true);
+            }
         } catch (err) {
-            console.group('🔍 [API Diagnostic Report]');
-            console.error('API Error Detected:', err.message);
-            console.log('Target Base URL:', process.env.REACT_APP_API_BASE_URL);
-            console.log('Error Code:', err.code);
-            console.log('Error Response:', err.response?.data);
-            console.groupEnd();
-
-            setError(err);
-
-            if (!navigator.onLine || err.message === 'Network Error' || err.code === 'ERR_NETWORK') {
-                setErrorType('network');
-            } else if (err.response?.status === 404) {
-                setErrorType('notfound');
-            } else if (err.response?.status >= 500) {
-                setErrorType('server');
-            } else {
-                setErrorType('unknown');
+            // If it's just a timeout or network error, we stay silent because we have localData
+            if (err.message !== 'TIMEOUT') {
+                console.group('🔍 [API Background Sync]');
+                console.warn('Backend still waking up or unreachable. Using bundled fallback.');
+                console.log('Error:', err.message);
+                console.groupEnd();
+            }
+            
+            // Only show the error screen if we have NO data at all (shouldn't happen with localData)
+            if (!profile) {
+                setError(err);
+                setErrorType(err.message === 'TIMEOUT' ? 'server' : 'network');
             }
         } finally {
             setLoading(false);
         }
-    }, []); // getProfile is a stable module-level import — no deps needed
+    }, [profile]);
 
     useEffect(() => {
         fetchProfileData();
-    }, [fetchProfileData]); // fetchProfileData is stable (useCallback with [])
+    }, []); // Run once on mount
 
-    return { profile, loading, error, errorType, retry: fetchProfileData };
+    return { profile, loading, error, errorType, retry: fetchProfileData, isRealTime };
 };
 
 export default useProfile;
