@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, Button, Stack, Container, Grid, Fade, CircularProgress, Alert, Snackbar } from '@mui/material';
-import { Send, Mail, User, MessageSquare, Terminal, ShieldCheck } from 'lucide-react';
+import { Box, Typography, TextField, Button, Stack, Container, Grid, CircularProgress, Alert, Snackbar } from '@mui/material';
+import { Send, Mail, Terminal, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { submitContact } from '../services/api';
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, Fade } from '@mui/material';
-import { Activity, Shield, Cpu, Zap } from 'lucide-react';
+import { Shield, Cpu, Zap } from 'lucide-react';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
 
 const GlobalHUD = () => {

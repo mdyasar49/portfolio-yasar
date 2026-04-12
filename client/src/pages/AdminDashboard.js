@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography, Container, Grid, Paper, Stack, Button, IconButton } from '@mui/material';
+import { Box, Typography, Container, Grid, Paper, Stack, Button } from '@mui/material';
 import { LayoutDashboard, Users, FolderKanban, Cpu, LogOut, Settings, ExternalLink } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import { useNavigate } from 'react-router-dom';
