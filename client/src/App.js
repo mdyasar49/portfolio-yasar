@@ -4,73 +4,82 @@
  * of the application and high-quality Material UI components for the design.
  */
 import React, { useEffect } from 'react';
-import { ThemeProvider, CssBaseline, Box, CircularProgress, Typography, Button } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box, CircularProgress, keyframes } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import theme from './theme/index';
 import useProfile from './hooks/useProfile';
 import Header from './components/Header';
 import Portfolio from './pages/Portfolio';
 import Resume from './pages/Resume';
-
 import Documentation from './pages/Documentation';
+import NetworkErrorScreen from './components/NetworkErrorScreen';
 
-// Helper component to reset scroll position on route change
+// ─── Animations ───────────────────────────────────────────
+const spin = keyframes`
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+// ─── Scroll Helpers ────────────────────────────────────────
 const ScrollToTop = () => {
   const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 };
 
-// Helper component to handle scrolling to hash on navigation
 const ScrollToHash = () => {
   const { hash, pathname } = useLocation();
-
   useEffect(() => {
     if (hash) {
-      const id = hash.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      }
+      const element = document.getElementById(hash.replace('#', ''));
+      if (element) setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 100);
     }
   }, [hash, pathname]);
-
   return null;
 };
 
+// ─── App ──────────────────────────────────────────────────
 const App = () => {
-  const { profile, loading, error } = useProfile();
+  const { profile, loading, error, errorType, retry } = useProfile();
 
+  // ── Loading state ──
   if (loading) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default' }}>
-          <CircularProgress color="primary" />
+        <Box sx={{
+          height: '100vh',
+          bgcolor: '#010409',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 3,
+        }}>
+          {/* Spinning ring loader */}
+          <Box sx={{
+            width: 56, height: 56,
+            border: '3px solid rgba(51, 204, 255, 0.15)',
+            borderTop: '3px solid #33ccff',
+            borderRadius: '50%',
+            animation: `${spin} 0.9s linear infinite`,
+          }} />
         </Box>
       </ThemeProvider>
     );
   }
 
+  // ── Error / No data state ──
   if (error || !profile) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: 'background.default', textAlign: 'center', p: 4 }}>
-          <Typography variant="h3" color="error" gutterBottom> Connection Error</Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            {error ? 'The backend server could not be reached.' : 'The backend server is running but data has not been seeded.'}
-          </Typography>
-          <Button variant="contained" onClick={() => window.location.reload()}>Retry Connection</Button>
-        </Box>
+        <NetworkErrorScreen errorType={errorType || 'unknown'} onRetry={retry} />
       </ThemeProvider>
     );
   }
 
+  // ── Main app ──
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -80,8 +89,8 @@ const App = () => {
         <Header />
         <Box sx={{ pt: 10 }}>
           <Routes>
-            <Route path="/" element={<Portfolio profile={profile} loading={loading} />} />
-            <Route path="/resume" element={<Resume profile={profile} />} />
+            <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
+            <Route path="/resume"       element={<Resume profile={profile} />} />
             <Route path="/architecture" element={<Documentation profile={profile} />} />
           </Routes>
         </Box>
