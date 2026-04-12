@@ -26,7 +26,17 @@ export const getVisitors = async () => {
         return response.data;
     } catch (error) {
         console.error('SERVICE_ERROR_VISTORS:', error);
-        return { count: 0 };
+        return { success: false, count: 0 };
+    }
+};
+
+export const getHealth = async () => {
+    try {
+        const response = await api.get('/health');
+        return response.data;
+    } catch (error) {
+        console.error('SERVICE_ERROR_HEALTH:', error);
+        return { success: false, status: 'Offline' };
     }
 };
 

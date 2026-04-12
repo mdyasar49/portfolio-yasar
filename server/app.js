@@ -16,15 +16,26 @@ app.use(logger);
 app.use(cors());
 app.use(express.json());
 
-// Routes (Express.js)
+// Routes (Express.js) - Consolidating all API routes under /api prefix
 app.use('/api', portfolioRoutes);
+
+// JSON 404 Handler for API
+app.use('/api', (req, res) => {
+    res.status(404).json({ success: false, message: 'API Endpoint not found' });
+});
 
 // Error Handler
 app.use(errorHandler);
 
 // Health Check
 app.get('/', (req, res) => {
-    res.send('[Express.js API Home] - Health Check: Online');
+    const isProduction = process.env.NODE_ENV === 'production';
+    res.status(200).json({
+        status: 'Online',
+        message: '[Express.js API] - Systems Operational',
+        timestamp: new Date().toISOString(),
+        ...(isProduction ? {} : { version: '1.0.0', mode: 'Development' })
+    });
 });
 
 module.exports = app;
