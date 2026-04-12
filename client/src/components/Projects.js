@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
 import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
-import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity } from 'lucide-react';
+import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
