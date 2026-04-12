@@ -189,12 +189,14 @@ const Resume = () => {
         <Fade in={isSelectorOpen}>
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: { xs: '90%', sm: 400 }, 
+            width: { xs: '95%', sm: 400 }, 
             bgcolor: 'rgba(13, 17, 23, 0.95)', 
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(51, 204, 255, 0.3)',
             boxShadow: '0 0 100px rgba(0,0,0,1), 0 0 30px rgba(51, 204, 255, 0.1)',
-            borderRadius: 4, p: 4, outline: 'none'
+            borderRadius: 4, 
+            p: { xs: 3, sm: 4 }, 
+            outline: 'none'
           }}>
             <Stack spacing={4}>
               <Box>

@@ -136,7 +136,15 @@ const Contact = () => {
                 </Grid>
             </Grid>
 
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+            <Snackbar 
+                open={open} 
+                autoHideDuration={6000} 
+                onClose={handleClose} 
+                anchorOrigin={{ 
+                    vertical: { xs: 'top', sm: 'bottom' }, 
+                    horizontal: { xs: 'center', sm: 'right' } 
+                }}
+            >
                 <Alert onClose={handleClose} severity={status.type} sx={{ width: '100%', bgcolor: '#02040a', color: 'white', border: `1px solid ${status.type === 'success' ? '#00ffcc' : '#ff3366'}`, borderRadius: 2 }}>
                     <Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 900 }}>{status.message}</Typography>
                 </Alert>

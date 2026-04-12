@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
+import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, useMediaQuery, useTheme } from '@mui/material';
 import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
@@ -66,6 +66,8 @@ const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
 
 const Projects = memo(({ projects }) => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   if (!projects || !Array.isArray(projects)) return null;
 
@@ -248,14 +250,15 @@ const Projects = memo(({ projects }) => {
         onClose={handleClose} 
         maxWidth="lg" 
         fullWidth
+        fullScreen={fullScreen}
         PaperProps={{ 
           sx: { 
             bgcolor: '#010409', 
             backgroundImage: 'none',
-            border: '1px solid rgba(51, 204, 255, 0.1)',
-            borderRadius: 6,
+            border: fullScreen ? 'none' : '1px solid rgba(51, 204, 255, 0.1)',
+            borderRadius: fullScreen ? 0 : 6,
             overflow: 'hidden',
-            p: { xs: 2, md: 4 }
+            p: { xs: 1, sm: 2, md: 4 }
           } 
         }}
       >
