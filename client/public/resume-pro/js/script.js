@@ -5,7 +5,7 @@
 
 const CONFIG = {
     // Dynamic API discovery
-    api: window.location.hostname === 'localhost' ? 'http://localhost:5001/api/profile' : 'https://mern-portfolio-yasar-1.onrender.com/api/profile',
+    api: window.location.hostname === 'localhost' ? 'http://localhost:5001/api/profile' : 'https://mern-portfolio-yasar.onrender.com/api/profile',
     templates: {
         header: './templates/header.html',
         summary: './templates/summary.html',
