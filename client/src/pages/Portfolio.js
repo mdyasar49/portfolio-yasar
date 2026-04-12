@@ -55,8 +55,8 @@ const Portfolio = ({ profile, loading }) => {
         {profile?.experience && <Experience experience={profile.experience} />}
         {profile?.projects && <Projects projects={profile.projects} />}
         {profile?.education && <Education education={profile.education} />}
-        <ArchitectureModule />
         <ResumeModule />
+        <ArchitectureModule />
         <Contact />
       </Container>
       <Footer socials={profile.socials} name={profile.name} />
