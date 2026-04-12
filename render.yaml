@@ -13,6 +13,9 @@ projects:
       staticPublishPath: build
       autoDeployTrigger: commit
       rootDir: client
+      envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: https://mern-portfolio-yasar.onrender.com/api
     - type: web
       name: mern-portfolio-yasar
       runtime: node
