@@ -10,7 +10,7 @@ import {
   Fade
 } from '@mui/material';
 import { Globe, Check, ChevronDown, Languages } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export const languages = [
   { code: 'en', name: 'English', flag: '🇺🇸', label: 'Technical' },

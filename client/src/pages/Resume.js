@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, Divider, Modal, Fade } from '@mui/material';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Loader2, Send } from 'lucide-react';
+import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 
@@ -10,7 +10,6 @@ const Resume = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDispatching, setIsDispatching] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
-  const [isPreparing, setIsPreparing] = useState(false);
 
   // 3D Parallax Logic
   const x = useMotionValue(0);

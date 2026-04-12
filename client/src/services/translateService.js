@@ -23,7 +23,7 @@ export const translateText = async (text, targetLang) => {
         if (!line.trim()) return line;
 
         const headerMatch = line.match(/^(#+\s+)(.*)$/);
-        const listMatch = line.match(/^(\s*[-\*]\s+)(.*)$/);
+        const listMatch = line.match(/^(\s*[-*]\s+)(.*)$/);
         const quoteMatch = line.match(/^(>\s+)(.*)$/);
 
         let prefix = '';
