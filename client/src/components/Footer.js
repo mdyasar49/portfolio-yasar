@@ -1,6 +1,7 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Container, IconButton, Stack, Divider, Tooltip } from '@mui/material';
 import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu, ShieldCheck, Terminal, Hash } from 'lucide-react';
+import { Link as RouterLink } from 'react-router-dom';
 import { getVisitors } from '../services/api';
 
 const Footer = ({ socials, name }) => {
@@ -154,7 +155,17 @@ const Footer = ({ socials, name }) => {
                   <Cpu size={12} color="#33ccff" />
                   <Typography sx={{ color: '#33ccff', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>ENG_MERN_V4</Typography>
                </Stack>
-               <Typography sx={{ color: '#334155', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>MADE_IN_TAMIL_NADU</Typography>
+               <Typography sx={{ color: '#64748b', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>MADE_IN_TAMIL_NADU</Typography>
+               <Tooltip title="SYSTEM_ACCESS">
+                  <IconButton 
+                    component={RouterLink} 
+                    to="/admin/login"
+                    size="small"
+                    sx={{ color: '#334155', '&:hover': { color: '#ff3366', bgcolor: 'rgba(255, 51, 102, 0.05)' } }}
+                  >
+                    <Terminal size={10} />
+                  </IconButton>
+               </Tooltip>
             </Stack>
           </Box>
         </Box>

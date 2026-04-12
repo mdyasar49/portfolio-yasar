@@ -14,6 +14,9 @@ import Resume from './pages/Resume';
 import Documentation from './pages/Documentation';
 import NetworkErrorScreen from './components/NetworkErrorScreen';
 import GlobalHUD from './components/GlobalHUD';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // ─── Animations ───────────────────────────────────────────
 const spin = keyframes`
@@ -94,6 +97,14 @@ const App = () => {
             <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
             <Route path="/resume"       element={<Resume profile={profile} />} />
             <Route path="/architecture" element={<Documentation profile={profile} />} />
+            
+            {/* Administrative Infrastructure */}
+            <Route path="/admin/login"  element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
           </Routes>
         </Box>
       </Router>
