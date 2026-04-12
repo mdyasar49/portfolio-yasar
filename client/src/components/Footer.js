@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Container, IconButton, Stack, Divider } from '@mui/material';
-import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu } from 'lucide-react';
+import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu, Activity } from 'lucide-react';
+
+import { getVisitors } from '../services/api';
 
 const Footer = ({ socials, name }) => {
+  const [visitorCount, setVisitorCount] = useState(0);
+
+  useEffect(() => {
+    const fetchVisitorsData = async () => {
+        const data = await getVisitors();
+        setVisitorCount(data.count);
+    };
+    fetchVisitorsData();
+  }, []);
+
   if (!socials) return null;
   return (
     <Box 
       component="footer" 
       sx={{ 
-        bgcolor: '#030712',
+        bgcolor: '#010409',
         borderTop: '1px solid rgba(255,255,255,0.05)', 
         pt: 10,
         pb: 6,
@@ -16,21 +28,7 @@ const Footer = ({ socials, name }) => {
         overflow: 'hidden'
       }}
     >
-      {/* Decorative Blur Background */}
-      <Box sx={{
-        position: 'absolute',
-        bottom: -50,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: '600px',
-        height: '200px',
-        bgcolor: 'primary.main',
-        filter: 'blur(120px)',
-        opacity: 0.1,
-        borderRadius: '50%',
-        zIndex: 0
-      }} />
-
+      {/* ... existing decorative elements ... */}
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Typography 
@@ -57,7 +55,15 @@ const Footer = ({ socials, name }) => {
             "Building high-performance, visually stunning web applications with the latest modern technologies."
           </Typography>
 
-          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 6 }}>
+          {/* VISITOR COUNTER WIDGET */}
+          <Box sx={{ mb: 4, p: 1.5, px: 3, borderRadius: 2, border: '1px solid rgba(51, 204, 255, 0.1)', bgcolor: 'rgba(51, 204, 255, 0.03)', display: 'flex', alignItems: 'center', gap: 2 }}>
+             <Activity size={16} color="#33ccff" style={{ animation: 'pulse 2s infinite' }} />
+             <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1rem', letterSpacing: 2 }}>
+               TOTAL_VISTORS: {visitorCount || 'SYNCING...'}
+             </Typography>
+          </Box>
+
+          <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 6, flexWrap: 'wrap', gap: 1 }}>
             {[
               { icon: <Linkedin size={20} />, link: socials.linkedin, label: 'LinkedIn' },
               { icon: <Github size={20} />, link: socials.github, label: 'GitHub' },
@@ -76,11 +82,11 @@ const Footer = ({ socials, name }) => {
                   bgcolor: 'rgba(255,255,255,0.03)',
                   border: '1px solid rgba(255,255,255,0.08)',
                   '&:hover': { 
-                    color: 'primary.light',
+                    color: '#33ccff',
                     transform: 'translateY(-5px)',
-                    bgcolor: 'rgba(99, 102, 241, 0.1)',
-                    borderColor: 'primary.main',
-                    boxShadow: '0 5px 20px rgba(99, 102, 241, 0.3)'
+                    bgcolor: 'rgba(51, 204, 255, 0.1)',
+                    borderColor: '#33ccff',
+                    boxShadow: '0 5px 20px rgba(51, 204, 255, 0.3)'
                   }
                 }}
               >
@@ -100,11 +106,11 @@ const Footer = ({ socials, name }) => {
             gap: 2
           }}>
             <Typography variant="body2" color="text.secondary" sx={{ opacity: 0.6 }}>
-              &copy; {new Date().getFullYear()} {name}. All rights reserved.
+              &copy; {new Date().getFullYear()} {name}. ALL_ARCHIVES_SECURED.
             </Typography>
 
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Cpu size={14} color="#6366f1" />
+              <Cpu size={14} color="#33ccff" />
               <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600, letterSpacing: 0.5 }}>
                 POWERED BY FULL STACK EXPERTISE
               </Typography>
@@ -112,6 +118,12 @@ const Footer = ({ socials, name }) => {
           </Box>
         </Box>
       </Container>
+
+      <style>
+        {`
+          @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+        `}
+      </style>
     </Box>
   );
 };

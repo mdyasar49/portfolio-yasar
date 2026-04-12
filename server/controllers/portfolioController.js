@@ -17,6 +17,7 @@ const getLocalData = () => {
 };
 
 const mongoose = require('mongoose');
+const Stats = require('../models/Stats');
 
 /**
  * @desc    Get complete portfolio profile
@@ -26,18 +27,16 @@ const mongoose = require('mongoose');
 exports.getProfile = asyncHandler(async (req, res, next) => {
     let profile = null;
 
-    // 1. Try to fetch from MongoDB first ONLY if connected
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
+    // 1. Force prioritize Local JSON for immediate development updates
+    profile = getLocalData();
+
+    // 2. If JSON fails or is missing, try to fetch from MongoDB
+    if (!profile && mongoose.connection && mongoose.connection.readyState === 1) {
         try {
             profile = await Profile.findOne();
         } catch (error) {
             console.error("MongoDB Query Error:", error.message);
         }
-    }
-    
-    if (!profile) {
-        // 2. Fallback to Local JSON
-        profile = getLocalData();
     }
 
     if (!profile) {
@@ -45,4 +44,30 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
     }
 
     res.status(200).json(profile);
+});
+
+/**
+ * @desc    Increment and get site visitors
+ * @route   GET /api/visitors
+ * @access  Public
+ */
+exports.getVisitors = asyncHandler(async (req, res, next) => {
+    try {
+        let stats = await Stats.findOne();
+        
+        if (!stats) {
+            stats = new Stats({ visitors: 100 }); // Starting seed
+            await stats.save();
+        }
+
+        // Increment count
+        stats.visitors += 1;
+        stats.lastUpdated = Date.now();
+        await stats.save();
+
+        res.status(200).json({ success: true, count: stats.visitors });
+    } catch (error) {
+        console.error("STATS_ERROR:", error.message);
+        res.status(500).json({ success: false, count: 1248 }); // Fallback
+    }
 });

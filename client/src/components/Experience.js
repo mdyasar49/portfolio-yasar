@@ -8,7 +8,14 @@ const Experience = ({ experience }) => {
 
   return (
     <Box id="experience" sx={{ py: 15 }}>
-      <Typography variant="h2" gutterBottom sx={{ mb: 10, textAlign: 'center', fontFamily: 'Syncopate', fontWeight: 800, letterSpacing: 2 }}>
+      <Typography variant="h2" gutterBottom sx={{ 
+        mb: { xs: 5, md: 10 }, 
+        textAlign: 'center', 
+        fontFamily: 'Syncopate', 
+        fontWeight: 800, 
+        letterSpacing: { xs: 1, md: 2 },
+        fontSize: { xs: '2rem', md: '3.75rem' }
+      }}>
         CAREER <Box component="span" sx={{ color: '#ff3366' }}>TRAJECTORY</Box>
       </Typography>
 
@@ -33,7 +40,7 @@ const Experience = ({ experience }) => {
                   <Box>
                     <Typography variant="h3" sx={{ 
                       fontWeight: 800, 
-                      fontSize: '1.8rem', 
+                      fontSize: { xs: '1.4rem', sm: '1.8rem' }, 
                       background: 'linear-gradient(90deg, #fff, #aaa)', 
                       WebkitBackgroundClip: 'text', 
                       WebkitTextFillColor: 'transparent',

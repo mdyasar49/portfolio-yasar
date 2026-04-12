@@ -5,7 +5,7 @@
  */
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, List, ListItem, ListItemText, useScrollTrigger, Container } from '@mui/material';
-import { Menu as MenuIcon, X, ServerCog } from 'lucide-react';
+import { Menu as MenuIcon, X } from 'lucide-react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
 const Header = () => {
@@ -92,7 +92,7 @@ const Header = () => {
           top: trigger ? 20 : 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: trigger ? 'auto' : '100%',
+          width: trigger ? { xs: '95%', sm: 'auto' } : '100%',
           maxWidth: trigger ? '900px' : '100%',
           bgcolor: trigger ? 'rgba(10, 10, 15, 0.7)' : 'transparent',
           backdropFilter: trigger ? 'blur(24px) saturate(150%)' : 'none',
@@ -125,6 +125,7 @@ const Header = () => {
                     fontWeight: 900,
                     fontFamily: 'Syncopate', 
                     letterSpacing: -1,
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' },
                     background: 'linear-gradient(270deg, #ff3366, #ff9933)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',

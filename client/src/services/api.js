@@ -20,4 +20,14 @@ export const getProfile = async () => {
   }
 };
 
+export const getVisitors = async () => {
+    try {
+        const response = await api.get('/visitors');
+        return response.data;
+    } catch (error) {
+        console.error('SERVICE_ERROR_VISTORS:', error);
+        return { count: 0 };
+    }
+};
+
 export default api;

@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Stack, Chip } from '@mui/material';
+import { Box, Typography, Button, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 import { ChevronRight, Sparkles } from 'lucide-react';
@@ -71,7 +71,7 @@ const Hero = ({ profile }) => {
             boxShadow: '0 0 40px rgba(99, 102, 241, 0.2), inset 0 1px 0 rgba(255,255,255,0.2)'
           }}>
             <Sparkles size={16} color="#ff9933" />
-            <Typography sx={{ color: '#fff', fontWeight: 600, fontSize: '0.95rem', letterSpacing: 2, textTransform: 'uppercase' }}>
+            <Typography sx={{ color: '#fff', fontWeight: 600, fontSize: { xs: '0.75rem', sm: '0.95rem' }, letterSpacing: 2, textTransform: 'uppercase' }}>
               Available for Immediate Joining
             </Typography>
           </Box>
@@ -95,8 +95,8 @@ const Hero = ({ profile }) => {
             opacity: 0.9, 
             fontWeight: 800, 
             mb: 4,
-            fontSize: { xs: '1.5rem', md: '2.5rem' },
-            letterSpacing: 2,
+            fontSize: { xs: '1.2rem', sm: '1.5rem', md: '2.5rem' },
+            letterSpacing: { xs: 1, sm: 2 },
             textTransform: 'uppercase'
           }}>
             The Future of <span style={{ color: '#ff3366' }}>Full Stack</span> Engineering
@@ -110,9 +110,10 @@ const Hero = ({ profile }) => {
         >
           <Typography variant="body1" sx={{ 
             color: 'rgba(255,255,255,0.7)', 
-            fontSize: '1.25rem', 
+            fontSize: { xs: '1rem', md: '1.25rem' }, 
             maxWidth: '800px', 
             mx: 'auto', 
+            px: { xs: 2, md: 0 },
             lineHeight: 1.8,
             fontWeight: 300
           }}>

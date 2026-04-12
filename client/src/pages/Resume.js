@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import React from 'react';
+import { Box, Button, IconButton, Tooltip, Stack } from '@mui/material';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Download, Printer, ArrowLeft, FileText } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 const Resume = () => {
+  const navigate = useNavigate();
+
   // 3D Parallax Logic
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 30 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -31,62 +35,105 @@ const Resume = () => {
     y.set(0);
   };
 
+  const handlePrint = () => {
+    try {
+      const frame = document.getElementById('resume-frame');
+      if (frame) {
+        frame.contentWindow.focus();
+        frame.contentWindow.print();
+      }
+    } catch (e) {
+      window.print();
+    }
+  };
+
+  const handleDownload = () => {
+    const frame = document.getElementById('resume-frame');
+    if (frame && frame.contentWindow.downloadAsPDF) {
+      frame.contentWindow.downloadAsPDF();
+    }
+  };
+
   return (
     <Box 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       sx={{ 
         minHeight: '100vh', 
-        backgroundColor: '#020617',
+        backgroundColor: '#030712',
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        perspective: '1500px',
-        p: { xs: 2, sm: 4, md: 6 }
+        perspective: '2000px',
+        pt: { xs: 12, md: 6 },
+        pb: 4,
+        px: { xs: 2, md: 4 }
       }}
     >
       <SEO title="Professional Resume" description="High-end professional resume of A. Mohamed Yasar" />
+      
+      {/* Background Ambience */}
       <Box sx={{
-        position: 'fixed',
-        top: '-10%',
-        left: '-10%',
-        width: '120vw',
-        height: '120vh',
+        position: 'absolute',
+        top: 0, left: 0, right: 0, bottom: 0,
         zIndex: 0,
-        pointerEvents: 'none'
-      }}>
-        <Box sx={{
-          position: 'absolute',
-          top: '20%',
-          right: '15%',
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%)',
-          filter: 'blur(100px)',
-          animation: 'float 20s infinite alternate'
-        }} />
-        <Box sx={{
-          position: 'absolute',
-          bottom: '20%',
-          left: '10%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(236, 72, 153, 0.08) 0%, transparent 70%)',
-          filter: 'blur(80px)',
-          animation: 'float 15s infinite alternate-reverse'
-        }} />
-        <Box sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '100vw',
-          height: '100vh',
-          background: 'radial-gradient(circle at center, rgba(15, 23, 42, 0.9) 0%, transparent 100%)',
-        }} />
-      </Box>
+        pointerEvents: 'none',
+        background: 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 80%)'
+      }} />
+
+      {/* Action Toolbar */}
+      <Stack 
+        direction="row" 
+        spacing={2} 
+        sx={{ 
+          position: 'fixed', 
+          top: { xs: 80, md: 25 }, 
+          zIndex: 100, 
+          background: 'rgba(255,255,255,0.03)',
+          backdropFilter: 'blur(15px)',
+          p: 1.2,
+          px: 2,
+          borderRadius: 4,
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
+        }}
+      >
+        <Tooltip title="Exit Preview">
+          <IconButton onClick={() => navigate(-1)} sx={{ color: 'white', '&:hover': { bgcolor: 'rgba(255,255,255,0.05)' } }}>
+            <ArrowLeft size={20} />
+          </IconButton>
+        </Tooltip>
+        
+        <Box sx={{ width: '1px', bgcolor: 'rgba(255,255,255,0.1)', my: 1 }} />
+
+        <Tooltip title="Save as PDF">
+          <Button 
+            variant="contained" 
+            startIcon={<Download size={18} />}
+            onClick={handleDownload}
+            sx={{ 
+              bgcolor: '#6366f1', 
+              fontWeight: 800,
+              px: { xs: 3, md: 4 },
+              borderRadius: 3,
+              textTransform: 'uppercase',
+              letterSpacing: 1,
+              '&:hover': { bgcolor: '#4f46e5', transform: 'translateY(-2px)' }
+            }}
+          >
+            Download PDF
+          </Button>
+        </Tooltip>
+
+        <Tooltip title="Print Document">
+          <IconButton onClick={handlePrint} sx={{ color: '#aaa', '&:hover': { color: 'white', bgcolor: 'rgba(255,255,255,0.05)' } }}>
+            <Printer size={20} />
+          </IconButton>
+        </Tooltip>
+      </Stack>
 
       {/* 3D Tilted Resume Frame */}
       <motion.div
@@ -97,48 +144,53 @@ const Resume = () => {
           transformStyle: "preserve-3d",
           width: '100%',
           display: 'flex',
-          justifyContent: 'center'
+          flexDirection: 'column',
+          alignItems: 'center'
         }}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1, ease: "easeOut" }}
       >
         <Box sx={{ 
           width: { xs: '95vw', sm: '85vw', md: '210mm' }, 
-          height: { xs: '80vh', sm: '85vh', md: '297mm' }, 
+          height: { xs: '85vh', sm: '90vh', md: '297mm' }, 
           backgroundColor: 'white',
-          borderRadius: 2,
+          borderRadius: 1,
           position: 'relative',
-          boxShadow: '0 50px 100px rgba(0,0,0,0.8), 0 0 50px rgba(99, 102, 241, 0.15)',
+          boxShadow: '0 60px 120px rgba(0,0,0,0.9), 0 0 80px rgba(99, 102, 241, 0.1)',
           overflow: 'hidden',
-          // Holographic Border Glow
-          '&::after': {
-            content: '""',
-            position: 'absolute',
-            inset: -2,
-            background: 'linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.2), transparent, rgba(236, 72, 153, 0.2), transparent)',
-            borderRadius: 'inherit',
-            zIndex: -1,
-            opacity: 0.5
-          }
+          border: '1px solid rgba(255,255,255,0.1)'
         }}>
+          {/* Subtle Document Overlay */}
+          <Box sx={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 5,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%)',
+          }} />
+
           <iframe 
-             src="/resume-design.html" 
-             title="Luxury Professional Resume"
+             id="resume-frame"
+             src="/resume-pro/index.html" 
+             title="Professional ATS Resume"
              width="100%"
              height="100%"
              style={{ border: 'none' }}
           />
         </Box>
+        
+        {/* Document Label (Virtual Shadow Effect) */}
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 4, opacity: 0.5 }}>
+          <FileText size={16} color="white" />
+          <Box sx={{ color: 'white', fontSize: '0.8rem', fontWeight: 600, letterSpacing: 1.5 }}>
+            A_MOHAMED_YASAR_RESUME.PDF
+          </Box>
+        </Stack>
       </motion.div>
 
       <style>
         {`
-          @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 40px); }
-          }
-          /* Custom Scrollbar for the preview */
           iframe::-webkit-scrollbar { width: 6px; }
           iframe::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
         `}

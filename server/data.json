@@ -1,15 +1,17 @@
 {
   "name": "A. MOHAMED YASAR",
-  "title": "Full Stack Engineer | React.js | REST APIs | SQL",
+  "title": "Full Stack Engineer | React.js | MERN Stack | REST APIs | JavaScript",
   "email": "mohamedyasar081786@gmail.com",
   "phone": "+91-9025943184",
-  "location": "Chennai, Tamil Nadu, India",
-  "summary": "Software Engineer with 2.5+ years of experience developing and maintaining web applications. Skilled in React.js, REST API integration, and SQL databases, with hands-on experience in building responsive UI components and integrating backend services.",
+  "location": "Chennai, TN",
+  "summary": "Full Stack Engineer with 2.5+ years of experience building responsive web applications using React.js and integrating REST APIs. Proven ability to debug complex UI, API, and database issues, collaborate with cross-functional teams, and deliver stable, scalable solutions. Actively expanding backend skills with Node.js, Express.js, Spring Boot, and Python — with hands-on MERN stack projects in progress.",
   "technicalSkills": {
     "frontend": ["React.js", "Redux", "JavaScript (ES6+)", "HTML5", "CSS3", "Material UI"],
-    "backend": ["REST APIs", "Node.js", "Express.js", "Java", "Spring Boot", "Python"],
+    "backend": ["REST APIs", "Node.js", "Express.js", "Java (Core)", "Spring Boot", "Python"],
     "database": ["MySQL", "SQL Server", "MongoDB"],
-    "tools": ["Git", "GitHub", "Postman", "VS Code"]
+    "tools": ["Git", "GitHub", "Postman", "VS Code"],
+    "aiTools": ["ChatGPT", "Claude", "Gemini", "Cursor", "OpenAI Codex"],
+    "other": ["Bug Investigation", "Root Cause Analysis", "API Debugging", "Technical Documentation"]
   },
   "experience": [
     {
@@ -18,11 +20,14 @@
       "companyUrl": "https://www.bytesandbinaries.com/",
       "companyLinkedIn": "https://www.linkedin.com/company/bytes-and-binaries/",
       "period": "July 2023 – March 2026",
+      "location": "Pudukkottai, Tamil Nadu",
       "description": [
-        "Developed high-performance UI components using React.js and Material UI.",
-        "Integrated complex business logic across full-stack repositories.",
-        "Managed end-to-end data flow validation and optimized SQL queries.",
-        "Led UI/UX workflow improvements and supported deployments."
+        "Developed reusable, responsive UI components using React.js and Material UI, improving UI consistency across modules",
+        "Integrated frontend modules with backend REST APIs, handling API responses and managing complex data flows",
+        "Wrote and optimized SQL queries for data validation, issue analysis, and performance troubleshooting",
+        "Led investigation and resolution of UI, API, and database-related bugs — reducing post-release issues",
+        "Collaborated with developers and QA teams to ensure smooth application releases and post-deployment validation",
+        "Maintained clear technical documentation for features, API contracts, and issue resolutions"
       ]
     }
   ],
@@ -34,7 +39,25 @@
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
       "link": "https://jobplanner.com.au/",
       "github": "#",
-      "description": ["Job Management System built with React and MySQL."]
+      "description": [
+        "Built modular UI components and integrated backend APIs with efficient data rendering and validation",
+        "Investigated and fixed cross-layer issues spanning UI, APIs, and SQL databases",
+        "Contributed UI/UX improvement suggestions that enhanced workflow efficiency",
+        "Supported pre-production testing and validation to ensure stable releases"
+      ]
+    },
+    {
+      "name": "MERN Stack Portfolio Application",
+      "type": "Open Source / Personal",
+      "technologies": ["MongoDB", "Express.js", "React.js", "Node.js", "JavaScript"],
+      "image": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800",
+      "link": "https://mern-portfolio-yasar-1.onrender.com/",
+      "github": "https://github.com/mdyasar49/mern-portfolio-yasar",
+      "description": [
+        "Built and deployed a full-stack portfolio application using MERN stack with JavaScript",
+        "Implemented RESTful APIs with Express.js and integrated with MongoDB for data persistence",
+        "Deployed live on Render with automated CI/CD pipeline"
+      ]
     },
     {
       "name": "TaskFlow Pro",
@@ -45,32 +68,14 @@
       "github": "https://github.com/mdyasar49/taskflow-pro",
       "description": ["High-performance Task Management Dashboard."]
     },
-     {
-        "name": "HR Management System",
-        "type": "Open Source / Personal",
-        "technologies": ["MERN Stack", "Node.js", "Express.js", "MongoDB"],
-        "image": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800",
-        "link": "https://github.com/mdyasar49/hr-management-system",
-        "github": "https://github.com/mdyasar49/hr-management-system",
-        "description": ["Full-stack HR application for employee management and payroll."]
-    },
     {
-        "name": "Exam Results Analyzer",
-        "type": "Open Source / Personal",
-        "technologies": ["JavaScript", "HTML5", "CSS3"],
-        "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
-        "link": "https://github.com/mdyasar49/exam-results",
-        "github": "https://github.com/mdyasar49/exam-results",
-        "description": ["Automated score calculation and performance analytics tool."]
-    },
-    {
-        "name": "Scientific Calculator",
-        "type": "Open Source / Personal",
-        "technologies": ["JavaScript", "CSS Grid", "HTML5"],
-        "image": "https://images.unsplash.com/photo-1587145820266-a5951ee6f620?auto=format&fit=crop&q=80&w=800",
-        "link": "https://github.com/mdyasar49/calculator",
-        "github": "https://github.com/mdyasar49/calculator",
-        "description": ["Interactive web-based calculator with advanced mathematical functions."]
+      "name": "HR Management System",
+      "type": "Open Source / Personal",
+      "technologies": ["MERN Stack", "Node.js", "Express.js", "MongoDB"],
+      "image": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800",
+      "link": "https://github.com/mdyasar49/hr-management-system",
+      "github": "https://github.com/mdyasar49/hr-management-system",
+      "description": ["Full-stack HR application for employee management and payroll."]
     }
   ],
   "education": [
@@ -87,11 +92,10 @@
       "year": "2023"
     }
   ],
-  "certifications": ["C Programming", "Programming Techniques", "Web Designing", "PC Hardware & Troubleshooting"],
   "softSkills": ["Problem Solving", "Analytical Thinking", "Communication", "Team Collaboration", "Adaptability"],
   "additionalInfo": {
     "availability": "Immediate Joiner",
-    "workPreference": "Willing to work from office | Rotational shifts",
+    "workPreference": "Comfortable with Work From Office | Rotational Shifts",
     "languages": ["English", "Tamil"]
   },
   "socials": {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Paper } from '@mui/material';
-import { ExternalLink, Lock, Github, X, Globe, Code2 } from 'lucide-react';
+import { ExternalLink, Lock, Github, X, Globe, Code2, Terminal } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const TiltCard = ({ children }) => {
@@ -59,13 +59,20 @@ const Projects = ({ projects }) => {
 
   return (
     <Box id="projects" sx={{ py: 15 }}>
-      <Typography variant="h2" gutterBottom sx={{ mb: 10, textAlign: 'center', fontFamily: 'Syncopate', fontWeight: 800, letterSpacing: 2 }}>
+      <Typography variant="h2" gutterBottom sx={{ 
+        mb: { xs: 5, md: 10 }, 
+        textAlign: 'center', 
+        fontFamily: 'Syncopate', 
+        fontWeight: 800, 
+        letterSpacing: { xs: 1, md: 2 },
+        fontSize: { xs: '2rem', md: '3.75rem' }
+      }}>
         ELITE <Box component="span" sx={{ color: '#ff3366' }}>PROJECTS</Box>
       </Typography>
 
-      <Grid container spacing={6}>
+      <Grid container spacing={{ xs: 3, md: 6 }}>
         {projects.map((project, index) => (
-          <Grid item xs={12} lg={6} key={index}>
+          <Grid item xs={12} md={6} key={index}>
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.8 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -113,7 +120,7 @@ const Projects = ({ projects }) => {
                   </Box>
 
                   <CardContent sx={{ p: 5, pt: 2, flexGrow: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
-                    <Typography variant="h3" sx={{ mb: 2, fontWeight: 800, fontSize: '2rem', background: 'linear-gradient(90deg, #fff, #aaa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
+                    <Typography variant="h3" sx={{ mb: 2, fontWeight: 800, fontSize: { xs: '1.5rem', md: '2rem' }, background: 'linear-gradient(90deg, #fff, #aaa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', textShadow: '0 4px 10px rgba(0,0,0,0.5)' }}>
                       {project.name}
                     </Typography>
                     <Typography variant="body2" sx={{ mb: 4, lineHeight: 1.8, color: '#aaa', fontSize: '1.1rem' }}>
@@ -122,45 +129,48 @@ const Projects = ({ projects }) => {
                     
                     <Box sx={{ mb: 4, display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
                       {project.technologies.map((tech) => (
-                        <Chip key={tech} label={tech} size="medium" 
+                        <Chip key={tech} label={tech.toUpperCase()} size="small" 
                           sx={{ 
-                            background: 'rgba(255, 51, 102, 0.1)', 
-                            color: '#ff9933', 
-                            fontWeight: 700, 
-                            borderRadius: 3,
-                            border: '1px solid rgba(255, 51, 102, 0.3)',
+                            background: 'rgba(51, 204, 255, 0.05)', 
+                            color: '#33ccff', 
+                            fontWeight: 900, 
+                            borderRadius: 1,
+                            border: '1px solid rgba(51, 204, 255, 0.2)',
                             backdropFilter: 'blur(5px)',
                             px: 1,
+                            fontFamily: 'monospace',
                             transition: 'all 0.3s ease',
-                            '&:hover': { background: 'rgba(255, 51, 102, 0.3)', transform: 'translateY(-3px)', boxShadow: '0 5px 15px rgba(255, 51, 102, 0.3)' }
+                            '&:hover': { background: 'rgba(51, 204, 255, 0.2)', transform: 'translateY(-2px)' }
                           }} 
                         />
                       ))}
                     </Box>
 
-                    <Box sx={{ mt: 'auto', pt: 3, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Box sx={{ mt: 'auto', pt: 3, borderTop: '1px solid rgba(255,255,255,0.03)' }}>
                       <Button 
                         fullWidth
                         variant="contained" 
                         onClick={() => handleOpen(project)} 
                         sx={{ 
-                          background: 'rgba(255,255,255,0.05)',
+                          background: 'rgba(255,255,255,0.02)',
                           py: 2,
-                          borderRadius: 4,
+                          borderRadius: 2,
                           textTransform: 'uppercase',
                           letterSpacing: 2,
-                          fontSize: '0.9rem',
-                          fontWeight: 800,
+                          fontSize: '0.8rem',
+                          fontWeight: 900,
+                          fontFamily: 'Syncopate',
                           backdropFilter: 'blur(10px)',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          border: '1px solid rgba(255,255,255,0.05)',
                           justifyContent: 'center',
                           gap: 2,
+                          color: '#fff',
                           transition: 'all 0.3s ease',
-                          '&:hover': { background: 'rgba(255,255,255,0.15)', boxShadow: '0 0 20px rgba(255,255,255,0.2)' }
+                          '&:hover': { background: 'rgba(51, 204, 255, 0.1)', borderColor: '#33ccff', boxShadow: '0 0 20px rgba(51, 204, 255, 0.2)' }
                         }}
                       >
-                        {project.github === '#' ? <Lock size={20} color="#ff3366" /> : <Github size={20} color="#fff" />}
-                        <span style={{ color: '#fff' }}>EXPLORE ARCHITECTURE</span>
+                        {project.github === '#' ? <Lock size={20} color="#ff3366" /> : <Terminal size={20} color="#33ccff" />}
+                        <span>VIEW_INTERFACE</span>
                       </Button>
                     </Box>
                   </CardContent>
@@ -178,12 +188,14 @@ const Projects = ({ projects }) => {
         fullWidth
         PaperProps={{ 
           sx: { 
-            borderRadius: '24px', 
+            borderRadius: { xs: '16px', sm: '24px' }, 
             background: 'rgba(5, 5, 5, 0.65)',
             backdropFilter: 'blur(30px) saturate(180%)',
             border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: '0 50px 100px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2)',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            margin: { xs: 2, sm: 4 },
+            width: { xs: 'calc(100% - 32px)', sm: 'auto' }
           } 
         }}
         BackdropProps={{
@@ -194,18 +206,18 @@ const Projects = ({ projects }) => {
           {selectedProject && (
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ type: 'spring', bounce: 0.3 }}>
               <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 5, px: 5, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <Stack direction="row" spacing={3} alignItems="center">
-                  <Box sx={{ p: 2, background: 'linear-gradient(45deg, #ff3366, #ff9933)', borderRadius: '16px', color: 'white', boxShadow: '0 10px 20px rgba(255,51,102,0.3)' }}>
-                    {selectedProject.github === '#' ? <Lock size={28} /> : <Github size={28} />}
+                <Stack direction="row" spacing={{ xs: 1.5, sm: 3 }} alignItems="center">
+                  <Box sx={{ p: { xs: 1, sm: 2 }, background: 'linear-gradient(45deg, #ff3366, #ff9933)', borderRadius: '12px', color: 'white', boxShadow: '0 10px 20px rgba(255,51,102,0.3)' }}>
+                    {selectedProject.github === '#' ? <Lock size={20} /> : <Github size={20} />}
                   </Box>
                   <Typography variant="h2" sx={{ 
                     fontWeight: 800, 
-                    fontSize: '2rem',
+                    fontSize: { xs: '1.2rem', sm: '2rem' },
                     background: 'linear-gradient(90deg, #fff, #aaa)', 
                     WebkitBackgroundClip: 'text', 
                     WebkitTextFillColor: 'transparent',
                     textTransform: 'uppercase',
-                    letterSpacing: 2
+                    letterSpacing: { xs: 1, sm: 2 }
                   }}>
                     {selectedProject.github === '#' ? 'Locked Logic' : 'Source Logic'}
                   </Typography>
@@ -213,7 +225,23 @@ const Projects = ({ projects }) => {
                 <IconButton onClick={handleClose} sx={{ color: 'white', background: 'rgba(255,255,255,0.05)', '&:hover': { background: 'rgba(255,33,66,0.3)' } }}><X size={24} /></IconButton>
               </DialogTitle>
 
-              <DialogContent sx={{ p: 5 }}>
+              <DialogContent sx={{ 
+                p: { xs: 2, sm: 5 }, 
+                overflowY: 'auto',
+                '&::-webkit-scrollbar': {
+                  width: '6px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: 'transparent',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '10px',
+                },
+                '&::-webkit-scrollbar-thumb:hover': {
+                  background: 'rgba(255, 255, 255, 0.2)',
+                }
+              }}>
                 {selectedProject.github === '#' ? (
                   /* PRIVATE MODE */
                   <Box sx={{ pt: 2 }}>
@@ -277,7 +305,7 @@ const Projects = ({ projects }) => {
                       </Stack>
                     </Paper>
                     <Box sx={{ display: 'flex', gap: 3 }}>
-                       <Stack direction="row" spacing={3} sx={{ width: '100%' }}>
+                       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ width: '100%' }}>
                           <Box sx={{ textAlign: 'center', flex: 1, p: 3, background: 'linear-gradient(to bottom, rgba(255,255,255,0.05), transparent)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.02)' }}>
                              <Code2 size={32} color="#ff3366" />
                              <Typography variant="h4" sx={{ mt: 2, fontSize: '1rem', color: '#fff', fontWeight: 700 }}>Scalable Code</Typography>
@@ -294,14 +322,64 @@ const Projects = ({ projects }) => {
                 )}
               </DialogContent>
 
-              <DialogActions sx={{ p: 5, pt: 0, justifyContent: 'center' }}>
-                <Button onClick={handleClose} sx={{ color: '#888', px: 4, py: 1.5, '&:hover': { color: '#fff', background: 'rgba(255,255,255,0.05)' } }}>CANCEL</Button>
+              <DialogActions sx={{ 
+                p: { xs: 3, md: 5 }, 
+                pt: 0, 
+                flexDirection: { xs: 'column-reverse', sm: 'row' },
+                justifyContent: 'center',
+                gap: { xs: 2, sm: 3 }
+              }}>
+                <Button 
+                  onClick={handleClose} 
+                  fullWidth={{ xs: true, sm: false }}
+                  sx={{ 
+                    color: '#888', 
+                    px: 4, 
+                    py: 1.5, 
+                    fontWeight: 700,
+                    '&:hover': { color: '#fff', background: 'rgba(255,255,255,0.05)' } 
+                  }}
+                >
+                  CANCEL
+                </Button>
                 {selectedProject.github !== '#' ? (
-                  <Button variant="contained" href={selectedProject.github} target="_blank" startIcon={<Github size={20} />} sx={{ background: 'linear-gradient(45deg, #ff3366, #ff9933)', px: 5, py: 1.5, borderRadius: 50, fontWeight: 800, letterSpacing: 1, boxShadow: '0 10px 20px rgba(255,51,102,0.3)', '&:hover': { transform: 'translateY(-2px)' } }}>
+                  <Button 
+                    variant="contained" 
+                    href={selectedProject.github} 
+                    target="_blank" 
+                    fullWidth={{ xs: true, sm: false }}
+                    startIcon={<Github size={20} />} 
+                    sx={{ 
+                      background: 'linear-gradient(45deg, #ff3366, #ff9933)', 
+                      px: 5, 
+                      py: 1.5, 
+                      borderRadius: 50, 
+                      fontWeight: 800, 
+                      letterSpacing: 1, 
+                      boxShadow: '0 10px 20px rgba(255,51,102,0.3)', 
+                      '&:hover': { transform: 'translateY(-2px)' } 
+                    }}
+                  >
                     INSPECT CODE
                   </Button>
                 ) : (
-                  <Button variant="contained" href={selectedProject.link} target="_blank" startIcon={<ExternalLink size={20} />} sx={{ background: 'linear-gradient(45deg, #ff3366, #ff9933)', px: 5, py: 1.5, borderRadius: 50, fontWeight: 800, letterSpacing: 1, boxShadow: '0 10px 20px rgba(255,51,102,0.3)', '&:hover': { transform: 'translateY(-2px)' } }}>
+                  <Button 
+                    variant="contained" 
+                    href={selectedProject.link} 
+                    target="_blank" 
+                    fullWidth={{ xs: true, sm: false }}
+                    startIcon={<ExternalLink size={20} />} 
+                    sx={{ 
+                      background: 'linear-gradient(45deg, #ff3366, #ff9933)', 
+                      px: 5, 
+                      py: 1.5, 
+                      borderRadius: 50, 
+                      fontWeight: 800, 
+                      letterSpacing: 1, 
+                      boxShadow: '0 10px 20px rgba(255,51,102,0.3)', 
+                      '&:hover': { transform: 'translateY(-2px)' } 
+                    }}
+                  >
                     VISIT PRODUCTION
                   </Button>
                 )}
