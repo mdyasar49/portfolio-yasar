@@ -64,8 +64,11 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+const authRoutes = require('./routes/authRoutes');
+
 // Routes (Express.js) - Consolidating all API routes under /api prefix
 app.use('/api', portfolioRoutes);
+app.use('/api/auth', authRoutes);
 
 // JSON 404 Handler for API
 app.use('/api', (req, res) => {
