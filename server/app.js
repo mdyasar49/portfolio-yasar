@@ -32,10 +32,9 @@ app.use(cors({
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn(`⚠️  [CORS] Blocked request from: ${origin}`);
-      console.warn(`   Allowed: ${allowedOrigins.join(', ')}`);
-      console.warn(`   Fix: Add this origin to CLIENT_URL in server/.env or Render dashboard.`);
-      callback(new Error(`CORS: Origin ${origin} is not allowed.`));
+      console.warn(`⚠️ [CORS] Blocked request from origin: ${origin}`);
+      console.warn(`   Allowed origins in system: ${allowedOrigins.join(', ')}`);
+      callback(new Error(`CORS policy blocked access from origin ${origin}.`));
     }
   },
   credentials: true
@@ -49,11 +48,14 @@ app.use((req, res, next) => {
     const referer = req.headers.referer;
 
     if (!origin && !referer && req.method === 'GET' && req.path !== '/') {
+        // Use the first production URL for the return link if available
+        const returnUrl = allowedOrigins.find(o => o.includes('onrender.com')) || 'https://mern-portfolio-yasar-1.onrender.com';
+        
         return res.status(403).send(`
             <div style="background:#010409; color:#ff3366; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; padding:20px;">
                 <h1 style="font-size:3rem; margin-bottom:10px;">🚫 ACCESS_DENIED</h1>
                 <p style="color:#64748b; font-size:1.2rem;">Direct system access via browser is restricted to maintain MERN core integrity.</p>
-                <a href="${process.env.CLIENT_URL || '#'}" style="color:#33ccff; text-decoration:none; border:1px solid #33ccff; padding:12px 30px; border-radius:8px; margin-top:30px; font-weight:bold; transition: 0.3s;">RETURN_TO_PORTFOLIO</a>
+                <a href="${returnUrl}" style="color:#33ccff; text-decoration:none; border:1px solid #33ccff; padding:12px 30px; border-radius:8px; margin-top:30px; font-weight:bold; transition: 0.3s;">RETURN_TO_PORTFOLIO</a>
             </div>
         `);
     }

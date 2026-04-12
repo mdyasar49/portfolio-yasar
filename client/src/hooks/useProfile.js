@@ -21,7 +21,13 @@ const useProfile = () => {
             const data = await getProfile();
             if (data) setProfile(data);
         } catch (err) {
-            console.error('Error fetching profile:', err);
+            console.group('🔍 [API Diagnostic Report]');
+            console.error('API Error Detected:', err.message);
+            console.log('Target Base URL:', process.env.REACT_APP_API_BASE_URL);
+            console.log('Error Code:', err.code);
+            console.log('Error Response:', err.response?.data);
+            console.groupEnd();
+
             setError(err);
 
             if (!navigator.onLine || err.message === 'Network Error' || err.code === 'ERR_NETWORK') {
