@@ -71,7 +71,18 @@ The "Impress" factor comes from the bridge between code and design.
 
 ---
 
-## 6. How to Extend This Project
+## 6. Dynamic Localization & Transliteration
+To make the engineering documentation accessible to a wider audience, I engineered a **real-time translation engine**.
+
+*   **Google Translate API Integration:** The system fetches technical documentation in English and translates it on-the-fly when a user switches languages.
+*   **Markdown Preservation:** I implemented a regex-based parser that identifies Markdown headers, lists, and quotes, ensuring the **technical layout remains 100% identical** across all languages.
+*   **Thanglish Phonetic Engine:** Since Thanglish (Tamil words in English script) isn't natively supported by standard APIs, I built a custom transliteration layer that converts Tamil unicode characters into authentic English phonetic equivalents.
+*   **Interactive UX (Copy Engine):** I integrated a premium 'Copy to Clipboard' system for all code blocks. It utilizes the asynchronous Clipboard API and provides real-time visual feedback via a Framer Motion-animated checkmark icon upon success.
+*   **Performance:** All translations are cached locally to ensure a near-instant experience when switching between language modes.
+
+---
+
+## 7. How to Extend This Project
 This system is designed to be extensible. To add a new section:
 1.  **Define Schema:** Add a new model in `server/models/`.
 2.  **Expose Endpoint:** Map a new route in `server/routes/`.
@@ -80,7 +91,7 @@ This system is designed to be extensible. To add a new section:
 
 ---
 
-## 7. Engineer's Summary
+## 8. Engineer's Summary
 Building this project taught me that **Performance** and **Reliability** are just as important as the **User Interface**. By managing my own API and handling database failovers, I have created a portfolio that doesn't just look good—it is built to last.
 
 **Developed with Passion. Engineered with Precision.**

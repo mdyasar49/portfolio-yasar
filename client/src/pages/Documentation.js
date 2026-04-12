@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress } from '@mui/material';
+import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress, Tooltip, Zoom } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Book, 
@@ -16,7 +16,9 @@ import {
   Globe,
   Search,
   Command,
-  RefreshCw
+  RefreshCw,
+  Copy,
+  Check
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import SEO from '../components/SEO';
@@ -24,6 +26,57 @@ import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
 import LanguageSelector, { languages } from '../components/LanguageSelector';
 import { translateText, transliterateToThanglish } from '../services/translateService';
+
+// Premium Copy Button Component
+const CopyButton = ({ text }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <IconButton
+      onClick={handleCopy}
+      className="copy-button"
+      sx={{
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        zIndex: 50,
+        bgcolor: 'rgba(1, 4, 9, 0.8)', 
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        color: copied ? '#00ffcc' : '#888',
+        opacity: 0,
+        transform: 'scale(0.8)',
+        boxShadow: copied ? '0 0 20px rgba(0, 255, 204, 0.4)' : '0 10px 30px rgba(0,0,0,0.5)',
+        '&:hover': {
+          bgcolor: 'rgba(51, 204, 255, 0.15)',
+          color: '#33ccff',
+          borderColor: 'rgba(51, 204, 255, 0.4)',
+          transform: 'scale(1.1) !important'
+        },
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+      }}
+      size="small"
+    >
+      <AnimatePresence mode="wait">
+        {copied ? (
+          <motion.div key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+            <Check size={14} />
+          </motion.div>
+        ) : (
+          <motion.div key="copy" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+            <Copy size={14} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </IconButton>
+  );
+};
 
 const Documentation = ({ profile }) => {
   const navigate = useNavigate();
@@ -124,7 +177,6 @@ const Documentation = ({ profile }) => {
       setIsTranslating(true);
       try {
         if (archLanguage === 'all') {
-          // Generate Trilingual View Dynamically
           const lines = projectContent.split('\n');
           const trilingualLines = await Promise.all(lines.map(async (line) => {
              if (!line.trim() || line.startsWith('#') || line.startsWith('---')) return line;
@@ -177,21 +229,34 @@ const Documentation = ({ profile }) => {
       { name: 'client', type: 'folder', children: [
         { name: 'public', type: 'folder', children: [
           { name: 'docs', type: 'folder', children: [{ name: 'README.md', type: 'file' }, { name: 'PROJECT_EXPLANATION.md', type: 'file' }] },
-          { name: 'resume-pro', type: 'folder', highlight: true }
+          { name: 'resume-pro', type: 'folder' }
         ]},
         { name: 'src', type: 'folder', children: [
-          { name: 'components', type: 'folder' },
-          { name: 'pages', type: 'folder', children: [{ name: 'Documentation.js', type: 'file', highlight: true }] },
+          { name: 'components', type: 'folder', children: [
+            { name: 'LanguageSelector.js', type: 'file', highlight: true },
+            { name: 'Header.js', type: 'file' },
+            { name: 'Footer.js', type: 'file' }
+          ]},
+          { name: 'pages', type: 'folder', children: [
+            { name: 'Documentation.js', type: 'file', highlight: true },
+            { name: 'Home.js', type: 'file' },
+            { name: 'Resume.js', type: 'file' }
+          ]},
+          { name: 'services', type: 'folder', children: [
+            { name: 'translateService.js', type: 'file', highlight: true },
+            { name: 'api.js', type: 'file' }
+          ]},
           { name: 'App.js', type: 'file' }
         ]}
       ]},
       { name: 'server', type: 'folder', children: [
-        { name: 'controllers', type: 'folder' },
-        { name: 'routes', type: 'folder' },
+        { name: 'controllers', type: 'folder', children: [{ name: 'PortfolioController.js', type: 'file' }] },
+        { name: 'routes', type: 'folder', children: [{ name: 'portfolioRoutes.js', type: 'file' }] },
         { name: 'data.json', type: 'file', highlight: true },
         { name: 'app.js', type: 'file' }
       ]},
-      { name: 'README.md', type: 'file' }
+      { name: 'README.md', type: 'file' },
+      { name: 'PROJECT_EXPLANATION.md', type: 'file' }
     ];
 
     const renderTree = (items, depth = 0) => (
@@ -546,7 +611,29 @@ const Documentation = ({ profile }) => {
                                      h3: ({node, ...props}) => <Typography variant="h3" sx={markdownStyles} {...props} />,
                                      li: ({node, ...props}) => <Box component="li" sx={markdownStyles} {...props} />,
                                      code: ({node, ...props}) => <Box component="code" sx={markdownStyles} {...props} />,
-                                     pre: ({node, ...props}) => <Box component="pre" sx={markdownStyles} {...props} />,
+                                     pre: ({ children }) => {
+                                       const extractText = (child) => {
+                                         if (typeof child === 'string') return child;
+                                         if (Array.isArray(child)) return child.map(extractText).join('');
+                                         if (child.props && child.props.children) return extractText(child.props.children);
+                                         return '';
+                                       };
+                                       const codeText = extractText(children);
+                                       return (
+                                         <Box 
+                                            sx={{ 
+                                              position: 'relative', 
+                                              my: 4,
+                                              '&:hover .copy-button': { opacity: 1, transform: 'scale(1)' } 
+                                            }}
+                                         >
+                                            <CopyButton text={codeText} />
+                                            <Box component="pre" sx={{ ...markdownStyles['& pre'], my: 0 }}>
+                                               {children}
+                                            </Box>
+                                         </Box>
+                                       );
+                                     },
                                      table: ({node, ...props}) => <Box component="table" sx={markdownStyles} {...props} />,
                                      th: ({node, ...props}) => <Box component="th" sx={markdownStyles} {...props} />,
                                      td: ({node, ...props}) => <Box component="td" sx={markdownStyles} {...props} />,

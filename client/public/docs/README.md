@@ -23,6 +23,8 @@ This isn't just a portfolio; it's a **Production-Grade Simulation**. Most beginn
 | **Performance** | **Optimized Asset Loading** & Framer Motion orchestration. | Ultra-smooth 60fps animations and near-instant initial paint. |
 | **Security** | **Strict CORS Policy** & Environment Protection. | Backend only accepts requests from whitelisted domains, protecting API integrity. |
 | **UX Innovation** | **Client-Side PDF Engine**. Bespoke resume generation using `html2pdf.js`. | Real-time PDF generation without server overhead. |
+| **Multilingual** | **Dynamic Localization Engine**. Real-time Google Translate API integration with a custom Thanglish phonetic layer. | Documentation is accessible in English, Tamil, and Thanglish with 100% layout preservation. |
+| **Bespoke UX** | **Interactive Documentation**. Integrated 'Copy to Clipboard' for code blocks and hover-triggered UI elements. | Significantly improves developer experience and accessibility. |
 
 ---
 
@@ -92,6 +94,8 @@ npm start
 *   **Tree Shaking:** Minimized bundle size by selectively importing MUI icons and components.
 *   **Lazy Loading:** Implemented code splitting for the Resume engine to reduce initial bundle overhead.
 *   **Memoization:** Used `React.memo` and `useMemo` in high-render components (like the Background Canvas) to maintain buttery-smooth performance.
+*   **Dynamic Translation:** Implemented a custom `translateService` that handles Markdown structural preservation during machine translation.
+*   **Copy Engine:** Integrated an asynchronous clipboard API with a visual feedback system (Framer Motion checkmark) for all technical code blocks.
 
 ---
 
