@@ -97,6 +97,7 @@ const App = () => {
             <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
             <Route path="/resume"       element={<Resume profile={profile} />} />
             <Route path="/architecture" element={<Documentation profile={profile} />} />
+            <Route path="/contact"      element={<Portfolio profile={profile} loading={loading} forceContact={true} />} />
             
             {/* Administrative Infrastructure */}
             <Route path="/admin/login"  element={<AdminLogin />} />
