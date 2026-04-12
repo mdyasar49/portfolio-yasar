@@ -7,6 +7,7 @@ import Skills from '../components/Skills';
 import Experience from '../components/Experience';
 import Projects from '../components/Projects';
 import Education from '../components/Education';
+import ResumeModule from '../components/ResumeModule';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
@@ -53,6 +54,7 @@ const Portfolio = ({ profile, loading }) => {
         {profile?.experience && <Experience experience={profile.experience} />}
         {profile?.projects && <Projects projects={profile.projects} />}
         {profile?.education && <Education education={profile.education} />}
+        <ResumeModule />
         <Contact />
       </Container>
       <Footer socials={profile.socials} name={profile.name} />
