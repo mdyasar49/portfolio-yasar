@@ -32,111 +32,120 @@ const ResumeModule = () => {
         </Stack>
 
         <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} lg={7}>
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <Box sx={{ position: 'relative' }}>
+                 {/* Holographic Frame for the Live Resume */}
+                 <Box sx={{ 
+                   p: 0.5, 
+                   bgcolor: 'rgba(51, 204, 255, 0.1)', 
+                   borderRadius: 4,
+                   border: '1px solid rgba(51, 204, 255, 0.3)',
+                   boxShadow: '0 0 40px rgba(51, 204, 255, 0.1)',
+                   overflow: 'hidden',
+                   position: 'relative',
+                   height: { xs: '500px', md: '700px' }
+                 }}>
+                   {/* Vertical Scanner Line */}
+                   <Box sx={{
+                     position: 'absolute', top: 0, left: 0, right: 0, height: 2,
+                     background: 'linear-gradient(90deg, transparent, #33ccff, transparent)',
+                     boxShadow: '0 0 15px #33ccff',
+                     zIndex: 10, opacity: 0.5,
+                     animation: 'scan 4s linear infinite'
+                   }} />
+
+                   <iframe 
+                      src="/resume-pro/index.html" 
+                      title="Direct Resume View"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 'none', background: 'white', borderRadius: '8px' }}
+                   />
+                 </Box>
+
+                 {/* Tech Brackets */}
+                 <Box sx={{ position: 'absolute', top: -15, left: -15, width: 40, height: 40, borderTop: '2px solid #ff3366', borderLeft: '2px solid #ff3366' }} />
+                 <Box sx={{ position: 'absolute', bottom: -15, right: -15, width: 40, height: 40, borderBottom: '2px solid #33ccff', borderRight: '2px solid #33ccff' }} />
+              </Box>
+            </motion.div>
+          </Grid>
+
+          <Grid item xs={12} lg={5}>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
               <Paper sx={{ 
-                p: { xs: 4, md: 6 }, 
+                p: { xs: 4, md: 5 }, 
                 bgcolor: 'rgba(1, 4, 9, 0.8)', 
                 backdropFilter: 'blur(20px)',
                 borderRadius: 6,
                 border: '1px solid rgba(255, 255, 255, 0.05)',
-                position: 'relative',
-                overflow: 'hidden'
+                position: 'relative'
               }}>
-                {/* Background Tech Accent */}
-                <Box sx={{ position: 'absolute', top: -20, right: -20, opacity: 0.05 }}>
-                  <FileText size={200} />
-                </Box>
-
                 <Stack spacing={4}>
                   <Box>
-                    <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 2 }}>CORE_QUALIFICATIONS</Typography>
-                    <Typography variant="body1" sx={{ color: '#94a3b8', lineHeight: 1.8 }}>
-                      Senior MERN Stack Engineer specializing in high-performance architectures, 
-                      real-time telemetry systems, and premium UI/UX implementations. Validated 
-                      expertise in cloud infrastructure and secure API design.
+                    <Typography variant="h5" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 2, fontSize: '1.2rem' }}>VERIFIED_PROFILE</Typography>
+                    <Typography variant="body2" sx={{ color: '#94a3b8', lineHeight: 1.8 }}>
+                      Instant extraction of professional architecture and core engineering metrics. 
+                      This asset is cryptographically validated and ready for enterprise-level review.
                     </Typography>
                   </Box>
 
-                  <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)' }} />
-
-                  <Grid container spacing={3}>
+                  <Grid container spacing={2}>
                     {[
-                      { label: 'ENGINEERING', val: 'MERN STACK' },
-                      { label: 'EXPERIENCE', val: '2+ YEARS' },
-                      { label: 'LOCATION', val: 'TAMIL NADU, IN' },
-                      { label: 'CLEARANCE', val: 'AUTHENTICATED' }
-                    ].map((stat, i) => (
+                      { l: 'TYPE', v: 'FULL_STACK' },
+                      { l: 'MOD', v: 'v4.2.0' },
+                      { l: 'STATUS', v: 'ACTIVE' },
+                      { l: 'ACCESS', v: 'OPEN' }
+                    ].map((s, i) => (
                       <Grid item xs={6} key={i}>
-                        <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, letterSpacing: 2, display: 'block' }}>{stat.label}</Typography>
-                        <Typography sx={{ color: 'white', fontWeight: 700, fontFamily: 'monospace', fontSize: '1.1rem' }}>{stat.val}</Typography>
+                        <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block' }}>{s.l}</Typography>
+                        <Typography sx={{ color: '#33ccff', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.9rem' }}>{s.v}</Typography>
                       </Grid>
                     ))}
                   </Grid>
 
-                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mt: 2 }}>
+                  <Stack spacing={2}>
                     <Button 
+                      fullWidth
                       variant="contained" 
                       onClick={handleDownload}
-                      startIcon={<Download size={20} />}
+                      startIcon={<Download size={18} />}
                       sx={{ 
                         background: 'linear-gradient(45deg, #ff3366, #ff9933)',
-                        color: 'white', px: 5, py: 2, borderRadius: 3, fontWeight: 900, fontFamily: 'Syncopate',
-                        boxShadow: '0 20px 40px rgba(255, 51, 102, 0.2)',
-                        '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 25px 50px rgba(255, 51, 102, 0.3)' }
+                        py: 1.8, borderRadius: 2.5, fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.75rem',
+                        boxShadow: '0 10px 20px rgba(255, 51, 102, 0.2)',
+                        '&:hover': { transform: 'translateY(-2px)' }
                       }}
                     >
-                      EXTRACT_PDF
+                      PULL_PDF_VERSION
                     </Button>
                     <Button 
+                      fullWidth
                       href="/resume" 
                       target="_blank"
-                      startIcon={<ExternalLink size={20} />}
+                      startIcon={<ExternalLink size={18} />}
                       sx={{ 
-                        border: '1px solid rgba(255,255,255,0.1)',
-                        color: 'white', px: 5, py: 2, borderRadius: 3, fontWeight: 900, fontFamily: 'Syncopate',
-                        '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', borderColor: '#33ccff' }
+                        border: '1px solid rgba(255,255,255,0.05)',
+                        bgcolor: 'rgba(255,255,255,0.01)',
+                        color: 'white', py: 1.8, borderRadius: 2.5, fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.75rem',
+                        '&:hover': { bgcolor: 'rgba(51, 204, 255, 0.05)', borderColor: '#33ccff' }
                       }}
                     >
-                      FULL_IMMERSIVE_VIEW
+                      FULL_3D_VIEWER
                     </Button>
                   </Stack>
                 </Stack>
               </Paper>
-            </motion.div>
-          </Grid>
-
-          <Grid item xs={12} md={5}>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1 }}
-              viewport={{ once: true }}
-            >
-              <Box sx={{ position: 'relative' }}>
-                {/* Visual Security Badge */}
-                <Box sx={{ 
-                  p: 4, borderRadius: '50%', border: '1px solid rgba(51, 204, 255, 0.2)',
-                  width: 300, height: 300, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: 'radial-gradient(circle, rgba(51, 204, 255, 0.05) 0%, transparent 70%)',
-                  animation: 'pulse 3s infinite'
-                }}>
-                  <ShieldCheck size={120} color="#33ccff" />
-                </Box>
-                
-                {/* Floating Tags */}
-                <Box sx={{ position: 'absolute', top: '10%', right: '10%', p: 1.5, bgcolor: 'rgba(0,0,0,0.8)', border: '1px solid #00ffcc', borderRadius: 2 }}>
-                  <Zap size={24} color="#00ffcc" />
-                </Box>
-                <Box sx={{ position: 'absolute', bottom: '10%', left: '10%', p: 1.5, bgcolor: 'rgba(0,0,0,0.8)', border: '1px solid #ff3366', borderRadius: 2 }}>
-                  <FileText size={24} color="#ff3366" />
-                </Box>
-              </Box>
             </motion.div>
           </Grid>
         </Grid>
@@ -144,7 +153,9 @@ const ResumeModule = () => {
 
       <style>
         {`
-          @keyframes pulse { 0% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.5; transform: scale(1); } }
+          @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+          iframe::-webkit-scrollbar { width: 4px; }
+          iframe::-webkit-scrollbar-thumb { background: #33ccff; border-radius: 10px; }
         `}
       </style>
     </Box>
