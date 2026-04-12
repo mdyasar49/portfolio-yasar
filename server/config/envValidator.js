@@ -1,29 +1,34 @@
 /**
  * Environment Variable Validator
- * Ensures all required environment variables are present and valid
+ * Validates environment variables at startup.
+ * - MONGO_URI: Optional (server falls back to data.json if missing)
+ * - PORT: Optional (defaults to 5001)
+ * - CLIENT_URL: Optional (CORS will only allow localhost if missing)
+ * - NODE_ENV: Optional (defaults to 'development')
  */
 const validateEnv = () => {
-    const required = ['MONGO_URI', 'PORT', 'CLIENT_URL'];
+    // These vars are optional — server has fallbacks for all of them
+    const optional = ['MONGO_URI', 'PORT', 'CLIENT_URL', 'NODE_ENV'];
     const missing = [];
 
-    required.forEach(variable => {
+    optional.forEach(variable => {
         if (!process.env[variable]) {
             missing.push(variable);
         }
     });
 
     if (missing.length > 0) {
-        console.error(`\n❌ [ENV ERROR] Missing required environment variables: ${missing.join(', ')}`);
-        console.error(`Please check your .env file and ensure these are defined.\n`);
-        process.exit(1);
+        console.warn(`\n⚠️  [ENV WARNING] The following optional environment variables are not set: ${missing.join(', ')}`);
+        console.warn(`   Server will use default fallback values for missing variables.\n`);
+        // Do NOT call process.exit() — server can run with fallbacks
     }
 
-    // Validate MONGO_URI format
-    if (!process.env.MONGO_URI.startsWith('mongodb')) {
-        console.error(`\n⚠️  [ENV WARNING] MONGO_URI does not look like a valid MongoDB connection string.\n`);
+    // Validate MONGO_URI format only if it is provided
+    if (process.env.MONGO_URI && !process.env.MONGO_URI.startsWith('mongodb')) {
+        console.warn(`\n⚠️  [ENV WARNING] MONGO_URI does not look like a valid MongoDB connection string.\n`);
     }
 
-    console.log(`✅ [ENV] Environment variables validated.`);
+    console.log(`✅ [ENV] Environment check complete. Server is starting...`);
 };
 
 module.exports = validateEnv;

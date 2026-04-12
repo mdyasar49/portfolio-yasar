@@ -14,13 +14,15 @@ const app = express();
 // Middlewares (Express.js)
 app.use(logger);
 // 1. CORS Whitelist Security (Uses .env configuration)
+// .filter(Boolean) removes undefined/null entries if CLIENT_URL is not set
 const allowedOrigins = [
   'http://localhost:3000',                              // Local Client
   process.env.CLIENT_URL                               // Live Production Client (from .env)
-];
+].filter(Boolean);
 
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman, server-to-server)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);

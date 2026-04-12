@@ -22,7 +22,11 @@ projects:
       - key: MONGO_URI
         sync: false
       - key: PORT
-        sync: false
+        value: 5001
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_URL
+        value: https://mern-portfolio-yasar-1.onrender.com
       region: oregon
       buildCommand: npm install
       startCommand: npm start
