@@ -3,7 +3,7 @@
  * Ensures all required environment variables are present and valid
  */
 const validateEnv = () => {
-    const required = ['MONGO_URI', 'PORT'];
+    const required = ['MONGO_URI', 'PORT', 'CLIENT_URL'];
     const missing = [];
 
     required.forEach(variable => {
