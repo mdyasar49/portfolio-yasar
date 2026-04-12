@@ -16,6 +16,10 @@ projects:
       envVars:
       - key: REACT_APP_API_BASE_URL
         value: https://mern-portfolio-yasar.onrender.com/api
+      routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     - type: web
       name: mern-portfolio-yasar
       runtime: node
