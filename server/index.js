@@ -9,20 +9,25 @@ const validateEnv = require('./config/envValidator');
 // Validate Environment before starting
 validateEnv();
 
+const http = require('http');
+const initSocket = require('./socket');
+
 const PORT = process.env.PORT || 5001;
+const server = http.createServer(app);
+
+// Initialize Real-time Layer
+initSocket(server);
 
 const startServer = async () => {
     try {
-        // Attempt to connect to the [MongoDB] Layer
         await connectDB();
     } catch (error) {
-        console.warn("⚠️  MongoDB could not start. Server is running in PORTABLE MODE with data.json.");
+        console.warn("⚠️  MongoDB could not start. Server is running in PORTABLE MODE.");
     } finally {
-        // Always start the [Express.js] Server on top of [Node.js]
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log(`🚀 [Node.js] Runtime environment active.`);
-            console.log(`🌐 [Express.js] Server running on port ${PORT}`);
-            console.log(`📂 [Data Layer] Serving dynamic content from JSON fallback.`);
+            console.log(`🌐 [Express.js] API Layer: http://localhost:${PORT}/api`);
+            console.log(`📡 [Socket.io] Persistence Layer: Active`);
         });
     }
 };
