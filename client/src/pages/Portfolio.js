@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import SEO from '../components/SEO';
 import Hero from '../components/Hero';
@@ -10,17 +10,7 @@ import Education from '../components/Education';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
-const Portfolio = ({ profile, loading, forceContact }) => {
-  useEffect(() => {
-    if (forceContact) {
-      const element = document.getElementById('contact');
-      if (element) {
-        setTimeout(() => {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }, 500);
-      }
-    }
-  }, [forceContact]);
+const Portfolio = ({ profile, loading }) => {
   if (loading && !profile) return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: '#010409', color: 'white' }}>
        <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>INITIALIZING_INTERFACE...</Typography>

@@ -20,9 +20,9 @@ const Header = () => {
     { name: 'About', path: '/#about', type: 'anchor' },
     { name: 'Skills', path: '/#skills', type: 'anchor' },
     { name: 'Projects', path: '/#projects', type: 'anchor' },
-    { name: 'Contact', path: '/contact', type: 'link' },
     { name: 'Resume', path: '/resume', type: 'link' },
-    { name: 'Documentation', path: '/architecture', type: 'link' },
+    { name: 'Architecture', path: '/architecture', type: 'link' },
+    { name: 'Contact', path: '/#contact', type: 'anchor' },
   ];
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
