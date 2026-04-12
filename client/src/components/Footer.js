@@ -33,17 +33,17 @@ const Footer = ({ socials, name }) => {
         bgcolor: '#010409',
         borderTop: '1px solid rgba(51, 204, 255, 0.1)', 
         pt: 12,
-        pb: 4,
+        pb: 12,
         position: 'relative',
         overflow: 'hidden'
       }}
     >
       {/* Background Watermark */}
       <Box sx={{
-        position: 'absolute', bottom: -50, right: -50, opacity: 0.03,
+        position: 'absolute', bottom: -80, right: -20, opacity: 0.02,
         userSelect: 'none', pointerEvents: 'none'
       }}>
-        <Typography sx={{ fontSize: '15rem', fontWeight: 900, fontFamily: 'Syncopate' }}>YASAR</Typography>
+        <Typography sx={{ fontSize: '15rem', fontWeight: 900, fontFamily: 'Syncopate', color: 'white' }}>YASAR</Typography>
       </Box>
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
@@ -144,7 +144,7 @@ const Footer = ({ socials, name }) => {
           }}>
             <Stack direction="row" spacing={1} alignItems="center">
                <Hash size={12} color="#334155" />
-               <Typography variant="body2" sx={{ color: '#334155', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace' }}>
+               <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: 0.5 }}>
                   &copy; {new Date().getFullYear()} ARCH_TERMINUS // NO_UNAUTHORIZED_ACCESS
                </Typography>
             </Stack>
