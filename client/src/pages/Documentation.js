@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery } from '@mui/material';
+import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Book, 
@@ -15,12 +15,15 @@ import {
   Github,
   Globe,
   Search,
-  Command
+  Command,
+  RefreshCw
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import SEO from '../components/SEO';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router-dom';
+import LanguageSelector, { languages } from '../components/LanguageSelector';
+import { translateText, transliterateToThanglish } from '../services/translateService';
 
 const Documentation = ({ profile }) => {
   const navigate = useNavigate();
@@ -28,14 +31,16 @@ const Documentation = ({ profile }) => {
   const [readmeContent, setReadmeContent] = useState('');
   const [projectContent, setProjectContent] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [translatedDoc, setTranslatedDoc] = useState('');
   const [logs, setLogs] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [archLanguage, setArchLanguage] = useState('en');
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Quick Find Navigation Items
   const navItems = [
     { name: 'System Logistics', path: 'readme', type: 'doc', icon: <Book size={16} /> },
     { name: 'System Architecture', path: 'explanation', type: 'doc', icon: <Layers size={16} /> },
@@ -51,7 +56,6 @@ const Documentation = ({ profile }) => {
   );
 
   useEffect(() => {
-    // Keyboard Shortcut CMD+K
     const handleKeyDown = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
@@ -64,7 +68,6 @@ const Documentation = ({ profile }) => {
   }, []);
 
   useEffect(() => {
-    // Simulated Live API Logs
     const logInterval = setInterval(() => {
       const actions = ['GET_PROFILE', 'FETCH_SCHEMA', 'RESOLVE_DNS', 'VALIDATE_CORS', 'PING_DB', 'CACHE_RELOAD'];
       const newLog = {
@@ -109,6 +112,42 @@ const Documentation = ({ profile }) => {
     };
     fetchDocs();
   }, []);
+
+  // Dynamic Translation Hook
+  useEffect(() => {
+    const performTranslation = async () => {
+      if (!projectContent || archLanguage === 'en') {
+        setTranslatedDoc(projectContent);
+        return;
+      }
+
+      setIsTranslating(true);
+      try {
+        if (archLanguage === 'all') {
+          // Generate Trilingual View Dynamically
+          const lines = projectContent.split('\n');
+          const trilingualLines = await Promise.all(lines.map(async (line) => {
+             if (!line.trim() || line.startsWith('#') || line.startsWith('---')) return line;
+             const taLine = await translateText(line, 'ta');
+             const thLine = transliterateToThanglish(taLine);
+             return `**[EN]** ${line}\n\n**[TA]** ${taLine}\n\n**[TH]** ${thLine}`;
+          }));
+          setTranslatedDoc(trilingualLines.join('\n\n'));
+        } else {
+          const result = await translateText(projectContent, archLanguage);
+          setTranslatedDoc(result);
+        }
+      } catch (err) {
+        console.error("Translation Failed", err);
+      } finally {
+        setIsTranslating(false);
+      }
+    };
+
+    if (activeSection === 'explanation') {
+      performTranslation();
+    }
+  }, [archLanguage, projectContent, activeSection]);
 
   const handleNav = (item) => {
     if (item.type === 'doc') {
@@ -223,7 +262,6 @@ const Documentation = ({ profile }) => {
     <Box sx={{ bgcolor: '#010409', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
       <SEO title="Engineering Dashboard" description="Full technical documentation portal for the MERN Stack application." />
       
-      {/* QUICK FIND MODAL OVERLAY */}
       <AnimatePresence>
         {isSearching && (
           <Box sx={{ 
@@ -286,14 +324,12 @@ const Documentation = ({ profile }) => {
         )}
       </AnimatePresence>
 
-      {/* GLOBAL SCANNING EFFECT */}
       <Box sx={{ 
         position: 'fixed', top: 0, left: 0, right: 0, height: '1px', 
         background: 'linear-gradient(90deg, transparent, #ff3366, transparent)', 
         zIndex: 2000, opacity: 0.3, animation: 'scan 4s linear infinite' 
       }} />
 
-      {/* Dashboard Top Header */}
       <Box sx={{ 
         height: 80, 
         borderBottom: '1px solid rgba(255,255,255,0.05)', 
@@ -341,7 +377,6 @@ const Documentation = ({ profile }) => {
       </Box>
 
       <Box sx={{ flexGrow: 1, display: 'flex' }}>
-         {/* SIDEBAR NAVIGATION */}
          {!isMobile && (
            <Box sx={{ 
              width: 320, 
@@ -411,7 +446,6 @@ const Documentation = ({ profile }) => {
            </Box>
          )}
 
-         {/* MAIN CONTENT AREA */}
          <Box sx={{ flexGrow: 1, p: { xs: 3, md: 8 }, overflowY: 'auto', bgcolor: '#0b0e14' }}>
            <AnimatePresence mode="wait">
               {isLoading ? (
@@ -427,20 +461,37 @@ const Documentation = ({ profile }) => {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  {/* BREADCRUMB */}
                   <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2, opacity: 0.4 }}>
                      <Typography variant="caption" sx={{ color: 'white', fontWeight: 700 }}>RESOURCES</Typography>
                      <ChevronRight size={12} color="white" />
                      <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 900 }}>{sidebarItems.find(i => i.id === activeSection)?.label}</Typography>
                   </Stack>
 
-                  {/* DYNAMIC SECTION RENDERING */}
                   {activeSection === 'readme' || activeSection === 'explanation' ? (
                      <Box sx={{ maxWidth: '1100px' }}>
-                        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 6 }}>
+                        <Stack 
+                           direction={{ xs: 'column', sm: 'row' }} 
+                           spacing={2} 
+                           alignItems={{ xs: 'flex-start', sm: 'center' }} 
+                           justifyContent="space-between" 
+                           sx={{ mb: 6 }}
+                        >
                            <Typography variant="h2" sx={{ color: 'white', fontWeight: 900, fontSize: { xs: '1.8rem', md: '3rem' }, letterSpacing: -1 }}>
                              {sections.find(s => s.id === activeSection)?.title}
                            </Typography>
+                           
+                           {activeSection === 'explanation' && (
+                             <motion.div
+                               initial={{ opacity: 0, x: 20 }}
+                               animate={{ opacity: 1, x: 0 }}
+                               transition={{ delay: 0.3 }}
+                             >
+                               <LanguageSelector 
+                                 currentLanguage={archLanguage} 
+                                 onLanguageChange={(lang) => setArchLanguage(lang)} 
+                               />
+                             </motion.div>
+                           )}
                         </Stack>
 
                         <Box sx={{ 
@@ -450,26 +501,62 @@ const Documentation = ({ profile }) => {
                           border: '1px solid rgba(255,255,255,0.03)',
                           boxShadow: '0 60px 100px rgba(0,0,0,0.7)',
                           position: 'relative',
-                          overflow: 'hidden'
+                          overflow: 'hidden',
+                          minHeight: 400
                         }}>
-                           {/* Decorative background grid */}
                            <Box sx={{ position: 'absolute', inset: 0, opacity: 0.03, backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px', pointerEvents: 'none' }} />
                            
-                           <ReactMarkdown components={{
-                              p: ({node, ...props}) => <Typography variant="body1" sx={markdownStyles} {...props} />,
-                              h1: ({node, ...props}) => <Typography variant="h1" sx={markdownStyles} {...props} />,
-                              h2: ({node, ...props}) => <Typography variant="h2" sx={markdownStyles} {...props} />,
-                              h3: ({node, ...props}) => <Typography variant="h3" sx={markdownStyles} {...props} />,
-                              li: ({node, ...props}) => <Box component="li" sx={markdownStyles} {...props} />,
-                              code: ({node, ...props}) => <Box component="code" sx={markdownStyles} {...props} />,
-                              pre: ({node, ...props}) => <Box component="pre" sx={markdownStyles} {...props} />,
-                              table: ({node, ...props}) => <Box component="table" sx={markdownStyles} {...props} />,
-                              th: ({node, ...props}) => <Box component="th" sx={markdownStyles} {...props} />,
-                              td: ({node, ...props}) => <Box component="td" sx={markdownStyles} {...props} />,
-                              a: ({node, ...props}) => <Box component="a" target="_blank" rel="noopener noreferrer" sx={markdownStyles} {...props} />
-                           }}>
-                             {activeSection === 'readme' ? readmeContent : projectContent}
-                           </ReactMarkdown>
+                           <AnimatePresence mode="wait">
+                            {isTranslating ? (
+                               <motion.div 
+                                 key="translating"
+                                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                                 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: 300 }}
+                               >
+                                 <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}>
+                                    <RefreshCw size={40} color="#33ccff" />
+                                 </motion.div>
+                                 <Typography sx={{ mt: 3, color: '#33ccff', fontFamily: 'Syncopate', fontSize: '0.7rem', fontWeight: 900, letterSpacing: 2 }}>
+                                    DYNAMIC_ENGINE_TRANSLATING...
+                                 </Typography>
+                                 <Box sx={{ width: 200, mt: 2 }}>
+                                    <LinearProgress sx={{ bgcolor: 'rgba(51, 204, 255, 0.1)', '& .MuiLinearProgress-bar': { bgcolor: '#33ccff' } }} />
+                                 </Box>
+                               </motion.div>
+                            ) : (
+                               <motion.div key="translated" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                  {activeSection === 'explanation' && archLanguage !== 'en' && archLanguage !== 'all' && (
+                                      <Box sx={{ 
+                                        mb: 4, p: 2, borderRadius: 2, 
+                                        bgcolor: 'rgba(51, 204, 255, 0.05)', 
+                                        border: '1px solid rgba(51, 204, 255, 0.2)',
+                                        display: 'flex', alignItems: 'center', gap: 2
+                                      }}>
+                                        <Globe size={16} color="#33ccff" />
+                                        <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 800 }}>
+                                          GOOGLE_TRANSLATE_API: Using dynamic machine translation for {languages.find(l => l.code === archLanguage)?.name}.
+                                        </Typography>
+                                      </Box>
+                                   )}
+
+                                  <ReactMarkdown components={{
+                                     p: ({node, ...props}) => <Typography variant="body1" sx={markdownStyles} {...props} />,
+                                     h1: ({node, ...props}) => <Typography variant="h1" sx={markdownStyles} {...props} />,
+                                     h2: ({node, ...props}) => <Typography variant="h2" sx={markdownStyles} {...props} />,
+                                     h3: ({node, ...props}) => <Typography variant="h3" sx={markdownStyles} {...props} />,
+                                     li: ({node, ...props}) => <Box component="li" sx={markdownStyles} {...props} />,
+                                     code: ({node, ...props}) => <Box component="code" sx={markdownStyles} {...props} />,
+                                     pre: ({node, ...props}) => <Box component="pre" sx={markdownStyles} {...props} />,
+                                     table: ({node, ...props}) => <Box component="table" sx={markdownStyles} {...props} />,
+                                     th: ({node, ...props}) => <Box component="th" sx={markdownStyles} {...props} />,
+                                     td: ({node, ...props}) => <Box component="td" sx={markdownStyles} {...props} />,
+                                     a: ({node, ...props}) => <Box component="a" target="_blank" rel="noopener noreferrer" sx={markdownStyles} {...props} />
+                                  }}>
+                                    {activeSection === 'readme' ? readmeContent : translatedDoc}
+                                  </ReactMarkdown>
+                               </motion.div>
+                            )}
+                           </AnimatePresence>
                         </Box>
                      </Box>
                   ) : activeSection === 'structure' ? (
