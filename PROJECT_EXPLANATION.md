@@ -79,10 +79,21 @@ To make the engineering documentation accessible to a wider audience, I engineer
 *   **Thanglish Phonetic Engine:** Since Thanglish (Tamil words in English script) isn't natively supported by standard APIs, I built a custom transliteration layer that converts Tamil unicode characters into authentic English phonetic equivalents.
 *   **Interactive UX (Copy Engine):** I integrated a premium 'Copy to Clipboard' system for all code blocks. It utilizes the asynchronous Clipboard API and provides real-time visual feedback via a Framer Motion-animated checkmark icon upon success.
 *   **Performance:** All translations are cached locally to ensure a near-instant experience when switching between language modes.
+|
+---
+
+## 7. The Asset Dispatcher: Secure Sharing & Auto-Download
+A significant technical hurdle in modern browsers is the inability to physically attach files to a web-based email compose window (like Gmail) via a simple URL link. 
+
+**The Engineering Workaround:** I implemented a custom **Auto-Dispatch Protocol**.
+*   **The Dispatcher:** When a user shares their resume via the "Elite Dispatch" button, the system generates a URL with a specialized query parameter: `?system_dispatch=true`.
+*   **The Listener:** The Portfolio application is programmed to monitor its initialization parameters. If the `system_dispatch` flag is detected, a high-priority `useEffect` hook triggers a "DECODING ASSET" overlay.
+*   **The Execution:** After a 500ms "engine warm-up," the site automatically invokes the Resume Engine's PDF generation function and initiates a direct download for the recipient. 
+*   **Impact:** This provides the seamless UX of an email attachment without compromising browser security standards.
 
 ---
 
-## 7. How to Extend This Project
+## 8. How to Extend This Project
 This system is designed to be extensible. To add a new section:
 1.  **Define Schema:** Add a new model in `server/models/`.
 2.  **Expose Endpoint:** Map a new route in `server/routes/`.
@@ -91,7 +102,7 @@ This system is designed to be extensible. To add a new section:
 
 ---
 
-## 8. Engineer's Summary
+## 9. Engineer's Summary
 Building this project taught me that **Performance** and **Reliability** are just as important as the **User Interface**. By managing my own API and handling database failovers, I have created a portfolio that doesn't just look good—it is built to last.
 
 **Developed with Passion. Engineered with Precision.**

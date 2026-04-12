@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, Divider } from '@mui/material';
+import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, Divider, Modal, Fade } from '@mui/material';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Loader2 } from 'lucide-react';
+import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Loader2, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 
@@ -9,6 +9,7 @@ const Resume = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDispatching, setIsDispatching] = useState(false);
+  const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [isPreparing, setIsPreparing] = useState(false);
 
   // 3D Parallax Logic
@@ -66,19 +67,63 @@ const Resume = () => {
   };
 
   const handleShare = () => {
+    setIsSelectorOpen(true);
+  };
+
+  const executeEmailDispatch = () => {
+    setIsSelectorOpen(false);
     const resumeUrl = `${window.location.origin}${window.location.pathname}?system_dispatch=true`;
-    const subject = encodeURIComponent("Elite Engineering Profile Dispatch: A. Mohamed Yasar [Full-Stack Portfolio]");
+    const subject = encodeURIComponent("A. Mohamed Yasar | Authenticated Engineering Portfolio & Asset Dispatch");
     const body = encodeURIComponent(
-      `SYSTEM_DISPATCH: SECURE_ASSET_ACCESS\n\n` +
-      `I am sharing the high-tier professional profile and technical architecture of A. Mohamed Yasar.\n\n` +
-      `[ VERIFIED_ASSET_PORTAL ]\n${resumeUrl}\n\n` +
-      `Note: The link above is optimized for professional review. Upon entry, the system will automatically initiate the secure extraction of the primary PDF resume asset for your convenience.\n\n` +
-      `Session_Token: ${Math.random().toString(36).substring(7).toUpperCase()}\n` +
-      `Integrated Portfolio Infrastructure | v4.0.2`
+      `[ AUTHENTICATED_ACCESS_REQUEST ]\n\n` +
+      `A secure connection has been established to grant you access to the live professional architecture and engineering profile of A. Mohamed Yasar.\n\n` +
+      `[ SECURE_PORTAL_LOGON ]\n${resumeUrl}\n\n` +
+      `VERIFICATION_PROTOCOL: Upon entering the gateway via the secure link above, the system will automatically extract and deliver the validated PDF Resume asset directly to your device.\n\n` +
+      `DISPATCH_ID: ${Math.random().toString(36).substring(7).toUpperCase()}\n` +
+      `Core Infrastructure v4.0.5 | Built with MERN`
     );
-    
     const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=${subject}&body=${body}`;
     window.open(gmailUrl, '_blank');
+  };
+
+  const executeAssetExtraction = async () => {
+    setIsSelectorOpen(false);
+    setIsDispatching(true); // Reuse the dispatch overlay for feedback
+
+    try {
+      const frame = document.getElementById('resume-frame');
+      let pdfBlob;
+      
+      // 1. Generate PDF snapshot from the index.html content
+      if (frame && frame.contentWindow.getPDFBlob) {
+        pdfBlob = await frame.contentWindow.getPDFBlob();
+      } else {
+        const response = await fetch('/resume-pro/A_MOHAMED_YASAR_RESUME.pdf');
+        if (response.ok) pdfBlob = await response.blob();
+      }
+
+      if (!pdfBlob) throw new Error("Asset module unreachable");
+
+      const file = new File([pdfBlob], "A_MOHAMED_YASAR_RESUME.pdf", { type: "application/pdf" });
+
+      // 2. Intelligence: Check if we can share the file directly (Mobile Priority)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: "A. Mohamed Yasar - Technical Asset",
+          text: "Directly sharing the professional PDF engine export of A. Mohamed Yasar.",
+          files: [file],
+        });
+      } else {
+        // 3. Fallback: Desktop direct download
+        handleDownload();
+      }
+    } catch (error) {
+      console.error("Extraction Dispatch Failure:", error);
+      // Final fallback to simple download
+      handleDownload();
+    } finally {
+      setIsDispatching(false);
+    }
   };
 
   return (
@@ -135,6 +180,68 @@ const Resume = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Asset Dispatch Selector Modal */}
+      <Modal
+        open={isSelectorOpen}
+        onClose={() => setIsSelectorOpen(false)}
+        closeAfterTransition
+      >
+        <Fade in={isSelectorOpen}>
+          <Box sx={{
+            position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+            width: { xs: '90%', sm: 400 }, 
+            bgcolor: 'rgba(13, 17, 23, 0.95)', 
+            backdropFilter: 'blur(20px)',
+            border: '1px solid rgba(51, 204, 255, 0.3)',
+            boxShadow: '0 0 100px rgba(0,0,0,1), 0 0 30px rgba(51, 204, 255, 0.1)',
+            borderRadius: 4, p: 4, outline: 'none'
+          }}>
+            <Stack spacing={4}>
+              <Box>
+                <Typography sx={{ fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.75rem', color: '#33ccff', letterSpacing: 3, mb: 1 }}>SELECT_DISPATCH_PROTOCOL</Typography>
+                <Divider sx={{ borderColor: 'rgba(51, 204, 255, 0.1)' }} />
+              </Box>
+
+              <Stack spacing={2}>
+                <Button 
+                  fullWidth 
+                  onClick={executeEmailDispatch}
+                  sx={{ 
+                    py: 2, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)',
+                    color: 'white', borderRadius: 2, display: 'flex', flexDirection: 'column',
+                    alignItems: 'flex-start', px: 3,
+                    '&:hover': { bgcolor: 'rgba(51, 204, 255, 0.05)', borderColor: '#33ccff' }
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 900, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Send size={16} color="#33ccff" /> SYSTEM_DISPATCH [EMAIL]
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#555', ml: 3.2 }}>Direct browser-bound sharing via Gmail</Typography>
+                </Button>
+
+                <Button 
+                  fullWidth 
+                  onClick={executeAssetExtraction}
+                  sx={{ 
+                    py: 2, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)',
+                    color: 'white', borderRadius: 2, display: 'flex', flexDirection: 'column',
+                    alignItems: 'flex-start', px: 3,
+                    '&:hover': { bgcolor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc' }
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 900, fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Download size={16} color="#00ffcc" /> ASSET_EXTRACTION [PDF]
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: '#555', ml: 3.2 }}>Local PDF compilation and direct download</Typography>
+                </Button>
+              </Stack>
+
+              <Button onClick={() => setIsSelectorOpen(false)} sx={{ color: '#444', fontSize: '0.65rem' }}>CANCEL_AND_RETURN</Button>
+            </Stack>
+          </Box>
+        </Fade>
+      </Modal>
 
       {/* Dynamic Background Grid */}
       <Box sx={{
