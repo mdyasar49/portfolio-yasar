@@ -21,7 +21,7 @@ const Header = () => {
     { name: 'Skills', path: '/#skills', type: 'anchor' },
     { name: 'Projects', path: '/#projects', type: 'anchor' },
     { name: 'Resume', path: '/#resume', type: 'anchor' },
-    { name: 'Architecture', path: '/architecture', type: 'link' },
+    { name: 'Architecture', path: '/#architecture', type: 'anchor' },
     { name: 'Contact', path: '/#contact', type: 'anchor' },
   ];
 
