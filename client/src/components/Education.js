@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Typography, Stack, Paper } from '@mui/material';
 import { GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Education = ({ education }) => {
+const Education = memo(({ education }) => {
   if (!education || !Array.isArray(education)) return null;
 
   return (
@@ -77,6 +77,6 @@ const Education = ({ education }) => {
       </Stack>
     </Box>
   );
-};
+});
 
 export default Education;

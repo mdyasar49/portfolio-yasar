@@ -4,7 +4,7 @@
  * of the application and high-quality Material UI components for the design.
  */
 import React, { useEffect } from 'react';
-import { ThemeProvider, CssBaseline, Box, CircularProgress, keyframes } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box, keyframes } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import theme from './theme/index';
 import useProfile from './hooks/useProfile';
@@ -13,6 +13,7 @@ import Portfolio from './pages/Portfolio';
 import Resume from './pages/Resume';
 import Documentation from './pages/Documentation';
 import NetworkErrorScreen from './components/NetworkErrorScreen';
+import GlobalHUD from './components/GlobalHUD';
 
 // ─── Animations ───────────────────────────────────────────
 const spin = keyframes`
@@ -87,6 +88,7 @@ const App = () => {
         <ScrollToTop />
         <ScrollToHash />
         <Header />
+        <GlobalHUD />
         <Box sx={{ pt: 10 }}>
           <Routes>
             <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />

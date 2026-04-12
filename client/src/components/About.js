@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Typography, Grid, Paper, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
 
-const About = ({ profile }) => {
+const About = memo(({ profile }) => {
   if (!profile) return null;
   return (
     <Box id="about" sx={{ py: 15 }}>
@@ -20,7 +20,7 @@ const About = ({ profile }) => {
 
         <Grid container spacing={6} alignItems="center">
           <Grid item xs={12} md={7}>
-            <Box sx={{ p: 4, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(20px)' }}>
+            <Box sx={{ p: 4, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)' }}>
               <Typography variant="body1" sx={{ color: '#cbd5e1', lineHeight: 2, fontSize: '1.1rem', textAlign: 'justify', mb: 4 }}>
                 {profile?.summary}
               </Typography>
@@ -64,6 +64,6 @@ const About = ({ profile }) => {
       </motion.div>
     </Box>
   );
-};
+});
 
 export default About;

@@ -148,5 +148,19 @@ window.downloadAsPDF = function() {
     html2pdf().set(opt).from(element).save();
 }
 
+/**
+ * Returns the PDF as a Blob for sharing or other purposes.
+ */
+window.getPDFBlob = async function() {
+    const element = document.getElementById('main-resume');
+    const opt = {
+        margin: 0,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    return html2pdf().set(opt).from(element).output('blob');
+}
+
 // Ignition
 init();

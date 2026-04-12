@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress, Tooltip, Zoom } from '@mui/material';
+import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Book, 
@@ -18,8 +18,10 @@ import {
   Command,
   RefreshCw,
   Copy,
-  Check
+  Check,
+  Menu
 } from 'lucide-react';
+import { Drawer } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 import SEO from '../components/SEO';
 import Footer from '../components/Footer';
@@ -90,6 +92,7 @@ const Documentation = ({ profile }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [archLanguage, setArchLanguage] = useState('en');
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -409,6 +412,14 @@ const Documentation = ({ profile }) => {
         justifyContent: 'space-between'
       }}>
         <Stack direction="row" spacing={3} alignItems="center">
+          {isMobile && (
+            <IconButton 
+              onClick={() => setIsNavOpen(true)}
+              sx={{ color: '#ff3366', bgcolor: 'rgba(255,51,102,0.1)', '&:hover': { bgcolor: 'rgba(255,51,102,0.2)' } }}
+            >
+              <Menu size={20} />
+            </IconButton>
+          )}
           <Box sx={{ p: 1, bgcolor: '#ff3366', borderRadius: '10px', color: 'white', boxShadow: '0 0 20px rgba(255,51,102,0.4)' }}>
             <Terminal size={22} />
           </Box>
@@ -685,6 +696,63 @@ const Documentation = ({ profile }) => {
            </AnimatePresence>
          </Box>
       </Box>
+
+      {/* Mobile Navigation Drawer */}
+      <Drawer
+        anchor="left"
+        open={isNavOpen}
+        onClose={() => setIsNavOpen(false)}
+        PaperProps={{
+          sx: {
+            width: 280,
+            bgcolor: 'rgba(1, 4, 9, 0.95)',
+            backdropFilter: 'blur(20px)',
+            borderRight: '1px solid rgba(255,255,255,0.05)',
+            p: 3
+          }
+        }}
+      >
+        <Typography variant="overline" sx={{ color: '#333', fontWeight: 900, letterSpacing: 3, mb: 4, display: 'block' }}>SYSTEM_NAV</Typography>
+        <Stack spacing={2}>
+          {sidebarItems.map((item) => (
+            <Box 
+              key={item.id}
+              onClick={() => {
+                setActiveSection(item.id);
+                setIsNavOpen(false);
+              }}
+              sx={{ 
+                p: 2, px: 2.5, borderRadius: 3, cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 2.5,
+                bgcolor: activeSection === item.id ? 'rgba(51, 204, 255, 0.08)' : 'transparent',
+                color: activeSection === item.id ? '#33ccff' : '#64748b',
+                border: activeSection === item.id ? '1px solid rgba(51, 204, 255, 0.2)' : '1px solid transparent',
+              }}
+            >
+              {item.icon}
+              <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: 1.5 }}>{item.label}</Typography>
+            </Box>
+          ))}
+        </Stack>
+        
+        <Divider sx={{ my: 4, borderColor: 'rgba(255,255,255,0.03)' }} />
+        
+        <Box sx={{ mt: 'auto' }}>
+           <Typography variant="caption" sx={{ color: '#333', fontWeight: 900, display: 'block', mb: 2 }}>PAGE_LINKS</Typography>
+           <Stack spacing={1}>
+              {navItems.filter(i => i.type === 'page').map(item => (
+                 <Box 
+                   key={item.path}
+                   onClick={() => navigate(item.path)}
+                   sx={{ p: 1.5, display: 'flex', alignItems: 'center', gap: 2, color: '#444', cursor: 'pointer', '&:hover': { color: 'white' } }}
+                 >
+                    {item.icon}
+                    <Typography variant="caption" sx={{ fontWeight: 800 }}>{item.name.toUpperCase()}</Typography>
+                 </Box>
+              ))}
+           </Stack>
+        </Box>
+      </Drawer>
 
       <Footer socials={profile.socials} name={profile.name} />
 

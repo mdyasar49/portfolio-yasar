@@ -14,7 +14,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Insane 3D Animated Grid Background */
+/* Insane 3D Animated Grid Background - Optimized for Performance */
 body::before {
   content: "";
   position: fixed;
@@ -25,30 +25,32 @@ body::before {
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 100% 100%, 60px 60px, 60px 60px;
   transform: perspective(500px) rotateX(60deg) scale(2.5) translateY(-50px);
-  animation: gridMove 15s linear infinite;
+  animation: gridMove 20s linear infinite;
   z-index: -2;
   pointer-events: none;
+  will-change: transform;
 }
 
-/* Deep Ambient Glow */
+/* Deep Ambient Glow - Optimized */
 body::after {
   content: "";
   position: fixed;
   top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.15), rgba(236, 72, 153, 0.05), transparent 60%);
-  animation: pulseGlow 10s ease-in-out infinite alternate;
+  background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.03), transparent 60%);
+  animation: pulseGlow 15s ease-in-out infinite alternate;
   z-index: -1;
   pointer-events: none;
+  will-change: transform, opacity;
 }
 
 @keyframes gridMove {
-  0% { transform: perspective(500px) rotateX(60deg) scale(2.5) translateY(0); }
-  100% { transform: perspective(500px) rotateX(60deg) scale(2.5) translateY(60px); }
+  0% { transform: perspective(500px) rotateX(60deg) scale(2.5) translateZ(0) translateY(0); }
+  100% { transform: perspective(500px) rotateX(60deg) scale(2.5) translateZ(0) translateY(60px); }
 }
 
 @keyframes pulseGlow {
-  0% { transform: scale(1); opacity: 0.8; filter: hue-rotate(0deg); }
-  100% { transform: scale(1.2); opacity: 1; filter: hue-rotate(45deg); }
+  0% { transform: scale(1) translateZ(0); opacity: 0.6; }
+  100% { transform: scale(1.1) translateZ(0); opacity: 0.8; }
 }
 
 /* Liquid Gradient Text for mindblowing effect */

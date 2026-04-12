@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Typography, Grid, Paper, Stack, Tooltip } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Database, Layout, Terminal, Sparkles, Cpu } from 'lucide-react';
 
-const SkillCategory = ({ title, skills, icon: Icon, delay, color }) => (
+const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9 }}
     whileInView={{ opacity: 1, scale: 1 }}
@@ -19,7 +19,7 @@ const SkillCategory = ({ title, skills, icon: Icon, delay, color }) => (
         borderRadius: 6, 
         position: 'relative',
         background: 'rgba(2, 6, 23, 0.7)',
-        backdropFilter: 'blur(30px)',
+        backdropFilter: 'blur(8px)',
         border: '1px solid rgba(255, 255, 255, 0.03)',
         transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
         overflow: 'hidden',
@@ -85,9 +85,9 @@ const SkillCategory = ({ title, skills, icon: Icon, delay, color }) => (
       }} />
     </Paper>
   </motion.div>
-);
+));
 
-const Skills = ({ skills }) => {
+const Skills = memo(({ skills }) => {
   if (!skills) return null;
 
   const categories = [
@@ -132,6 +132,6 @@ const Skills = ({ skills }) => {
       </Grid>
     </Box>
   );
-};
+});
 
 export default Skills;

@@ -23,21 +23,25 @@ const Portfolio = ({ profile, loading }) => {
         description={profile?.summary || "Full Stack Engineer Portfolio"} 
       />
       
-      {/* GLOBAL SCANNING EFFECT */}
+      {/* GLOBAL SCANNING EFFECT - Optimized with will-change and transform */}
       <Box sx={{ 
-        position: 'fixed', top: 0, left: 0, right: 0, height: '1px', 
-        background: 'linear-gradient(90deg, transparent, #ff3366, transparent)', 
-        zIndex: 2000, opacity: 0.2, animation: 'scan 4s linear infinite',
-        pointerEvents: 'none'
+        position: 'fixed', top: 0, left: 0, right: 0, height: '2px', 
+        background: 'linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.5), transparent)', 
+        zIndex: 2000, opacity: 0.1, 
+        animation: 'scan-optimized 8s linear infinite',
+        pointerEvents: 'none',
+        willChange: 'transform'
       }} />
 
       <style>
         {`
-          @keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
+          @keyframes scan-optimized { 
+            0% { transform: translateY(-100vh); } 
+            100% { transform: translateY(100vh); } 
+          }
           ::-webkit-scrollbar { width: 8px; }
           ::-webkit-scrollbar-track { background: transparent; }
           ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
-          html { scroll-behavior: smooth; }
         `}
       </style>
 

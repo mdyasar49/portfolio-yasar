@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Typography, Card, CardContent, Stack, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Linkedin } from 'lucide-react';
 
-const Experience = ({ experience }) => {
+const Experience = memo(({ experience }) => {
   if (!experience || !Array.isArray(experience)) return null;
 
   return (
@@ -126,6 +126,6 @@ const Experience = ({ experience }) => {
       </Stack>
     </Box>
   );
-};
+});
 
 export default Experience;

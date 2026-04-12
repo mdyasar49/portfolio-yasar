@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Box, Typography, Button, Chip, keyframes } from '@mui/material';
+import React, { useState, useEffect, useCallback, memo } from 'react';
+import { Box, Typography, Button, Chip, keyframes, Stack } from '@mui/material';
 import WifiOffIcon from '@mui/icons-material/WifiOff';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -9,7 +9,7 @@ import SignalWifiConnectedNoInternet4Icon from '@mui/icons-material/SignalWifiCo
 // ─── Animations ───────────────────────────────────────────
 const pulse = keyframes`
   0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.95); }
+  50%       { opacity: 0.6; transform: scale(0.98); }
 `;
 
 const float = keyframes`
@@ -18,8 +18,13 @@ const float = keyframes`
 `;
 
 const scanLine = keyframes`
-  0%   { top: 0%; opacity: 0.6; }
-  100% { top: 100%; opacity: 0; }
+  0%   { transform: translateY(0); opacity: 0.6; }
+  100% { transform: translateY(100vh); opacity: 0; }
+`;
+
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 `;
 
 // ─── Error Config by Type ─────────────────────────────────
@@ -99,29 +104,20 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
     };
   }, []);
 
-  // Auto-retry when internet comes back (network error only)
-  useEffect(() => {
-    if (isOnline && errorType === 'network') {
-      handleRetry();
-    }
-  }, [isOnline, errorType, handleRetry]);
-
-  // Start 30s countdown for server errors (Render cold start)
+  // Countdown is now PURELY visual, no auto-trigger
   useEffect(() => {
     if (errorType === 'server') {
       setCountdown(30);
+    } else {
+      setCountdown(null);
     }
   }, [errorType]);
 
   useEffect(() => {
-    if (countdown === null) return;
-    if (countdown === 0) {
-      handleRetry();
-      return;
-    }
+    if (countdown === null || countdown <= 0) return;
     const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
     return () => clearTimeout(timer);
-  }, [countdown, handleRetry]);
+  }, [countdown]);
 
   return (
     <Box
@@ -166,15 +162,31 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       {/* Main content card */}
       <Box sx={{
         position: 'relative', zIndex: 1,
-        background: 'rgba(255,255,255,0.03)',
         border: `1px solid ${config.iconColor}33`,
         borderRadius: 3,
         p: { xs: 4, md: 6 },
         maxWidth: 520,
         width: '100%',
         textAlign: 'center',
-        backdropFilter: 'blur(20px)',
-        boxShadow: `0 0 60px ${config.glowColor}`,
+        background: 'rgba(10, 10, 15, 0.8)',
+        backdropFilter: 'blur(8px)',
+        boxShadow: `0 40px 100px rgba(0,0,0,0.8)`,
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0, left: 0, width: 30, height: 30,
+          borderTop: `1px solid ${config.iconColor}`,
+          borderLeft: `1px solid ${config.iconColor}`,
+          borderRadius: '8px 0 0 0',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          bottom: 0, right: 0, width: 30, height: 30,
+          borderBottom: `1px solid ${config.iconColor}`,
+          borderRight: `1px solid ${config.iconColor}`,
+          borderRadius: '0 0 8px 0',
+        }
       }}>
 
         {/* Status dots */}
@@ -217,12 +229,12 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
 
         {/* Title */}
         <Typography variant="h5" sx={{
-          fontWeight: 800,
-          color: '#e2e8f0',
+          fontWeight: 900,
+          color: '#ffffff',
           letterSpacing: 3,
-          fontFamily: 'monospace',
+          fontFamily: 'Syncopate',
           mb: 1,
-          fontSize: { xs: '1.1rem', md: '1.4rem' },
+          fontSize: { xs: '0.9rem', md: '1.1rem' },
         }}>
           {config.title}
         </Typography>
@@ -250,69 +262,109 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
         {/* Online status badge */}
         {errorType === 'network' && (
           <Box sx={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             gap: 1, mb: 3,
             p: '6px 16px',
             borderRadius: 2,
-            bgcolor: isOnline ? 'rgba(46, 213, 115, 0.1)' : 'rgba(255, 107, 107, 0.1)',
-            border: `1px solid ${isOnline ? '#2ed573' : '#ff6b6b'}44`,
-            display: 'inline-flex', mx: 'auto',
+            bgcolor: isOnline ? 'rgba(0, 255, 204, 0.1)' : 'rgba(255, 107, 107, 0.1)',
+            border: `1px solid ${isOnline ? '#00ffcc' : '#ff6b6b'}44`,
+            mx: 'auto',
           }}>
             <Box sx={{
               width: 8, height: 8, borderRadius: '50%',
-              bgcolor: isOnline ? '#2ed573' : '#ff6b6b',
-              animation: `${pulse} 1.5s ease-in-out infinite`,
+              bgcolor: isOnline ? '#00ffcc' : '#ff6b6b',
+              animation: isOnline ? `${pulse} 1s ease-in-out infinite` : 'none',
             }} />
             <Typography sx={{
-              color: isOnline ? '#2ed573' : '#ff6b6b',
+              color: isOnline ? '#00ffcc' : '#ff6b6b',
               fontSize: '0.75rem',
               fontFamily: 'monospace',
               letterSpacing: 1,
+              fontWeight: 800
             }}>
-              {isOnline ? 'INTERNET RESTORED — Reconnecting...' : 'NO INTERNET DETECTED'}
+              {isOnline ? 'CONNECTION_READY' : 'CONNECTION_LOST'}
             </Typography>
           </Box>
         )}
 
-        {/* Countdown for server errors */}
+        {/* Countdown - Purely informational */}
         {errorType === 'server' && countdown !== null && (
           <Typography sx={{
-            color: '#64748b', fontSize: '0.8rem',
-            fontFamily: 'monospace', mb: 2,
+            color: '#444', fontSize: '0.7rem',
+            fontFamily: 'monospace', mb: 2, letterSpacing: 1
           }}>
-            Auto-retry in {countdown}s (server may be waking up)
+            {countdown > 0 ? `MANUAL_RETRY_RECOMMENDED_IN: ${countdown}S` : 'READY_FOR_RETRY'}
           </Typography>
         )}
 
         {/* Retry button */}
-        <Button
-          variant="outlined"
-          size="large"
-          startIcon={<RefreshIcon sx={{ animation: retrying ? `${pulse} 0.6s linear infinite` : 'none' }} />}
-          onClick={handleRetry}
-          disabled={retrying}
-          sx={{
-            color: config.iconColor,
-            borderColor: `${config.iconColor}66`,
-            px: 4, py: 1.2,
-            fontFamily: 'monospace',
-            letterSpacing: 2,
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            borderRadius: 2,
-            '&:hover': {
-              borderColor: config.iconColor,
-              bgcolor: `${config.iconColor}18`,
-              boxShadow: `0 0 20px ${config.glowColor}`,
-            },
-            '&:disabled': {
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
+          <Button
+            variant="contained"
+            size="large"
+            startIcon={<RefreshIcon sx={{ animation: retrying ? `${spin} 1s linear infinite` : 'none' }} />}
+            onClick={handleRetry}
+            disabled={retrying}
+            sx={{
+              background: `linear-gradient(45deg, ${config.iconColor}, #000)`,
+              color: 'white',
+              px: 4, py: 1.2,
+              fontFamily: 'Syncopate',
+              letterSpacing: 2,
+              fontSize: '0.75rem',
+              fontWeight: 900,
+              borderRadius: 2,
+              boxShadow: `0 10px 20px ${config.glowColor}`,
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: `0 15px 30px ${config.glowColor}`,
+                background: `linear-gradient(45deg, ${config.iconColor}, ${config.iconColor}88)`,
+              }
+            }}
+          >
+            {retrying ? 'CONNECTING...' : 'REBOOT_CONNECTION'}
+          </Button>
+
+          <Button
+            variant="outlined"
+            onClick={() => window.location.href = '/'}
+            sx={{
               color: '#64748b',
-              borderColor: '#33333366',
-            },
-          }}
-        >
-          {retrying ? 'CONNECTING...' : 'RETRY CONNECTION'}
-        </Button>
+              borderColor: 'rgba(255,255,255,0.1)',
+              px: 3,
+              fontFamily: 'monospace',
+              fontWeight: 900,
+              fontSize: '0.75rem',
+              '&:hover': { color: 'white', borderColor: 'white', bgcolor: 'rgba(255,255,255,0.05)' }
+            }}
+          >
+            EXIT_TO_HOME
+          </Button>
+        </Stack>
+
+        {/* Diagnostic Log */}
+        <Box sx={{ 
+          mt: 4, p: 2, 
+          bgcolor: 'rgba(0,0,0,0.3)', 
+          borderRadius: 2, 
+          border: '1px solid rgba(255,255,255,0.03)',
+          textAlign: 'left'
+        }}>
+          <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>DIAGNOSTIC_TRACE v4.0</Typography>
+          <Stack spacing={0.5}>
+            <Typography variant="caption" sx={{ color: '#555', fontFamily: 'monospace', fontSize: '0.65rem' }}>
+              &gt; STACK: MERN_CORE_V2
+            </Typography>
+            <Typography variant="caption" sx={{ color: config.iconColor, fontFamily: 'monospace', fontSize: '0.65rem', opacity: 0.8 }}>
+              &gt; STATUS: {config.chipLabel}
+            </Typography>
+            <Typography variant="caption" sx={{ color: '#33ccff', fontFamily: 'monospace', fontSize: '0.65rem', opacity: 0.6 }}>
+              &gt; ENV: {process.env.NODE_ENV?.toUpperCase() || 'DEVELOPMENT'}
+            </Typography>
+          </Stack>
+        </Box>
 
         {/* Divider */}
         <Box sx={{
@@ -331,4 +383,4 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
   );
 };
 
-export default NetworkErrorScreen;
+export default memo(NetworkErrorScreen);

@@ -58,24 +58,6 @@
         "Implemented RESTful APIs with Express.js and integrated with MongoDB for data persistence",
         "Deployed live on Render with automated CI/CD pipeline"
       ]
-    },
-    {
-      "name": "TaskFlow Pro",
-      "type": "Open Source / Personal",
-      "technologies": ["React.js", "Material UI", "Framer Motion"],
-      "image": "https://images.unsplash.com/photo-1540350394557-8d14678e7f91?auto=format&fit=crop&q=80&w=800",
-      "link": "https://github.com/mdyasar49/taskflow-pro",
-      "github": "https://github.com/mdyasar49/taskflow-pro",
-      "description": ["High-performance Task Management Dashboard."]
-    },
-    {
-      "name": "HR Management System",
-      "type": "Open Source / Personal",
-      "technologies": ["MERN Stack", "Node.js", "Express.js", "MongoDB"],
-      "image": "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=800",
-      "link": "https://github.com/mdyasar49/hr-management-system",
-      "github": "https://github.com/mdyasar49/hr-management-system",
-      "description": ["Full-stack HR application for employee management and payroll."]
     }
   ],
   "education": [
