@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, Button, Chip, keyframes } from '@mui/material';
 import WifiOffIcon from '@mui/icons-material/WifiOff';
 import CloudOffIcon from '@mui/icons-material/CloudOff';
@@ -79,27 +79,34 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
   const config = ERROR_CONFIG[errorType] || ERROR_CONFIG.unknown;
   const IconComponent = config.icon;
 
+  const handleRetry = useCallback(async () => {
+    setRetrying(true);
+    setCountdown(null);
+    await new Promise(r => setTimeout(r, 800));
+    onRetry();
+    setRetrying(false);
+  }, [onRetry]);
+
   // Listen for browser online/offline events
   useEffect(() => {
-    const handleOnline  = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-    window.addEventListener('online',  handleOnline);
-    window.addEventListener('offline', handleOffline);
+    const goOnline  = () => setIsOnline(true);
+    const goOffline = () => setIsOnline(false);
+    window.addEventListener('online',  goOnline);
+    window.addEventListener('offline', goOffline);
     return () => {
-      window.removeEventListener('online',  handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online',  goOnline);
+      window.removeEventListener('offline', goOffline);
     };
   }, []);
 
-  // Auto-retry when internet comes back
+  // Auto-retry when internet comes back (network error only)
   useEffect(() => {
     if (isOnline && errorType === 'network') {
       handleRetry();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOnline]);
+  }, [isOnline, errorType, handleRetry]);
 
-  // Auto-retry countdown for server errors (Render cold start)
+  // Start 30s countdown for server errors (Render cold start)
   useEffect(() => {
     if (errorType === 'server') {
       setCountdown(30);
@@ -114,16 +121,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
     }
     const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
     return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [countdown]);
-
-  const handleRetry = async () => {
-    setRetrying(true);
-    setCountdown(null);
-    await new Promise(r => setTimeout(r, 800)); // small delay for UX
-    onRetry();
-    setRetrying(false);
-  };
+  }, [countdown, handleRetry]);
 
   return (
     <Box
