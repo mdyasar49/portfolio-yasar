@@ -19,6 +19,8 @@ const buildApiCandidates = () => {
 
     // Default production fallback for direct resume URL access
     candidates.push('https://mern-portfolio-yasar.onrender.com/api/profile');
+    // Secondary fallback if production domain is switched during migration
+    candidates.push('https://mern-portfolio-yasar-1.onrender.com/api/profile');
 
     return [...new Set(candidates.filter(Boolean))];
 };

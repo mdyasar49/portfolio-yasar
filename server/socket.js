@@ -12,10 +12,12 @@ const initSocket = (server) => {
         .split(',')
         .map(normalizeOrigin)
         .filter(Boolean);
+    const defaultOrigins = ["http://localhost:3000", "https://mern-portfolio-yasar-1.onrender.com"];
+    const allowedOrigins = clientOrigins.length > 0 ? clientOrigins : defaultOrigins;
 
     const io = new Server(server, {
         cors: {
-            origin: clientOrigins.length > 0 ? clientOrigins : ["http://localhost:3000"],
+            origin: allowedOrigins,
             methods: ["GET", "POST"]
         }
     });

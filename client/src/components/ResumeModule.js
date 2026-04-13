@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, Typography, Button, Stack, Container, Grid, Paper, Divider } from '@mui/material';
-import { Download, ExternalLink, ShieldCheck, FileText, Zap } from 'lucide-react';
+import { Box, Typography, Button, Stack, Container, Grid, Paper } from '@mui/material';
+import { Download, ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import API_BASE_URL from '../config';
 

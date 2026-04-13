@@ -21,6 +21,7 @@ const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '');
 const rawClientUrl = process.env.CLIENT_URL || '';
 const allowedOrigins = [
   'http://localhost:3000',                              // Local dev client
+  'https://mern-portfolio-yasar-1.onrender.com',       // Production frontend
   ...rawClientUrl.split(',').map(normalizeOrigin)      // Production client(s) from .env
 ].map(normalizeOrigin).filter(Boolean);
 
