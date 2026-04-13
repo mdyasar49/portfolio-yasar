@@ -21,33 +21,19 @@ api.interceptors.request.use((config) => {
 // Global Response Error Handler
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
-        // Log critical network failures for debugging
-        if (!error.response) {
-            console.error("🌐 [Network Error] Server unreachable or CORS failure.");
-        } else {
-            // console.error(`❌ [API Error] Status ${error.response.status}:`, error.response.data);
-        }
-        return Promise.reject(error);
-    }
+    (error) => Promise.reject(error)
 );
 
 export const getProfile = async () => {
-  try {
-    const response = await api.get('/profile');
-    return response.data;
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
-  }
+  const response = await api.get('/profile');
+  return response.data;
 };
 
 export const getVisitors = async () => {
     try {
         const response = await api.get('/visitors');
         return response.data;
-    } catch (error) {
-        console.error('SERVICE_ERROR_VISTORS:', error);
+    } catch {
         return { success: false, count: 0 };
     }
 };
@@ -56,8 +42,7 @@ export const getHealth = async () => {
     try {
         const response = await api.get('/health');
         return response.data;
-    } catch (error) {
-        console.error('SERVICE_ERROR_HEALTH:', error);
+    } catch {
         return { success: false, status: 'Offline' };
     }
 };
@@ -67,7 +52,6 @@ export const submitContact = async (formData) => {
         const response = await api.post('/contact', formData);
         return response.data;
     } catch (error) {
-        console.error('SERVICE_ERROR_CONTACT:', error);
         return { 
             success: false, 
             error: error.response?.data?.error || 'System core failure during transmission.' 

@@ -117,7 +117,14 @@ const LanguageSelector = ({ currentLanguage, onLanguageChange }) => {
             boxShadow: '0 40px 100px rgba(0,0,0,0.8)',
             minWidth: 240,
             overflow: 'hidden',
-            p: 1
+            p: 1,
+            maxHeight: { xs: '70vh', sm: 'unset' }
+          }
+        }}
+        MenuListProps={{
+          sx: {
+            maxHeight: { xs: '62vh', sm: 'unset' },
+            overflowY: { xs: 'auto', sm: 'visible' }
           }
         }}
       >

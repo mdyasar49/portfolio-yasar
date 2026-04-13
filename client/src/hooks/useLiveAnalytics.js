@@ -1,39 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
-import API_BASE_URL from '../config';
+import { getVisitors } from '../services/api';
 
 /**
  * Custom Hook: useLiveAnalytics
- * Establishes a WebSocket connection to track live active sessions.
+ * Uses lightweight polling to avoid noisy socket reconnect failures.
  */
 const useLiveAnalytics = () => {
     const [activeSessions, setActiveSessions] = useState(1); // Default to at least self
-    const socketRef = useRef(null);
+    const pollTimerRef = useRef(null);
 
     useEffect(() => {
-        // Derive Socket URL from API_BASE_URL (removing /api)
-        const socketUrl = API_BASE_URL.replace('/api', '');
-        
-        // Initialize Socket connection
-        socketRef.current = io(socketUrl, {
-            reconnectionAttempts: 5,
-            timeout: 10000,
-        });
+        let mounted = true;
 
-        // Listen for live updates
-        socketRef.current.on('visitorCountUpdate', (count) => {
-            setActiveSessions(count);
-        });
+        const refreshVisitors = async () => {
+            const data = await getVisitors();
+            if (mounted && data?.success && Number.isFinite(data.count)) {
+                setActiveSessions(Math.max(1, data.count));
+            }
+        };
 
-        // Silent error handling for production stability
-        socketRef.current.on('connect_error', () => {
-            // console.log("📡 [Socket.io] Service currently unavailable.");
-        });
+        // Initial load and slow polling keeps telemetry fresh
+        refreshVisitors();
+        pollTimerRef.current = setInterval(refreshVisitors, 30000);
 
-        // Cleanup on unmount
         return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
+            mounted = false;
+            if (pollTimerRef.current) {
+                clearInterval(pollTimerRef.current);
             }
         };
     }, []);

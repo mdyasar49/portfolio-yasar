@@ -341,7 +341,7 @@ const Documentation = ({ profile }) => {
                 style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }} 
              />
              <motion.div initial={{ scale: 0.95, opacity: 0, y: -20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: -20 }}
-                style={{ position: 'relative', width: '100%', maxWidth: 600, background: '#0d1117', borderRadius: 16, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.8)' }}>
+                style={{ position: 'relative', width: '100%', maxWidth: 600, maxHeight: '88vh', background: '#0d1117', borderRadius: 16, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column' }}>
                 
                 <Box sx={{ p: 2.5, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 2 }}>
                    <Search size={20} color="#33ccff" />
@@ -358,7 +358,7 @@ const Documentation = ({ profile }) => {
                    <Box sx={{ bgcolor: 'rgba(255,255,255,0.05)', px: 1, borderRadius: 1, color: '#555', fontSize: '0.7rem' }}>ESC</Box>
                 </Box>
 
-                <Box sx={{ maxHeight: 400, overflowY: 'auto', p: 1.5 }}>
+                <Box sx={{ maxHeight: { xs: '60vh', md: 400 }, overflowY: 'auto', p: 1.5 }}>
                    {filteredNav.length > 0 ? (
                      filteredNav.map((item, i) => (
                         <Box key={i} onClick={() => handleNav(item)}

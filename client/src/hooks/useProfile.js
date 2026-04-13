@@ -17,17 +17,28 @@ const useProfile = () => {
         setError(null);
         setErrorType(null);
 
-        try {
-            const data = await getProfile();
-            if (data) setProfile(data);
-        } catch (err) {
-            console.group('🔍 [API Diagnostic Report]');
-            console.error('API Error Detected:', err.message);
-            console.log('Target Base URL:', process.env.REACT_APP_API_BASE_URL);
-            console.log('Error Code:', err.code);
-            console.log('Error Response:', err.response?.data);
-            console.groupEnd();
+        const MAX_RETRIES = 4;
+        let lastError = null;
 
+        try {
+            for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+                try {
+                    const data = await getProfile();
+                    if (data) {
+                        setProfile(data);
+                        return;
+                    }
+                } catch (err) {
+                    lastError = err;
+                    // Render/host cold-start handling: wait and retry before showing error UI
+                    if (attempt < MAX_RETRIES) {
+                        await new Promise((resolve) => setTimeout(resolve, attempt * 1200));
+                    }
+                }
+            }
+
+            if (lastError) throw lastError;
+        } catch (err) {
             setError(err);
 
             if (!navigator.onLine || err.message === 'Network Error' || err.code === 'ERR_NETWORK') {

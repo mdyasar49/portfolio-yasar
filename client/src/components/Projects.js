@@ -258,14 +258,16 @@ const Projects = memo(({ projects }) => {
             border: fullScreen ? 'none' : '1px solid rgba(51, 204, 255, 0.1)',
             borderRadius: fullScreen ? 0 : 6,
             overflow: 'hidden',
-            p: { xs: 1, sm: 2, md: 4 }
+            p: { xs: 1, sm: 2, md: 4 },
+            maxHeight: { xs: '100vh', md: '92vh' },
+            m: { xs: 0, md: 2 }
           } 
         }}
       >
         <AnimatePresence mode="wait">
           {selectedProject && (
             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
-              <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: 4 }}>
+              <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: { xs: 2, md: 4 }, pr: { xs: 1, md: 2 } }}>
                 <Stack direction="row" spacing={3} alignItems="center">
                   <Box sx={{ p: 2, bgcolor: 'rgba(51, 204, 255, 0.1)', borderRadius: 2, color: '#33ccff', boxShadow: '0 0 20px rgba(51, 204, 255, 0.1)' }}>
                     <LayoutDashboard size={28} />
@@ -278,7 +280,7 @@ const Projects = memo(({ projects }) => {
                 <IconButton onClick={handleClose} sx={{ color: '#444', '&:hover': { color: '#ff3366' } }}><X size={28} /></IconButton>
               </DialogTitle>
 
-              <DialogContent>
+              <DialogContent sx={{ px: { xs: 1, sm: 2 }, overflowY: 'auto' }}>
                 <Grid container spacing={6}>
                   <Grid item xs={12} lg={7}>
                     <Box sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.01)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
@@ -322,7 +324,7 @@ const Projects = memo(({ projects }) => {
                 </Grid>
               </DialogContent>
 
-              <DialogActions sx={{ p: 5, pt: 2, gap: 3 }}>
+              <DialogActions sx={{ p: { xs: 2, md: 5 }, pt: 2, gap: 2, flexWrap: 'wrap' }}>
                 <Button onClick={handleClose} sx={{ color: '#444', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}>ABORT_VIEW</Button>
                 <Button 
                   variant="contained" 

@@ -161,7 +161,9 @@ const Resume = () => {
               backgroundColor: '#02040a',
               display: 'flex', flexDirection: 'column',
               alignItems: 'center', justifyContent: 'center',
-              backdropFilter: 'blur(20px)'
+              backdropFilter: 'blur(20px)',
+              overflowY: 'auto',
+              padding: '24px 16px'
             }}
           >
             <Stack spacing={4} alignItems="center">
@@ -195,6 +197,8 @@ const Resume = () => {
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
             width: { xs: '95%', sm: 400 }, 
+            maxHeight: { xs: '88vh', sm: '80vh' },
+            overflowY: 'auto',
             bgcolor: 'rgba(13, 17, 23, 0.95)', 
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(51, 204, 255, 0.3)',
