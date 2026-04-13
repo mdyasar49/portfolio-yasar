@@ -1,17 +1,36 @@
-import React from 'react';
-import { Box, Typography, Container, Grid, Paper, Stack, Button } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Typography, Container, Grid, Paper, Stack, Button, Snackbar, Alert } from '@mui/material';
 import { LayoutDashboard, Users, FolderKanban, Cpu, LogOut, Settings, ExternalLink } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
-import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 
 const AdminDashboard = () => {
     const { admin, logoutAdmin } = useAdmin();
-    const navigate = useNavigate();
+    const [toast, setToast] = useState({ open: false, message: '' });
 
     const handleLogout = () => {
         logoutAdmin();
-        navigate('/admin/login');
+        window.location.href = '/admin/login';
+    };
+
+    const openModule = (moduleName) => {
+        const moduleRoutes = {
+            'Profile Core': '/#about',
+            'Projects Hub': '/#projects',
+            'Tech Infrastructure': '/#skills',
+            'System Settings': '/admin/login'
+        };
+
+        const target = moduleRoutes[moduleName];
+        if (target) {
+            window.open(target, '_blank', 'noopener,noreferrer');
+            return;
+        }
+
+        setToast({
+            open: true,
+            message: `${moduleName} module is syncing. Please try again.`
+        });
     };
 
     const modules = [
@@ -59,22 +78,52 @@ const AdminDashboard = () => {
                 <Grid container spacing={4}>
                     {modules.map((m, i) => (
                         <Grid item xs={12} sm={6} lg={3} key={i}>
-                            <Paper sx={{ 
+                            <Paper
+                                onClick={() => openModule(m.name)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        event.preventDefault();
+                                        openModule(m.name);
+                                    }
+                                }}
+                                sx={{ 
                                 p: 4, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)',
                                 borderRadius: 4, transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer',
                                 '&:hover': { 
                                     transform: 'translateY(-8px)', 
                                     borderColor: m.color,
                                     boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${m.color}11`
+                                },
+                                '&:focus-visible': {
+                                    outline: `2px solid ${m.color}`,
+                                    outlineOffset: 2
                                 }
                             }}>
                                 <Box sx={{ mb: 3, color: m.color }}>{m.icon}</Box>
                                 <Typography sx={{ fontWeight: 900, color: 'white', mb: 1, fontFamily: 'Syncopate', fontSize: '0.85rem' }}>{m.name}</Typography>
                                 <Typography variant="caption" sx={{ color: '#555', lineHeight: 1.6, display: 'block', mb: 3 }}>{m.desc}</Typography>
-                                <Stack direction="row" spacing={1} alignItems="center" sx={{ color: m.color }}>
-                                    <Typography variant="caption" sx={{ fontWeight: 900, fontSize: '0.6rem' }}>ENTER_MODULE</Typography>
-                                    <ExternalLink size={12} />
-                                </Stack>
+                                <Button
+                                    variant="text"
+                                    size="small"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        openModule(m.name);
+                                    }}
+                                    endIcon={<ExternalLink size={12} />}
+                                    sx={{
+                                        color: m.color,
+                                        fontWeight: 900,
+                                        fontSize: '0.6rem',
+                                        letterSpacing: 1,
+                                        p: 0,
+                                        minWidth: 'auto',
+                                        '&:hover': { backgroundColor: 'transparent', opacity: 0.85 }
+                                    }}
+                                >
+                                    ENTER_MODULE
+                                </Button>
                             </Paper>
                         </Grid>
                     ))}
@@ -88,6 +137,21 @@ const AdminDashboard = () => {
                      <Typography sx={{ color: '#00ffcc', fontFamily: 'monospace', fontSize: '0.7rem' }}>&gt; Admin session established at {new Date().toLocaleTimeString()}</Typography>
                 </Box>
             </Container>
+
+            <Snackbar
+                open={toast.open}
+                autoHideDuration={2500}
+                onClose={() => setToast({ open: false, message: '' })}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setToast({ open: false, message: '' })}
+                    severity="info"
+                    sx={{ width: '100%' }}
+                >
+                    {toast.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
