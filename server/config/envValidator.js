@@ -3,12 +3,13 @@
  * Validates environment variables at startup.
  * - MONGO_URI: Optional (server falls back to data.json if missing)
  * - PORT: Optional (defaults to 5001)
- * - CLIENT_URL: Optional (CORS will only allow localhost if missing)
+ * - CLIENT_URL: Optional (primary frontend origin)
+ * - CLIENT_URLS: Optional (comma-separated extra origins)
  * - NODE_ENV: Optional (defaults to 'development')
  */
 const validateEnv = () => {
     // These vars are optional — server has fallbacks for all of them
-    const optional = ['MONGO_URI', 'PORT', 'CLIENT_URL', 'NODE_ENV'];
+    const optional = ['MONGO_URI', 'PORT', 'CLIENT_URL', 'CLIENT_URLS', 'NODE_ENV'];
     const missing = [];
 
     optional.forEach(variable => {

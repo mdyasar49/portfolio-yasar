@@ -41,15 +41,28 @@ const CONFIG = {
 const safeArray = (value) => Array.isArray(value) ? value : [];
 const safeText = (value, fallback = '') => typeof value === 'string' ? value : fallback;
 const safeObject = (value) => (value && typeof value === 'object') ? value : {};
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const loadingOverlay = document.getElementById('loading-overlay');
 
-async function fetchProfileWithFallback() {
+const updateLoadingStatus = (message) => {
+    if (loadingOverlay) {
+        loadingOverlay.innerText = message;
+    }
+};
+
+async function fetchProfileWithFallback(attempt) {
     let lastError = null;
 
     for (const apiUrl of CONFIG.apiCandidates) {
         try {
-            const profileResp = await fetch(apiUrl);
+            updateLoadingStatus(`CONNECTING TO DATA CORE... (ATTEMPT ${attempt})`);
+            const profileResp = await fetch(apiUrl, { cache: 'no-store' });
             if (!profileResp.ok) {
                 throw new Error(`API Fetch Failed (${profileResp.status}) from ${apiUrl}`);
+            }
+            const contentType = profileResp.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+                throw new Error(`Invalid API response format from ${apiUrl}`);
             }
             return await profileResp.json();
         } catch (error) {
@@ -61,11 +74,27 @@ async function fetchProfileWithFallback() {
 }
 
 async function init() {
+    const maxAttempts = 4;
+    let profile = null;
+
     try {
-        // 1. Fetch Profile Data
-        const profile = await fetchProfileWithFallback();
+        // 1. Fetch Profile Data with warm-up retries
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                profile = await fetchProfileWithFallback(attempt);
+                break;
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    throw error;
+                }
+                const waitMs = attempt * 2000;
+                updateLoadingStatus(`SERVER IS WARMING UP... RETRYING IN ${Math.ceil(waitMs / 1000)}s`);
+                await sleep(waitMs);
+            }
+        }
 
         // 2. Load all templates
+        updateLoadingStatus('LOADING TEMPLATE MODULES...');
         const templateKeys = Object.keys(CONFIG.templates);
         const templatePromises = templateKeys.map(async key => {
             const r = await fetch(CONFIG.templates[key]);
@@ -87,12 +116,14 @@ async function init() {
         renderFooter(templates.footer, profile);
 
         // 4. Show Content
-        document.getElementById('loading-overlay').classList.add('hidden');
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('hidden');
+        }
         document.getElementById('main-resume').classList.remove('hidden');
 
     } catch (err) {
         console.error("Module Loading Failed:", err);
-        document.getElementById('loading-overlay').innerText = "FATAL ERROR: Failed to load modules.";
+        updateLoadingStatus('SYSTEM BUSY. PLEASE WAIT OR REFRESH IN A MOMENT.');
     }
 }
 

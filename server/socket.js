@@ -3,22 +3,23 @@
  * Manages real-time bi-directional communication for Live Analytics.
  */
 const { Server } = require("socket.io");
+const { createCorsOptions, isAllowedOrigin } = require('./config/cors');
 
 let activeUsers = 0;
-const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '');
 
 const initSocket = (server) => {
-    const clientOrigins = (process.env.CLIENT_URL || '')
-        .split(',')
-        .map(normalizeOrigin)
-        .filter(Boolean);
-    const defaultOrigins = ["http://localhost:3000", "https://mern-portfolio-yasar-1.onrender.com"];
-    const allowedOrigins = clientOrigins.length > 0 ? clientOrigins : defaultOrigins;
+    const { allowedOrigins, corsOptions } = createCorsOptions();
 
     const io = new Server(server, {
         cors: {
-            origin: allowedOrigins,
-            methods: ["GET", "POST"]
+            origin: corsOptions.origin,
+            methods: corsOptions.methods,
+            allowedHeaders: corsOptions.allowedHeaders,
+            credentials: corsOptions.credentials
+        },
+        allowRequest: (req, callback) => {
+            const origin = req.headers.origin;
+            callback(null, isAllowedOrigin(origin, allowedOrigins));
         }
     });
 

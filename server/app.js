@@ -8,41 +8,20 @@ const cors = require('cors');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorMiddleware');
+const { createCorsOptions } = require('./config/cors');
 
 const app = express();
 
 // Middlewares (Express.js)
 app.use(logger);
 
-const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '');
-
-// 1. CORS Whitelist — reads from CLIENT_URL env var (supports comma-separated values)
-// Example: CLIENT_URL=https://mern-portfolio-yasar-1.onrender.com
-const rawClientUrl = process.env.CLIENT_URL || '';
-const allowedOrigins = [
-  'http://localhost:3000',                              // Local dev client
-  'https://mern-portfolio-yasar-1.onrender.com',       // Production frontend
-  ...rawClientUrl.split(',').map(normalizeOrigin)      // Production client(s) from .env
-].map(normalizeOrigin).filter(Boolean);
+const { allowedOrigins, corsOptions } = createCorsOptions();
 
 // Log allowed origins at startup so you can verify the env var is being read
 console.log(`🔐 [CORS] Allowed origins: ${allowedOrigins.join(', ')}`);
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (Postman, curl, server-to-server calls)
-    if (!origin) return callback(null, true);
-    const normalizedOrigin = normalizeOrigin(origin);
-    if (allowedOrigins.includes(normalizedOrigin)) {
-      callback(null, true);
-    } else {
-      console.warn(`⚠️ [CORS] Blocked request from origin: ${origin}`);
-      console.warn(`   Allowed origins in system: ${allowedOrigins.join(', ')}`);
-      callback(new Error(`CORS policy blocked access from origin ${origin}.`));
-    }
-  },
-  credentials: true
-}));
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // 2. Direct Browser Access Protection (Applied to ALL endpoints)
 app.use((req, res, next) => {
