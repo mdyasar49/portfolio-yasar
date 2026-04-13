@@ -14,13 +14,15 @@ const app = express();
 // Middlewares (Express.js)
 app.use(logger);
 
+const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '');
+
 // 1. CORS Whitelist — reads from CLIENT_URL env var (supports comma-separated values)
 // Example: CLIENT_URL=https://mern-portfolio-yasar-1.onrender.com
 const rawClientUrl = process.env.CLIENT_URL || '';
 const allowedOrigins = [
   'http://localhost:3000',                              // Local dev client
-  ...rawClientUrl.split(',').map(u => u.trim())        // Production client(s) from .env
-].filter(Boolean);
+  ...rawClientUrl.split(',').map(normalizeOrigin)      // Production client(s) from .env
+].map(normalizeOrigin).filter(Boolean);
 
 // Log allowed origins at startup so you can verify the env var is being read
 console.log(`🔐 [CORS] Allowed origins: ${allowedOrigins.join(', ')}`);
@@ -29,7 +31,8 @@ app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (Postman, curl, server-to-server calls)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    const normalizedOrigin = normalizeOrigin(origin);
+    if (allowedOrigins.includes(normalizedOrigin)) {
       callback(null, true);
     } else {
       console.warn(`⚠️ [CORS] Blocked request from origin: ${origin}`);

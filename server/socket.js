@@ -5,11 +5,17 @@
 const { Server } = require("socket.io");
 
 let activeUsers = 0;
+const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '');
 
 const initSocket = (server) => {
+    const clientOrigins = (process.env.CLIENT_URL || '')
+        .split(',')
+        .map(normalizeOrigin)
+        .filter(Boolean);
+
     const io = new Server(server, {
         cors: {
-            origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : "http://localhost:3000",
+            origin: clientOrigins.length > 0 ? clientOrigins : ["http://localhost:3000"],
             methods: ["GET", "POST"]
         }
     });
