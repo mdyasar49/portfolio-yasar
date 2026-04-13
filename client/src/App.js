@@ -34,10 +34,26 @@ const ScrollToTop = () => {
 const ScrollToHash = () => {
   const { hash, pathname } = useLocation();
   useEffect(() => {
-    if (hash) {
-      const element = document.getElementById(hash.replace('#', ''));
-      if (element) setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 100);
-    }
+    if (!hash) return;
+
+    const id = hash.replace('#', '');
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const tryScroll = () => {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < maxAttempts) {
+        setTimeout(tryScroll, 150);
+      }
+    };
+
+    setTimeout(tryScroll, 100);
   }, [hash, pathname]);
   return null;
 };
