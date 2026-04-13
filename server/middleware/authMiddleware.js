@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('./asyncHandler');
 const Admin = require('../models/Admin');
+const mongoose = require('mongoose');
 
 /**
  * Middleware: Protect
@@ -24,10 +25,21 @@ exports.protect = asyncHandler(async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'cyber_premium_secure_key_2024');
 
         // 4. Attach admin to request
-        req.admin = await Admin.findById(decoded.id);
-        
-        if (!req.admin) {
-             return res.status(401).json({ success: false, error: 'Identity mismatch. Access revoked.' });
+        const isDbConnected = mongoose.connection && mongoose.connection.readyState === 1;
+        if (isDbConnected) {
+            req.admin = await Admin.findById(decoded.id);
+            if (!req.admin) {
+                return res.status(401).json({ success: false, error: 'Identity mismatch. Access revoked.' });
+            }
+        } else {
+            if (decoded.role !== 'admin') {
+                return res.status(401).json({ success: false, error: 'Identity mismatch. Access revoked.' });
+            }
+            req.admin = {
+                _id: decoded.id || 'portable-admin',
+                username: decoded.username || process.env.PORTABLE_ADMIN_USERNAME || 'admin',
+                role: decoded.role
+            };
         }
 
         next();

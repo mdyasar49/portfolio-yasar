@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
-import { Box, Typography, Button, Stack, Container, IconButton } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import { Box, Typography, Button, Stack, Container } from '@mui/material';
+import { motion } from 'framer-motion';
 import { 
   WifiOff, 
   ServerCrash, 
@@ -67,31 +67,10 @@ const ERROR_CONFIG = {
   }
 };
 
-// ─── Micro-Components ────────────────────────────────────────
-
-const DiagnosticLine = ({ text, color, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, x: -10 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay }}
-    style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      gap: '8px',
-      marginBottom: '4px' 
-    }}
-  >
-    <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: color, boxShadow: `0 0 8px ${color}` }} />
-    <Typography sx={{ 
-      fontFamily: '"JetBrains Mono", monospace', 
-      fontSize: '0.65rem', 
-      color: `${color}cc`,
-      letterSpacing: 1
-    }}>
-      {text}
-    </Typography>
-  </motion.div>
-);
+const normalizeErrorType = (type) => {
+  const normalized = typeof type === 'string' ? type.trim().toLowerCase() : 'unknown';
+  return ERROR_CONFIG[normalized] ? normalized : 'unknown';
+};
 
 const GlitchText = ({ children, color }) => (
   <Box sx={{ position: 'relative', display: 'inline-block' }}>
@@ -141,17 +120,32 @@ const GlitchText = ({ children, color }) => (
 const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
   const [isRetrying, setIsRetrying] = useState(false);
   const [terminalLines, setTerminalLines] = useState([]);
-  const config = ERROR_CONFIG[errorType] || ERROR_CONFIG.unknown;
+  const safeErrorType = normalizeErrorType(errorType);
+  const config = ERROR_CONFIG[safeErrorType];
   const ErrorIcon = config.icon;
+  const hasRetryHandler = typeof onRetry === 'function';
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 20 }, (_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        xDrift: Math.random() * 100 - 50,
+        duration: 2 + Math.random() * 4,
+        delay: Math.random() * 5,
+      })),
+    []
+  );
 
   // Simulate terminal output
   useEffect(() => {
+    setTerminalLines([]);
     const lines = [
       `INITIALIZING RECOVERY PROTOCOL [${config.code}]...`,
       `SCANNING LOCAL NODES... COMPLETE.`,
       `PINGING GATEWAY... TIMEOUT.`,
       `DETERRING SUBTLE PACKET LOSS... FAILURE.`,
-      `SYSTEM STATUS: ${errorType.toUpperCase()}_HALT`
+      `SYSTEM STATUS: ${safeErrorType.toUpperCase()}_HALT`
     ];
     let i = 0;
     const interval = setInterval(() => {
@@ -163,15 +157,22 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       }
     }, 400);
     return () => clearInterval(interval);
-  }, [config.code, errorType]);
+  }, [config.code, safeErrorType]);
 
   const handleRetry = useCallback(async () => {
+    if (!hasRetryHandler) {
+      window.location.reload();
+      return;
+    }
     setIsRetrying(true);
     // Visual delay for "Cyber" feel
     await new Promise(r => setTimeout(r, 1200));
-    onRetry?.();
-    setIsRetrying(false);
-  }, [onRetry]);
+    try {
+      await onRetry();
+    } finally {
+      setIsRetrying(false);
+    }
+  }, [hasRetryHandler, onRetry]);
 
   return (
     <Box
@@ -214,23 +215,23 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
         />
 
         {/* Floating Particles (Simple CSS) */}
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             animate={{ 
               y: [-20, -120], 
-              x: Math.random() * 100 - 50,
+              x: particle.xDrift,
               opacity: [0, 1, 0] 
             }}
             transition={{ 
-              duration: 2 + Math.random() * 4, 
+              duration: particle.duration, 
               repeat: Infinity, 
-              delay: Math.random() * 5 
+              delay: particle.delay 
             }}
             style={{
               position: 'absolute',
               bottom: '10%',
-              left: `${Math.random() * 100}%`,
+              left: particle.left,
               width: '2px', height: '2px',
               backgroundColor: config.color,
               borderRadius: '50%',
@@ -399,7 +400,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                   </motion.div>
                   <span>RECONNECTING</span>
                 </Stack>
-              ) : 'FORCE_REBOOT'}
+              ) : hasRetryHandler ? 'FORCE_REBOOT' : 'RELOAD_SYSTEM'}
             </Button>
 
             <Button
