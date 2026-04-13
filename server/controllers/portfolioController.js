@@ -3,6 +3,70 @@ const path = require('path');
 const Profile = require('../models/Profile');
 
 const asyncHandler = require('../middleware/asyncHandler');
+const safeArray = (value) => Array.isArray(value) ? value : [];
+const safeObject = (value) => (value && typeof value === 'object' ? value : {});
+const safeString = (value, fallback = '') => (typeof value === 'string' ? value : fallback);
+
+const normalizeProfile = (source) => {
+    const profile = safeObject(source);
+    const technicalSkills = safeObject(profile.technicalSkills);
+    const additionalInfo = safeObject(profile.additionalInfo);
+    const socials = safeObject(profile.socials);
+
+    return {
+        name: safeString(profile.name, 'Profile Unavailable'),
+        title: safeString(profile.title, 'Full Stack Developer'),
+        email: safeString(profile.email),
+        phone: safeString(profile.phone),
+        location: safeString(profile.location),
+        summary: safeString(profile.summary),
+        technicalSkills: {
+            frontend: safeArray(technicalSkills.frontend),
+            backend: safeArray(technicalSkills.backend),
+            database: safeArray(technicalSkills.database),
+            tools: safeArray(technicalSkills.tools),
+            aiTools: safeArray(technicalSkills.aiTools),
+            other: safeArray(technicalSkills.other)
+        },
+        experience: safeArray(profile.experience).map(exp => ({
+            role: safeString(exp?.role, 'Role'),
+            company: safeString(exp?.company, 'Company'),
+            companyUrl: safeString(exp?.companyUrl),
+            companyLinkedIn: safeString(exp?.companyLinkedIn),
+            period: safeString(exp?.period),
+            location: safeString(exp?.location),
+            description: safeArray(exp?.description)
+        })),
+        projects: safeArray(profile.projects).map(project => ({
+            name: safeString(project?.name, 'Project'),
+            type: safeString(project?.type),
+            technologies: safeArray(project?.technologies),
+            image: safeString(project?.image),
+            link: safeString(project?.link),
+            github: safeString(project?.github),
+            description: safeArray(project?.description)
+        })),
+        education: safeArray(profile.education).map(edu => ({
+            degree: safeString(edu?.degree, 'Education'),
+            institution: safeString(edu?.institution, 'Institution'),
+            institutionUrl: safeString(edu?.institutionUrl),
+            year: safeString(edu?.year)
+        })),
+        softSkills: safeArray(profile.softSkills),
+        additionalInfo: {
+            availability: safeString(additionalInfo.availability),
+            workPreference: safeString(additionalInfo.workPreference),
+            languages: safeArray(additionalInfo.languages)
+        },
+        socials: {
+            linkedin: safeString(socials.linkedin),
+            github: safeString(socials.github),
+            twitter: safeString(socials.twitter),
+            instagram: safeString(socials.instagram),
+            facebook: safeString(socials.facebook)
+        }
+    };
+};
 
 /**
  * Portability Logic: Fallback to local data if MongoDB is off or empty
@@ -62,7 +126,7 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ success: false, message: "Portfolio data not found." });
     }
 
-    res.status(200).json(profile);
+    res.status(200).json(normalizeProfile(profile));
 });
 
 /**

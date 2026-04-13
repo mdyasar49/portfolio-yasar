@@ -2,8 +2,14 @@ import React from 'react';
 import { Box, Typography, Button, Stack, Container, Grid, Paper, Divider } from '@mui/material';
 import { Download, ExternalLink, ShieldCheck, FileText, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
+import API_BASE_URL from '../config';
 
 const ResumeModule = () => {
+  const resumeApi = API_BASE_URL ? `${API_BASE_URL}/profile` : '';
+  const iframeSrc = resumeApi
+    ? `/resume-pro/index.html?api=${encodeURIComponent(resumeApi)}`
+    : '/resume-pro/index.html';
+
   const handleDownload = () => {
     window.open('/resume-pro/A_MOHAMED_YASAR_RESUME.pdf', '_blank');
   };
@@ -61,7 +67,7 @@ const ResumeModule = () => {
                    }} />
 
                    <iframe 
-                      src="/resume-pro/index.html" 
+                     src={iframeSrc}
                       title="Direct Resume View"
                       width="100%"
                       height="100%"

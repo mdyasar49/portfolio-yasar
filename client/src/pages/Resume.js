@@ -4,12 +4,17 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
+import API_BASE_URL from '../config';
 
 const Resume = () => {
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDispatching, setIsDispatching] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const resumeApi = API_BASE_URL ? `${API_BASE_URL}/profile` : '';
+  const iframeSrc = resumeApi
+    ? `/resume-pro/index.html?api=${encodeURIComponent(resumeApi)}`
+    : '/resume-pro/index.html';
 
   // 3D Parallax Logic
   const x = useMotionValue(0);
@@ -404,7 +409,7 @@ const Resume = () => {
 
             <iframe 
                id="resume-frame"
-               src="/resume-pro/index.html" 
+               src={iframeSrc}
                title="Professional Elite Resume"
                width="100%"
                height="100%"

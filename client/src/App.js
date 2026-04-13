@@ -42,8 +42,7 @@ const ScrollToHash = () => {
   return null;
 };
 
-// ─── App ──────────────────────────────────────────────────
-const App = () => {
+const PublicApp = () => {
   const { profile, loading, error, errorType, retry } = useProfile();
 
   // ── Loading state ──
@@ -85,28 +84,53 @@ const App = () => {
 
   // ── Main app ──
   return (
+    <>
+      <Header />
+      <GlobalHUD />
+      <Box sx={{ pt: 10 }}>
+        <Routes>
+          <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
+          <Route path="/resume"       element={<Resume profile={profile} />} />
+          <Route path="/architecture" element={<Documentation profile={profile} />} />
+          <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
+        </Routes>
+      </Box>
+    </>
+  );
+};
+
+const AppRoutes = () => {
+  const { pathname } = useLocation();
+  const isAdminRoute = pathname.startsWith('/admin');
+
+  if (isAdminRoute) {
+    return (
+      <Routes>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    );
+  }
+
+  return <PublicApp />;
+};
+
+// ─── App ──────────────────────────────────────────────────
+const App = () => {
+  return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <ScrollToHash />
-        <Header />
-        <GlobalHUD />
-        <Box sx={{ pt: 10 }}>
-          <Routes>
-            <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
-            <Route path="/resume"       element={<Resume profile={profile} />} />
-            <Route path="/architecture" element={<Documentation profile={profile} />} />
-            
-            {/* Administrative Infrastructure */}
-            <Route path="/admin/login"  element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-          </Routes>
-        </Box>
+        <AppRoutes />
       </Router>
     </ThemeProvider>
   );

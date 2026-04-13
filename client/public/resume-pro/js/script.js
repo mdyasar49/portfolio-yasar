@@ -3,12 +3,28 @@
  * Responsibly fetches modular HTML templates and populates them with profile data.
  */
 
+const query = new URLSearchParams(window.location.search);
+const configuredApi = query.get('api');
+
+const buildApiCandidates = () => {
+    const candidates = [];
+
+    if (configuredApi) {
+        candidates.push(configuredApi);
+    }
+
+    if (window.location.hostname === 'localhost') {
+        candidates.push('http://localhost:5001/api/profile');
+    }
+
+    // Default production fallback for direct resume URL access
+    candidates.push('https://mern-portfolio-yasar.onrender.com/api/profile');
+
+    return [...new Set(candidates.filter(Boolean))];
+};
+
 const CONFIG = {
-    // Dynamic API discovery
-    // Dynamic API Resolution: Prefers environment-based URL if possible, or derives from location
-    api: window.location.hostname === 'localhost' 
-        ? 'http://localhost:5001/api/profile' 
-        : 'https://mern-portfolio-yasar.onrender.com/api/profile',
+    apiCandidates: buildApiCandidates(),
     templates: {
         header: './templates/header.html',
         summary: './templates/summary.html',
@@ -20,12 +36,32 @@ const CONFIG = {
     }
 };
 
+const safeArray = (value) => Array.isArray(value) ? value : [];
+const safeText = (value, fallback = '') => typeof value === 'string' ? value : fallback;
+const safeObject = (value) => (value && typeof value === 'object') ? value : {};
+
+async function fetchProfileWithFallback() {
+    let lastError = null;
+
+    for (const apiUrl of CONFIG.apiCandidates) {
+        try {
+            const profileResp = await fetch(apiUrl);
+            if (!profileResp.ok) {
+                throw new Error(`API Fetch Failed (${profileResp.status}) from ${apiUrl}`);
+            }
+            return await profileResp.json();
+        } catch (error) {
+            lastError = error;
+        }
+    }
+
+    throw lastError || new Error('No reachable profile API endpoint.');
+}
+
 async function init() {
     try {
         // 1. Fetch Profile Data
-        const profileResp = await fetch(CONFIG.api);
-        if (!profileResp.ok) throw new Error(`API Fetch Failed: ${profileResp.status}`);
-        const profile = await profileResp.json();
+        const profile = await fetchProfileWithFallback();
 
         // 2. Load all templates
         const templateKeys = Object.keys(CONFIG.templates);
@@ -59,47 +95,51 @@ async function init() {
 }
 
 function renderHeader(template, p) {
-    const linkedinId = p.socials.linkedin.split('/').pop();
-    const portfolioUrl = p.projects.find(proj => proj.name.includes('Portfolio'))?.link || 'mern-portfolio-yasar-1.onrender.com';
+    const socials = safeObject(p.socials);
+    const projects = safeArray(p.projects);
+    const linkedin = safeText(socials.linkedin);
+    const linkedinId = linkedin ? linkedin.split('/').filter(Boolean).pop() : 'linkedin';
+    const portfolioUrl = projects.find(proj => safeText(proj.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar-1.onrender.com';
     const html = template
-        .replace('{{name}}', p.name)
-        .replace('{{title}}', p.title)
-        .replace('{{location}}', p.location)
-        .replace('{{phone}}', p.phone)
-        .replace('{{email}}', p.email)
+        .replace('{{name}}', safeText(p.name, 'Profile Unavailable'))
+        .replace('{{title}}', safeText(p.title, 'Full Stack Developer'))
+        .replace('{{location}}', safeText(p.location, 'N/A'))
+        .replace('{{phone}}', safeText(p.phone, 'N/A'))
+        .replace('{{email}}', safeText(p.email, 'N/A'))
         .replace('{{linkedinId}}', linkedinId)
-        .replace('{{portfolioUrl}}', portfolioUrl.replace('https://', ''));
+        .replace('{{portfolioUrl}}', safeText(portfolioUrl, '').replace('https://', ''));
     document.getElementById('header-module').innerHTML = html;
 }
 
 function renderSummary(template, p) {
-    const html = template.replace('{{summary}}', p.summary);
+    const html = template.replace('{{summary}}', safeText(p.summary, 'Profile summary is currently unavailable.'));
     document.getElementById('summary-module').innerHTML = html;
 }
 
 function renderSkills(template, p) {
+    const technicalSkills = safeObject(p.technicalSkills);
     document.getElementById('skills-module').innerHTML = template;
     const items = [
-        { label: 'Frontend', val: p.technicalSkills.frontend.join(', ') },
-        { label: 'Backend', val: p.technicalSkills.backend.join(', ') },
-        { label: 'Database', val: p.technicalSkills.database.join(', ') },
-        { label: 'Pipeline', val: p.technicalSkills.tools.join(', ') }
+        { label: 'Frontend', val: safeArray(technicalSkills.frontend).join(', ') },
+        { label: 'Backend', val: safeArray(technicalSkills.backend).join(', ') },
+        { label: 'Database', val: safeArray(technicalSkills.database).join(', ') },
+        { label: 'Pipeline', val: safeArray(technicalSkills.tools).join(', ') }
     ];
-    if (p.technicalSkills.aiTools) items.push({ label: 'AI Tools', val: p.technicalSkills.aiTools.join(', ') });
-    if (p.technicalSkills.other) items.push({ label: 'Others', val: p.technicalSkills.other.join(', ') });
+    if (safeArray(technicalSkills.aiTools).length) items.push({ label: 'AI Tools', val: safeArray(technicalSkills.aiTools).join(', ') });
+    if (safeArray(technicalSkills.other).length) items.push({ label: 'Others', val: safeArray(technicalSkills.other).join(', ') });
 
     document.getElementById('skills-list').innerHTML = items.map(i => `
-        <div class="skill-item"><b>${i.label}:</b> ${i.val}</div>
+        <div class="skill-item"><b>${i.label}:</b> ${i.val || 'N/A'}</div>
     `).join('');
 }
 
 function renderExperience(template, p) {
     document.getElementById('experience-module').innerHTML = template;
-    document.getElementById('experience-container').innerHTML = p.experience.map(exp => `
+    document.getElementById('experience-container').innerHTML = safeArray(p.experience).map(exp => `
         <div class="exp-item">
-            <div class="exp-top"><span>${exp.role}</span><span>${exp.period}</span></div>
-            <div class="exp-sub"><span>${exp.company}, ${exp.location || 'India'}</span></div>
-            <ul>${exp.description.map(d => `<li>${d}</li>`).join('')}</ul>
+            <div class="exp-top"><span>${safeText(exp.role, 'Role')}</span><span>${safeText(exp.period, '')}</span></div>
+            <div class="exp-sub"><span>${safeText(exp.company, 'Company')}, ${safeText(exp.location, 'India')}</span></div>
+            <ul>${safeArray(exp.description).map(d => `<li>${safeText(d)}</li>`).join('')}</ul>
         </div>
     `).join('');
 }
@@ -107,32 +147,33 @@ function renderExperience(template, p) {
 function renderProjects(template, p) {
     document.getElementById('projects-module').innerHTML = template;
     // Render clean projects without internal type labels
-    document.getElementById('projects-container').innerHTML = p.projects.filter(pr => pr.name !== 'Scientific Calculator').map(pr => `
+    document.getElementById('projects-container').innerHTML = safeArray(p.projects).filter(pr => safeText(pr.name) !== 'Scientific Calculator').map(pr => `
         <div class="exp-item">
-            <div class="exp-top"><span>${pr.name}</span></div>
-            <div class="exp-sub"><span>Core Tech: ${pr.technologies.join(', ')}</span></div>
-            <ul>${pr.description.map(d => `<li>${d}</li>`).join('')}</ul>
+            <div class="exp-top"><span>${safeText(pr.name, 'Project')}</span></div>
+            <div class="exp-sub"><span>Core Tech: ${safeArray(pr.technologies).join(', ') || 'N/A'}</span></div>
+            <ul>${safeArray(pr.description).map(d => `<li>${safeText(d)}</li>`).join('')}</ul>
         </div>
     `).join('');
 }
 
 function renderEducation(template, p) {
     document.getElementById('education-module').innerHTML = template;
-    document.getElementById('education-container').innerHTML = p.education.map(edu => `
+    document.getElementById('education-container').innerHTML = safeArray(p.education).map(edu => `
         <div class="exp-item">
-            <div class="exp-top"><span>${edu.degree}</span><span>${edu.year}</span></div>
-            <div class="exp-sub"><span>${edu.institution}</span></div>
+            <div class="exp-top"><span>${safeText(edu.degree, 'Education')}</span><span>${safeText(edu.year, '')}</span></div>
+            <div class="exp-sub"><span>${safeText(edu.institution, 'Institution')}</span></div>
         </div>
     `).join('');
 }
 
 function renderFooter(template, p) {
+    const additionalInfo = safeObject(p.additionalInfo);
     document.getElementById('footer-module').innerHTML = template;
     document.getElementById('additional-container').innerHTML = `
-        <div><b>Availability:</b> ${p.additionalInfo.availability}</div>
-        <div><b>Work Mode:</b> ${p.additionalInfo.workPreference}</div>
-        <div><b>Languages:</b> ${p.additionalInfo.languages.join(', ')}</div>
-        <div style="margin-top:5px"><b>Soft Skills:</b> ${p.softSkills.join(', ')}</div>
+        <div><b>Availability:</b> ${safeText(additionalInfo.availability, 'N/A')}</div>
+        <div><b>Work Mode:</b> ${safeText(additionalInfo.workPreference, 'N/A')}</div>
+        <div><b>Languages:</b> ${safeArray(additionalInfo.languages).join(', ') || 'N/A'}</div>
+        <div style="margin-top:5px"><b>Soft Skills:</b> ${safeArray(p.softSkills).join(', ') || 'N/A'}</div>
     `;
 }
 
