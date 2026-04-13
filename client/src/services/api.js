@@ -10,6 +10,28 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
+// Global Request Logger
+api.interceptors.request.use((config) => {
+    // console.log(`🚀 [API Request] ${config.method.toUpperCase()} ${config.url}`);
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
+
+// Global Response Error Handler
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        // Log critical network failures for debugging
+        if (!error.response) {
+            console.error("🌐 [Network Error] Server unreachable or CORS failure.");
+        } else {
+            // console.error(`❌ [API Error] Status ${error.response.status}:`, error.response.data);
+        }
+        return Promise.reject(error);
+    }
+);
+
 export const getProfile = async () => {
   try {
     const response = await api.get('/profile');

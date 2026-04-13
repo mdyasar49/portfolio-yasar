@@ -5,7 +5,10 @@
 
 const CONFIG = {
     // Dynamic API discovery
-    api: window.location.hostname === 'localhost' ? 'http://localhost:5001/api/profile' : 'https://mern-portfolio-yasar.onrender.com/api/profile',
+    // Dynamic API Resolution: Prefers environment-based URL if possible, or derives from location
+    api: window.location.hostname === 'localhost' 
+        ? 'http://localhost:5001/api/profile' 
+        : 'https://mern-portfolio-yasar.onrender.com/api/profile',
     templates: {
         header: './templates/header.html',
         summary: './templates/summary.html',

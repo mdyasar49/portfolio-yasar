@@ -1,17 +1,29 @@
+const mongoose = require('mongoose');
+
 /**
  * [MongoDB Database Connection]
- * All logic related to your database connection goes here.
+ * Configured with a 5-second timeout to prevent server "hangs" on Render.
+ * If connection fails, the server will continue in PORTABLE_MODE.
  */
-const mongoose = require('mongoose');
-require('dotenv').config();
-
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/portfolio_db');
+        // Strict 5s timeout to ensure fast fallback to JSON mode if DB is unreachable
+        const options = {
+            serverSelectionTimeoutMS: 5000, 
+            socketTimeoutMS: 45000,
+        };
+
+        const mongoUri = process.env.MONGO_URI;
+        if (!mongoUri) {
+            console.warn("⚠️  MONGO_URI is not defined. Skipping DB connection.");
+            return;
+        }
+
+        const conn = await mongoose.connect(mongoUri, options);
         console.log(`✅ [MongoDB Layer] Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`❌ [MongoDB Layer] Connection Error: ${error.message}`);
-        // Do NOT exit the process, so the app can fallback to JSON
+        // Let the caller handle the fallback logic
         throw error;
     }
 };

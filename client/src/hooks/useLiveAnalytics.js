@@ -25,6 +25,11 @@ const useLiveAnalytics = () => {
             setActiveSessions(count);
         });
 
+        // Silent error handling for production stability
+        socketRef.current.on('connect_error', () => {
+            // console.log("📡 [Socket.io] Service currently unavailable.");
+        });
+
         // Cleanup on unmount
         return () => {
             if (socketRef.current) {
