@@ -45,7 +45,7 @@ const GlobalHUD = () => {
                 animation: 'pulse 2s infinite', boxShadow: '0 0 10px #00ffcc' 
               }} />
               <Box>
-                <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.62rem', display: 'block', letterSpacing: 2, fontFamily: 'Syncopate' }}>CORE_UPTIME</Typography>
+                <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.62rem', display: 'block', letterSpacing: 2, fontFamily: 'Syncopate' }}>SESSION_DURATION</Typography>
                 <Typography variant="caption" sx={{ color: 'white', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', opacity: 0.9 }}>{formatUptime(uptime)}</Typography>
               </Box>
             </Stack>
@@ -54,9 +54,9 @@ const GlobalHUD = () => {
           {/* Real-time Telemetry Widgets */}
           <Stack direction="row" spacing={1.5}>
             {[
-              { icon: <Cpu size={12} color="#ff3366" />, label: '98%_CORES', color: '#ff3366' },
-              { icon: <Zap size={12} color="#33ccff" />, label: `${activeSessions}_NODES_LIVE`, color: '#33ccff', active: true },
-              { icon: <Shield size={12} color="#888" />, label: 'V_SECURED', color: '#888' }
+              { icon: <Cpu size={12} color="#ff3366" />, label: 'SYSTEM_STABLE', color: '#ff3366' },
+              { icon: <Zap size={12} color="#33ccff" />, label: `${activeSessions}_ACTIVE_SESSIONS`, color: '#33ccff', active: true },
+              { icon: <Shield size={12} color="#888" />, label: 'ENCRYPTED', color: '#888' }
             ].map((item, i) => (
               <Box key={i} sx={{ 
                 p: 1, px: 1.5, borderRadius: 1.5, 

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Box, Typography, Grid, Paper, Stack, Tooltip } from '@mui/material';
 import { motion } from 'framer-motion';
-import { Database, Layout, Terminal, Sparkles, Cpu } from 'lucide-react';
+import { Database, Layout, Terminal, Sparkles, Cpu, Activity } from 'lucide-react';
 
 const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
   <motion.div
@@ -44,7 +44,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
           <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: `${color}15`, color: color, display: 'flex' }}>
             <Icon size={32} />
           </Box>
-          <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>TECH_OS</Typography>
+          <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>RESOURCES</Typography>
         </Box>
 
         <Box>
@@ -91,11 +91,12 @@ const Skills = memo(({ skills }) => {
   if (!skills) return null;
 
   const categories = [
-    { title: 'FRONTEND ARCH', skills: skills.frontend || [], icon: Layout, color: '#33ccff' },
-    { title: 'BACKEND CORE', skills: skills.backend || [], icon: Database, color: '#ff3366' },
-    { title: 'DATA SYSTEMS', skills: skills.database || [], icon: Cpu, color: '#00ffcc' },
-    { title: 'DEV PIPELINES', skills: skills.tools || [], icon: Terminal, color: '#ff9933' },
-    { title: 'AI PROTOCOLS', skills: skills.aiTools || [], icon: Sparkles, color: '#a855f7' },
+    { title: 'FRONTEND DEVELOPMENT', skills: skills.frontend || [], icon: Layout, color: '#33ccff' },
+    { title: 'BACKEND ENGINEERING', skills: skills.backend || [], icon: Database, color: '#ff3366' },
+    { title: 'DATABASE SYSTEMS', skills: skills.database || [], icon: Cpu, color: '#00ffcc' },
+    { title: 'DEVOPS & TOOLS', skills: skills.tools || [], icon: Terminal, color: '#ff9933' },
+    { title: 'AI & AUTOMATION', skills: skills.aiTools || [], icon: Sparkles, color: '#a855f7' },
+    { title: 'OTHER EXPERTISE', skills: skills.other || [], icon: Activity, color: '#64748b' },
   ];
 
   return (
@@ -119,7 +120,7 @@ const Skills = memo(({ skills }) => {
         >
           TECHNICAL <Box component="span" sx={{ color: '#ff3366' }}>ARSENAL</Box>
         </Typography>
-        <Typography variant="overline" sx={{ display: 'block', textAlign: 'center', color: '#444', fontWeight: 900, letterSpacing: 6 }}>SYSTEM_SPEC_V2.0</Typography>
+        <Typography variant="overline" sx={{ display: 'block', textAlign: 'center', color: '#444', fontWeight: 900, letterSpacing: 6 }}>CORE COMPETENCIES</Typography>
         <Box sx={{ width: 100, height: 4, background: 'linear-gradient(90deg, #ff3366, #ff9933)', mx: 'auto', borderRadius: 2, mt: 3 }} />
       </Box>
 

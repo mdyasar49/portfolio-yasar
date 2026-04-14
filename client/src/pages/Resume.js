@@ -3,13 +3,12 @@ import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, D
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Send } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Download, FileText, ShieldCheck, Cpu, Database, Info, Send } from 'lucide-react';
 import SEO from '../components/SEO';
+
 import API_BASE_URL from '../config';
 
 const Resume = () => {
-  const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
@@ -56,18 +55,6 @@ const Resume = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handlePrint = () => {
-    try {
-      const frame = document.getElementById('resume-frame');
-      if (frame) {
-        frame.contentWindow.focus();
-        frame.contentWindow.print();
-      }
-    } catch (e) {
-      window.print();
-    }
-  };
-
   const handleDownload = () => {
     const frame = document.getElementById('resume-frame');
     if (frame && frame.contentWindow.downloadAsPDF) {
@@ -77,9 +64,6 @@ const Resume = () => {
     }
   };
 
-  const handleShare = () => {
-    setIsSelectorOpen(true);
-  };
 
   const executeEmailDispatch = () => {
     setIsSelectorOpen(false);
@@ -204,15 +188,15 @@ const Resume = () => {
         <Fade in={isSelectorOpen}>
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: { xs: '95%', sm: 400 }, 
-            maxHeight: { xs: '88vh', sm: '80vh' },
+            width: { xs: '95%', sm: 350 }, 
+            maxHeight: { xs: '88vh', sm: '75vh' },
             overflowY: 'auto',
             bgcolor: 'rgba(13, 17, 23, 0.95)', 
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(51, 204, 255, 0.3)',
             boxShadow: '0 0 100px rgba(0,0,0,1), 0 0 30px rgba(51, 204, 255, 0.1)',
-            borderRadius: 4, 
-            p: { xs: 3, sm: 4 }, 
+            borderRadius: 3, 
+            p: { xs: 2.5, sm: 3.5 }, 
             outline: 'none'
           }}>
             <Stack spacing={4}>

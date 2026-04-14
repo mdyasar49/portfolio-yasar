@@ -10,7 +10,7 @@ export const AdminProvider = ({ children }) => {
     // [Check Session] — Load admin data on startup if token exists
     useEffect(() => {
         const checkAuth = async () => {
-            const token = localStorage.getItem('adminToken');
+            const token = localStorage.getItem('token');
             if (!token) {
                 setLoading(false);
                 return;
@@ -24,11 +24,11 @@ export const AdminProvider = ({ children }) => {
                 if (response.data.success) {
                     setAdmin(response.data.data);
                 } else {
-                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('token');
                     delete api.defaults.headers.common['Authorization'];
                 }
             } catch (error) {
-                localStorage.removeItem('adminToken');
+                localStorage.removeItem('token');
                 delete api.defaults.headers.common['Authorization'];
             } finally {
                 setLoading(false);
@@ -40,17 +40,18 @@ export const AdminProvider = ({ children }) => {
 
     // [Login Event] — Save token and update state
     const loginAdmin = (adminData, token) => {
-        localStorage.setItem('adminToken', token);
+        localStorage.setItem('token', token);
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         setAdmin(adminData);
     };
 
     // [Logout Event] — Clear everything
     const logoutAdmin = () => {
-        localStorage.removeItem('adminToken');
+        localStorage.removeItem('token');
         delete api.defaults.headers.common['Authorization'];
         setAdmin(null);
     };
+
 
     return (
         <AdminContext.Provider value={{ admin, loading, loginAdmin, logoutAdmin }}>

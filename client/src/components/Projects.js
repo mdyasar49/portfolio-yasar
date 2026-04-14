@@ -96,7 +96,7 @@ const Projects = memo(({ projects }) => {
           fontSize: { xs: '2.8rem', md: '5rem' },
           textShadow: '0 0 40px rgba(255,255,255,0.05)'
         }}>
-          TECHNICAL <span style={{ color: '#ff3366', textShadow: '0 0 20px rgba(255, 51, 102, 0.4)' }}>DEPLOYMENTS</span>
+          FEATURED <span style={{ color: '#ff3366', textShadow: '0 0 20px rgba(255, 51, 102, 0.4)' }}>PROJECTS</span>
         </Typography>
       </Stack>
 
@@ -165,7 +165,7 @@ const Projects = memo(({ projects }) => {
                               boxShadow: `0 0 10px ${accent}22`
                             }}>
                                <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: accent, animation: 'pulse 1s infinite' }} />
-                               <Typography sx={{ color: accent, fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', letterSpacing: 1 }}>DEPLOY_STABLE_v1.2</Typography>
+                               <Typography sx={{ color: accent, fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', letterSpacing: 1 }}>PRODUCTION_SECURED</Typography>
                             </Box>
                             <Box sx={{ 
                               display: 'flex', alignItems: 'center', gap: 1,
@@ -173,8 +173,25 @@ const Projects = memo(({ projects }) => {
                               border: '1px solid rgba(255,255,255,0.1)'
                             }}>
                                <Zap size={10} color="#ff9933" />
-                               <Typography sx={{ color: '#fff', fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', opacity: 0.6 }}>LOAD_PERFORMANCE_OPTIMIZED</Typography>
+                               <Typography sx={{ color: '#fff', fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', opacity: 0.6 }}>PERFORMANCE_OPTIMIZED</Typography>
                             </Box>
+                            
+                            {/* Visual Project Stats HUD */}
+                            {project.stats && (
+                              <Box sx={{ 
+                                display: 'flex', gap: 1.5, mt: 1,
+                                bgcolor: 'rgba(0,0,0,0.6)', py: 0.5, px: 2, borderRadius: 100,
+                                border: '1px solid rgba(255,255,255,0.05)',
+                                backdropFilter: 'blur(5px)'
+                              }}>
+                                {Object.entries(project.stats).map(([k, v]) => (
+                                  <Box key={k} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <Typography sx={{ color: '#444', fontSize: '0.55rem', fontWeight: 900 }}>{k.toUpperCase()}:</Typography>
+                                    <Typography sx={{ color: '#fff', fontSize: '0.6rem', fontWeight: 900 }}>{v}</Typography>
+                                  </Box>
+                                ))}
+                              </Box>
+                            )}
                          </Stack>
                       </Box>
 
@@ -236,7 +253,7 @@ const Projects = memo(({ projects }) => {
                             }
                           }}
                          >
-                           ANALYZE_ASSET
+                           VIEW_DETAILS
                          </Button>
                       </Box>
                     </CardContent>
@@ -252,7 +269,7 @@ const Projects = memo(({ projects }) => {
       <Dialog 
         open={Boolean(selectedProject)} 
         onClose={handleClose} 
-        maxWidth="lg" 
+        maxWidth="md" 
         fullWidth
         fullScreen={fullScreen}
         PaperProps={{ 
@@ -260,10 +277,10 @@ const Projects = memo(({ projects }) => {
             bgcolor: 'background.default', 
             backgroundImage: 'none',
             border: fullScreen ? 'none' : '1px solid rgba(51, 204, 255, 0.1)',
-            borderRadius: fullScreen ? 0 : 6,
+            borderRadius: fullScreen ? 0 : 5,
             overflow: 'hidden',
-            p: { xs: 1, sm: 2, md: 4 },
-            maxHeight: { xs: '100dvh', md: '92vh' },
+            p: { xs: 1, sm: 1.5, md: 2.5 },
+            maxHeight: { xs: '100dvh', md: '85vh' },
             height: { xs: '100dvh', md: 'auto' },
             m: { xs: 0, md: 2 },
             display: 'flex',
@@ -285,13 +302,13 @@ const Projects = memo(({ projects }) => {
                 overflow: 'hidden'
               }}
             >
-              <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: { xs: 2, md: 4 }, pr: { xs: 1, md: 2 } }}>
+              <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: { xs: 1.5, md: 2.5 }, pr: { xs: 1, md: 2 } }}>
                 <Stack direction="row" spacing={3} alignItems="center">
                   <Box sx={{ p: 2, bgcolor: 'rgba(51, 204, 255, 0.1)', borderRadius: 2, color: '#33ccff', boxShadow: '0 0 20px rgba(51, 204, 255, 0.1)' }}>
                     <LayoutDashboard size={28} />
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.7rem', display: 'block', letterSpacing: 4, fontFamily: 'monospace' }}>&gt; SYSTEM_ASSET_DIAGNOSTICS</Typography>
+                    <Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.7rem', display: 'block', letterSpacing: 4, fontFamily: 'monospace' }}>&gt; PROJECT_SPECIFICATIONS</Typography>
                     <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -1 }}>{selectedProject.name.toUpperCase()}</Typography>
                   </Box>
                 </Stack>
@@ -315,8 +332,8 @@ const Projects = memo(({ projects }) => {
                     }
                   }}
                 >
-                  <Tab label="DIAGNOSTICS" icon={<Activity size={16} />} iconPosition="start" />
-                  <Tab label="ARCHITECTURE" icon={<Cpu size={16} />} iconPosition="start" />
+                  <Tab label="OVERVIEW" icon={<Activity size={16} />} iconPosition="start" />
+                  <Tab label="STACK" icon={<Cpu size={16} />} iconPosition="start" />
                 </Tabs>
               </Box>
 
@@ -330,7 +347,7 @@ const Projects = memo(({ projects }) => {
                       exit={{ opacity: 0, x: 20 }}
                     >
                       <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: 'rgba(255,255,255,0.01)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
-                        <Typography variant="h6" sx={{ color: '#64748b', fontWeight: 900, mb: 4, fontSize: '0.8rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>TECHNICAL_ARCHITECTURE_LOGS</Typography>
+                        <Typography variant="h6" sx={{ color: '#64748b', fontWeight: 900, mb: 4, fontSize: '0.8rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>PROJECT_OVERVIEW</Typography>
                         <Stack spacing={3}>
                           {selectedProject.description.map((line, i) => (
                              <Stack key={i} direction="row" spacing={3}>
@@ -340,6 +357,20 @@ const Projects = memo(({ projects }) => {
                           ))}
                         </Stack>
                       </Box>
+
+                      {selectedProject.highlights && (
+                         <Box sx={{ mt: 4, p: { xs: 2, md: 4 }, bgcolor: 'rgba(0, 255, 204, 0.01)', borderRadius: 4, border: '1px solid rgba(0, 255, 204, 0.05)' }}>
+                            <Typography variant="h3" sx={{ color: '#00ffcc', fontWeight: 900, mb: 3, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>KEY_HIGHLIGHTS</Typography>
+                            <Stack spacing={2}>
+                               {selectedProject.highlights.map((h, i) => (
+                                 <Stack key={i} direction="row" spacing={2} alignItems="center">
+                                    <Box sx={{ width: 4, height: 4, borderRadius: '50%', bgcolor: '#00ffcc' }} />
+                                    <Typography sx={{ color: '#fff', fontSize: '0.9rem', fontWeight: 500, opacity: 0.8 }}>{h}</Typography>
+                                 </Stack>
+                               ))}
+                            </Stack>
+                         </Box>
+                      )}
                     </motion.div>
                   ) : (
                     <motion.div 
@@ -350,7 +381,7 @@ const Projects = memo(({ projects }) => {
                     >
                       <Stack spacing={4}>
                         <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(0, 255, 204, 0.02)', borderRadius: 4, border: '1px solid rgba(0, 255, 204, 0.15)' }}>
-                          <Typography variant="h6" sx={{ color: '#00ffcc', fontWeight: 900, mb: 3, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>INFRASTRUCTURE_STACK</Typography>
+                          <Typography variant="h6" sx={{ color: '#00ffcc', fontWeight: 900, mb: 3, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>TECHNOLOGY_STACK</Typography>
                           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
                             {selectedProject.technologies.map(t => (
                                <Chip key={t} label={t} size="small" sx={{ bgcolor: 'rgba(0, 255, 204, 0.05)', color: '#00ffcc', fontWeight: 900, borderRadius: 1.5, border: '1px solid rgba(0, 255, 204, 0.2)', fontSize: '0.65rem', fontFamily: 'Syncopate' }} />
@@ -359,14 +390,14 @@ const Projects = memo(({ projects }) => {
                         </Box>
                         
                         <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(255, 51, 102, 0.02)', borderRadius: 4, border: '1px solid rgba(255, 51, 102, 0.15)' }}>
-                          <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, mb: 2.5, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>SECURITY_CLEARANCE</Typography>
+                          <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, mb: 2.5, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>ACCESS_CONTROL</Typography>
                           <Stack direction="row" spacing={3} alignItems="center">
                             <Box sx={{ p: 1.5, bgcolor: 'rgba(255, 51, 102, 0.1)', borderRadius: 2, color: '#ff3366' }}>
                                {selectedProject.github === '#' ? <Lock size={22} /> : <Github size={22} />}
                             </Box>
                             <Box>
-                               <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '0.85rem' }}>{selectedProject.github === '#' ? 'RESTRICTED_ACCESS' : 'PUBLIC_OPEN_SOURCE'}</Typography>
-                               <Typography variant="caption" sx={{ color: '#444', fontWeight: 800, fontFamily: 'monospace' }}>SEC_PROTOCOL_MOD_6</Typography>
+                               <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '0.85rem' }}>{selectedProject.github === '#' ? 'PRIVATE_REPOSITORY' : 'OPEN_SOURCE'}</Typography>
+                               <Typography variant="caption" sx={{ color: '#444', fontWeight: 800, fontFamily: 'monospace' }}>SECURITY_STATUS</Typography>
                             </Box>
                           </Stack>
                         </Box>
@@ -376,8 +407,8 @@ const Projects = memo(({ projects }) => {
                 </AnimatePresence>
               </DialogContent>
 
-              <DialogActions sx={{ p: { xs: 2, md: 5 }, pt: 2, gap: 2, flexWrap: 'wrap' }}>
-                <Button onClick={handleClose} sx={{ color: '#444', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}>ABORT_VIEW</Button>
+              <DialogActions sx={{ p: { xs: 2, md: 3.5 }, pt: 2, gap: 2, flexWrap: 'wrap' }}>
+                <Button onClick={handleClose} sx={{ color: '#444', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}>CLOSE</Button>
                 <Button 
                   variant="contained" 
                   href={selectedProject.link === '#' ? undefined : selectedProject.link} 
@@ -392,7 +423,7 @@ const Projects = memo(({ projects }) => {
                     '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.05)', color: '#222' }
                   }}
                 >
-                  LIVE_SYSTEM_BRIDGE
+                  VIEW_LIVE_SYSTEM
                 </Button>
               </DialogActions>
             </motion.div>

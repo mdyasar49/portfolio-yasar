@@ -9,7 +9,7 @@ const Education = memo(({ education }) => {
   return (
     <Box id="education" sx={{ py: 15 }}>
       <Typography variant="h2" gutterBottom sx={{ mb: 10, textAlign: 'center', fontFamily: 'Syncopate', fontWeight: 800, letterSpacing: 2 }}>
-        ACADEMIC <Box component="span" sx={{ color: '#ff3366' }}>FOUNDATION</Box>
+        ACADEMIC <Box component="span" sx={{ color: '#ff3366' }}>BACKGROUND</Box>
       </Typography>
 
       <Stack spacing={6}>

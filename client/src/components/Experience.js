@@ -107,12 +107,49 @@ const Experience = memo(({ experience }) => {
                   </Box>
                 </Box>
                 
-                <Box sx={{ mt: 3, opacity: 0.8 }}>
-                  <Stack spacing={2}>
+                {/* Engineering Metrics HUD */}
+                {exp.metrics && (
+                  <Stack direction="row" spacing={4} sx={{ mb: 4, flexWrap: 'wrap', gap: 3 }}>
+                    {exp.metrics.map((m, i) => (
+                      <Box key={i} sx={{ minWidth: 100 }}>
+                        <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 0.8, display: 'block', letterSpacing: 1.5, fontSize: '0.6rem' }}>{m.label}</Typography>
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                          <Box sx={{ width: 80, height: 4, bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 1, overflow: 'hidden' }}>
+                            <motion.div 
+                              initial={{ width: 0 }} 
+                              whileInView={{ width: `${m.value}%` }} 
+                              transition={{ duration: 1.5, delay: i * 0.1, ease: 'easeOut' }}
+                              style={{ height: '100%', backgroundColor: '#ff3366', boxShadow: '0 0 10px #ff336644' }} 
+                            />
+                          </Box>
+                          <Typography sx={{ color: '#fff', fontSize: '0.7rem', fontWeight: 900, fontFamily: 'monospace', opacity: 0.8 }}>{m.value}%</Typography>
+                        </Stack>
+                      </Box>
+                    ))}
+                  </Stack>
+                )}
+
+                {/* Role Specific Stack */}
+                {exp.technologies && (
+                  <Box sx={{ mb: 4 }}>
+                    <Typography variant="caption" sx={{ color: '#ff9933', fontWeight: 900, mb: 1.5, display: 'block', letterSpacing: 2, fontSize: '0.65rem', fontFamily: 'Syncopate' }}>TECHNOLOGY_STACK</Typography>
+                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+                      {exp.technologies.map(tech => (
+                        <Box key={tech} sx={{ px: 1.5, py: 0.5, bgcolor: 'rgba(255, 153, 51, 0.05)', border: '1px solid rgba(255, 153, 51, 0.2)', borderRadius: 1 }}>
+                          <Typography sx={{ color: '#ff9933', fontSize: '0.65rem', fontWeight: 900, fontFamily: 'monospace' }}>{tech.toUpperCase()}</Typography>
+                        </Box>
+                      ))}
+                    </Stack>
+                  </Box>
+                )}
+
+                <Box sx={{ mt: 3 }}>
+                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, mb: 2, display: 'block', letterSpacing: 2, fontSize: '0.65rem', fontFamily: 'Syncopate' }}>KEY_RESPONSIBILITIES</Typography>
+                  <Stack spacing={2.5}>
                     {exp.description.map((item, i) => (
-                      <Box key={i} sx={{ display: 'flex', gap: 2 }}>
-                        <Box sx={{ color: '#ff3366', fontSize: '1.2rem' }}>▹</Box>
-                        <Typography variant="body1" sx={{ color: '#ddd', lineHeight: 1.8, fontSize: '1.05rem' }}>
+                      <Box key={i} sx={{ display: 'flex', gap: 2.5 }}>
+                        <Box sx={{ color: '#ff3366', fontSize: '1.2rem', mt: -0.5, opacity: 0.5 }}>[{(i+1).toString().padStart(2, '0')}]</Box>
+                        <Typography variant="body1" sx={{ color: '#94a3b8', lineHeight: 1.9, fontSize: '1rem', fontWeight: 500 }}>
                           {item}
                         </Typography>
                       </Box>

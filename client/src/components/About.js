@@ -15,7 +15,7 @@ const About = memo(({ profile }) => {
         <Typography variant="h2" sx={{ 
           fontFamily: 'Syncopate', fontWeight: 900, mb: 8, textAlign: 'center', letterSpacing: 4, fontSize: { xs: '2rem', md: '3.5rem' } 
         }}>
-          ABOUT <Box component="span" sx={{ color: '#ff3366' }}>LOGISTICS</Box>
+          ENGINEERING <Box component="span" sx={{ color: '#ff3366' }}>PROFILE</Box>
         </Typography>
 
         <Grid container spacing={6} alignItems="center">
@@ -28,11 +28,11 @@ const About = memo(({ profile }) => {
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} sx={{ mb: 4 }}>
                 <Box sx={{ flex: 1, p: 3, borderRadius: 3, border: '1px solid rgba(51, 204, 255, 0.2)', background: 'linear-gradient(to bottom, rgba(51, 204, 255, 0.05), transparent)' }}>
                   <Typography variant="h3" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'monospace' }}>2.5+</Typography>
-                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 1 }}>YEARS_EXP</Typography>
+                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 1 }}>YEARS OF EXPERIENCE</Typography>
                 </Box>
                 <Box sx={{ flex: 1, p: 3, borderRadius: 3, border: '1px solid rgba(255, 51, 102, 0.2)', background: 'linear-gradient(to bottom, rgba(255, 51, 102, 0.05), transparent)' }}>
                   <Typography variant="h3" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'monospace' }}>15+</Typography>
-                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 1 }}>PROJECTS_SOLVED</Typography>
+                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 1 }}>PROJECTS COMPLETED</Typography>
                 </Box>
               </Stack>
 

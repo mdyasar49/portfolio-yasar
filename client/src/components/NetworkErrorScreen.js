@@ -20,8 +20,8 @@ const ERROR_CONFIG = {
   network: {
     icon: WifiOff,
     color: '#ff3366',
-    title: 'NEURAL LINK SEVERED',
-    subtitle: 'System is currently detached from the global matrix.',
+    title: 'CONNECTION LOST',
+    subtitle: 'System is currently offline. Please check your internet connection.',
     code: 'ERR_CONNECTION_OFFLINE',
     diagnostics: [
       'IP_STACK_UNREACHABLE',
@@ -32,8 +32,8 @@ const ERROR_CONFIG = {
   server: {
     icon: ServerCrash,
     color: '#ff9933',
-    title: 'REACTOR CORE OFFLINE',
-    subtitle: 'The central processing cluster is not responding to pings.',
+    title: 'SERVER UNAVAILABLE',
+    subtitle: 'The server is not responding. Please try again in a moment.',
     code: 'ERR_BACKEND_UNAVAILABLE',
     diagnostics: [
       'CLUSTER_PROTOCOL_HANG',
@@ -44,8 +44,8 @@ const ERROR_CONFIG = {
   notfound: {
     icon: SearchX,
     color: '#cc33ff',
-    title: 'DATA SECTOR CORRUPTED',
-    subtitle: 'The requested memory address is no longer in the registry.',
+    title: 'PAGE NOT FOUND',
+    subtitle: "The page you're looking for doesn't exist or has been moved.",
     code: 'ERR_ENTRY_NOT_FOUND',
     diagnostics: [
       'NODE_ADDR_MISMATCH',
@@ -56,8 +56,8 @@ const ERROR_CONFIG = {
   unknown: {
     icon: AlertOctagon,
     color: '#33ccff',
-    title: 'SYSTEM ANOMALY DETECTED',
-    subtitle: 'An unhandled exception has breached the primary firewall.',
+    title: 'SOMETHING WENT WRONG',
+    subtitle: 'An unexpected error occurred. Our engineers have been notified.',
     code: 'ERR_UNKNOWN_OVERFLOW',
     diagnostics: [
       'STACK_OVERFLOW_RISK',
@@ -141,11 +141,10 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
   useEffect(() => {
     setTerminalLines([]);
     const lines = [
-      `INITIALIZING RECOVERY PROTOCOL [${config.code}]...`,
-      `SCANNING LOCAL NODES... COMPLETE.`,
-      `PINGING GATEWAY... TIMEOUT.`,
-      `DETERRING SUBTLE PACKET LOSS... FAILURE.`,
-      `SYSTEM STATUS: ${safeErrorType.toUpperCase()}_HALT`
+      `INITIALIZING RECOVERY...`,
+      `SCANNING NETWORK... COMPLETE.`,
+      `REACHING GATEWAY... TIMEOUT.`,
+      `SYSTEM STATUS: ${safeErrorType.toUpperCase()}_OFFLINE`
     ];
     let i = 0;
     const interval = setInterval(() => {
@@ -314,7 +313,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, pb: 2, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
               <Stack direction="row" spacing={1} alignItems="center">
                 <Terminal size={14} color={config.color} />
-                <Typography sx={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: 2, color: config.color }}>DIAG_LOG_v7.2</Typography>
+                <Typography sx={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: 2, color: config.color }}>DIAGNOSTIC_LOG</Typography>
               </Stack>
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#ff5f56' }} />
@@ -400,7 +399,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                   </motion.div>
                   <span>RECONNECTING</span>
                 </Stack>
-              ) : hasRetryHandler ? 'FORCE_REBOOT' : 'RELOAD_SYSTEM'}
+              ) : hasRetryHandler ? 'RETRY_SERVER' : 'RELOAD_PAGE'}
             </Button>
 
             <Button
@@ -426,21 +425,19 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                 }
               }}
             >
-              RETURN_HOME
+              RETURN_TO_HOME
             </Button>
           </Stack>
 
           {/* Footer Branding */}
-          <Stack direction="row" spacing={4} sx={{ opacity: 0.3, mt: 4 }}>
             <Stack direction="row" spacing={1} alignItems="center">
               <Activity size={14} />
-              <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>LATENCY: --ms</Typography>
+              <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>STATUS: OFFLINE</Typography>
             </Stack>
             <Stack direction="row" spacing={1} alignItems="center">
               <Unplug size={14} />
-              <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>UPLINK: FAILED</Typography>
+              <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>UPLINK: DISCONNECTED</Typography>
             </Stack>
-          </Stack>
 
         </Stack>
       </Container>

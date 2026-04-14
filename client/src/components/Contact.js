@@ -59,13 +59,13 @@ const Contact = () => {
                         viewport={{ once: true }}
                     >
                         <Typography sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 4, mb: 2, fontSize: '0.7rem' }}>
-                            [ SECURE_COMMUNICATION ]
+                            [ GET_IN_TOUCH ]
                         </Typography>
                         <Typography variant="h3" sx={{ fontWeight: 900, color: 'white', mb: 3, fontFamily: 'Syncopate', letterSpacing: -1 }}>
-                            INITIATE<br/><span style={{ color: '#33ccff' }}>CONNECTION</span>
+                            SEND A<br/><span style={{ color: '#33ccff' }}>MESSAGE</span>
                         </Typography>
                         <Typography sx={{ color: '#444', lineHeight: 1.8, mb: 6 }}>
-                            Establishing a direct encrypted channel to the MERN Core Infrastructure. Provide your credentials and payload content to proceed with dispatch.
+                            Have a project in mind or just want to say hi? Feel free to reach out. I'm always open to discussing new opportunities and technical challenges.
                         </Typography>
 
                         <Stack spacing={3}>
@@ -106,16 +106,16 @@ const Contact = () => {
                             
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
-                                    <TextField fullWidth label="NAME_IDENTIFIER" name="name" value={formData.name} onChange={handleChange} required sx={inputStyles} />
+                                    <TextField fullWidth label="FULL_NAME" name="name" value={formData.name} onChange={handleChange} required sx={inputStyles} />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <TextField fullWidth label="RETURN_EMAIL" name="email" type="email" value={formData.email} onChange={handleChange} required sx={inputStyles} />
+                                    <TextField fullWidth label="EMAIL_ADDRESS" name="email" type="email" value={formData.email} onChange={handleChange} required sx={inputStyles} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField fullWidth label="SUBJECT_PROTOCOL" name="subject" value={formData.subject} onChange={handleChange} sx={inputStyles} />
+                                    <TextField fullWidth label="SUBJECT" name="subject" value={formData.subject} onChange={handleChange} sx={inputStyles} />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField fullWidth label="PAYLOAD_CONTENT" name="message" multiline rows={5} value={formData.message} onChange={handleChange} required sx={inputStyles} />
+                                    <TextField fullWidth label="YOUR_MESSAGE" name="message" multiline rows={5} value={formData.message} onChange={handleChange} required sx={inputStyles} />
                                 </Grid>
                             </Grid>
 
@@ -131,7 +131,7 @@ const Contact = () => {
                                     '&:hover': { bgcolor: '#00ffcc', boxShadow: '0 0 30px rgba(0, 255, 204, 0.3)' }
                                 }}
                             >
-                                {loading ? 'TRANSMITTING...' : 'DISPATCH_MESSAGE'}
+                                {loading ? 'SENDING...' : 'SEND_MESSAGE'}
                             </Button>
                         </Box>
                     </motion.div>

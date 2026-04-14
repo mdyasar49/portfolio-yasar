@@ -77,8 +77,8 @@ const AdminLogin = () => {
                                 </Box>
                              </motion.div>
                              <Box sx={{ textAlign: 'center' }}>
-                                <Typography variant="h5" sx={{ fontWeight: 900, fontFamily: 'Syncopate', color: 'white', letterSpacing: -1 }}>CONTROL_GATEWAY</Typography>
-                                <Typography variant="caption" sx={{ color: '#444', fontFamily: 'monospace', letterSpacing: 2 }}>SECURITY_PROTOCOL: AUTH_V4.0</Typography>
+                                <Typography variant="h5" sx={{ fontWeight: 900, fontFamily: 'Syncopate', color: 'white', letterSpacing: -1 }}>ADMIN_LOGIN</Typography>
+                                <Typography variant="caption" sx={{ color: '#444', fontFamily: 'monospace', letterSpacing: 2 }}>SECURITY_STATUS: VERIFIED_ACCESS</Typography>
                              </Box>
                         </Stack>
 
@@ -95,12 +95,12 @@ const AdminLogin = () => {
                             )}
 
                             <TextField 
-                                fullWidth label="ROOT_USERNAME" name="username" value={credentials.username} onChange={handleChange} required sx={inputStyles}
+                                fullWidth label="USERNAME" name="username" value={credentials.username} onChange={handleChange} required sx={inputStyles}
                                 InputProps={{ startAdornment: <User size={16} color="#444" style={{ marginRight: 15 }} /> }}
                             />
                             
                             <TextField 
-                                fullWidth label="ENCRYPTION_KEY" name="password" type="password" value={credentials.password} onChange={handleChange} required sx={inputStyles}
+                                fullWidth label="PASSWORD" name="password" type="password" value={credentials.password} onChange={handleChange} required sx={inputStyles}
                                 InputProps={{ startAdornment: <KeyRound size={16} color="#444" style={{ marginRight: 15 }} /> }}
                             />
 
@@ -116,12 +116,12 @@ const AdminLogin = () => {
                                     '&:hover': { bgcolor: '#ff4d79', boxShadow: '0 0 30px rgba(255, 51, 102, 0.4)' }
                                 }}
                             >
-                                {loading ? 'BYPASSING...' : 'INITIATE_SESSION'}
+                                {loading ? 'AUTHENTICATING...' : 'LOGIN'}
                             </Button>
                         </Box>
 
                         <Typography sx={{ textAlign: 'center', mt: 4, color: '#222', fontSize: '0.6rem', fontFamily: 'monospace', letterSpacing: 2 }}>
-                            IP_LOGGING_ACTIVE // UNAUTHORIZED_ACCESS_BLACKLISTED
+                            SECURE_ADMIN_ACCESS // AUTHORIZED_PERSIONAL_ONLY
                         </Typography>
                     </Box>
                 </Fade>

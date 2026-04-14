@@ -12,6 +12,8 @@ const useProfile = () => {
     const [error, setError]         = useState(null);
     const [errorType, setErrorType] = useState(null); // 'network' | 'server' | 'notfound' | 'unknown'
 
+    const [maintenanceMode, setMaintenanceMode] = useState(false);
+
     const fetchProfileData = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -26,11 +28,11 @@ const useProfile = () => {
                     const data = await getProfile();
                     if (data) {
                         setProfile(data);
+                        setMaintenanceMode(data.maintenanceMode || false);
                         return;
                     }
                 } catch (err) {
                     lastError = err;
-                    // Render/host cold-start handling: wait and retry before showing error UI
                     if (attempt < MAX_RETRIES) {
                         await new Promise((resolve) => setTimeout(resolve, attempt * 1200));
                     }
@@ -53,13 +55,13 @@ const useProfile = () => {
         } finally {
             setLoading(false);
         }
-    }, []); // getProfile is a stable module-level import — no deps needed
+    }, []); 
 
     useEffect(() => {
         fetchProfileData();
-    }, [fetchProfileData]); // fetchProfileData is stable (useCallback with [])
+    }, [fetchProfileData]); 
 
-    return { profile, loading, error, errorType, retry: fetchProfileData };
+    return { profile, loading, error, errorType, maintenanceMode, retry: fetchProfileData };
 };
 
 export default useProfile;

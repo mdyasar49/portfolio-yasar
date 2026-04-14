@@ -5,9 +5,17 @@ const statsSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    history: [{
+        date: { type: String, required: true }, // YYYY-MM-DD
+        count: { type: Number, default: 0 }
+    }],
     lastUpdated: {
         type: Date,
         default: Date.now
+    },
+    maintenanceMode: {
+        type: Boolean,
+        default: false
     }
 });
 

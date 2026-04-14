@@ -22,7 +22,7 @@ const ResumeModule = () => {
           <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 1 }}>
             <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(255, 51, 102, 0.3)' }} />
             <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, letterSpacing: 6, fontFamily: 'Syncopate', fontSize: '0.65rem' }}>
-              RESUME_PROTOCOL_v4.2
+              CURRICULUM_VITAE
             </Typography>
             <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(255, 51, 102, 0.3)' }} />
           </Box>
@@ -33,7 +33,7 @@ const ResumeModule = () => {
             fontSize: { xs: '2.8rem', md: '5rem' },
             textShadow: '0 0 40px rgba(255,255,255,0.05)'
           }}>
-            PROFESSIONAL <span style={{ color: '#33ccff', textShadow: '0 0 20px rgba(51, 204, 255, 0.4)' }}>ASSETS</span>
+            RESUME & <span style={{ color: '#33ccff', textShadow: '0 0 20px rgba(51, 204, 255, 0.4)' }}>ASSETS</span>
           </Typography>
         </Stack>
 
@@ -99,10 +99,9 @@ const ResumeModule = () => {
               }}>
                 <Stack spacing={4}>
                   <Box>
-                    <Typography variant="h5" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 2, fontSize: '1.2rem' }}>VERIFIED_PROFILE</Typography>
+                    <Typography variant="h5" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 2, fontSize: '1.2rem' }}>RESUME_OVERVIEW</Typography>
                     <Typography variant="body2" sx={{ color: '#94a3b8', lineHeight: 1.8 }}>
-                      Instant extraction of professional architecture and core engineering metrics. 
-                      This asset is cryptographically validated and ready for enterprise-level review.
+                      A comprehensive overview of my professional experience and technical skills. This document is optimized for engineering-focused review and reflects current industry standards.
                     </Typography>
                   </Box>
 
@@ -133,7 +132,7 @@ const ResumeModule = () => {
                         '&:hover': { transform: 'translateY(-2px)' }
                       }}
                     >
-                      PULL_PDF_VERSION
+                      DOWNLOAD_PDF_VERSION
                     </Button>
                     <Button 
                       fullWidth
@@ -147,7 +146,7 @@ const ResumeModule = () => {
                         '&:hover': { bgcolor: 'rgba(51, 204, 255, 0.05)', borderColor: '#33ccff' }
                       }}
                     >
-                      FULL_3D_VIEWER
+                      VIEW_INTERACTIVE_RESUME
                     </Button>
                   </Stack>
                 </Stack>

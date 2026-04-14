@@ -28,7 +28,7 @@ const ArchitectureModule = () => {
           <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 1 }}>
             <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(0, 255, 204, 0.3)' }} />
             <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: { xs: 3, md: 6 }, fontFamily: 'Syncopate', fontSize: '0.65rem' }}>
-              SYSTEM_ARCHITECTURE_v5.0
+              SYSTEM_ARCHITECTURE
             </Typography>
             <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(0, 255, 204, 0.3)' }} />
           </Box>
@@ -38,7 +38,7 @@ const ArchitectureModule = () => {
             letterSpacing: -2,
             fontSize: { xs: '2rem', sm: '3rem', md: '5rem' }
           }}>
-            INFRA <span style={{ color: '#00ffcc' }}>MAP</span>
+            ARCHITECTURE <span style={{ color: '#00ffcc' }}>MAP</span>
           </Typography>
         </Stack>
 
@@ -60,7 +60,7 @@ const ArchitectureModule = () => {
                 overflow: 'hidden'
               }}>
                 <Typography variant="h5" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 5, display: 'flex', alignItems: 'center', gap: 2, fontSize: { xs: '1rem', md: '1.5rem' } }}>
-                  <Cpu color="#00ffcc" size={isSmall ? 20 : 24} /> FULL_STACK_SCHEMATIC
+                  <Cpu color="#00ffcc" size={isSmall ? 20 : 24} /> FULL_STACK_ARCHITECTURE
                 </Typography>
 
                 <Grid container spacing={{ xs: 2, md: 4 }}>
@@ -98,7 +98,7 @@ const ArchitectureModule = () => {
                       '&:hover': { bgcolor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc' }
                     }}
                    >
-                     EXPAND_TECHNICAL_DOCS
+                     VIEW_DOCUMENTATION
                    </Button>
                 </Stack>
               </Paper>
@@ -108,12 +108,12 @@ const ArchitectureModule = () => {
           <Grid item xs={12} lg={4}>
             <Stack spacing={{ xs: 3, md: 4 }}>
                <Paper sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(2, 4, 10, 0.9)', borderRadius: 5, border: '1px solid rgba(51, 204, 255, 0.1)' }}>
-                  <Typography variant="h6" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '0.8rem' }}>SECURITY_PROTOCOL</Typography>
+                  <Typography variant="h6" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '0.8rem' }}>SECURITY_MEASURES</Typography>
                   <Stack spacing={2}>
                     {[
                       { l: 'ENCRYPTION', v: 'AES-256' },
-                      { l: 'AUTHENTICATION', v: 'JWT_BEARER' },
-                      { l: 'GATEWAY', v: 'PROTECTED' }
+                      { l: 'AUTHENTICATION', v: 'JWT / AUTH' },
+                      { l: 'API_GATEWAY', v: 'SECURED' }
                     ].map((s, i) => (
                       <Box key={i} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="caption" sx={{ color: '#444', fontWeight: 900 }}>{s.l}</Typography>
@@ -124,14 +124,14 @@ const ArchitectureModule = () => {
                </Paper>
 
                <Paper sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(2, 4, 10, 0.9)', borderRadius: 5, border: '1px solid rgba(255, 51, 102, 0.1)' }}>
-                  <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '0.8rem' }}>LIVE_TELEMETRY</Typography>
+                  <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '0.8rem' }}>PLATFORM_STATUS</Typography>
                   <Stack direction="row" spacing={3} alignItems="center">
                     <Box sx={{ p: 2, bgcolor: 'rgba(255, 51, 102, 0.1)', borderRadius: '50%', color: '#ff3366', animation: `${spin} 4s linear infinite` }}>
                       <Shield size={24} />
                     </Box>
                     <Box>
-                      <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '0.75rem' }}>SSL_ENFORCED</Typography>
-                      <Typography variant="caption" sx={{ color: '#444' }}>PRODUCTION_BUILD_v1.2</Typography>
+                      <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '0.75rem' }}>SSL_SECURED</Typography>
+                      <Typography variant="caption" sx={{ color: '#444' }}>PRODUCTION_READY</Typography>
                     </Box>
                   </Stack>
                </Paper>

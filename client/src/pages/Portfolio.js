@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import SEO from '../components/SEO';
 import Hero from '../components/Hero';
@@ -12,10 +12,10 @@ import ResumeModule from '../components/ResumeModule';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
-const Portfolio = ({ profile, loading }) => {
+const Portfolio = memo(({ profile, loading }) => {
   if (loading && !profile) return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: 'background.default', color: 'white' }}>
-       <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>INITIALIZING_INTERFACE...</Typography>
+       <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>LOADING_PROFILE...</Typography>
     </Box>
   );
 
@@ -59,6 +59,7 @@ const Portfolio = ({ profile, loading }) => {
       <Footer socials={profile.socials} name={profile.name} />
     </Box>
   );
-};
+});
 
 export default Portfolio;
+

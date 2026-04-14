@@ -101,7 +101,7 @@ const Hero = memo(({ profile }) => {
               }}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00ffcc', animation: 'pulse 1.5s infinite' }} />
                 <Typography sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.75rem', letterSpacing: 3, fontFamily: 'monospace' }}>
-                  CORE_ENGINE_ACTIVE // READY_TO_JOIN
+                  SYSTEM_ACTIVE // AVAILABLE_FOR_HIRE
                 </Typography>
               </Box>
             </motion.div>
@@ -120,7 +120,7 @@ const Hero = memo(({ profile }) => {
                 position: 'absolute', top: -10, right: -40, opacity: 0.5,
                 display: { xs: 'none', md: 'block' }
               }}>
-                <Typography variant="caption" sx={{ color: '#33ccff', fontFamily: 'monospace', fontSize: '0.6rem' }}>[MERN_ARCHITECT_v4]</Typography>
+                <Typography variant="caption" sx={{ color: '#33ccff', fontFamily: 'monospace', fontSize: '0.6rem' }}>[FULL_STACK_ENGINEER]</Typography>
               </Box>
             </Box>
 
@@ -165,7 +165,7 @@ const Hero = memo(({ profile }) => {
                   '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 25px 50px rgba(0, 210, 255, 0.5)' }
                 }}
               >
-                INITIALIZE_RESUME
+                ACCESS_RESUME
               </Button>
               <Button 
                 variant="outlined" 
@@ -181,7 +181,7 @@ const Hero = memo(({ profile }) => {
                   '&:hover': { borderColor: 'white', background: 'rgba(255,255,255,0.05)' }
                 }}
               >
-                VIEW_SYSTEMS
+                EXPLORE_PROJECTS
               </Button>
             </Stack>
           </Stack>

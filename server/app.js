@@ -5,6 +5,8 @@
  */
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorMiddleware');
@@ -12,8 +14,31 @@ const { createCorsOptions } = require('./config/cors');
 
 const app = express();
 
+// 1. Production Security Headers (Helmet)
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    contentSecurityPolicy: false, // Disable for development to allow external scripts/styles if any
+}));
+
+
+// 2. Resource Protection (Rate Limiting)
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes.' }
+});
+
+const contactLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 hour
+    max: 5, // Limit each IP to 5 contact submissions per hour
+    message: { success: false, message: 'Spam protection active. Please wait an hour before sending another message.' }
+});
+
 // Middlewares (Express.js)
 app.use(logger);
+app.use('/api', limiter);
+app.use('/api/contact', contactLimiter);
+
 
 const { allowedOrigins, corsOptions } = createCorsOptions();
 

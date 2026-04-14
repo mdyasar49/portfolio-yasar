@@ -6,7 +6,8 @@ import { getVisitors } from '../services/api';
  * Uses lightweight polling to avoid noisy socket reconnect failures.
  */
 const useLiveAnalytics = () => {
-    const [activeSessions, setActiveSessions] = useState(1); // Default to at least self
+    const [activeSessions, setActiveSessions] = useState(1);
+    const [history, setHistory] = useState([]);
     const pollTimerRef = useRef(null);
     const latestAppliedRequestRef = useRef(0);
 
@@ -15,33 +16,29 @@ const useLiveAnalytics = () => {
 
         const refreshVisitors = async () => {
             const requestStartedAt = Date.now();
-            const data = await getVisitors(false); // Do not increment on polling
+            const data = await getVisitors(false); 
 
-            // Only apply the newest successful response to avoid stale overwrites.
             if (
                 mounted &&
                 data?.success &&
-                Number.isFinite(data.count) &&
                 requestStartedAt >= latestAppliedRequestRef.current
             ) {
                 latestAppliedRequestRef.current = requestStartedAt;
-                setActiveSessions(Math.max(1, data.count));
+                if (Number.isFinite(data.count)) setActiveSessions(Math.max(1, data.count));
+                if (Array.isArray(data.history)) setHistory(data.history);
             }
         };
 
-        // Initial load and slow polling keeps telemetry fresh
         refreshVisitors();
         pollTimerRef.current = setInterval(refreshVisitors, 30000);
 
         return () => {
             mounted = false;
-            if (pollTimerRef.current) {
-                clearInterval(pollTimerRef.current);
-            }
+            if (pollTimerRef.current) clearInterval(pollTimerRef.current);
         };
     }, []);
 
-    return { activeSessions };
+    return { activeSessions, history };
 };
 
 export default useLiveAnalytics;

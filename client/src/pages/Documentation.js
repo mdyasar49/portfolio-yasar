@@ -98,8 +98,8 @@ const Documentation = ({ profile }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const navItems = [
-    { name: 'System Logistics', path: 'readme', type: 'doc', icon: <Book size={16} /> },
-    { name: 'System Architecture', path: 'explanation', type: 'doc', icon: <Layers size={16} /> },
+    { name: 'System Overview', path: 'readme', type: 'doc', icon: <Book size={16} /> },
+    { name: 'Core Architecture', path: 'explanation', type: 'doc', icon: <Layers size={16} /> },
     { name: 'Tech Stack', path: 'dev-stack', type: 'doc', icon: <Zap size={16} /> },
     { name: 'Network Status', path: 'api-status', type: 'doc', icon: <Activity size={16} /> },
     { name: 'Home / About', path: '/', type: 'page', icon: <Globe size={16} /> },
@@ -215,13 +215,13 @@ const Documentation = ({ profile }) => {
   };
 
   const sections = [
-    { id: 'readme', title: 'SYSTEM LOGISTICS', icon: <Book size={18} />, content: readmeContent, color: '#33ccff' },
-    { id: 'explanation', title: 'SYSTEM ARCHITECTURE', icon: <Cpu size={18} />, content: projectContent, color: '#ff3366' },
+    { id: 'readme', title: 'SYSTEM OVERVIEW', icon: <Book size={18} />, content: readmeContent, color: '#33ccff' },
+    { id: 'explanation', title: 'CORE ARCHITECTURE', icon: <Cpu size={18} />, content: projectContent, color: '#ff3366' },
   ];
 
   const sidebarItems = [
-    { id: 'readme', label: 'SYSTEM LOGISTICS', icon: <Hash size={16} /> },
-    { id: 'explanation', label: 'SYSTEM ARCHITECTURE', icon: <Layers size={16} /> },
+    { id: 'readme', label: 'SYSTEM OVERVIEW', icon: <Hash size={16} /> },
+    { id: 'explanation', label: 'CORE ARCHITECTURE', icon: <Layers size={16} /> },
     { id: 'dev-stack', label: 'DEVELOPMENT STACK', icon: <Zap size={16} /> },
     { id: 'api-status', label: 'NETWORK STATUS', icon: <Activity size={16} /> },
     { id: 'structure', label: 'FILESYSTEM', icon: <Hash size={16} /> },
@@ -341,13 +341,13 @@ const Documentation = ({ profile }) => {
                 style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(8px)' }} 
              />
              <motion.div initial={{ scale: 0.95, opacity: 0, y: -20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: -20 }}
-                style={{ position: 'relative', width: '100%', maxWidth: 600, maxHeight: '88vh', background: '#0d1117', borderRadius: 16, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column' }}>
+                style={{ position: 'relative', width: '100%', maxWidth: 500, maxHeight: '75vh', background: '#0d1117', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)', overflow: 'hidden', boxShadow: '0 50px 100px rgba(0,0,0,0.8)', display: 'flex', flexDirection: 'column' }}>
                 
-                <Box sx={{ p: 2.5, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ p: 2, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 2 }}>
                    <Search size={20} color="#33ccff" />
                    <input 
                       autoFocus
-                      placeholder="SEARCH_COMMAND..."
+                      placeholder="FIND_DOCUMENTATION..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       style={{ 
@@ -424,7 +424,7 @@ const Documentation = ({ profile }) => {
             <Terminal size={22} />
           </Box>
           <Box>
-            <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '1.1rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>CORE_V2.0</Typography>
+            <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '1.1rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>SYSTEM_DOCS</Typography>
             <Stack direction="row" spacing={1} alignItems="center">
               <div className="status-blink" style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#00ffcc' }} />
               <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 800, letterSpacing: 1 }}>SYSTEM_ALIVE</Typography>
@@ -620,7 +620,7 @@ const Documentation = ({ profile }) => {
                                     <RefreshCw size={40} color="#33ccff" />
                                  </motion.div>
                                  <Typography sx={{ mt: 3, color: '#33ccff', fontFamily: 'Syncopate', fontSize: '0.7rem', fontWeight: 900, letterSpacing: 2 }}>
-                                    DYNAMIC_ENGINE_TRANSLATING...
+                                    SYSTEM_TRANSLATING_CONTENT...
                                  </Typography>
                                  <Box sx={{ width: 200, mt: 2 }}>
                                     <LinearProgress sx={{ bgcolor: 'rgba(51, 204, 255, 0.1)', '& .MuiLinearProgress-bar': { bgcolor: '#33ccff' } }} />

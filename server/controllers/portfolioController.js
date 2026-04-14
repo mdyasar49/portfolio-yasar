@@ -21,6 +21,7 @@ const normalizeProfile = (source) => {
         location: safeString(profile.location),
         summary: safeString(profile.summary),
         technicalSkills: {
+
             frontend: safeArray(technicalSkills.frontend),
             backend: safeArray(technicalSkills.backend),
             database: safeArray(technicalSkills.database),
@@ -90,7 +91,7 @@ const getLocalStats = () => {
             return JSON.parse(fs.readFileSync(statsFile, 'utf-8'));
         }
     } catch (e) {}
-    return { visitors: 0 }; // Starting from zero as requested
+    return { visitors: 0, maintenanceMode: false }; // Starting from zero as requested
 };
 
 const saveLocalStats = (stats) => {
@@ -126,7 +127,12 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
         return res.status(404).json({ success: false, message: "Portfolio data not found." });
     }
 
-    res.status(200).json(normalizeProfile(profile));
+    const stats = mongoose.connection.readyState === 1 ? await Stats.findOne() : getLocalStats();
+
+    res.status(200).json({
+        ...normalizeProfile(profile),
+        maintenanceMode: stats?.maintenanceMode || false
+    });
 });
 
 /**
@@ -136,40 +142,163 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
  */
 exports.getVisitors = asyncHandler(async (req, res, next) => {
     const shouldIncrement = req.query.inc === 'true';
-    console.log(`📡 [Analytics] Visitor Count Request - Increment: ${shouldIncrement}`);
+    const today = new Date().toISOString().split('T')[0];
     
-    // Persistence Check: If MongoDB is offline, use Local JSON persistence
+    // 1. Portable/Offline Logic
     if (!mongoose.connection || mongoose.connection.readyState !== 1) {
         const stats = getLocalStats();
+        if (!stats.history) stats.history = [];
+
         if (shouldIncrement) {
             stats.visitors += 1;
+            let dayRecord = stats.history.find(h => h.date === today);
+            if (dayRecord) dayRecord.count += 1;
+            else stats.history.push({ date: today, count: 1 });
             saveLocalStats(stats);
         }
 
         return res.status(200).json({ 
             success: true, 
             count: stats.visitors,
-            mode: 'PORTABLE_GET'
+            history: req.headers.authorization ? stats.history : undefined,
+            mode: 'PORTABLE'
         });
     }
 
     try {
         let stats = await Stats.findOne();
-        
         if (!stats) {
-            stats = new Stats({ visitors: 0 });
+            stats = new Stats({ visitors: 0, history: [{ date: today, count: 0 }] });
             await stats.save();
         }
 
         if (shouldIncrement) {
             stats.visitors += 1;
+            let dayRecord = stats.history.find(h => h.date === today);
+            if (dayRecord) dayRecord.count += 1;
+            else stats.history.push({ date: today, count: 1 });
             stats.lastUpdated = Date.now();
             await stats.save();
         }
 
-        res.status(200).json({ success: true, count: stats.visitors });
+        res.status(200).json({ 
+            success: true, 
+            count: stats.visitors,
+            history: req.headers.authorization ? stats.history : undefined 
+        });
     } catch (error) {
-        console.error("STATS_SERVICE_ERROR:", error.message);
-        res.status(200).json({ success: true, count: 0 });
+        console.error("STATS_SERVICE_FAILURE:", error.message);
+        res.status(200).json({ 
+            success: true, 
+            count: 0, 
+            history: req.headers.authorization ? [] : undefined 
+        });
     }
 });
+
+/**
+ * @desc    Update portfolio profile (Full Sync)
+ * @route   PUT /api/profile
+ * @access  Private
+ */
+exports.updateProfile = asyncHandler(async (req, res, next) => {
+    const newData = req.body;
+
+    if (!newData || typeof newData !== 'object') {
+        return res.status(400).json({ success: false, message: 'Invalid payload provided.' });
+    }
+
+    // 1. Persist to Local JSON (Primary for current architecture)
+    try {
+        fs.writeFileSync(path.join(__dirname, '../data.json'), JSON.stringify(newData, null, 2));
+        console.log("💾 [Storage] Local JSON synchronization complete.");
+    } catch (err) {
+        console.error("LOCAL_STORAGE_SYNC_ERROR:", err.message);
+        return res.status(500).json({ success: false, message: 'Failed to sync local data storage.' });
+    }
+
+    // 2. Sync with MongoDB Cloud (Optional persistence)
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+        try {
+            await Profile.findOneAndUpdate({}, newData, { upsert: true, new: true, runValidators: true });
+            console.log("☁️ [Cloud] MongoDB persistence finalized.");
+        } catch (error) {
+            console.error("CLOUD_SYNC_ERROR:", error.message);
+        }
+    }
+
+    res.status(200).json({ 
+        success: true, 
+        message: 'Portfolio architecture updated successfully.',
+        timestamp: new Date().toISOString()
+    });
+});
+
+/**
+ * @desc    Get live system health metrics
+ * @route   GET /api/health
+ * @access  Private
+ */
+exports.getSystemHealth = asyncHandler(async (req, res, next) => {
+    const uptime = process.uptime();
+    const memory = process.memoryUsage();
+    
+    const memUsage = Math.round((memory.heapUsed / memory.heapTotal) * 100);
+    
+    const dbStart = Date.now();
+    let dbStatus = 'OFFLINE';
+    let dbLatency = 0;
+
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+        try {
+            await mongoose.connection.db.admin().ping();
+            dbLatency = Date.now() - dbStart;
+            dbStatus = 'ONLINE';
+        } catch (e) {
+            dbStatus = 'ERROR';
+        }
+    }
+
+    res.status(200).json({
+        success: true,
+        data: {
+            uptimeSeconds: Math.floor(uptime),
+            memoryUsage: memUsage,
+            db: {
+                status: dbStatus,
+                latency: dbLatency
+            },
+            api: 'STABLE',
+            maintenance: mongoose.connection.readyState === 1 ? (await Stats.findOne())?.maintenanceMode : getLocalStats().maintenanceMode,
+            timestamp: new Date()
+        }
+    });
+});
+
+/**
+ * @desc    Toggle Maintenance Mode
+ * @route   PUT /api/health/maintenance
+ * @access  Private
+ */
+exports.toggleMaintenance = asyncHandler(async (req, res, next) => {
+    const { enabled } = req.body;
+
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+        let stats = await Stats.findOne();
+        if (!stats) stats = new Stats();
+        stats.maintenanceMode = enabled;
+        await stats.save();
+    } else {
+        const stats = getLocalStats();
+        stats.maintenanceMode = enabled;
+        saveLocalStats(stats);
+    }
+
+    res.status(200).json({ 
+        success: true, 
+        message: enabled ? 'System placed in MAINTENANCE_LOCK.' : 'System restored to PRODUCTION_STATUS.' 
+    });
+});
+
+
+

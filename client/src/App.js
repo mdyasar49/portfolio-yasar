@@ -3,25 +3,36 @@
  * This is the main presentation layer. It uses React.js to manage the state
  * of the application and high-quality Material UI components for the design.
  */
-import React, { useEffect } from 'react';
-import { ThemeProvider, CssBaseline, Box, keyframes } from '@mui/material';
+import React, { useEffect, lazy, Suspense } from 'react';
+import { ThemeProvider, CssBaseline, Box, keyframes, Typography } from '@mui/material';
+
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import theme from './theme/index';
 import useProfile from './hooks/useProfile';
 import Header from './components/Header';
 import Portfolio from './pages/Portfolio';
-import Resume from './pages/Resume';
-import Documentation from './pages/Documentation';
 import NetworkErrorScreen from './components/NetworkErrorScreen';
 import GlobalHUD from './components/GlobalHUD';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import MaintenancePage from './pages/MaintenancePage';
+
+// ─── Lazy Loaded Modules ──────────────────────────────────
+const Resume = lazy(() => import('./pages/Resume'));
+const Documentation = lazy(() => import('./pages/Documentation'));
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const ManagementHub = lazy(() => import('./pages/ManagementHub'));
 
 // ─── Animations ───────────────────────────────────────────
 const spin = keyframes`
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+`;
+
+const pulseGlow = keyframes`
+  0%   { transform: scale(0.9); opacity: 0.5; box-shadow: 0 0 5px #33ccff; }
+  50%  { transform: scale(1.1); opacity: 1; box-shadow: 0 0 20px #33ccff; }
+  100% { transform: scale(0.9); opacity: 0.5; box-shadow: 0 0 5px #33ccff; }
 `;
 
 // ─── Scroll Helpers ────────────────────────────────────────
@@ -59,9 +70,9 @@ const ScrollToHash = () => {
 };
 
 const PublicApp = () => {
-  const { profile, loading, error, errorType, retry } = useProfile();
+  const { profile, loading, error, errorType, maintenanceMode, retry } = useProfile();
 
-  // ── Loading state ──
+  // ── Initializing Operations ──
   if (loading) {
     return (
       <ThemeProvider theme={theme}>
@@ -73,17 +84,45 @@ const PublicApp = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 3,
+          gap: 4,
         }}>
-          {/* Spinning ring loader */}
-          <Box sx={{
-            width: 56, height: 56,
-            border: '3px solid rgba(51, 204, 255, 0.15)',
-            borderTop: '3px solid #33ccff',
-            borderRadius: '50%',
-            animation: `${spin} 0.9s linear infinite`,
-          }} />
+          {/* Orbital Loader Structure */}
+          <Box sx={{ position: 'relative', width: 100, height: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {/* Spinning ring outer */}
+            <Box sx={{
+              position: 'absolute',
+              width: 100, height: 100,
+              border: '2px solid rgba(51, 204, 255, 0.05)',
+              borderTop: '2px solid #33ccff',
+              borderRadius: '50%',
+              animation: `${spin} 0.8s linear infinite`,
+            }} />
+            
+            {/* Inner signature core */}
+            <Box sx={{ display: 'flex', alignItems: 'baseline', zIndex: 1 }}>
+              <Typography variant="h4" sx={{ 
+                fontWeight: 900, 
+                fontFamily: 'Syncopate', 
+                background: 'linear-gradient(270deg, #ff3366, #ff9933)', 
+                WebkitBackgroundClip: 'text', 
+                WebkitTextFillColor: 'transparent',
+                filter: 'drop-shadow(0 0 10px rgba(255, 51, 102, 0.3))'
+              }}>MY</Typography>
+              <Box sx={{ width: 8, height: 8, bgcolor: '#33ccff', borderRadius: '50%', ml: 0.5, boxShadow: '0 0 15px #33ccff', animation: `${pulseGlow} 1.5s infinite` }} />
+            </Box>
+          </Box>
+          <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_OPERATIONS</Typography>
         </Box>
+      </ThemeProvider>
+    );
+  }
+
+  // ── Maintenance state ──
+  if (maintenanceMode) {
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <MaintenancePage />
       </ThemeProvider>
     );
   }
@@ -104,12 +143,22 @@ const PublicApp = () => {
       <Header />
       <GlobalHUD />
       <Box sx={{ pt: 10 }}>
-        <Routes>
-          <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
-          <Route path="/resume"       element={<Resume profile={profile} />} />
-          <Route path="/architecture" element={<Documentation profile={profile} />} />
-          <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
-        </Routes>
+        <Suspense fallback={
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 20 }}>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
+              <Typography variant="h3" sx={{ fontWeight: 900, fontFamily: 'Syncopate', background: 'linear-gradient(270deg, #ff3366, #ff9933)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MY</Typography>
+              <Box sx={{ width: 10, height: 10, bgcolor: '#33ccff', borderRadius: '50%', ml: 1, boxShadow: '0 0 20px #33ccff', animation: `${pulseGlow} 1.5s infinite` }} />
+            </Box>
+            <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_MODULE</Typography>
+          </Box>
+        }>
+          <Routes>
+            <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
+            <Route path="/resume"       element={<Resume profile={profile} />} />
+            <Route path="/architecture" element={<Documentation profile={profile} />} />
+            <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
+          </Routes>
+        </Suspense>
       </Box>
     </>
   );
@@ -121,17 +170,35 @@ const AppRoutes = () => {
 
   if (isAdminRoute) {
     return (
-      <Routes>
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <ProtectedRoute>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <Suspense fallback={
+        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#010409' }}>
+          <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
+            <Typography variant="h3" sx={{ fontWeight: 900, fontFamily: 'Syncopate', background: 'linear-gradient(270deg, #ff3366, #ff9933)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MY</Typography>
+            <Box sx={{ width: 10, height: 10, bgcolor: '#33ccff', borderRadius: '50%', ml: 1, boxShadow: '0 0 20px #33ccff', animation: 'pulse-glow 1.5s infinite' }} />
+          </Box>
+          <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>SECURE_AUTH_INIT</Typography>
+        </Box>
+      }>
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/management"
+            element={
+              <ProtectedRoute>
+                <ManagementHub />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
     );
   }
 

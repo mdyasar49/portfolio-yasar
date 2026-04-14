@@ -127,9 +127,9 @@ const RenderEngine = {
             { l: 'Backend', v: safeArr(s.backend).join(', ') },
             { l: 'Database', v: safeArr(s.database).join(', ') },
             { l: 'Tools', v: safeArr(s.tools).join(', ') },
-            { l: 'AI Tools', v: safeArr(s.ai_tools || ['ChatGPT', 'Claude', 'Gemini', 'Cursor', 'OpenAI Codex']).join(', ') },
-            { l: 'Other', v: safeArr(s.other || ['Bug Investigation', 'Root Cause Analysis', 'API Debugging', 'Technical Documentation']).join(', ') }
-        ].map(i => `<div class="skill-item"><b>${i.l}:</b> ${i.v || 'N/A'}</div>`).join('');
+            { l: 'AI Tech', v: safeArr(s.aiTools).join(', ') },
+            { l: 'Expertise', v: safeArr(s.other).join(', ') }
+        ].map(i => i.v ? `<div class="skill-item"><b>${i.l}:</b> ${i.v}</div>` : '').join('');
         inject('skills-list', html);
     },
     experience(tpl, p) {
@@ -180,6 +180,25 @@ const RenderEngine = {
 async function init() {
     try {
         const profile = await fetchProfile();
+
+        // --- Apply Resume Content Overrides (Legacy details restoration) ---
+        if (profile.resumeOverride) {
+            if (profile.resumeOverride.summary) profile.summary = profile.resumeOverride.summary;
+            if (profile.resumeOverride.experience) {
+                // Map existing meta-data (location, etc) onto old descriptions
+                profile.experience = profile.experience.map(exp => {
+                    const override = profile.resumeOverride.experience.find(o => o.company === exp.company);
+                    return override ? { ...exp, description: override.description } : exp;
+                });
+            }
+            if (profile.resumeOverride.projects) {
+                profile.projects = profile.projects.map(pr => {
+                    const override = profile.resumeOverride.projects.find(o => o.name === pr.name || o.name.includes(pr.name) || pr.name.includes(o.name));
+                    return override ? { ...pr, description: override.description } : pr;
+                });
+            }
+        }
+
         const templates = await loadTemplates();
         setProgress(95, 'FINALIZING RENDER...');
         RenderEngine.header(templates.header, profile);

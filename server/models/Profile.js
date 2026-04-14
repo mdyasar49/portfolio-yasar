@@ -34,7 +34,9 @@ const ProfileSchema = new mongoose.Schema({
     frontend: [String],
     backend: [String],
     database: [String],
-    tools: [String]
+    tools: [String],
+    aiTools: [String],
+    other: [String]
   },
   experience: [ExperienceSchema],
   projects: [ProjectSchema],
