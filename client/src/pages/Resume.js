@@ -49,7 +49,7 @@ const Resume = () => {
       setIsDispatching(true);
       const dispatchTimer = setTimeout(() => {
         handleDownload();
-      }, 500); // High-speed dispatch
+      }, 2500); // Ensure iframe init
       return () => { clearTimeout(timer); clearTimeout(dispatchTimer); };
     }
 
@@ -108,12 +108,12 @@ const Resume = () => {
       // 1. Generate PDF snapshot from the index.html content
       if (frame && frame.contentWindow.getPDFBlob) {
         pdfBlob = await frame.contentWindow.getPDFBlob();
-      } else {
-        const response = await fetch('/resume-pro/A_MOHAMED_YASAR_RESUME.pdf');
-        if (response.ok) pdfBlob = await response.blob();
       }
 
-      if (!pdfBlob) throw new Error("Asset module unreachable");
+      if (!pdfBlob) {
+        handleDownload();
+        return;
+      }
 
       const file = new File([pdfBlob], "A_MOHAMED_YASAR_RESUME.pdf", { type: "application/pdf" });
 
@@ -360,7 +360,7 @@ const Resume = () => {
             <iframe 
                id="resume-frame"
                src={iframeSrc}
-               title="Professional Elite Resume"
+               title="Professional Resume Architecture"
                width="100%"
                height="100%"
                style={{ border: 'none', background: 'white' }}

@@ -130,24 +130,26 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @desc    Increment and get site visitors
- * @route   GET /api/visitors
+ * @desc    Get site visitors (Optional Increment)
+ * @route   GET /api/visitors?inc=true
  * @access  Public
  */
 exports.getVisitors = asyncHandler(async (req, res, next) => {
-    console.log(`[${new Date().toISOString()}] GET /api/visitors - Request Received`);
+    const shouldIncrement = req.query.inc === 'true';
+    console.log(`📡 [Analytics] Visitor Count Request - Increment: ${shouldIncrement}`);
     
     // Persistence Check: If MongoDB is offline, use Local JSON persistence
     if (!mongoose.connection || mongoose.connection.readyState !== 1) {
-        console.warn("⚠️  MongoDB offline. Using Dynamic Local Persistence (stats.json).");
         const stats = getLocalStats();
-        stats.visitors += 1;
-        saveLocalStats(stats);
+        if (shouldIncrement) {
+            stats.visitors += 1;
+            saveLocalStats(stats);
+        }
 
         return res.status(200).json({ 
             success: true, 
             count: stats.visitors,
-            mode: 'PORTABLE_DYNAMIC'
+            mode: 'PORTABLE_GET'
         });
     }
 
@@ -155,20 +157,19 @@ exports.getVisitors = asyncHandler(async (req, res, next) => {
         let stats = await Stats.findOne();
         
         if (!stats) {
-            console.log("No stats found, creating initial seed.");
-            stats = new Stats({ visitors: 0 }); // Starting from zero as requested
+            stats = new Stats({ visitors: 0 });
             await stats.save();
         }
 
-        // Increment count
-        stats.visitors += 1;
-        stats.lastUpdated = Date.now();
-        await stats.save();
+        if (shouldIncrement) {
+            stats.visitors += 1;
+            stats.lastUpdated = Date.now();
+            await stats.save();
+        }
 
-        console.log(`Successfully updated visitor count to: ${stats.visitors}`);
         res.status(200).json({ success: true, count: stats.visitors });
     } catch (error) {
         console.error("STATS_SERVICE_ERROR:", error.message);
-        res.status(200).json({ success: true, count: 1 }); // Fallback to 1 if first visit fails
+        res.status(200).json({ success: true, count: 0 });
     }
 });

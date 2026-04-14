@@ -36,7 +36,7 @@ const UI = {
     progress: document.getElementById('loader-progress'),
     main: document.getElementById('main-resume'),
     actions: document.getElementById('resume-actions'),
-    shareModal: document.getElementById('share-modal'),
+    shareModal: document.getElementById('more-modal'),
     dispatchOverlay: document.getElementById('dispatch-overlay')
 };
 
@@ -111,7 +111,7 @@ const RenderEngine = {
         const portfolio = safeArr(p.projects).find(pr => safeStr(pr.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar-1.onrender.com';
         inject('header-module', processTemplate(tpl, {
             name: safeStr(p.name, 'A. MOHAMED YASAR'),
-            title: `${safeStr(p.title, 'Full Stack Engineer')} | React.js | MERN Stack | REST APIs | JavaScript`,
+            title: safeStr(p.title, 'Full Stack Engineer | React.js | MERN Stack'),
             location: safeStr(p.location, 'Chennai, TN'),
             phone: safeStr(p.phone, '+91-9025943184'), 
             email: safeStr(p.email, 'mohamedyasar081786@gmail.com'),
@@ -219,24 +219,38 @@ function getPDFEngine() {
     return engine;
 }
 
-function downloadAsPDF() {
+async function downloadAsPDF() {
+    document.body.classList.add('pdf-capture');
+    await sleep(100);
     const opt = {
         margin: 0, filename: 'A_MOHAMED_YASAR_RESUME.pdf',
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 3, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
-    getPDFEngine()().set(opt).from(UI.main).save();
+    try {
+        await getPDFEngine()().set(opt).from(UI.main).save();
+    } finally {
+        document.body.classList.remove('pdf-capture');
+    }
 }
 window.downloadAsPDF = downloadAsPDF;
 
 async function getPDFBlob() {
+    document.body.classList.add('pdf-capture');
+    await sleep(100);
     const opt = {
-        margin: 0, image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        margin: 0, image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
-    return getPDFEngine()().set(opt).from(UI.main).output('blob');
+    try {
+        return await getPDFEngine()().set(opt).from(UI.main).output('blob');
+    } finally {
+        document.body.classList.remove('pdf-capture');
+    }
 }
 window.getPDFBlob = getPDFBlob;
 

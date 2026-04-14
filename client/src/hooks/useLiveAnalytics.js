@@ -15,7 +15,7 @@ const useLiveAnalytics = () => {
 
         const refreshVisitors = async () => {
             const requestStartedAt = Date.now();
-            const data = await getVisitors();
+            const data = await getVisitors(false); // Do not increment on polling
 
             // Only apply the newest successful response to avoid stale overwrites.
             if (

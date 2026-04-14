@@ -29,9 +29,9 @@ export const getProfile = async () => {
   return response.data;
 };
 
-export const getVisitors = async () => {
+export const getVisitors = async (increment = false) => {
     try {
-        const response = await api.get('/visitors');
+        const response = await api.get(`/visitors${increment ? '?inc=true' : ''}`);
         return response.data;
     } catch {
         return { success: false, count: 0 };

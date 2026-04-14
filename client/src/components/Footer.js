@@ -10,8 +10,13 @@ const Footer = ({ socials, name }) => {
 
   useEffect(() => {
     const fetchVisitorsData = async () => {
-        const data = await getVisitors();
-        setVisitorCount(data.count);
+        const hasIncremented = sessionStorage.getItem('v_inc');
+        const data = await getVisitors(!hasIncremented); 
+        
+        if (data?.success) {
+            setVisitorCount(data.count);
+            if (!hasIncremented) sessionStorage.setItem('v_inc', 'true');
+        }
     };
     fetchVisitorsData();
   }, []);
@@ -114,8 +119,8 @@ const Footer = ({ socials, name }) => {
                       <Terminal size={18} color="#33ccff" />
                    </Box>
                    <Box>
-                      <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1.2rem' }}>{visitorCount || '---'}</Typography>
-                      <Typography variant="caption" sx={{ color: '#00ffcc', fontSize: '0.6rem' }}>LIVE_NODES_REGISTERED</Typography>
+                      <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1.2rem' }}>{visitorCount > 0 ? visitorCount.toLocaleString() : '...'}</Typography>
+                      <Typography variant="caption" sx={{ color: '#00ffcc', fontSize: '0.6rem' }}>NODES_REGISTERED_TOTAL</Typography>
                    </Box>
                 </Stack>
              </Box>

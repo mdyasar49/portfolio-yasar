@@ -10,7 +10,7 @@ body {
 .resume-container {
     max-width: 850px;
     margin: 0 auto;
-    padding: 60px 70px;
+    padding: 25px 35px;
     background: #fff;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
@@ -20,23 +20,23 @@ body {
     text-transform: uppercase;
     color: #111827;
     border-bottom: 1.5px solid #111827;
-    margin-top: 24px;
-    margin-bottom: 12px;
-    padding-bottom: 3px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding-bottom: 2px;
     letter-spacing: 0.5px;
 }
-.header-container { text-align: center; margin-bottom: 25px; border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; }
-.name { font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 2px; color: #000; letter-spacing: 1px; }
-.job-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: #374151; }
-.contact-line { font-size: 12px; margin-bottom: 4px; color: #4b5563; }
+.header-container { text-align: center; margin-bottom: 10px; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; }
+.name { font-size: 26px; font-weight: 900; text-transform: uppercase; margin-bottom: 0px; color: #000; letter-spacing: 0.5px; }
+.job-title { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; color: #374151; }
+.contact-line { font-size: 11px; margin-bottom: 2px; color: #4b5563; }
 .contact-line a { color: #111827; text-decoration: none; font-weight: 500; }
-.summary-text { font-size: 13px; text-align: justify; color: #1f2937; }
-.skill-item { font-size: 13px; margin-bottom: 6px; color: #1f2937; }
-.exp-item { margin-bottom: 18px; }
-.exp-top { display: flex; justify-content: space-between; font-weight: 700; font-size: 14px; color: #111827; }
-.exp-sub { display: flex; justify-content: space-between; font-style: normal; font-weight: 500; font-size: 13px; margin-bottom: 6px; color: #374151; }
-ul { margin: 4px 0 0 0; padding-left: 20px; list-style-type: disc; }
-li { font-size: 12.5px; margin-bottom: 4px; color: #374151; }
+.summary-text { font-size: 11.5px; text-align: justify; color: #1f2937; line-height: 1.4; }
+.skill-item { font-size: 11.5px; margin-bottom: 4px; color: #1f2937; }
+.exp-item { margin-bottom: 12px; }
+.exp-top { display: flex; justify-content: space-between; font-weight: 700; font-size: 12.5px; color: #111827; }
+.exp-sub { display: flex; justify-content: space-between; font-style: normal; font-weight: 500; font-size: 11.5px; margin-bottom: 3px; color: #374151; }
+ul { margin: 2px 0 0 0; padding-left: 18px; list-style-type: disc; }
+li { font-size: 11px; margin-bottom: 2px; color: #374151; line-height: 1.3; }
 #loading-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -115,16 +115,24 @@ body.dark-mode-interactive .section-header {
 body.dark-mode-interactive .side-col { border-left-color: #334155; }
 body.dark-mode-interactive b { color: #38bdf8; }
 
-/* Print Optimizations */
+/* Print & PDF Capture Optimizations */
 @media print {
     body { background: #fff !important; color: #000 !important; margin: 0; padding: 0; }
     .resume-container { width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; color: #000 !important; background: #fff !important; border: none !important; box-shadow: none !important; }
-    #loading-overlay, #resume-actions, .hidden-print { display: none !important; }
+    #loading-overlay, #resume-actions, .hidden-print, .action-btn { display: none !important; }
     .resume-grid { display: block !important; }
     .side-col { border-left: none !important; padding-left: 0 !important; margin-top: 20px; }
     .section-header { border-bottom: 2.5px solid #000 !important; color: #000 !important; -webkit-print-color-adjust: exact; }
     .fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
 }
+
+/* Specific class to force stable state during html2canvas capture */
+.pdf-capture { background: white !important; }
+.pdf-capture .resume-container { background: white !important; color: black !important; padding: 40px !important; box-shadow: none !important; border: none !important; transform: none !important; }
+.pdf-capture .fade-in { opacity: 1 !important; animation: none !important; transform: none !important; }
+.pdf-capture .name { color: #000 !important; }
+.pdf-capture .section-header { color: #000 !important; border-bottom: 2px solid #000 !important; }
+.pdf-capture p, .pdf-capture div, .pdf-capture li, .pdf-capture span { color: #111 !important; opacity: 1 !important; }
 
 /* Modal System */
 .modal { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
