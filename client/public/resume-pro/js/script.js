@@ -295,13 +295,15 @@ UI_MORE.toggle?.addEventListener('click', () => UI_MORE.modal.classList.remove('
 UI_MORE.close?.addEventListener('click', () => UI_MORE.modal.classList.add('hidden'));
 
 window.dispatchWhatsApp = () => {
-    const text = encodeURIComponent(`Check out A. Mohamed Yasar's Elite Engineering Portfolio: ${window.location.origin}`);
+    const url = window.location.origin + window.location.pathname;
+    const text = encodeURIComponent(`Check out A. Mohamed Yasar's Elite Engineering Portfolio: ${url}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
     UI_MORE.modal.classList.add('hidden');
 };
 
 window.copyPortfolioLink = () => {
-    navigator.clipboard.writeText(window.location.origin).then(() => {
+    const url = window.location.origin + window.location.pathname;
+    navigator.clipboard.writeText(url).then(() => {
         alert("PORTFOLIO_LINK_COPIED_TO_SYSTEM_CLIPBOARD");
         UI_MORE.modal.classList.add('hidden');
     });
