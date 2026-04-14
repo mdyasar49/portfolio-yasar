@@ -648,9 +648,10 @@ const ManagementHub = ({ publicView = false }) => {
 
         return (
             <Stack spacing={4}>
-                {/* System Telemetry Dashboard */}
+                {/* System Intelligence Dashboard */}
                 <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#00ffcc', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 3 }}>SYSTEM_TELEMETRY</Typography>
+                    <Typography variant="h6" sx={{ color: '#00ffcc', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 3 }}>System Telemetry Dashboard</Typography>
+
                     <Grid container spacing={3}>
                         {[
                             { label: 'DATA_LAYER_PROTOCOL', value: health?.db?.status === 'ONLINE' ? 'CLOUD_SYNC (MONGODB)' : 'PORTABLE_CORE (JSON)', color: '#00ffcc' },
@@ -668,9 +669,10 @@ const ManagementHub = ({ publicView = false }) => {
                     </Grid>
                 </Paper>
 
-                {/* Analytics Exhibit */}
+                {/* Analytics Intelligence Exhibit */}
                 <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 4 }}>ANALYTICS_EXHIBIT</Typography>
+                    <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 4 }}>Visitor Analytics Exhibit</Typography>
+
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={8}>
                             <Box sx={{ p: 3, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
@@ -726,8 +728,8 @@ const ManagementHub = ({ publicView = false }) => {
                 <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                         <Box>
-                            <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 1 }}>SYSTEM_LOCK_PROTOCOL</Typography>
-                            <Typography sx={{ color: '#444', fontSize: '0.8rem' }}>Toggle public maintenance mode to shield the portfolio during updates.</Typography>
+                            <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 1 }}>System Access Protocol</Typography>
+                            <Typography sx={{ color: '#444', fontSize: '0.8rem' }}>Control the public accessibility of your portfolio during architectural updates.</Typography>
                         </Box>
                         <Button 
                             variant="outlined" 
@@ -736,13 +738,13 @@ const ManagementHub = ({ publicView = false }) => {
                             color={health?.maintenance ? "error" : "success"}
                             sx={{ fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.65rem' }}
                         >
-                            {health?.maintenance ? 'LIFT_LOCK' : 'ACTIVATE_LOCK'}
+                            {health?.maintenance ? 'Deactivate System Lock' : 'Activate System Lock'}
                         </Button>
                     </Box>
                 </Paper>
 
                 <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SECURITY_CREDENTIALS</Typography>
+                    <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>Security Credentials</Typography>
                     <Box component="form" onSubmit={handlePasswordChange}>
                         <Grid container spacing={3}>
                             <Grid item xs={12}>
@@ -848,7 +850,8 @@ const ManagementHub = ({ publicView = false }) => {
                                     '&.Mui-disabled': { bgcolor: 'rgba(51, 204, 255, 0.2)' }
                                 }}
                             >
-                                {loading ? 'SYNCING...' : 'SAVE_CHANGES'}
+                                {loading ? 'SYNCING...' : 'Update System Architecture'}
+
                             </Button>
                         )}
                         {publicView && (
@@ -858,8 +861,9 @@ const ManagementHub = ({ publicView = false }) => {
                             }}>
                                 <Shield size={16} color="#ff3366" />
                                 <Typography sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 2 }}>
-                                    TERMINAL_SIMULATION_ACTIVE (READ_ONLY)
+                                    System Simulation Mode Active (Read Only)
                                 </Typography>
+
                             </Box>
                         )}
                     </Box>
@@ -892,8 +896,9 @@ const ManagementHub = ({ publicView = false }) => {
                                 '&:hover': { borderColor: editMode ? '#ff3366' : '#00ffcc', bgcolor: 'transparent' }
                             }}
                         >
-                            {editMode ? 'CANCEL_PROPOSAL' : 'EDIT_PROPOSAL'}
+                            {editMode ? 'Cancel Refinement' : 'Draft Refinement'}
                         </Button>
+
                         {editMode && (
                             <Button 
                                 variant="contained" 
@@ -909,7 +914,8 @@ const ManagementHub = ({ publicView = false }) => {
                                     '&:hover': { bgcolor: '#00ccaa' }
                                 }}
                             >
-                                {proposalSending ? 'DISPATCHING...' : 'DISPATCH_PROPOSAL'}
+                                {proposalSending ? 'DISPATCHING...' : 'Submit for Approval'}
+
                             </Button>
                         )}
                     </Box>
@@ -927,15 +933,16 @@ const ManagementHub = ({ publicView = false }) => {
                         '& .MuiTab-root': { color: '#444', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem', '&.Mui-selected': { color: 'white' } }
                     }}
                 >
-                    <Tab label="IDENTITY_CORE" icon={<User size={18} />} iconPosition="start" />
-                    <Tab label="PORTFOLIO_EXHIBITS" icon={<Briefcase size={18} />} iconPosition="start" />
-                    <Tab label="TECH_STACK" icon={<Terminal size={18} />} iconPosition="start" />
-                    <Tab label="EXPERIENCE_LOG" icon={<Layers size={18} />} iconPosition="start" />
-                    <Tab label="ACADEMIC_PORTFOLIO" icon={<GraduationCap size={18} />} iconPosition="start" />
-                    {!publicView && <Tab label="COMMUNICATION_HUB" icon={<Inbox size={18} />} iconPosition="start" />}
-                    <Tab label="ARCHITECTURAL_LOGISTICS" icon={<Book size={18} />} iconPosition="start" />
-                    {!publicView && <Tab label="OPERATIONAL_SECURITY" icon={<Settings size={18} />} iconPosition="start" />}
+                    <Tab label="Profile Intelligence" icon={<User size={18} />} iconPosition="start" />
+                    <Tab label="Bespoke Projects" icon={<Briefcase size={18} />} iconPosition="start" />
+                    <Tab label="Technical Arsenal" icon={<Terminal size={18} />} iconPosition="start" />
+                    <Tab label="Career Trajectory" icon={<Layers size={18} />} iconPosition="start" />
+                    <Tab label="Education Timeline" icon={<GraduationCap size={18} />} iconPosition="start" />
+                    {!publicView && <Tab label="Inquiry Center" icon={<Inbox size={18} />} iconPosition="start" />}
+                    <Tab label="System Documentation" icon={<Book size={18} />} iconPosition="start" />
+                    {!publicView && <Tab label="Operational Security" icon={<Settings size={18} />} iconPosition="start" />}
                 </Tabs>
+
 
 
                 {(() => {
@@ -943,9 +950,9 @@ const ManagementHub = ({ publicView = false }) => {
                     const tabs = [
                         { id: 0, component: <ProfileTab publicView={viewOnlyActive} /> },
                         { id: 1, component: <ProjectsTab publicView={viewOnlyActive} /> },
-                        { id: 2, component: <SkillsTab publicView={viewOnlyActive} /> },
-                        { id: 3, component: <ExperienceTab publicView={viewOnlyActive} /> },
-                        { id: 4, component: <EducationTab publicView={viewOnlyActive} /> },
+                        { id: 2, component: <ExperienceTab publicView={viewOnlyActive} /> },
+                        { id: 3, component: <EducationTab publicView={viewOnlyActive} /> },
+                        { id: 4, component: <SkillsTab publicView={viewOnlyActive} /> },
                         { id: 5, component: <MessagesTab publicView={viewOnlyActive} />, hidden: publicView },
                         { id: 6, component: <DocsTab publicView={viewOnlyActive} /> },
                         { id: 7, component: <SettingsTab publicView={viewOnlyActive} />, hidden: publicView }
