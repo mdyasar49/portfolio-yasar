@@ -11,6 +11,7 @@ import ArchitectureModule from '../components/ArchitectureModule';
 import ResumeModule from '../components/ResumeModule';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
+import ManagementHub from './ManagementHub';
 
 const Portfolio = memo(({ profile, loading }) => {
   if (loading && !profile) return (
@@ -52,7 +53,11 @@ const Portfolio = memo(({ profile, loading }) => {
         {profile?.experience && <Experience experience={profile.experience} />}
         {profile?.projects && <Projects projects={profile.projects} />}
         {profile?.education && <Education education={profile.education} />}
+        <Box id="terminal" sx={{ py: 10 }}>
+           <ManagementHub publicView={true} />
+        </Box>
         <ResumeModule />
+
         <ArchitectureModule />
         <Contact />
       </Container>

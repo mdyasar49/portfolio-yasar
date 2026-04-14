@@ -91,10 +91,10 @@ const AdminDashboard = () => {
     const openModule = (moduleName) => {
 
         const moduleRoutes = {
-            'Professional Profile': '/admin/management?tab=0',
-            'Project Management': '/admin/management?tab=1',
-            'Technical Expertise': '/admin/management?tab=2',
-            'Account Settings': '/admin/login'
+            'PROFESSIONAL IDENTITY': '/admin/management?tab=0',
+            'PORTFOLIO ORCHESTRATION': '/admin/management?tab=1',
+            'TECHNOLOGY STACK': '/admin/management?tab=2',
+            'OPERATIONAL SECURITY': '/admin/management?tab=6'
         };
 
         const target = moduleRoutes[moduleName];
@@ -110,11 +110,12 @@ const AdminDashboard = () => {
     };
 
     const modules = [
-        { name: 'Professional Profile', desc: 'Update bio, summary and identifiers', icon: <Users />, color: '#33ccff' },
-        { name: 'Project Management', desc: 'Manage projects and portfolio content', icon: <FolderKanban />, color: '#ff3366' },
-        { name: 'Technical Expertise', desc: 'Manage technical skills and tools', icon: <Cpu />, color: '#00ffcc' },
-        { name: 'Account Settings', desc: 'Manage account access and security', icon: <Settings />, color: '#94a3b8' }
+        { name: 'PROFESSIONAL IDENTITY', desc: 'Maintain primary professional identifiers and career bio.', icon: <Users />, color: '#33ccff' },
+        { name: 'PORTFOLIO ORCHESTRATION', desc: 'Securely manage your engineering projects and content layers.', icon: <FolderKanban />, color: '#ff3366' },
+        { name: 'TECHNOLOGY STACK', desc: 'Orchestrate technical competencies and system tools.', icon: <Cpu />, color: '#00ffcc' },
+        { name: 'OPERATIONAL SECURITY', desc: 'Manage system access protocols and security credentials.', icon: <Settings />, color: '#94a3b8' }
     ];
+
 
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: '#02040a', pt: 12, pb: 10 }}>

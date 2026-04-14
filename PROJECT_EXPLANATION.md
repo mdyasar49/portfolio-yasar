@@ -26,6 +26,7 @@ React Component (Mount)                      Express Handler
        │                                    ▼       │
        │                            [ MIDDLEWARE LAYER ]
        │                            Check CORS Whitelist
+       │                            JWT Auth Verification
        │                            Log Request Activity
        │                                    │
        │                            [ CONTROLLER LAYER ]
@@ -53,47 +54,53 @@ if (connection.isOnline) {
 
 ---
 
-## 4. Security & Environment Integrity
-I treated security as a first-class citizen using three layers:
+## 4. The Proposal Protocol: Collaborative Engineering
+To demonstrate real-world administrative workflows, I engineered a **Guest Contribution Pipeline**.
 
-1.  **Origin Isolation (CORS):** The backend is hardwired to reject *any* request that doesn't come from my specific frontend URL.
-2.  **Secret Management:** Sensitive strings (DB keys, API URLs) are never committed to GitHub. They live in `.env` files, protected by `.gitignore`.
-3.  **Client-Side Scoping:** Environment variables on the frontend start with `REACT_APP_` to prevent accidental exposure of system-level secrets.
+*   **Public Simulation:** Visitors can "Edit" the portfolio in a simulated terminal environment.
+*   **Secure Dispatch:** Instead of directly modifying the database, refinements are staged as **Proposals**.
+*   **Live Alerts (Nodemailer):** Every submission triggers a high-fidelity email alert to the administrator via a custom `EmailService`.
+*   **Administrative Sovereignty:** Proposals are marked as `pending` and require authenticated approval via a secure deep-link to be merged into the live system.
 
 ---
 
-## 5. UI/UX Orchestration: Glassmorphism & Motion
+## 5. System Intelligence: Advanced Analytics
+The portfolio doesn't just display data; it monitors its own performance and audience.
+
+*   **7-Day Traffic Density:** A custom SVG visualization engine that renders visitor history with zero overhead.
+*   **Platform Insights:** Automated telemetry for Device Distribution and Geographic Origin (Simulated/Placeholder for high-fidelity UI).
+*   **Real-time Health Monitoring:** Continuous polling for Database latency, Memory utilization, and System Uptime.
+
+---
+
+## 6. UI/UX Orchestration: Glassmorphism & Motion
 The "Impress" factor comes from the bridge between code and design. 
 
 *   **Bespoke Themes:** Using Material UI (MUI), I created a customized design system with glassmorphic cards and neon accents.
 *   **Motion Graphs:** Every page transition and scroll effect is managed by **Framer Motion**, ensuring the site feels "alive" and interactive.
-*   **Dynamic Resume Generator:** Instead of serving a static PDF, the site *builds* a resume from live data using `html2pdf.js`, ensuring the CV is always up-to-date with the portfolio contents.
+*   **Dynamic Resume Generator:** Instead of serving a static PDF, the site *builds* a resume from live data using `html2pdf.js`, ensuring the CV is always up-to-date.
 
 ---
 
-## 6. Dynamic Localization & Transliteration
+## 7. Dynamic Localization & Transliteration
 To make the engineering documentation accessible to a wider audience, I engineered a **real-time translation engine**.
 
-*   **Google Translate API Integration:** The system fetches technical documentation in English and translates it on-the-fly when a user switches languages.
-*   **Markdown Preservation:** I implemented a regex-based parser that identifies Markdown headers, lists, and quotes, ensuring the **technical layout remains 100% identical** across all languages.
-*   **Thanglish Phonetic Engine:** Since Thanglish (Tamil words in English script) isn't natively supported by standard APIs, I built a custom transliteration layer that converts Tamil unicode characters into authentic English phonetic equivalents.
-*   **Interactive UX (Copy Engine):** I integrated a premium 'Copy to Clipboard' system for all code blocks. It utilizes the asynchronous Clipboard API and provides real-time visual feedback via a Framer Motion-animated checkmark icon upon success.
-*   **Performance:** All translations are cached locally to ensure a near-instant experience when switching between language modes.
-|
+*   **Google Translate API Integration:** The system fetches technical documentation in English and translates it on-the-fly.
+*   **Markdown Preservation:** I implemented a regex-based parser that identifies Markdown structural tokens, ensuring technical layouts remain identical across all languages.
+*   **Thanglish Phonetic Engine:** A custom transliteration layer that converts Tamil unicode characters into authentic English phonetic equivalents.
+
 ---
 
-## 7. The Asset Dispatcher: Secure Sharing & Auto-Download
-A significant technical hurdle in modern browsers is the inability to physically attach files to a web-based email compose window (like Gmail) via a simple URL link. 
+## 8. The Asset Dispatcher: Secure Sharing
+A significant technical hurdle in modern browsers is the inability to physically attach files to a web-based email compose window via a URL link. 
 
 **The Engineering Workaround:** I implemented a custom **Auto-Dispatch Protocol**.
-*   **The Dispatcher:** When a user shares their resume via the "Elite Dispatch" button, the system generates a URL with a specialized query parameter: `?system_dispatch=true`.
-*   **The Listener:** The Portfolio application is programmed to monitor its initialization parameters. If the `system_dispatch` flag is detected, a high-priority `useEffect` hook triggers a "DECODING ASSET" overlay.
-*   **The Execution:** After a 500ms "engine warm-up," the site automatically invokes the Resume Engine's PDF generation function and initiates a direct download for the recipient. 
-*   **Impact:** This provides the seamless UX of an email attachment without compromising browser security standards.
+*   **The Dispatcher:** Generates a URL with a specialized query parameter: `?system_dispatch=true`.
+*   **The Listener:** Portfolios tagged with this flag detection automatically initiate a Resume Engine PDF generation and initiate a direct download for the recipient. 
 
 ---
 
-## 8. How to Extend This Project
+## 9. How to Extend This Project
 This system is designed to be extensible. To add a new section:
 1.  **Define Schema:** Add a new model in `server/models/`.
 2.  **Expose Endpoint:** Map a new route in `server/routes/`.
@@ -102,7 +109,7 @@ This system is designed to be extensible. To add a new section:
 
 ---
 
-## 9. Engineer's Summary
+## 10. Engineer's Summary
 Building this project taught me that **Performance** and **Reliability** are just as important as the **User Interface**. By managing my own API and handling database failovers, I have created a portfolio that doesn't just look good—it is built to last.
 
 **Developed with Passion. Engineered with Precision.**

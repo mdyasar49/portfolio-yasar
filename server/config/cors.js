@@ -10,8 +10,11 @@ const getAllowedOrigins = () => {
   const defaults = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3001',
     'https://mern-portfolio-yasar-1.onrender.com'
   ];
+
 
   const fromEnv = [
     ...splitOrigins(process.env.CLIENT_URL || ''),
@@ -46,17 +49,21 @@ const createCorsOptions = () => {
     allowedOrigins,
     corsOptions: {
       origin(origin, callback) {
-        if (isAllowedOrigin(origin, allowedOrigins)) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        // or if the origin is in our whitelist
+        if (!origin || isAllowedOrigin(origin, allowedOrigins)) {
           callback(null, true);
         } else {
+          console.error(`🔴 [CORS_BLOCKED] Origin "${origin}" is not in whitelist:`, allowedOrigins);
           callback(new Error(`CORS policy blocked access from origin ${origin}.`));
         }
       },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
       credentials: true,
       optionsSuccessStatus: 204
     }
+
   };
 };
 

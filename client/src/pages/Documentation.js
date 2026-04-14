@@ -83,11 +83,11 @@ const CopyButton = ({ text }) => {
 const Documentation = ({ profile }) => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('readme');
-  const [readmeContent, setReadmeContent] = useState('');
-  const [projectContent, setProjectContent] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [readmeContent, setReadmeContent] = useState(profile?.readme || '');
+  const [projectContent, setProjectContent] = useState(profile?.projectExplanation || '');
+  const [isLoading, setIsLoading] = useState(!profile?.readme);
   const [isTranslating, setIsTranslating] = useState(false);
-  const [translatedDoc, setTranslatedDoc] = useState('');
+  const [translatedDoc, setTranslatedDoc] = useState(profile?.projectExplanation || '');
   const [logs, setLogs] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -137,6 +137,14 @@ const Documentation = ({ profile }) => {
   }, []);
 
   useEffect(() => {
+    // ── Pre-flight Check: If profile data exists, skip static fetch ──
+    if (profile?.readme && profile?.projectExplanation) {
+        setReadmeContent(profile.readme);
+        setProjectContent(profile.projectExplanation);
+        setIsLoading(false);
+        return;
+    }
+
     setIsLoading(true);
     const fetchDocs = async () => {
       try {
@@ -167,7 +175,8 @@ const Documentation = ({ profile }) => {
       }
     };
     fetchDocs();
-  }, []);
+  }, [profile]);
+
 
   // Dynamic Translation Hook
   useEffect(() => {

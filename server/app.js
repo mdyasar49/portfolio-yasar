@@ -14,24 +14,30 @@ const { createCorsOptions } = require('./config/cors');
 
 const app = express();
 
-// 1. Production Security Headers (Helmet)
+// 1. CORS Orchestration (Must be first to handle preflights)
+const { allowedOrigins, corsOptions } = createCorsOptions();
+console.log(`🔐 [CORS] Allowed origins: ${allowedOrigins.join(', ')}`);
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// 2. Production Security Headers (Helmet)
 app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
-    contentSecurityPolicy: false, // Disable for development to allow external scripts/styles if any
+    contentSecurityPolicy: false, 
 }));
 
 
-// 2. Resource Protection (Rate Limiting)
+// 3. Resource Protection (Rate Limiting)
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
-    message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes.' }
+    windowMs: 15 * 60 * 1000, 
+    max: 100, 
+    message: { success: false, message: 'Too many requests from this IP.' }
 });
 
 const contactLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 5, // Limit each IP to 5 contact submissions per hour
-    message: { success: false, message: 'Spam protection active. Please wait an hour before sending another message.' }
+    windowMs: 60 * 60 * 1000, 
+    max: 5, 
+    message: { success: false, message: 'Spam protection active.' }
 });
 
 // Middlewares (Express.js)
@@ -39,14 +45,6 @@ app.use(logger);
 app.use('/api', limiter);
 app.use('/api/contact', contactLimiter);
 
-
-const { allowedOrigins, corsOptions } = createCorsOptions();
-
-// Log allowed origins at startup so you can verify the env var is being read
-console.log(`🔐 [CORS] Allowed origins: ${allowedOrigins.join(', ')}`);
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 
 // 2. Direct Browser Access Protection (Applied to ALL endpoints)
 app.use((req, res, next) => {

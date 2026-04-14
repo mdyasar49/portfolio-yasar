@@ -22,7 +22,9 @@ const Header = () => {
     { name: 'Projects', path: '/#projects', type: 'anchor' },
     { name: 'Resume', path: '/#resume', type: 'anchor' },
     { name: 'Architecture', path: '/#architecture', type: 'anchor' },
+    { name: 'Terminal', path: '/#terminal', type: 'anchor' },
     { name: 'Contact', path: '/#contact', type: 'anchor' },
+
   ];
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
@@ -47,8 +49,11 @@ const Header = () => {
     }
   };
 
-  const renderNavButton = (item) => {
+  const renderNavButton = (item) => {    
     const isAnchor = item.type === 'anchor';
+    const isTerminal = item.name === 'Terminal';
+    const isActive = location.hash === item.path.replace('/', '') || (location.pathname === item.path && !isAnchor);
+
     
     if (isAnchor && location.pathname === '/') {
       return (
@@ -56,10 +61,31 @@ const Header = () => {
           key={item.name} 
           onClick={() => scrollToSection(item.name.toLowerCase())}
           sx={{ 
-            color: 'text.primary',
-            px: 3,
-            fontWeight: 500,
-            '&:hover': { color: 'primary.light', bgcolor: 'transparent' }
+            color: isActive ? (isTerminal ? '#00ffcc' : '#ff3366') : 'white',
+            px: 2,
+            mx: 0.5,
+            fontSize: '0.7rem',
+            fontFamily: 'Syncopate',
+            fontWeight: 900,
+            letterSpacing: 1,
+            transition: '0.3s ease',
+            position: 'relative',
+            '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: 12,
+                left: '25%',
+                width: isActive ? '50%' : 0,
+                height: '1.5px',
+                bgcolor: isTerminal ? '#00ffcc' : '#ff3366',
+                boxShadow: `0 0 12px ${isTerminal ? '#00ffcc' : '#ff3366'}`,
+                transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            },
+            '&:hover': { 
+                color: isTerminal ? '#00ffcc' : '#ff3366',
+                bgcolor: 'transparent',
+                '&::after': { width: '50%' }
+            }
           }}
         >
           {item.name}
@@ -74,10 +100,31 @@ const Header = () => {
         to={item.path}
         onClick={() => setMobileOpen(false)}
         sx={{ 
-          color: location.pathname === item.path ? 'primary.light' : 'text.primary',
-          px: 3,
-          fontWeight: location.pathname === item.path ? 700 : 500,
-          '&:hover': { color: 'primary.light', bgcolor: 'transparent' }
+          color: location.pathname === item.path ? (isTerminal ? '#00ffcc' : '#ff3366') : 'white',
+          px: 2,
+          mx: 0.5,
+          fontSize: '0.7rem',
+          fontFamily: 'Syncopate',
+          fontWeight: 900,
+          letterSpacing: 1,
+          position: 'relative',
+          transition: '0.3s ease',
+          '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: 12,
+              left: '25%',
+              width: location.pathname === item.path ? '50%' : 0,
+              height: '1.5px',
+              bgcolor: isTerminal ? '#00ffcc' : '#ff3366',
+              boxShadow: `0 0 12px ${isTerminal ? '#00ffcc' : '#ff3366'}`,
+              transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+          },
+          '&:hover': { 
+              color: isTerminal ? '#00ffcc' : '#ff3366',
+              bgcolor: 'transparent',
+              '&::after': { width: '50%' }
+          }
         }}
       >
         {item.name}
@@ -90,22 +137,27 @@ const Header = () => {
       <AppBar 
         position="fixed" 
         sx={{ 
-          top: trigger ? 20 : 0,
+          top: trigger ? 15 : 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: trigger ? { xs: '95%', sm: 'auto' } : '100%',
-          maxWidth: trigger ? '900px' : '100%',
-          bgcolor: trigger ? 'rgba(10, 10, 15, 0.7)' : 'transparent',
-          backdropFilter: trigger ? 'blur(24px) saturate(150%)' : 'none',
+          width: trigger ? 'max-content' : '100%',
+          maxWidth: trigger ? '95%' : '100%',
+          minWidth: trigger ? { sm: '800px', md: '1000px', lg: '1150px' } : '100%',
+          bgcolor: trigger ? 'rgba(1, 4, 9, 0.85)' : 'transparent',
+
+          backdropFilter: trigger ? 'blur(20px) saturate(180%)' : 'none',
           borderRadius: trigger ? 100 : 0,
-          border: trigger ? '1px solid rgba(255,255,255,0.05)' : 'none',
+          border: trigger ? '1px solid rgba(255,255,255,0.06)' : 'none',
           transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: trigger ? '0 30px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)' : 'none',
+          boxShadow: trigger ? '0 15px 35px rgba(0,0,0,0.4)' : 'none',
         }}
         elevation={0}
       >
-        <Container maxWidth="lg">
-          <Toolbar sx={{ justifyContent: 'space-between', height: trigger ? 64 : 80 }}>
+
+
+        <Container maxWidth={trigger ? false : "lg"} sx={{ width: '100%', px: trigger ? 4 : 2 }}>
+          <Toolbar sx={{ justifyContent: 'space-between', height: trigger ? 64 : 80, width: '100%', gap: trigger ? 4 : 2 }}>
+
             <Box 
               component={RouterLink} 
               to="/" 
@@ -146,9 +198,10 @@ const Header = () => {
               </Box>
             </Box>
             
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', whiteSpace: 'nowrap' }}>
               {menuItems.map((item) => renderNavButton(item))}
             </Box>
+
 
             <IconButton color="inherit" onClick={handleDrawerToggle} sx={{ display: { xs: 'flex', md: 'none' } }}>
               <MenuIcon />

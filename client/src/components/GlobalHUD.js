@@ -1,7 +1,9 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, Fade } from '@mui/material';
-import { Shield, Cpu, Zap } from 'lucide-react';
+import { Shield, Cpu, Zap, Terminal } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
+
 
 const GlobalHUD = () => {
   const [uptime, setUptime] = useState(0);
@@ -52,28 +54,45 @@ const GlobalHUD = () => {
           </Box>
 
           {/* Real-time Telemetry Widgets */}
-          <Stack direction="row" spacing={1.5}>
+          <Stack direction="row" spacing={1.5} sx={{ pointerEvents: 'auto' }}>
             {[
               { icon: <Cpu size={12} color="#ff3366" />, label: 'SYSTEM_STABLE', color: '#ff3366' },
               { icon: <Zap size={12} color="#33ccff" />, label: `${activeSessions}_ACTIVE_SESSIONS`, color: '#33ccff', active: true },
-              { icon: <Shield size={12} color="#888" />, label: 'ENCRYPTED', color: '#888' }
-            ].map((item, i) => (
-              <Box key={i} sx={{ 
-                p: 1, px: 1.5, borderRadius: 1.5, 
-                bgcolor: 'rgba(255,255,255,0.02)', 
-                border: `1px solid ${item.active ? item.color + '44' : 'rgba(255,255,255,0.05)'}`,
-                display: 'flex', alignItems: 'center', gap: 1, 
-                color: item.active ? item.color : '#555',
-                boxShadow: item.active ? `0 0 15px ${item.color}11` : 'none',
-                transition: '0.3s ease'
-              }}>
-                {item.icon}
-                <Typography variant="caption" sx={{ fontSize: '0.58rem', fontWeight: 900, letterSpacing: 1.5, fontFamily: 'Syncopate' }}>{item.label}</Typography>
-              </Box>
-            ))}
+              { icon: <Shield size={12} color="#888" />, label: 'ENCRYPTED', color: '#888' },
+              { icon: <Terminal size={12} color="#00ffcc" />, label: 'SIMULATE_COMMAND', color: '#00ffcc', active: true, link: '/#terminal' }
+
+            ].map((item, i) => {
+              const content = (
+                <Box key={i} sx={{ 
+                  p: 1, px: 1.5, borderRadius: 1.5, 
+                  bgcolor: 'rgba(255,255,255,0.02)', 
+                  border: `1px solid ${item.active ? item.color + '44' : 'rgba(255,255,255,0.05)'}`,
+                  display: 'flex', alignItems: 'center', gap: 1, 
+                  color: item.active ? item.color : '#555',
+                  boxShadow: item.active ? `0 0 15px ${item.color}11` : 'none',
+                  transition: '0.3s ease',
+                  cursor: item.link ? 'pointer' : 'default',
+                  '&:hover': item.link ? { 
+                    bgcolor: 'rgba(255,255,255,0.05)',
+                    borderColor: item.color,
+                    boxShadow: `0 0 20px ${item.color}33`
+                  } : {}
+                }}>
+                  {item.icon}
+                  <Typography variant="caption" sx={{ fontSize: '0.58rem', fontWeight: 900, letterSpacing: 1.5, fontFamily: 'Syncopate' }}>{item.label}</Typography>
+                </Box>
+              );
+
+              return item.link ? (
+                <Link key={i} to={item.link} style={{ textDecoration: 'none' }}>
+                  {content}
+                </Link>
+              ) : content;
+            })}
           </Stack>
         </Stack>
       </Fade>
+
 
       <style>
         {`

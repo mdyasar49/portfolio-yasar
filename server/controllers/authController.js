@@ -81,3 +81,43 @@ exports.getMe = asyncHandler(async (req, res, next) => {
         data: req.admin
     });
 });
+
+/**
+ * @desc    Change admin password
+ * @route   PUT /api/auth/change-password
+ * @access  Private
+ */
+exports.changePassword = asyncHandler(async (req, res, next) => {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+        return res.status(400).json({ success: false, message: 'Please provide all password fields.' });
+    }
+
+    if (isDbConnected()) {
+        const admin = await Admin.findById(req.admin.id).select('+password');
+        if (!admin) {
+            return res.status(404).json({ success: false, message: 'System Admin not found.' });
+        }
+
+        // Match current password
+        const isMatch = await admin.matchPassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({ success: false, message: 'Current access key is incorrect.' });
+        }
+
+        // Set New Password (hashed via schema pre-save hook)
+        admin.password = newPassword;
+        await admin.save();
+
+        res.status(200).json({ success: true, message: 'Security credentials updated successfully.' });
+    } else {
+        // Portable mode security restriction
+        res.status(403).json({ 
+            success: false, 
+            message: 'PORTABLE_MODE Restriction: Please update credentials manually in your server .env file.' 
+        });
+    }
+});
+
+

@@ -20,8 +20,11 @@ const ProjectSchema = new mongoose.Schema({
   image: String,
   link: String,
   github: String,
-  description: [String]
+  description: [String],
+  highlights: [String],
+  stats: { type: Map, of: String }
 });
+
 
 const ProfileSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -61,7 +64,10 @@ const ProfileSchema = new mongoose.Schema({
     twitter: String,
     instagram: String,
     facebook: String
-  }
+  },
+  readme: String,
+  projectExplanation: String
 });
+
 
 module.exports = mongoose.model('Profile', ProfileSchema);

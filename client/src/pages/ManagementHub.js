@@ -6,27 +6,21 @@ import {
 } from '@mui/material';
 
 import { 
-  Save, 
-  ArrowLeft, 
-  Trash2, 
-  Plus, 
-  User, 
-  Briefcase, 
-  Terminal, 
-  Layers, 
-  Inbox,
-  GraduationCap
+  Save, ArrowLeft, Trash2, Plus, User, Briefcase, Terminal, Layers, Inbox, 
+  GraduationCap, Settings, Shield, Book, Edit3 as EditIcon, X as XIcon 
 } from 'lucide-react';
+
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
 import useProfile from '../hooks/useProfile';
 
 
-const ManagementHub = () => {
+const ManagementHub = ({ publicView = false }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { profile: initialProfile, loading: initialLoading } = useProfile();
+
     const [activeTab, setActiveTab] = useState(0);
 
     useEffect(() => {
@@ -36,6 +30,8 @@ const ManagementHub = () => {
     }, [location]);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [proposalSending, setProposalSending] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
@@ -46,6 +42,8 @@ const ManagementHub = () => {
     }, [initialProfile]);
 
     useEffect(() => {
+        if (publicView) return; // Skip auth for public view simulation
+        
         // Patient Auth Protocol: Allow hydration before redirect
         const checkAuth = () => {
             const token = localStorage.getItem('token');
@@ -55,7 +53,8 @@ const ManagementHub = () => {
         };
         const timer = setTimeout(checkAuth, 600);
         return () => clearTimeout(timer);
-    }, [navigate]);
+    }, [navigate, publicView]);
+
 
     const handleSave = async () => {
         const token = localStorage.getItem('token');
@@ -81,7 +80,20 @@ const ManagementHub = () => {
         }
     };
 
-
+    const handleProposalSubmit = async () => {
+        setProposalSending(true);
+        try {
+            const res = await api.post('/proposals/submit', { suggestedData: profile });
+            if (res.data.success) {
+                setSuccess('ARCHITECTURAL_PROPOSAL_DISPATCHED. Awaiting administrative approval via secure link.');
+                setEditMode(false);
+            }
+        } catch (err) {
+            setError('PROPOSAL_DISPATCH_FAILURE. System handshake timed out.');
+        } finally {
+            setProposalSending(false);
+        }
+    };
 
     if (initialLoading || !profile) {
         return (
@@ -91,7 +103,7 @@ const ManagementHub = () => {
         );
     }
 
-    const ProfileTab = () => (
+    const ProfileTab = ({ publicView }) => (
         <Stack spacing={4}>
             <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                 <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>IDENTITY_CORE</Typography>
@@ -102,6 +114,7 @@ const ManagementHub = () => {
                             variant="outlined" 
                             value={profile.name} 
                             onChange={(e) => setProfile({...profile, name: e.target.value})}
+                            disabled={publicView}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -110,6 +123,7 @@ const ManagementHub = () => {
                             variant="outlined" 
                             value={profile.title} 
                             onChange={(e) => setProfile({...profile, title: e.target.value})}
+                            disabled={publicView}
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -118,6 +132,7 @@ const ManagementHub = () => {
                             variant="outlined" 
                             value={profile.summary} 
                             onChange={(e) => setProfile({...profile, summary: e.target.value})}
+                            disabled={publicView}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -126,6 +141,7 @@ const ManagementHub = () => {
                             variant="outlined" 
                             value={profile.location} 
                             onChange={(e) => setProfile({...profile, location: e.target.value})}
+                            disabled={publicView}
                         />
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -134,6 +150,7 @@ const ManagementHub = () => {
                             variant="outlined" 
                             value={profile.email} 
                             onChange={(e) => setProfile({...profile, email: e.target.value})}
+                            disabled={publicView}
                         />
                     </Grid>
                 </Grid>
@@ -152,6 +169,7 @@ const ManagementHub = () => {
                                     ...profile, 
                                     socials: { ...profile.socials, [key]: e.target.value }
                                 })}
+                                disabled={publicView}
                             />
                         </Grid>
                     ))}
@@ -160,32 +178,38 @@ const ManagementHub = () => {
         </Stack>
     );
 
-    const ProjectsTab = () => (
+
+    const ProjectsTab = ({ publicView }) => (
         <Stack spacing={4}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button 
-                    variant="contained" 
-                    startIcon={<Plus size={18} />}
-                    onClick={() => {
-                        const newProject = { name: 'New Project', description: [''], technologies: [], image: '', link: '#', github: '#' };
-                        setProfile({ ...profile, projects: [newProject, ...profile.projects] });
-                    }}
-                    sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, '&:hover': { bgcolor: '#00ccaa' } }}
-                >
-                    ADD_NEW_PROJECT
-                </Button>
-            </Box>
+            {!publicView && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button 
+                        variant="contained" 
+                        startIcon={<Plus size={18} />}
+                        onClick={() => {
+                            const newProject = { name: 'New Project', description: [''], technologies: [], image: '', link: '#', github: '#' };
+                            setProfile({ ...profile, projects: [newProject, ...profile.projects] });
+                        }}
+                        sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, '&:hover': { bgcolor: '#00ccaa' } }}
+                    >
+                        ADD_NEW_PROJECT
+                    </Button>
+                </Box>
+            )}
+
             {profile.projects.map((project, idx) => (
                 <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
                     <CardContent sx={{ p: 4 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                             <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem' }}>DEPLOYMENT_UNIT_{String(idx + 1).padStart(2, '0')}</Typography>
-                            <IconButton color="error" size="small" onClick={() => {
-                                const updated = profile.projects.filter((_, i) => i !== idx);
-                                setProfile({ ...profile, projects: updated });
-                            }}>
-                                <Trash2 size={20} />
-                            </IconButton>
+                            {!publicView && (
+                                <IconButton color="error" size="small" onClick={() => {
+                                    const updated = profile.projects.filter((_, i) => i !== idx);
+                                    setProfile({ ...profile, projects: updated });
+                                }}>
+                                    <Trash2 size={20} />
+                                </IconButton>
+                             )}
                         </Box>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
@@ -198,6 +222,7 @@ const ManagementHub = () => {
                                         );
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
+                                    disabled={publicView}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -210,8 +235,10 @@ const ManagementHub = () => {
                                         );
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
+                                    disabled={publicView}
                                 />
                             </Grid>
+
 
                             <Grid item xs={12}>
                                 <TextField 
@@ -228,6 +255,7 @@ const ManagementHub = () => {
                                         });
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
+                                    disabled={publicView}
                                 />
                             </Grid>
 
@@ -241,6 +269,7 @@ const ManagementHub = () => {
                                         );
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
+                                    disabled={publicView}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
@@ -253,6 +282,7 @@ const ManagementHub = () => {
                                         );
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
+                                    disabled={publicView}
                                 />
                             </Grid>
 
@@ -266,91 +296,132 @@ const ManagementHub = () => {
                                         );
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
+                                    disabled={publicView}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField 
+                                    fullWidth multiline rows={2} label="KEY_HIGHLIGHTS (COMMA_SEPARATED)" 
+                                    value={project.highlights?.join(', ') || ''} 
+                                    onChange={(e) => {
+                                        const updatedProjects = profile.projects.map((p, i) => 
+                                            i === idx ? { ...p, highlights: e.target.value.split(',').map(s => s.trim()) } : p
+                                        );
+                                        setProfile({ ...profile, projects: updatedProjects });
+                                    }}
+                                    disabled={publicView}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField 
+                                    fullWidth label="METRICS_JSON (e.g. {'Uptime': '99%', 'Latency': '50ms'})" 
+                                    value={JSON.stringify(project.stats || {})} 
+                                    onChange={(e) => {
+                                        try {
+                                            const newStats = JSON.parse(e.target.value);
+                                            const updatedProjects = profile.projects.map((p, i) => 
+                                                i === idx ? { ...p, stats: newStats } : p
+                                            );
+                                            setProfile({ ...profile, projects: updatedProjects });
+                                        } catch (e) {}
+                                    }}
+                                    sx={{ '& .MuiInputBase-input': { fontFamily: 'monospace' } }}
+                                    disabled={publicView}
                                 />
                             </Grid>
 
                         </Grid>
                     </CardContent>
+
                 </Card>
             ))}
         </Stack>
     );
-    const ExperienceTab = () => (
+    const ExperienceTab = ({ publicView }) => (
         <Stack spacing={4}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" startIcon={<Plus size={18} />} onClick={() => {
-                    const newExp = { role: 'New Role', company: 'New Company', period: '2024 - Present', description: [''] };
-                    setProfile({ ...profile, experience: [newExp, ...profile.experience] });
-                }} sx={{ bgcolor: '#ff3366', color: '#fff', fontWeight: 900 }}>ADD_EXPERIENCE_NODE</Button>
-            </Box>
+            {!publicView && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button variant="contained" startIcon={<Plus size={18} />} onClick={() => {
+                        const newExp = { role: 'New Role', company: 'New Company', period: '2024 - Present', description: [''] };
+                        setProfile({ ...profile, experience: [newExp, ...profile.experience] });
+                    }} sx={{ bgcolor: '#ff3366', color: '#fff', fontWeight: 900 }}>ADD_EXPERIENCE_NODE</Button>
+                </Box>
+            )}
             {profile.experience.map((exp, idx) => (
                 <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                             <Typography sx={{ color: '#ff3366', fontWeight: 900 }}>TRAJECTORY_NODE_{String(idx + 1).padStart(2, '0')}</Typography>
-                            <IconButton color="error" onClick={() => {
-                                const updated = profile.experience.filter((_, i) => i !== idx);
-                                setProfile({ ...profile, experience: updated });
-                            }}><Trash2 size={20} /></IconButton>
+                            {!publicView && (
+                                <IconButton color="error" onClick={() => {
+                                    const updated = profile.experience.filter((_, i) => i !== idx);
+                                    setProfile({ ...profile, experience: updated });
+                                }}><Trash2 size={20} /></IconButton>
+                            )}
                         </Box>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}><TextField fullWidth label="ROLE" value={exp.role} onChange={(e) => { 
                                 const updatedExp = profile.experience.map((ex, i) => i === idx ? { ...ex, role: e.target.value } : ex);
                                 setProfile({ ...profile, experience: updatedExp }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                             <Grid item xs={12} md={6}><TextField fullWidth label="COMPANY" value={exp.company} onChange={(e) => { 
                                 const updatedExp = profile.experience.map((ex, i) => i === idx ? { ...ex, company: e.target.value } : ex);
                                 setProfile({ ...profile, experience: updatedExp }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                             <Grid item xs={12} md={6}><TextField fullWidth label="PERIOD" value={exp.period} onChange={(e) => { 
                                 const updatedExp = profile.experience.map((ex, i) => i === idx ? { ...ex, period: e.target.value } : ex);
                                 setProfile({ ...profile, experience: updatedExp }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                             <Grid item xs={12}><TextField fullWidth multiline rows={3} label="KEY_RESPONSIBILITIES" value={exp.description.join('\n')} onChange={(e) => { 
                                 const updatedExp = profile.experience.map((ex, i) => i === idx ? { ...ex, description: e.target.value.split('\n') } : ex);
                                 setProfile({ ...profile, experience: updatedExp }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                         </Grid>
-
                     </CardContent>
                 </Card>
             ))}
         </Stack>
     );
 
-    const EducationTab = () => (
+
+    const EducationTab = ({ publicView }) => (
         <Stack spacing={4}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" startIcon={<Plus size={18} />} onClick={() => {
-                    const newEdu = { degree: 'Degree Name', institution: 'University', year: '2024' };
-                    setProfile({ ...profile, education: [newEdu, ...profile.education] });
-                }} sx={{ bgcolor: '#ff9933', color: '#fff', fontWeight: 900 }}>ADD_ACADEMIC_NODE</Button>
-            </Box>
+            {!publicView && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button variant="contained" startIcon={<Plus size={18} />} onClick={() => {
+                        const newEdu = { degree: 'Degree Name', institution: 'University', year: '2024' };
+                        setProfile({ ...profile, education: [newEdu, ...profile.education] });
+                    }} sx={{ bgcolor: '#ff9933', color: '#fff', fontWeight: 900 }}>ADD_ACADEMIC_NODE</Button>
+                </Box>
+            )}
             {profile.education.map((edu, idx) => (
                 <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                             <Typography sx={{ color: '#ff9933', fontWeight: 900 }}>ACADEMIC_NODE_{String(idx + 1).padStart(2, '0')}</Typography>
-                            <IconButton color="error" onClick={() => {
-                                const updated = profile.education.filter((_, i) => i !== idx);
-                                setProfile({ ...profile, education: updated });
-                            }}><Trash2 size={20} /></IconButton>
+                            {!publicView && (
+                                <IconButton color="error" onClick={() => {
+                                    const updated = profile.education.filter((_, i) => i !== idx);
+                                    setProfile({ ...profile, education: updated });
+                                }}><Trash2 size={20} /></IconButton>
+                            )}
                         </Box>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}><TextField fullWidth label="DEGREE" value={edu.degree} onChange={(e) => { 
                                 const updatedEdu = profile.education.map((ed, i) => i === idx ? { ...ed, degree: e.target.value } : ed);
                                 setProfile({ ...profile, education: updatedEdu }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                             <Grid item xs={12} md={6}><TextField fullWidth label="INSTITUTION" value={edu.institution} onChange={(e) => { 
                                 const updatedEdu = profile.education.map((ed, i) => i === idx ? { ...ed, institution: e.target.value } : ed);
                                 setProfile({ ...profile, education: updatedEdu }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                             <Grid item xs={12} md={6}><TextField fullWidth label="YEAR" value={edu.year} onChange={(e) => { 
                                 const updatedEdu = profile.education.map((ed, i) => i === idx ? { ...ed, year: e.target.value } : ed);
                                 setProfile({ ...profile, education: updatedEdu }); 
-                            }} /></Grid>
+                            }} disabled={publicView} /></Grid>
                         </Grid>
-
                     </CardContent>
                 </Card>
             ))}
@@ -364,13 +435,15 @@ const ManagementHub = () => {
                     onChange={(e) => {
                         setProfile({ ...profile, certifications: e.target.value.split(',').map(s => s.trim()) });
                     }}
+                    disabled={publicView}
                 />
             </Paper>
         </Stack>
     );
 
 
-    const SkillsTab = () => (
+
+    const SkillsTab = ({ publicView }) => (
         <Stack spacing={4}>
             {Object.keys(profile.technicalSkills).map((category) => (
                 <Paper key={category} sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
@@ -384,11 +457,13 @@ const ManagementHub = () => {
                             updated[category] = e.target.value.split(',').map(s => s.trim());
                             setProfile({ ...profile, technicalSkills: updated });
                         }}
+                        disabled={publicView}
                     />
                 </Paper>
             ))}
         </Stack>
     );
+
 
 
     const MessagesTab = () => {
@@ -503,38 +578,344 @@ const ManagementHub = () => {
         );
     };
 
+        const SettingsTab = ({ publicView }) => {
+            const [pwData, setPwData] = useState({ current: '', new: '', confirm: '' });
+            const [health, setHealth] = useState(null);
+            const [stats, setStats] = useState({ count: 0, history: [] });
+            const [updating, setUpdating] = useState(false);
+
+    
+            const fetchHealth = async () => {
+                try {
+                    const res = await api.get('/health');
+                    setHealth(res.data);
+                } catch (e) {}
+            };
+
+            const fetchStats = async () => {
+                try {
+                    const res = await api.get('/visitors');
+                    setStats(res.data);
+                } catch (e) {}
+            };
+    
+            useEffect(() => {
+                fetchHealth();
+                fetchStats();
+                const interval = setInterval(() => {
+                    fetchHealth();
+                    fetchStats();
+                }, 10000);
+                return () => clearInterval(interval);
+            }, []);
+
+    
+            const handlePasswordChange = async (e) => {
+                e.preventDefault();
+                if (pwData.new !== pwData.confirm) return setError('Passwords do not match.');
+                setUpdating(true);
+                try {
+                    const res = await api.put('/auth/change-password', {
+                        currentPassword: pwData.current,
+                        newPassword: pwData.new
+                    });
+                    if (res.data.success) {
+                        setSuccess('Security Credentials Updated Successfully.');
+                        setPwData({ current: '', new: '', confirm: '' });
+                    }
+                } catch (err) {
+                    setError(err.response?.data?.message || 'Failed to update security credentials.');
+                } finally {
+                    setUpdating(false);
+                }
+            };
+    
+            const toggleMaintenance = async () => {
+                setUpdating(true);
+                try {
+                    const res = await api.put('/health/maintenance', { enabled: !health?.maintenance });
+                    if (res.data.success) {
+                        fetchHealth();
+                        setSuccess(res.data.message);
+                    }
+                } catch (err) {
+                    setError('Failed to toggle system lock.');
+                } finally {
+                    setUpdating(false);
+                }
+            };
+
+
+        return (
+            <Stack spacing={4}>
+                {/* System Telemetry Dashboard */}
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Typography variant="h6" sx={{ color: '#00ffcc', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 3 }}>SYSTEM_TELEMETRY</Typography>
+                    <Grid container spacing={3}>
+                        {[
+                            { label: 'DATA_LAYER_PROTOCOL', value: health?.db?.status === 'ONLINE' ? 'CLOUD_SYNC (MONGODB)' : 'PORTABLE_CORE (JSON)', color: '#00ffcc' },
+                            { label: 'RUNTIME_UPTIME', value: health?.uptimeSeconds ? `${Math.floor(health.uptimeSeconds / 3600)}h ${Math.floor((health.uptimeSeconds % 3600) / 60)}m` : 'CALCULATING...', color: '#33ccff' },
+                            { label: 'MEMORY_UTILIZATION', value: health?.memoryUsage ? `${health.memoryUsage}%` : 'TRACE_PENDING', color: '#ff9933' },
+                            { label: 'TOTAL_VISITOR_TRAFFIC', value: stats.count || '0', color: '#a855f7' }
+                        ].map((stat, i) => (
+                            <Grid item xs={12} sm={6} md={3} key={i}>
+                                <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
+                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1 }}>{stat.label}</Typography>
+                                    <Typography sx={{ color: stat.color, fontWeight: 900, fontFamily: 'monospace', fontSize: '0.85rem' }}>{stat.value}</Typography>
+                                </Box>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Paper>
+
+                {/* Analytics Exhibit */}
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 4 }}>ANALYTICS_EXHIBIT</Typography>
+                    <Grid container spacing={4}>
+                        <Grid item xs={12} md={8}>
+                            <Box sx={{ p: 3, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
+                                <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 3, display: 'block' }}>7_DAY_TRAFFIC_DENSITY</Typography>
+                                <Box sx={{ height: 180, display: 'flex', alignItems: 'flex-end', gap: 1, px: 2, pb: 2 }}>
+                                    {[...Array(7)].map((_, i) => {
+                                        const dayData = stats.history?.[stats.history.length - 7 + i];
+                                        const count = dayData?.count || 0;
+                                        const max = Math.max(...(stats.history?.map(h => h.count) || [1]), 1);
+                                        const height = (count / max) * 100;
+                                        return (
+                                            <Box key={i} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                                                <Box sx={{ 
+                                                    width: '100%', 
+                                                    height: `${Math.max(height, 5)}%`, 
+                                                    bgcolor: i === 6 ? '#ff3366' : 'rgba(255, 51, 102, 0.2)',
+                                                    borderRadius: '4px 4px 0 0',
+                                                    transition: 'height 0.5s ease'
+                                                }} />
+                                                <Typography sx={{ fontSize: '0.5rem', color: '#444', fontFamily: 'monospace' }}>
+                                                    {dayData?.date?.split('-')[2] || '--'}
+                                                </Typography>
+                                            </Box>
+                                        );
+                                    })}
+                                </Box>
+                            </Box>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Stack spacing={2}>
+                                <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
+                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 1, display: 'block' }}>DEVICE_DISTRIBUTION</Typography>
+                                    <Stack spacing={1}>
+                                        {['DESKTOP (85%)', 'MOBILE (12%)', 'SYSTEM_BOT (3%)'].map((d, i) => (
+                                            <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: i === 0 ? '#33ccff' : '#444' }} />
+                                                <Typography sx={{ fontSize: '0.65rem', color: i === 0 ? 'white' : '#444', fontFamily: 'monospace' }}>{d}</Typography>
+                                            </Box>
+                                        ))}
+                                    </Stack>
+                                </Box>
+                                <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
+                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 1, display: 'block' }}>GEOGRAPHIC_ORIGIN</Typography>
+                                    <Typography sx={{ fontSize: '0.65rem', color: 'white', fontFamily: 'monospace' }}>PRIMARY: IN_REGION (LOCAL)</Typography>
+                                    <Typography sx={{ fontSize: '0.65rem', color: '#444', fontFamily: 'monospace' }}>SECONDARY: GLOBAL_TRACE_PENDING</Typography>
+                                </Box>
+                            </Stack>
+                        </Grid>
+                    </Grid>
+                </Paper>
+
+
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+                        <Box>
+                            <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 1 }}>SYSTEM_LOCK_PROTOCOL</Typography>
+                            <Typography sx={{ color: '#444', fontSize: '0.8rem' }}>Toggle public maintenance mode to shield the portfolio during updates.</Typography>
+                        </Box>
+                        <Button 
+                            variant="outlined" 
+                            onClick={toggleMaintenance}
+                            disabled={updating || !health || publicView}
+                            color={health?.maintenance ? "error" : "success"}
+                            sx={{ fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.65rem' }}
+                        >
+                            {health?.maintenance ? 'LIFT_LOCK' : 'ACTIVATE_LOCK'}
+                        </Button>
+                    </Box>
+                </Paper>
+
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SECURITY_CREDENTIALS</Typography>
+                    <Box component="form" onSubmit={handlePasswordChange}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <TextField 
+                                    fullWidth type="password" label="CURRENT_ACCESS_KEY" 
+                                    value={pwData.current} onChange={(e) => setPwData({...pwData, current: e.target.value})}
+                                    required
+                                    disabled={publicView}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField 
+                                    fullWidth type="password" label="NEW_ACCESS_KEY" 
+                                    value={pwData.new} onChange={(e) => setPwData({...pwData, new: e.target.value})}
+                                    required
+                                    disabled={publicView}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField 
+                                    fullWidth type="password" label="CONFIRM_NEW_ACCESS_KEY" 
+                                    value={pwData.confirm} onChange={(e) => setPwData({...pwData, confirm: e.target.value})}
+                                    required
+                                    disabled={publicView}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Button 
+                                    type="submit" variant="contained" 
+                                    disabled={updating || publicView}
+                                    startIcon={<Shield size={16} />}
+                                    sx={{ bgcolor: '#33ccff', color: '#000', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}
+                                >
+                                    UPDATE_CREDENTIALS
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Paper>
+
+            </Stack>
+        );
+    };
+
+    const DocsTab = ({ publicView }) => {
+        return (
+            <Stack spacing={4}>
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Typography variant="h6" sx={{ color: '#00ffcc', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SYSTEM_OVERVIEW_MARKDOWN</Typography>
+                    <TextField 
+                        fullWidth multiline rows={15}
+                        placeholder="# Enter System README Markdown..."
+                        value={profile.readme || ''}
+                        onChange={(e) => setProfile({...profile, readme: e.target.value})}
+                        sx={{ '& .MuiInputBase-input': { color: '#cbd5e1', fontFamily: 'monospace', fontSize: '0.85rem' } }}
+                        disabled={publicView}
+                    />
+                </Paper>
+
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Typography variant="h6" sx={{ color: '#ff3366', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>CORE_ARCHITECTURE_MARKDOWN</Typography>
+                    <TextField 
+                        fullWidth multiline rows={15}
+                        placeholder="# Enter Architecture Deep-Dive Markdown..."
+                        value={profile.projectExplanation || ''}
+                        onChange={(e) => setProfile({...profile, projectExplanation: e.target.value})}
+                        sx={{ '& .MuiInputBase-input': { color: '#cbd5e1', fontFamily: 'monospace', fontSize: '0.85rem' } }}
+                        disabled={publicView}
+                    />
+                </Paper>
+            </Stack>
+        );
+    };
+
+
 
     return (
-        <Box sx={{ minHeight: '100vh', bgcolor: '#010409', color: 'white', pt: 4, pb: 10 }}>
-            <Container maxWidth="lg">
-                <Box sx={{ mb: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
-                    <Button 
-                        startIcon={<ArrowLeft size={18} />} 
-                        onClick={() => navigate('/admin/dashboard')}
-                        sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.7rem', '&:hover': { color: '#33ccff' } }}
-                    >
-                        RETURN_TO_CONTROL
-                    </Button>
+        <Box sx={{ py: 4, pb: 10, bgcolor: publicView ? 'transparent' : '#010409', color: 'white' }}>
+            <Container maxWidth={publicView ? "xl" : "lg"}>
+                {!publicView && (
+                    <Box sx={{ mb: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
 
-                    <Button 
-                        variant="contained" 
-                        startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <Save size={18} />}
-                        onClick={handleSave}
-                        disabled={loading}
-                        sx={{ 
-                            bgcolor: '#33ccff', color: '#000', fontWeight: 900, px: 4, fontFamily: 'Syncopate', fontSize: '0.7rem',
-                            '&:hover': { bgcolor: '#00aacc' },
-                            '&.Mui-disabled': { bgcolor: 'rgba(51, 204, 255, 0.2)' }
-                        }}
-                    >
-                        {loading ? 'SYNCING...' : 'SAVE_CHANGES'}
-                    </Button>
-                </Box>
+                    {!publicView && (
+                        <Button 
+                            startIcon={<ArrowLeft size={18} />} 
+                            onClick={() => navigate('/admin/dashboard')}
+                            sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.7rem', '&:hover': { color: '#33ccff' } }}
+                        >
+                            RETURN_TO_CONTROL
+                        </Button>
+                    )}
 
 
-                <Typography variant="h3" sx={{ textAlign: 'center', mb: 8, fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2 }}>
+                        {!publicView && (
+                            <Button 
+                                variant="contained" 
+                                startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <Save size={18} />}
+                                onClick={handleSave}
+                                disabled={loading}
+                                sx={{ 
+                                    bgcolor: '#33ccff', color: '#000', fontWeight: 900, px: 4, fontFamily: 'Syncopate', fontSize: '0.7rem',
+                                    '&:hover': { bgcolor: '#00aacc' },
+                                    '&.Mui-disabled': { bgcolor: 'rgba(51, 204, 255, 0.2)' }
+                                }}
+                            >
+                                {loading ? 'SYNCING...' : 'SAVE_CHANGES'}
+                            </Button>
+                        )}
+                        {publicView && (
+                            <Box sx={{ 
+                                px: 3, py: 1, borderRadius: 1, border: '1px solid #ff3366', 
+                                bgcolor: 'rgba(255, 51, 102, 0.05)', display: 'flex', alignItems: 'center', gap: 2
+                            }}>
+                                <Shield size={16} color="#ff3366" />
+                                <Typography sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 2 }}>
+                                    TERMINAL_SIMULATION_ACTIVE (READ_ONLY)
+                                </Typography>
+                            </Box>
+                        )}
+                    </Box>
+                )}
+
+
+
+
+                <Typography variant="h3" sx={{ textAlign: 'center', mb: 2, fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2 }}>
                     MANAGEMENT <Box component="span" sx={{ color: '#33ccff' }}>HUB</Box>
                 </Typography>
+                
+                {publicView && (
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 8, gap: 2 }}>
+                        <Typography variant="overline" sx={{ color: '#444', letterSpacing: 2 }}>
+                            SYSTEM_TERMINAL_BLUEPRINT
+                        </Typography>
+                        <Button 
+                            variant="outlined" 
+                            size="small"
+                            onClick={() => setEditMode(!editMode)}
+                            startIcon={editMode ? <XIcon size={14} /> : <EditIcon size={14} />}
+
+                            sx={{ 
+                                color: editMode ? '#ff3366' : '#00ffcc', 
+                                borderColor: editMode ? 'rgba(255, 51, 102, 0.3)' : 'rgba(0, 255, 204, 0.3)',
+                                fontSize: '0.6rem',
+                                fontFamily: 'Syncopate',
+                                fontWeight: 900,
+                                '&:hover': { borderColor: editMode ? '#ff3366' : '#00ffcc', bgcolor: 'transparent' }
+                            }}
+                        >
+                            {editMode ? 'CANCEL_PROPOSAL' : 'EDIT_PROPOSAL'}
+                        </Button>
+                        {editMode && (
+                            <Button 
+                                variant="contained" 
+                                size="small"
+                                onClick={handleProposalSubmit}
+                                disabled={proposalSending}
+                                sx={{ 
+                                    bgcolor: '#00ffcc', 
+                                    color: '#000',
+                                    fontSize: '0.6rem',
+                                    fontFamily: 'Syncopate',
+                                    fontWeight: 900,
+                                    '&:hover': { bgcolor: '#00ccaa' }
+                                }}
+                            >
+                                {proposalSending ? 'DISPATCHING...' : 'DISPATCH_PROPOSAL'}
+                            </Button>
+                        )}
+                    </Box>
+                )}
+
+
 
                 <Tabs 
                     value={activeTab} 
@@ -546,20 +927,33 @@ const ManagementHub = () => {
                         '& .MuiTab-root': { color: '#444', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem', '&.Mui-selected': { color: 'white' } }
                     }}
                 >
-                    <Tab label="IDENTITY" icon={<User size={18} />} iconPosition="start" />
-                    <Tab label="DEPLOYMENTS" icon={<Briefcase size={18} />} iconPosition="start" />
-                    <Tab label="STACK" icon={<Terminal size={18} />} iconPosition="start" />
-                    <Tab label="TRAJECTORY" icon={<Layers size={18} />} iconPosition="start" />
-                    <Tab label="FOUNDATIONS" icon={<GraduationCap size={18} />} iconPosition="start" />
-                    <Tab label="CORRESPONDENCE" icon={<Inbox size={18} />} iconPosition="start" />
+                    <Tab label="IDENTITY_CORE" icon={<User size={18} />} iconPosition="start" />
+                    <Tab label="PORTFOLIO_EXHIBITS" icon={<Briefcase size={18} />} iconPosition="start" />
+                    <Tab label="TECH_STACK" icon={<Terminal size={18} />} iconPosition="start" />
+                    <Tab label="EXPERIENCE_LOG" icon={<Layers size={18} />} iconPosition="start" />
+                    <Tab label="ACADEMIC_PORTFOLIO" icon={<GraduationCap size={18} />} iconPosition="start" />
+                    {!publicView && <Tab label="COMMUNICATION_HUB" icon={<Inbox size={18} />} iconPosition="start" />}
+                    <Tab label="ARCHITECTURAL_LOGISTICS" icon={<Book size={18} />} iconPosition="start" />
+                    {!publicView && <Tab label="OPERATIONAL_SECURITY" icon={<Settings size={18} />} iconPosition="start" />}
                 </Tabs>
 
-                {activeTab === 0 && <ProfileTab />}
-                {activeTab === 1 && <ProjectsTab />}
-                {activeTab === 2 && <SkillsTab />}
-                {activeTab === 3 && <ExperienceTab />}
-                {activeTab === 4 && <EducationTab />}
-                {activeTab === 5 && <MessagesTab />}
+
+                {(() => {
+                    const viewOnlyActive = publicView && !editMode;
+                    const tabs = [
+                        { id: 0, component: <ProfileTab publicView={viewOnlyActive} /> },
+                        { id: 1, component: <ProjectsTab publicView={viewOnlyActive} /> },
+                        { id: 2, component: <SkillsTab publicView={viewOnlyActive} /> },
+                        { id: 3, component: <ExperienceTab publicView={viewOnlyActive} /> },
+                        { id: 4, component: <EducationTab publicView={viewOnlyActive} /> },
+                        { id: 5, component: <MessagesTab publicView={viewOnlyActive} />, hidden: publicView },
+                        { id: 6, component: <DocsTab publicView={viewOnlyActive} /> },
+                        { id: 7, component: <SettingsTab publicView={viewOnlyActive} />, hidden: publicView }
+                    ].filter(tab => !tab.hidden);
+
+                    return tabs[activeTab]?.component;
+                })()}
+
 
                 <Snackbar 
                     open={!!success} 

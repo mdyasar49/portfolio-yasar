@@ -45,8 +45,11 @@ const normalizeProfile = (source) => {
             image: safeString(project?.image),
             link: safeString(project?.link),
             github: safeString(project?.github),
-            description: safeArray(project?.description)
+            description: safeArray(project?.description),
+            highlights: safeArray(project?.highlights),
+            stats: safeObject(project?.stats)
         })),
+
         education: safeArray(profile.education).map(edu => ({
             degree: safeString(edu?.degree, 'Education'),
             institution: safeString(edu?.institution, 'Institution'),
@@ -65,9 +68,12 @@ const normalizeProfile = (source) => {
             twitter: safeString(socials.twitter),
             instagram: safeString(socials.instagram),
             facebook: safeString(socials.facebook)
-        }
+        },
+        readme: safeString(profile.readme),
+        projectExplanation: safeString(profile.projectExplanation)
     };
 };
+
 
 /**
  * Portability Logic: Fallback to local data if MongoDB is off or empty

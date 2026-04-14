@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Contact = require('../models/Contact');
-const { sendEmail } = require('../services/mailService');
+const { sendContactAlert } = require('../services/emailService');
 const asyncHandler = require('../middleware/asyncHandler');
 const mongoose = require('mongoose');
 
@@ -58,10 +58,11 @@ exports.submitContactForm = asyncHandler(async (req, res, next) => {
 
     // 3. Dispatch Email Notification
     try {
-        await sendEmail(contactData);
+        await sendContactAlert(contactData);
     } catch (error) {
         console.error('MAIL_DISPATCH_ERROR:', error);
     }
+
 
     res.status(200).json({
         success: true,
