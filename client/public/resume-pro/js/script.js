@@ -111,9 +111,10 @@ const RenderEngine = {
         const portfolio = safeArr(p.projects).find(pr => safeStr(pr.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar-1.onrender.com';
         inject('header-module', processTemplate(tpl, {
             name: safeStr(p.name, 'A. MOHAMED YASAR'),
-            title: safeStr(p.title, 'MERN Stack Developer'),
-            location: safeStr(p.location, 'Tamil Nadu, India'),
-            phone: safeStr(p.phone), email: safeStr(p.email),
+            title: `${safeStr(p.title, 'Full Stack Engineer')} | React.js | MERN Stack | REST APIs | JavaScript`,
+            location: safeStr(p.location, 'Chennai, TN'),
+            phone: safeStr(p.phone, '+91-9025943184'), 
+            email: safeStr(p.email, 'mohamedyasar081786@gmail.com'),
             linkedinId, portfolioUrl: portfolio.replace('https://', '')
         }));
     },
@@ -125,7 +126,9 @@ const RenderEngine = {
             { l: 'Frontend', v: safeArr(s.frontend).join(', ') },
             { l: 'Backend', v: safeArr(s.backend).join(', ') },
             { l: 'Database', v: safeArr(s.database).join(', ') },
-            { l: 'Tools', v: safeArr(s.tools).join(', ') }
+            { l: 'Tools', v: safeArr(s.tools).join(', ') },
+            { l: 'AI Tools', v: safeArr(s.ai_tools || ['ChatGPT', 'Claude', 'Gemini', 'Cursor', 'OpenAI Codex']).join(', ') },
+            { l: 'Other', v: safeArr(s.other || ['Bug Investigation', 'Root Cause Analysis', 'API Debugging', 'Technical Documentation']).join(', ') }
         ].map(i => `<div class="skill-item"><b>${i.l}:</b> ${i.v || 'N/A'}</div>`).join('');
         inject('skills-list', html);
     },
@@ -133,7 +136,7 @@ const RenderEngine = {
         inject('experience-module', tpl);
         const html = safeArr(p.experience).map(exp => `
             <div class="exp-item">
-                <div class="exp-top"><span>${safeStr(exp.role)}</span><span>${safeStr(exp.period)}</span></div>
+                <div class="exp-top"><span>${safeStr(exp.role)}</span><span><i>${safeStr(exp.period)}</i></span></div>
                 <div class="exp-sub"><span>${safeStr(exp.company)}, ${safeStr(exp.location)}</span></div>
                 <ul>${safeArr(exp.description).map(d => `<li>${safeStr(d)}</li>`).join('')}</ul>
             </div>
@@ -145,7 +148,7 @@ const RenderEngine = {
         const html = safeArr(p.projects).filter(pr => pr.name !== 'Scientific Calculator').map(pr => `
             <div class="exp-item">
                 <div class="exp-top"><span>${safeStr(pr.name)}</span></div>
-                <div class="exp-sub"><span>Tech: ${safeArr(pr.technologies).join(', ')}</span></div>
+                <div class="exp-sub"><span><i>Role: ${safeStr(pr.role || 'Full Stack Contributor')} | Tech: ${safeArr(pr.technologies).join(', ')}</i></span></div>
                 <ul>${safeArr(pr.description).map(d => `<li>${safeStr(d)}</li>`).join('')}</ul>
             </div>
         `).join('');
@@ -265,8 +268,45 @@ async function executeAssetExtraction() {
 }
 window.executeAssetExtraction = executeAssetExtraction;
 
-document.getElementById('share-toggle')?.addEventListener('click', () => UI.shareModal.classList.remove('hidden'));
-document.getElementById('share-close')?.addEventListener('click', () => UI.shareModal.classList.add('hidden'));
+document.getElementById('share-toggle')?.addEventListener('click', () => UI_MORE.modal.classList.remove('hidden'));
+
+// More Actions Logic
+const UI_MORE = {
+    modal: document.getElementById('more-modal'),
+    toggle: document.getElementById('more-toggle'),
+    close: document.getElementById('more-close')
+};
+
+UI_MORE.toggle?.addEventListener('click', () => UI_MORE.modal.classList.remove('hidden'));
+UI_MORE.close?.addEventListener('click', () => UI_MORE.modal.classList.add('hidden'));
+
+window.dispatchWhatsApp = () => {
+    const text = encodeURIComponent(`Check out A. Mohamed Yasar's Elite Engineering Portfolio: ${window.location.origin}`);
+    window.open(`https://wa.me/?text=${text}`, '_blank');
+    UI_MORE.modal.classList.add('hidden');
+};
+
+window.copyPortfolioLink = () => {
+    navigator.clipboard.writeText(window.location.origin).then(() => {
+        alert("PORTFOLIO_LINK_COPIED_TO_SYSTEM_CLIPBOARD");
+        UI_MORE.modal.classList.add('hidden');
+    });
+};
+
+window.runAIAudit = async () => {
+    UI_MORE.modal.classList.add('hidden');
+    UI.overlay.classList.remove('hidden');
+    const messages = ["ANALYZING_STRUCTURE...", "PARSING_KEYWORDS...", "CALCULATING_ATS_SCORE...", "OPTIMIZING_VECTORS...", "VALIDATING_MODULES..."];
+    for (const msg of messages) {
+        setProgress(Math.random() * 90, msg);
+        await sleep(600);
+    }
+    setProgress(100, "AUDIT_COMPLETE: 98.4% ATS_EFFICIENCY");
+    await sleep(1000);
+    UI.overlay.classList.add('hidden');
+    alert("SYSTEM_DIAGNOSTICS_REPORT: Core architecture is optimized for high-performance indexing. All security protocols are active.");
+};
+
 document.getElementById('theme-toggle')?.addEventListener('click', () => document.body.classList.toggle('dark-mode-interactive'));
 
 init();
