@@ -1,10 +1,11 @@
 /**
- * [Resume Pro Engine - v2.0 Premium]
- * Highly modernized resume generator with modular architecture.
+ * [Resume Pro Engine - v2.1 Ultimate]
+ * Enhanced with Share Protocol and System Dispatch Logic.
  */
 
 const query = new URLSearchParams(window.location.search);
 const configuredApi = query.get('api');
+const isDispatchAuto = query.get('system_dispatch') === 'true';
 
 const buildApiCandidates = () => {
     const candidates = [];
@@ -34,7 +35,9 @@ const UI = {
     message: document.getElementById('loader-message'),
     progress: document.getElementById('loader-progress'),
     main: document.getElementById('main-resume'),
-    actions: document.getElementById('resume-actions')
+    actions: document.getElementById('resume-actions'),
+    shareModal: document.getElementById('share-modal'),
+    dispatchOverlay: document.getElementById('dispatch-overlay')
 };
 
 const setProgress = (percent, message) => {
@@ -63,7 +66,6 @@ async function fetchProfile(maxAttempts = 3) {
                 return data;
             } catch (e) {
                 lastError = e;
-                console.warn(`Fetch failed for ${url}:`, e.message);
             }
         }
         if (attempt < maxAttempts) {
@@ -78,17 +80,13 @@ async function loadTemplates() {
     setProgress(50, 'FETCHING MODULES...');
     const keys = Object.keys(CONFIG.templates);
     const results = {};
-    
     const promises = keys.map(async (key, idx) => {
         const r = await fetch(CONFIG.templates[key]);
-        if (!r.ok) throw new Error(`Missing module: ${key}`);
         const text = await r.text();
         results[key] = text;
-        const p = 50 + Math.floor(((idx + 1) / keys.length) * 40);
-        setProgress(p, `MOUNTING ${key.toUpperCase()}...`);
+        setProgress(50 + Math.floor(((idx + 1) / keys.length) * 40), `MOUNTING ${key.toUpperCase()}...`);
         return text;
     });
-
     await Promise.all(promises);
     return results;
 }
@@ -97,58 +95,40 @@ async function loadTemplates() {
 
 function inject(id, html) {
     const el = document.getElementById(id);
-    if (el) {
-        el.innerHTML = html;
-        el.classList.add('fade-in');
-    }
+    if (el) { el.innerHTML = html; el.classList.add('fade-in'); }
 }
 
 function processTemplate(tpl, data) {
     let output = tpl;
-    Object.keys(data).forEach(key => {
-        output = output.split(`{{${key}}}`).join(data[key]);
-    });
+    Object.keys(data).forEach(key => { output = output.split(`{{${key}}}`).join(data[key]); });
     return output;
 }
 
 const RenderEngine = {
     header(tpl, p) {
         const socials = safeObj(p.socials);
-        const linkedin = safeStr(socials.linkedin);
-        const linkedinId = linkedin ? linkedin.split('/').filter(Boolean).pop() : 'linkedin';
-        const portfolio = safeArr(p.projects).find(pr => safeStr(pr.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar.onrender.com';
-        
-        const html = processTemplate(tpl, {
+        const linkedinId = safeStr(socials.linkedin).split('/').filter(Boolean).pop() || 'linkedin';
+        const portfolio = safeArr(p.projects).find(pr => safeStr(pr.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar-1.onrender.com';
+        inject('header-module', processTemplate(tpl, {
             name: safeStr(p.name, 'A. MOHAMED YASAR'),
             title: safeStr(p.title, 'MERN Stack Developer'),
             location: safeStr(p.location, 'Tamil Nadu, India'),
-            phone: safeStr(p.phone, '+91-XXXXXXXXXX'),
-            email: safeStr(p.email, 'example@mail.com'),
-            linkedinId: linkedinId,
-            portfolioUrl: safeStr(portfolio, '').replace('https://', '')
-        });
-        inject('header-module', html);
+            phone: safeStr(p.phone), email: safeStr(p.email),
+            linkedinId, portfolioUrl: portfolio.replace('https://', '')
+        }));
     },
-
-    summary(tpl, p) {
-        inject('summary-module', processTemplate(tpl, { summary: safeStr(p.summary) }));
-    },
-
+    summary(tpl, p) { inject('summary-module', processTemplate(tpl, { summary: safeStr(p.summary) })); },
     skills(tpl, p) {
         inject('skills-module', tpl);
         const s = safeObj(p.technicalSkills);
-        const skills = [
+        const html = [
             { l: 'Frontend', v: safeArr(s.frontend).join(', ') },
             { l: 'Backend', v: safeArr(s.backend).join(', ') },
             { l: 'Database', v: safeArr(s.database).join(', ') },
             { l: 'Tools', v: safeArr(s.tools).join(', ') }
-        ];
-        if (safeArr(s.aiTools).length) skills.push({ l: 'AI Tools', v: s.aiTools.join(', ') });
-        
-        const html = skills.map(i => `<div class="skill-item"><b>${i.l}:</b> ${i.v || 'N/A'}</div>`).join('');
+        ].map(i => `<div class="skill-item"><b>${i.l}:</b> ${i.v || 'N/A'}</div>`).join('');
         inject('skills-list', html);
     },
-
     experience(tpl, p) {
         inject('experience-module', tpl);
         const html = safeArr(p.experience).map(exp => `
@@ -160,7 +140,6 @@ const RenderEngine = {
         `).join('');
         inject('experience-container', html);
     },
-
     projects(tpl, p) {
         inject('projects-module', tpl);
         const html = safeArr(p.projects).filter(pr => pr.name !== 'Scientific Calculator').map(pr => `
@@ -172,7 +151,6 @@ const RenderEngine = {
         `).join('');
         inject('projects-container', html);
     },
-
     education(tpl, p) {
         inject('education-module', tpl);
         const html = safeArr(p.education).map(edu => `
@@ -183,16 +161,14 @@ const RenderEngine = {
         `).join('');
         inject('education-container', html);
     },
-
     footer(tpl, p) {
         inject('footer-module', tpl);
         const inf = safeObj(p.additionalInfo);
-        const html = `
+        inject('additional-container', `
             <div><b>Availability:</b> ${safeStr(inf.availability)}</div>
             <div><b>Languages:</b> ${safeArr(inf.languages).join(', ')}</div>
             <div style="margin-top:5px"><b>Soft Skills:</b> ${safeArr(p.softSkills).join(', ')}</div>
-        `;
-        inject('additional-container', html);
+        `);
     }
 };
 
@@ -202,10 +178,7 @@ async function init() {
     try {
         const profile = await fetchProfile();
         const templates = await loadTemplates();
-
         setProgress(95, 'FINALIZING RENDER...');
-        await sleep(400);
-
         RenderEngine.header(templates.header, profile);
         RenderEngine.summary(templates.summary, profile);
         RenderEngine.skills(templates.skills, profile);
@@ -213,16 +186,20 @@ async function init() {
         RenderEngine.projects(templates.projects, profile);
         RenderEngine.education(templates.education, profile);
         RenderEngine.footer(templates.footer, profile);
-
         setProgress(100, 'SYSTEM READY.');
         await sleep(500);
-
         UI.overlay.classList.add('hidden');
         UI.main.classList.remove('hidden');
         UI.actions.classList.remove('hidden');
 
+        if (isDispatchAuto) {
+            UI.dispatchOverlay.classList.remove('hidden');
+            setTimeout(() => { 
+                window.downloadAsPDF(); 
+                UI.dispatchOverlay.classList.add('hidden'); 
+            }, 1500);
+        }
     } catch (err) {
-        console.error("Critical Failure:", err);
         setProgress(100, 'DATA LINK OFFLINE. RETRYING...');
         setTimeout(() => window.location.reload(), 5000);
     }
@@ -230,22 +207,66 @@ async function init() {
 
 // --- Global Actions ---
 
-window.downloadAsPDF = function() {
+function getPDFEngine() {
+    const engine = window.html2pdf;
+    if (!engine) {
+        alert("PDF Engine offline. Please check your internet connection.");
+        throw new Error("html2pdf library not loaded.");
+    }
+    return engine;
+}
+
+function downloadAsPDF() {
     const opt = {
-        margin: 0,
-        filename: 'A_MOHAMED_YASAR_RESUME.pdf',
+        margin: 0, filename: 'A_MOHAMED_YASAR_RESUME.pdf',
         image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+        html2canvas: { scale: 3, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-    html2pdf().set(opt).from(UI.main).save();
-};
+    getPDFEngine()().set(opt).from(UI.main).save();
+}
+window.downloadAsPDF = downloadAsPDF;
 
-document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode-interactive');
-    const isDark = document.body.classList.contains('dark-mode-interactive');
-    console.log('Interactive Mode:', isDark ? 'ON' : 'OFF');
-});
+async function getPDFBlob() {
+    const opt = {
+        margin: 0, image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    return getPDFEngine()().set(opt).from(UI.main).output('blob');
+}
+window.getPDFBlob = getPDFBlob;
 
-// Run
+function executeEmailDispatch() {
+    UI.shareModal.classList.add('hidden');
+    const url = `${window.location.origin}${window.location.pathname}?system_dispatch=true`;
+    const sub = "A. Mohamed Yasar | Authenticated Asset Access";
+    const body = `[ AUTHENTICATED_ACCESS_REQUEST ]\n\nLink: ${url}\n\nVERIFICATION_PROTOCOL: Upon clicking, the system will auto-extract the PDF asset.`;
+    window.open(`https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`, '_blank');
+}
+window.executeEmailDispatch = executeEmailDispatch;
+
+async function executeAssetExtraction() {
+    UI.shareModal.classList.add('hidden');
+    UI.dispatchOverlay.classList.remove('hidden');
+    try {
+        const blob = await getPDFBlob();
+        const file = new File([blob], "A_MOHAMED_YASAR_RESUME.pdf", { type: "application/pdf" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ title: "A. Mohamed Yasar Resume", files: [file] });
+        } else { 
+            downloadAsPDF(); 
+        }
+    } catch (e) { 
+        downloadAsPDF(); 
+    } finally { 
+        UI.dispatchOverlay.classList.add('hidden'); 
+    }
+}
+window.executeAssetExtraction = executeAssetExtraction;
+
+document.getElementById('share-toggle')?.addEventListener('click', () => UI.shareModal.classList.remove('hidden'));
+document.getElementById('share-close')?.addEventListener('click', () => UI.shareModal.classList.add('hidden'));
+document.getElementById('theme-toggle')?.addEventListener('click', () => document.body.classList.toggle('dark-mode-interactive'));
+
 init();
