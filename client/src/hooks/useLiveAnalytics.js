@@ -8,13 +8,23 @@ import { getVisitors } from '../services/api';
 const useLiveAnalytics = () => {
     const [activeSessions, setActiveSessions] = useState(1); // Default to at least self
     const pollTimerRef = useRef(null);
+    const latestAppliedRequestRef = useRef(0);
 
     useEffect(() => {
         let mounted = true;
 
         const refreshVisitors = async () => {
+            const requestStartedAt = Date.now();
             const data = await getVisitors();
-            if (mounted && data?.success && Number.isFinite(data.count)) {
+
+            // Only apply the newest successful response to avoid stale overwrites.
+            if (
+                mounted &&
+                data?.success &&
+                Number.isFinite(data.count) &&
+                requestStartedAt >= latestAppliedRequestRef.current
+            ) {
+                latestAppliedRequestRef.current = requestStartedAt;
                 setActiveSessions(Math.max(1, data.count));
             }
         };

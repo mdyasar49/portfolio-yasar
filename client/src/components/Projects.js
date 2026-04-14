@@ -253,7 +253,7 @@ const Projects = memo(({ projects }) => {
         fullScreen={fullScreen}
         PaperProps={{ 
           sx: { 
-            bgcolor: '#010409', 
+            bgcolor: 'background.default', 
             backgroundImage: 'none',
             border: fullScreen ? 'none' : '1px solid rgba(51, 204, 255, 0.1)',
             borderRadius: fullScreen ? 0 : 6,

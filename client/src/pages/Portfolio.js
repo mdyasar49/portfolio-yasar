@@ -14,13 +14,13 @@ import Footer from '../components/Footer';
 
 const Portfolio = ({ profile, loading }) => {
   if (loading && !profile) return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: '#010409', color: 'white' }}>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: 'background.default', color: 'white' }}>
        <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>INITIALIZING_INTERFACE...</Typography>
     </Box>
   );
 
   return (
-    <Box sx={{ bgcolor: '#010409', minHeight: '100vh', scrollBehavior: 'smooth', position: 'relative', overflowX: 'hidden' }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', scrollBehavior: 'smooth', position: 'relative', overflowX: 'hidden' }}>
       <SEO 
         title="Portfolio" 
         description={profile?.summary || "Full Stack Engineer Portfolio"} 
@@ -42,9 +42,6 @@ const Portfolio = ({ profile, loading }) => {
             0% { transform: translateY(-100vh); } 
             100% { transform: translateY(100vh); } 
           }
-          ::-webkit-scrollbar { width: 8px; }
-          ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
         `}
       </style>
 

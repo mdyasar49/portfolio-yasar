@@ -327,7 +327,7 @@ const Documentation = ({ profile }) => {
   };
 
   return (
-    <Box sx={{ bgcolor: '#010409', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
       <SEO title="Engineering Dashboard" description="Full technical documentation portal for the MERN Stack application." />
       
       <AnimatePresence>
@@ -765,10 +765,6 @@ const Documentation = ({ profile }) => {
           }
           .status-blink { animation: pulse 2s infinite; }
           @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
-          ::-webkit-scrollbar { width: 8px; }
-          ::-webkit-scrollbar-track { background: transparent; }
-          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
-          ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.1); }
         `}
       </style>
     </Box>

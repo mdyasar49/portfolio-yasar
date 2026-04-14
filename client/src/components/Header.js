@@ -4,7 +4,7 @@
  * Developer: A. Mohamed Yasar
  */
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, List, ListItem, ListItemText, useScrollTrigger, Container } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
 import { Menu as MenuIcon, X } from 'lucide-react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
@@ -164,15 +164,26 @@ const Header = () => {
           </Box>
           <List>
             {menuItems.map((item) => (
-              <ListItem 
+              <ListItem
                 key={item.name} 
-                button 
-                onClick={() => item.type === 'anchor' ? scrollToSection(item.name.toLowerCase()) : setMobileOpen(false)} 
-                component={item.type === 'anchor' && location.pathname === '/' ? 'div' : RouterLink} 
-                to={item.path} 
-                sx={{ borderRadius: 2, mb: 1, '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.1)' } }}
+                disablePadding
+                sx={{ mb: 1 }}
               >
-                <ListItemText primary={item.name} sx={{ '& .MuiTypography-root': { fontWeight: 600, color: 'white' } }} />
+                <ListItemButton
+                  onClick={() => item.type === 'anchor' ? scrollToSection(item.name.toLowerCase()) : setMobileOpen(false)}
+                  component={item.type === 'anchor' && location.pathname === '/' ? 'div' : RouterLink}
+                  {...(item.type === 'anchor' && location.pathname === '/' ? {} : { to: item.path })}
+                  sx={{
+                    borderRadius: 2,
+                    '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.1)' },
+                    '&.Mui-focusVisible': {
+                      outline: '2px solid rgba(51, 204, 255, 0.5)',
+                      outlineOffset: '2px',
+                    },
+                  }}
+                >
+                  <ListItemText primary={item.name} sx={{ '& .MuiTypography-root': { fontWeight: 600, color: 'white' } }} />
+                </ListItemButton>
               </ListItem>
             ))}
           </List>

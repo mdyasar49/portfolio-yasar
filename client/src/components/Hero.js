@@ -1,11 +1,15 @@
 import React, { memo, useRef } from 'react';
-import { Box, Typography, Button, Stack, Container } from '@mui/material';
+import { Box, Typography, Button, Stack, Container, useMediaQuery, useTheme } from '@mui/material';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 import { Terminal, ShieldCheck } from 'lucide-react';
 
 const Hero = memo(({ profile }) => {
   const containerRef = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const disableHeavyMotion = isMobile || prefersReducedMotion;
 
   // 3D Tilt Parallax Logic
   const x = useMotionValue(0);
@@ -16,6 +20,7 @@ const Hero = memo(({ profile }) => {
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
   const handleMouseMove = (e) => {
+    if (disableHeavyMotion) return;
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
@@ -43,7 +48,7 @@ const Hero = memo(({ profile }) => {
         position: 'relative',
         overflow: 'hidden',
         perspective: '2000px',
-        bgcolor: '#010409'
+        bgcolor: 'background.default'
       }}
     >
       {/* Circuit Watermark Background */}
@@ -71,7 +76,11 @@ const Hero = memo(({ profile }) => {
 
       <Container maxWidth="xl" sx={{ zIndex: 1, textAlign: 'center' }}>
         <motion.div
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+          style={{
+            rotateX: disableHeavyMotion ? '0deg' : rotateX,
+            rotateY: disableHeavyMotion ? '0deg' : rotateY,
+            transformStyle: "preserve-3d"
+          }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, Divider, Modal, Fade } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Download, Printer, ArrowLeft, FileText, ShieldCheck, Cpu, Database, Share2, Info, Send } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +10,10 @@ import API_BASE_URL from '../config';
 
 const Resume = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  const disableHeavyMotion = isMobile || prefersReducedMotion;
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDispatching, setIsDispatching] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
@@ -25,6 +31,7 @@ const Resume = () => {
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
 
   const handleMouseMove = (e) => {
+    if (disableHeavyMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
     const yPct = (e.clientY - rect.top) / rect.height - 0.5;
@@ -144,7 +151,8 @@ const Resume = () => {
         perspective: '2000px',
         pt: { xs: 14, md: 5 },
         pb: 10,
-        willChange: 'scroll-position'
+        willChange: 'scroll-position',
+        px: { xs: 2, md: 0 }
       }}
     >
       <SEO title="Elite Resume | A. Mohamed Yasar" description="Access the high-tier professional resume and architecture profile of A. Mohamed Yasar." />
@@ -275,7 +283,7 @@ const Resume = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            style={{ position: 'fixed', top: 30, left: 40, zIndex: 1000 }}
+            style={{ position: 'fixed', top: isMobile ? 16 : 30, left: isMobile ? 16 : 40, zIndex: 1000 }}
           >
             <Stack direction="row" spacing={2} alignItems="center">
               <Box sx={{ p: 1, bgcolor: '#ff3366', borderRadius: '8px', color: 'white' }}>
@@ -294,7 +302,7 @@ const Resume = () => {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        style={{ position: 'fixed', bottom: 40, zIndex: 1000 }}
+        style={{ position: 'fixed', bottom: isMobile ? 20 : 40, zIndex: 1000 }}
       >
         <Stack 
           direction="row" 
@@ -303,7 +311,7 @@ const Resume = () => {
             background: 'rgba(1, 4, 9, 0.8)',
             backdropFilter: 'blur(20px)',
             p: 1.5,
-            px: 3,
+            px: { xs: 1.5, md: 3 },
             borderRadius: 50,
             border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: '0 20px 50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1)'
@@ -326,9 +334,10 @@ const Resume = () => {
               color: 'white',
               fontWeight: 900,
               px: 4,
+              minWidth: { xs: 0, md: 'auto' },
               borderRadius: 50,
               fontFamily: 'Syncopate',
-              fontSize: '0.75rem',
+              fontSize: { xs: '0.65rem', md: '0.75rem' },
               letterSpacing: 1.5,
               textTransform: 'uppercase',
               boxShadow: '0 10px 20px rgba(255,51,102,0.3)',
@@ -358,7 +367,9 @@ const Resume = () => {
       <Container maxWidth="lg" sx={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
         <motion.div
            style={{ 
-             rotateX, rotateY, zIndex: 10, transformStyle: "preserve-3d",
+             rotateX: disableHeavyMotion ? '0deg' : rotateX,
+             rotateY: disableHeavyMotion ? '0deg' : rotateY,
+             zIndex: 10, transformStyle: "preserve-3d",
              width: 'fit-content', position: 'relative'
            }}
            initial={{ opacity: 0, scale: 0.95 }}
@@ -398,8 +409,8 @@ const Resume = () => {
           }}>
             {/* Holographic Scan Beam */}
             <motion.div 
-               animate={{ top: ['0%', '100%', '0%'] }}
-               transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
+               animate={disableHeavyMotion ? { opacity: 0.15 } : { top: ['0%', '100%', '0%'] }}
+               transition={disableHeavyMotion ? { duration: 0 } : { duration: 5, repeat: Infinity, ease: 'linear' }}
                style={{
                  position: 'absolute', left: 0, right: 0, height: '3px',
                  background: 'linear-gradient(90deg, transparent, #33ccff, transparent)',
