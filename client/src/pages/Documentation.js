@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress } from '@mui/material';
+import { Box, Typography, Stack, Grid, IconButton, Divider, useTheme, useMediaQuery, LinearProgress, Tabs, Tab } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Book, 
@@ -542,6 +542,33 @@ const Documentation = ({ profile }) => {
                      <ChevronRight size={12} color="white" />
                      <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 900 }}>{sidebarItems.find(i => i.id === activeSection)?.label}</Typography>
                   </Stack>
+
+                  {isMobile && (
+                    <Box sx={{ mb: 4, bgcolor: 'rgba(255,255,255,0.02)', borderRadius: 2, border: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
+                      <Tabs 
+                        value={activeSection} 
+                        onChange={(e, v) => setActiveSection(v)}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        sx={{
+                          '& .MuiTabs-indicator': { bgcolor: '#ff3366' },
+                          '& .MuiTab-root': { 
+                            color: '#64748b', 
+                            fontSize: '0.65rem', 
+                            fontFamily: 'Syncopate', 
+                            fontWeight: 900,
+                            minWidth: 'auto',
+                            px: 3,
+                            '&.Mui-selected': { color: '#ff3366' }
+                          }
+                        }}
+                      >
+                        {sidebarItems.map(item => (
+                          <Tab key={item.id} value={item.id} label={item.label} />
+                        ))}
+                      </Tabs>
+                    </Box>
+                  )}
 
                   {activeSection === 'readme' || activeSection === 'explanation' ? (
                      <Box sx={{ maxWidth: '1100px' }}>

@@ -1,6 +1,6 @@
 import React, { useState, memo } from 'react';
-import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, useMediaQuery, useTheme } from '@mui/material';
-import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard } from 'lucide-react';
+import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, useMediaQuery, useTheme, Tabs, Tab } from '@mui/material';
+import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard, Cpu } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
@@ -66,12 +66,16 @@ const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
 
 const Projects = memo(({ projects }) => {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   if (!projects || !Array.isArray(projects)) return null;
 
-  const handleOpen = (project) => setSelectedProject(project);
+  const handleOpen = (project) => {
+    setSelectedProject(project);
+    setActiveTab(0);
+  };
   const handleClose = () => setSelectedProject(null);
 
   return (
@@ -259,14 +263,28 @@ const Projects = memo(({ projects }) => {
             borderRadius: fullScreen ? 0 : 6,
             overflow: 'hidden',
             p: { xs: 1, sm: 2, md: 4 },
-            maxHeight: { xs: '100vh', md: '92vh' },
-            m: { xs: 0, md: 2 }
+            maxHeight: { xs: '100dvh', md: '92vh' },
+            height: { xs: '100dvh', md: 'auto' },
+            m: { xs: 0, md: 2 },
+            display: 'flex',
+            flexDirection: 'column'
           } 
         }}
       >
         <AnimatePresence mode="wait">
           {selectedProject && (
-            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.98 }} 
+              animate={{ opacity: 1, scale: 1 }} 
+              exit={{ opacity: 0 }}
+              style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                height: '100%', 
+                width: '100%',
+                overflow: 'hidden'
+              }}
+            >
               <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pb: { xs: 2, md: 4 }, pr: { xs: 1, md: 2 } }}>
                 <Stack direction="row" spacing={3} alignItems="center">
                   <Box sx={{ p: 2, bgcolor: 'rgba(51, 204, 255, 0.1)', borderRadius: 2, color: '#33ccff', boxShadow: '0 0 20px rgba(51, 204, 255, 0.1)' }}>
@@ -280,48 +298,82 @@ const Projects = memo(({ projects }) => {
                 <IconButton onClick={handleClose} sx={{ color: '#444', '&:hover': { color: '#ff3366' } }}><X size={28} /></IconButton>
               </DialogTitle>
 
-              <DialogContent sx={{ px: { xs: 1, sm: 2 }, overflowY: 'auto' }}>
-                <Grid container spacing={6}>
-                  <Grid item xs={12} lg={7}>
-                    <Box sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.01)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
-                      <Typography variant="h6" sx={{ color: '#64748b', fontWeight: 900, mb: 4, fontSize: '0.8rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>TECHNICAL_ARCHITECTURE_LOGS</Typography>
-                      <Stack spacing={3}>
-                        {selectedProject.description.map((line, i) => (
-                           <Stack key={i} direction="row" spacing={3}>
-                              <Typography sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'monospace' }}>[{i+1}]</Typography>
-                              <Typography sx={{ color: '#e2e8f0', fontSize: '1rem', lineHeight: 1.8, fontWeight: 500 }}>{line}</Typography>
-                           </Stack>
-                        ))}
-                      </Stack>
-                    </Box>
-                  </Grid>
+              <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', px: { xs: 2, md: 4 } }}>
+                <Tabs 
+                  value={activeTab} 
+                  onChange={(e, v) => setActiveTab(v)}
+                  variant="fullWidth"
+                  sx={{
+                    '& .MuiTabs-indicator': { bgcolor: '#33ccff', height: 3, boxShadow: '0 0 15px #33ccff' },
+                    '& .MuiTab-root': { 
+                      color: '#444', 
+                      fontFamily: 'Syncopate', 
+                      fontWeight: 900, 
+                      fontSize: { xs: '0.6rem', md: '0.75rem' },
+                      py: 2,
+                      '&.Mui-selected': { color: 'white' }
+                    }
+                  }}
+                >
+                  <Tab label="DIAGNOSTICS" icon={<Activity size={16} />} iconPosition="start" />
+                  <Tab label="ARCHITECTURE" icon={<Cpu size={16} />} iconPosition="start" />
+                </Tabs>
+              </Box>
 
-                  <Grid item xs={12} lg={5}>
-                    <Stack spacing={4}>
-                      <Box sx={{ p: 4, bgcolor: 'rgba(0, 255, 204, 0.02)', borderRadius: 4, border: '1px solid rgba(0, 255, 204, 0.15)' }}>
-                        <Typography variant="h6" sx={{ color: '#00ffcc', fontWeight: 900, mb: 3, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>INFRASTRUCTURE_STACK</Typography>
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
-                          {selectedProject.technologies.map(t => (
-                             <Chip key={t} label={t} size="small" sx={{ bgcolor: 'rgba(0, 255, 204, 0.05)', color: '#00ffcc', fontWeight: 900, borderRadius: 1.5, border: '1px solid rgba(0, 255, 204, 0.2)', fontSize: '0.65rem', fontFamily: 'Syncopate' }} />
+              <DialogContent sx={{ px: { xs: 2, md: 4 }, py: 4, overflowY: 'auto', flex: 1 }}>
+                <AnimatePresence mode="wait">
+                  {activeTab === 0 ? (
+                    <motion.div 
+                      key="logs" 
+                      initial={{ opacity: 0, x: -20 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      exit={{ opacity: 0, x: 20 }}
+                    >
+                      <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: 'rgba(255,255,255,0.01)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
+                        <Typography variant="h6" sx={{ color: '#64748b', fontWeight: 900, mb: 4, fontSize: '0.8rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>TECHNICAL_ARCHITECTURE_LOGS</Typography>
+                        <Stack spacing={3}>
+                          {selectedProject.description.map((line, i) => (
+                             <Stack key={i} direction="row" spacing={3}>
+                                <Typography sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'monospace' }}>[{i+1}]</Typography>
+                                <Typography sx={{ color: '#e2e8f0', fontSize: { xs: '0.85rem', md: '1rem' }, lineHeight: 1.8, fontWeight: 500 }}>{line}</Typography>
+                             </Stack>
                           ))}
-                        </Box>
-                      </Box>
-                      
-                      <Box sx={{ p: 4, bgcolor: 'rgba(255, 51, 102, 0.02)', borderRadius: 4, border: '1px solid rgba(255, 51, 102, 0.15)' }}>
-                        <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, mb: 2.5, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>SECURITY_CLEARANCE</Typography>
-                        <Stack direction="row" spacing={3} alignItems="center">
-                          <Box sx={{ p: 1.5, bgcolor: 'rgba(255, 51, 102, 0.1)', borderRadius: 2, color: '#ff3366' }}>
-                             {selectedProject.github === '#' ? <Lock size={22} /> : <Github size={22} />}
-                          </Box>
-                          <Box>
-                             <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '0.85rem' }}>{selectedProject.github === '#' ? 'RESTRICTED_ACCESS' : 'PUBLIC_OPEN_SOURCE'}</Typography>
-                             <Typography variant="caption" sx={{ color: '#444', fontWeight: 800, fontFamily: 'monospace' }}>SEC_PROTOCOL_MOD_6</Typography>
-                          </Box>
                         </Stack>
                       </Box>
-                    </Stack>
-                  </Grid>
-                </Grid>
+                    </motion.div>
+                  ) : (
+                    <motion.div 
+                      key="arch" 
+                      initial={{ opacity: 0, x: 20 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      exit={{ opacity: 0, x: -20 }}
+                    >
+                      <Stack spacing={4}>
+                        <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(0, 255, 204, 0.02)', borderRadius: 4, border: '1px solid rgba(0, 255, 204, 0.15)' }}>
+                          <Typography variant="h6" sx={{ color: '#00ffcc', fontWeight: 900, mb: 3, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>INFRASTRUCTURE_STACK</Typography>
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
+                            {selectedProject.technologies.map(t => (
+                               <Chip key={t} label={t} size="small" sx={{ bgcolor: 'rgba(0, 255, 204, 0.05)', color: '#00ffcc', fontWeight: 900, borderRadius: 1.5, border: '1px solid rgba(0, 255, 204, 0.2)', fontSize: '0.65rem', fontFamily: 'Syncopate' }} />
+                            ))}
+                          </Box>
+                        </Box>
+                        
+                        <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(255, 51, 102, 0.02)', borderRadius: 4, border: '1px solid rgba(255, 51, 102, 0.15)' }}>
+                          <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, mb: 2.5, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>SECURITY_CLEARANCE</Typography>
+                          <Stack direction="row" spacing={3} alignItems="center">
+                            <Box sx={{ p: 1.5, bgcolor: 'rgba(255, 51, 102, 0.1)', borderRadius: 2, color: '#ff3366' }}>
+                               {selectedProject.github === '#' ? <Lock size={22} /> : <Github size={22} />}
+                            </Box>
+                            <Box>
+                               <Typography sx={{ color: 'white', fontWeight: 900, fontSize: '0.85rem' }}>{selectedProject.github === '#' ? 'RESTRICTED_ACCESS' : 'PUBLIC_OPEN_SOURCE'}</Typography>
+                               <Typography variant="caption" sx={{ color: '#444', fontWeight: 800, fontFamily: 'monospace' }}>SEC_PROTOCOL_MOD_6</Typography>
+                            </Box>
+                          </Stack>
+                        </Box>
+                      </Stack>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </DialogContent>
 
               <DialogActions sx={{ p: { xs: 2, md: 5 }, pt: 2, gap: 2, flexWrap: 'wrap' }}>
