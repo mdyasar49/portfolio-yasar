@@ -1,6 +1,6 @@
 /**
- * [Resume Pro Engine]
- * Responsibly fetches modular HTML templates and populates them with profile data.
+ * [Resume Pro Engine - v2.0 Premium]
+ * Highly modernized resume generator with modular architecture.
  */
 
 const query = new URLSearchParams(window.location.search);
@@ -8,20 +8,10 @@ const configuredApi = query.get('api');
 
 const buildApiCandidates = () => {
     const candidates = [];
-
-    if (configuredApi) {
-        candidates.push(configuredApi);
-    }
-
-    if (window.location.hostname === 'localhost') {
-        candidates.push('http://localhost:5001/api/profile');
-    }
-
-    // Default production fallback for direct resume URL access
+    if (configuredApi) candidates.push(configuredApi);
+    if (window.location.hostname === 'localhost') candidates.push('http://localhost:5001/api/profile');
     candidates.push('https://mern-portfolio-yasar.onrender.com/api/profile');
-    // Secondary fallback if production domain is switched during migration
     candidates.push('https://mern-portfolio-yasar-1.onrender.com/api/profile');
-
     return [...new Set(candidates.filter(Boolean))];
 };
 
@@ -38,206 +28,224 @@ const CONFIG = {
     }
 };
 
-const safeArray = (value) => Array.isArray(value) ? value : [];
-const safeText = (value, fallback = '') => typeof value === 'string' ? value : fallback;
-const safeObject = (value) => (value && typeof value === 'object') ? value : {};
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const loadingOverlay = document.getElementById('loading-overlay');
+// --- Utilities ---
+const UI = {
+    overlay: document.getElementById('loading-overlay'),
+    message: document.getElementById('loader-message'),
+    progress: document.getElementById('loader-progress'),
+    main: document.getElementById('main-resume'),
+    actions: document.getElementById('resume-actions')
+};
 
-const updateLoadingStatus = (message) => {
-    if (loadingOverlay) {
-        loadingOverlay.innerText = message;
+const setProgress = (percent, message) => {
+    if (UI.progress) UI.progress.style.width = `${percent}%`;
+    if (UI.message) UI.message.innerText = message || 'PROCESSING...';
+};
+
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const safeArr = (v) => Array.isArray(v) ? v : [];
+const safeStr = (v, f = '') => typeof v === 'string' ? v : f;
+const safeObj = (v) => (v && typeof v === 'object') ? v : {};
+
+// --- Core Logic ---
+
+async function fetchProfile(maxAttempts = 3) {
+    setProgress(10, 'SYNCING WITH DATA CORE...');
+    let lastError = null;
+
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        for (const url of CONFIG.apiCandidates) {
+            try {
+                const resp = await fetch(url, { cache: 'no-store' });
+                if (!resp.ok) throw new Error(`Status ${resp.status}`);
+                const data = await resp.json();
+                setProgress(40, 'DATA RETRIEVED.');
+                return data;
+            } catch (e) {
+                lastError = e;
+                console.warn(`Fetch failed for ${url}:`, e.message);
+            }
+        }
+        if (attempt < maxAttempts) {
+            setProgress(10 + (attempt * 10), `RETRYING CONNECTION (${attempt}/${maxAttempts})...`);
+            await sleep(2000);
+        }
+    }
+    throw lastError || new Error('All endpoints unreachable');
+}
+
+async function loadTemplates() {
+    setProgress(50, 'FETCHING MODULES...');
+    const keys = Object.keys(CONFIG.templates);
+    const results = {};
+    
+    const promises = keys.map(async (key, idx) => {
+        const r = await fetch(CONFIG.templates[key]);
+        if (!r.ok) throw new Error(`Missing module: ${key}`);
+        const text = await r.text();
+        results[key] = text;
+        const p = 50 + Math.floor(((idx + 1) / keys.length) * 40);
+        setProgress(p, `MOUNTING ${key.toUpperCase()}...`);
+        return text;
+    });
+
+    await Promise.all(promises);
+    return results;
+}
+
+// --- Renderers ---
+
+function inject(id, html) {
+    const el = document.getElementById(id);
+    if (el) {
+        el.innerHTML = html;
+        el.classList.add('fade-in');
+    }
+}
+
+function processTemplate(tpl, data) {
+    let output = tpl;
+    Object.keys(data).forEach(key => {
+        output = output.split(`{{${key}}}`).join(data[key]);
+    });
+    return output;
+}
+
+const RenderEngine = {
+    header(tpl, p) {
+        const socials = safeObj(p.socials);
+        const linkedin = safeStr(socials.linkedin);
+        const linkedinId = linkedin ? linkedin.split('/').filter(Boolean).pop() : 'linkedin';
+        const portfolio = safeArr(p.projects).find(pr => safeStr(pr.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar.onrender.com';
+        
+        const html = processTemplate(tpl, {
+            name: safeStr(p.name, 'A. MOHAMED YASAR'),
+            title: safeStr(p.title, 'MERN Stack Developer'),
+            location: safeStr(p.location, 'Tamil Nadu, India'),
+            phone: safeStr(p.phone, '+91-XXXXXXXXXX'),
+            email: safeStr(p.email, 'example@mail.com'),
+            linkedinId: linkedinId,
+            portfolioUrl: safeStr(portfolio, '').replace('https://', '')
+        });
+        inject('header-module', html);
+    },
+
+    summary(tpl, p) {
+        inject('summary-module', processTemplate(tpl, { summary: safeStr(p.summary) }));
+    },
+
+    skills(tpl, p) {
+        inject('skills-module', tpl);
+        const s = safeObj(p.technicalSkills);
+        const skills = [
+            { l: 'Frontend', v: safeArr(s.frontend).join(', ') },
+            { l: 'Backend', v: safeArr(s.backend).join(', ') },
+            { l: 'Database', v: safeArr(s.database).join(', ') },
+            { l: 'Tools', v: safeArr(s.tools).join(', ') }
+        ];
+        if (safeArr(s.aiTools).length) skills.push({ l: 'AI Tools', v: s.aiTools.join(', ') });
+        
+        const html = skills.map(i => `<div class="skill-item"><b>${i.l}:</b> ${i.v || 'N/A'}</div>`).join('');
+        inject('skills-list', html);
+    },
+
+    experience(tpl, p) {
+        inject('experience-module', tpl);
+        const html = safeArr(p.experience).map(exp => `
+            <div class="exp-item">
+                <div class="exp-top"><span>${safeStr(exp.role)}</span><span>${safeStr(exp.period)}</span></div>
+                <div class="exp-sub"><span>${safeStr(exp.company)}, ${safeStr(exp.location)}</span></div>
+                <ul>${safeArr(exp.description).map(d => `<li>${safeStr(d)}</li>`).join('')}</ul>
+            </div>
+        `).join('');
+        inject('experience-container', html);
+    },
+
+    projects(tpl, p) {
+        inject('projects-module', tpl);
+        const html = safeArr(p.projects).filter(pr => pr.name !== 'Scientific Calculator').map(pr => `
+            <div class="exp-item">
+                <div class="exp-top"><span>${safeStr(pr.name)}</span></div>
+                <div class="exp-sub"><span>Tech: ${safeArr(pr.technologies).join(', ')}</span></div>
+                <ul>${safeArr(pr.description).map(d => `<li>${safeStr(d)}</li>`).join('')}</ul>
+            </div>
+        `).join('');
+        inject('projects-container', html);
+    },
+
+    education(tpl, p) {
+        inject('education-module', tpl);
+        const html = safeArr(p.education).map(edu => `
+            <div class="exp-item">
+                <div class="exp-top"><span>${safeStr(edu.degree)}</span><span>${safeStr(edu.year)}</span></div>
+                <div class="exp-sub"><span>${safeStr(edu.institution)}</span></div>
+            </div>
+        `).join('');
+        inject('education-container', html);
+    },
+
+    footer(tpl, p) {
+        inject('footer-module', tpl);
+        const inf = safeObj(p.additionalInfo);
+        const html = `
+            <div><b>Availability:</b> ${safeStr(inf.availability)}</div>
+            <div><b>Languages:</b> ${safeArr(inf.languages).join(', ')}</div>
+            <div style="margin-top:5px"><b>Soft Skills:</b> ${safeArr(p.softSkills).join(', ')}</div>
+        `;
+        inject('additional-container', html);
     }
 };
 
-async function fetchProfileWithFallback(attempt) {
-    let lastError = null;
-
-    for (const apiUrl of CONFIG.apiCandidates) {
-        try {
-            updateLoadingStatus(`CONNECTING TO DATA CORE... (ATTEMPT ${attempt})`);
-            const profileResp = await fetch(apiUrl, { cache: 'no-store' });
-            if (!profileResp.ok) {
-                throw new Error(`API Fetch Failed (${profileResp.status}) from ${apiUrl}`);
-            }
-            const contentType = profileResp.headers.get('content-type') || '';
-            if (!contentType.includes('application/json')) {
-                throw new Error(`Invalid API response format from ${apiUrl}`);
-            }
-            return await profileResp.json();
-        } catch (error) {
-            lastError = error;
-        }
-    }
-
-    throw lastError || new Error('No reachable profile API endpoint.');
-}
+// --- Initialization ---
 
 async function init() {
-    const maxAttempts = 4;
-    let profile = null;
-
     try {
-        // 1. Fetch Profile Data with warm-up retries
-        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-            try {
-                profile = await fetchProfileWithFallback(attempt);
-                break;
-            } catch (error) {
-                if (attempt === maxAttempts) {
-                    throw error;
-                }
-                const waitMs = attempt * 2000;
-                updateLoadingStatus(`SERVER IS WARMING UP... RETRYING IN ${Math.ceil(waitMs / 1000)}s`);
-                await sleep(waitMs);
-            }
-        }
+        const profile = await fetchProfile();
+        const templates = await loadTemplates();
 
-        // 2. Load all templates
-        updateLoadingStatus('LOADING TEMPLATE MODULES...');
-        const templateKeys = Object.keys(CONFIG.templates);
-        const templatePromises = templateKeys.map(async key => {
-            const r = await fetch(CONFIG.templates[key]);
-            if (!r.ok) throw new Error(`Template Load Failed: ${key} (${r.status})`);
-            return r.text();
-        });
-        const templateContents = await Promise.all(templatePromises);
-        
-        const templates = {};
-        templateKeys.forEach((key, i) => { templates[key] = templateContents[i]; });
+        setProgress(95, 'FINALIZING RENDER...');
+        await sleep(400);
 
-        // 3. Render Modules
-        renderHeader(templates.header, profile);
-        renderSummary(templates.summary, profile);
-        renderSkills(templates.skills, profile);
-        renderExperience(templates.experience, profile);
-        renderProjects(templates.projects, profile);
-        renderEducation(templates.education, profile);
-        renderFooter(templates.footer, profile);
+        RenderEngine.header(templates.header, profile);
+        RenderEngine.summary(templates.summary, profile);
+        RenderEngine.skills(templates.skills, profile);
+        RenderEngine.experience(templates.experience, profile);
+        RenderEngine.projects(templates.projects, profile);
+        RenderEngine.education(templates.education, profile);
+        RenderEngine.footer(templates.footer, profile);
 
-        // 4. Show Content
-        if (loadingOverlay) {
-            loadingOverlay.classList.add('hidden');
-        }
-        document.getElementById('main-resume').classList.remove('hidden');
+        setProgress(100, 'SYSTEM READY.');
+        await sleep(500);
+
+        UI.overlay.classList.add('hidden');
+        UI.main.classList.remove('hidden');
+        UI.actions.classList.remove('hidden');
 
     } catch (err) {
-        console.error("Module Loading Failed:", err);
-        updateLoadingStatus('SYSTEM BUSY. PLEASE WAIT OR REFRESH IN A MOMENT.');
+        console.error("Critical Failure:", err);
+        setProgress(100, 'DATA LINK OFFLINE. RETRYING...');
+        setTimeout(() => window.location.reload(), 5000);
     }
 }
 
-function renderHeader(template, p) {
-    const socials = safeObject(p.socials);
-    const projects = safeArray(p.projects);
-    const linkedin = safeText(socials.linkedin);
-    const linkedinId = linkedin ? linkedin.split('/').filter(Boolean).pop() : 'linkedin';
-    const portfolioUrl = projects.find(proj => safeText(proj.name).includes('Portfolio'))?.link || 'mern-portfolio-yasar-1.onrender.com';
-    const html = template
-        .replace('{{name}}', safeText(p.name, 'Profile Unavailable'))
-        .replace('{{title}}', safeText(p.title, 'Full Stack Developer'))
-        .replace('{{location}}', safeText(p.location, 'N/A'))
-        .replace('{{phone}}', safeText(p.phone, 'N/A'))
-        .replace('{{email}}', safeText(p.email, 'N/A'))
-        .replace('{{linkedinId}}', linkedinId)
-        .replace('{{portfolioUrl}}', safeText(portfolioUrl, '').replace('https://', ''));
-    document.getElementById('header-module').innerHTML = html;
-}
+// --- Global Actions ---
 
-function renderSummary(template, p) {
-    const html = template.replace('{{summary}}', safeText(p.summary, 'Profile summary is currently unavailable.'));
-    document.getElementById('summary-module').innerHTML = html;
-}
-
-function renderSkills(template, p) {
-    const technicalSkills = safeObject(p.technicalSkills);
-    document.getElementById('skills-module').innerHTML = template;
-    const items = [
-        { label: 'Frontend', val: safeArray(technicalSkills.frontend).join(', ') },
-        { label: 'Backend', val: safeArray(technicalSkills.backend).join(', ') },
-        { label: 'Database', val: safeArray(technicalSkills.database).join(', ') },
-        { label: 'Pipeline', val: safeArray(technicalSkills.tools).join(', ') }
-    ];
-    if (safeArray(technicalSkills.aiTools).length) items.push({ label: 'AI Tools', val: safeArray(technicalSkills.aiTools).join(', ') });
-    if (safeArray(technicalSkills.other).length) items.push({ label: 'Others', val: safeArray(technicalSkills.other).join(', ') });
-
-    document.getElementById('skills-list').innerHTML = items.map(i => `
-        <div class="skill-item"><b>${i.label}:</b> ${i.val || 'N/A'}</div>
-    `).join('');
-}
-
-function renderExperience(template, p) {
-    document.getElementById('experience-module').innerHTML = template;
-    document.getElementById('experience-container').innerHTML = safeArray(p.experience).map(exp => `
-        <div class="exp-item">
-            <div class="exp-top"><span>${safeText(exp.role, 'Role')}</span><span>${safeText(exp.period, '')}</span></div>
-            <div class="exp-sub"><span>${safeText(exp.company, 'Company')}, ${safeText(exp.location, 'India')}</span></div>
-            <ul>${safeArray(exp.description).map(d => `<li>${safeText(d)}</li>`).join('')}</ul>
-        </div>
-    `).join('');
-}
-
-function renderProjects(template, p) {
-    document.getElementById('projects-module').innerHTML = template;
-    // Render clean projects without internal type labels
-    document.getElementById('projects-container').innerHTML = safeArray(p.projects).filter(pr => safeText(pr.name) !== 'Scientific Calculator').map(pr => `
-        <div class="exp-item">
-            <div class="exp-top"><span>${safeText(pr.name, 'Project')}</span></div>
-            <div class="exp-sub"><span>Core Tech: ${safeArray(pr.technologies).join(', ') || 'N/A'}</span></div>
-            <ul>${safeArray(pr.description).map(d => `<li>${safeText(d)}</li>`).join('')}</ul>
-        </div>
-    `).join('');
-}
-
-function renderEducation(template, p) {
-    document.getElementById('education-module').innerHTML = template;
-    document.getElementById('education-container').innerHTML = safeArray(p.education).map(edu => `
-        <div class="exp-item">
-            <div class="exp-top"><span>${safeText(edu.degree, 'Education')}</span><span>${safeText(edu.year, '')}</span></div>
-            <div class="exp-sub"><span>${safeText(edu.institution, 'Institution')}</span></div>
-        </div>
-    `).join('');
-}
-
-function renderFooter(template, p) {
-    const additionalInfo = safeObject(p.additionalInfo);
-    document.getElementById('footer-module').innerHTML = template;
-    document.getElementById('additional-container').innerHTML = `
-        <div><b>Availability:</b> ${safeText(additionalInfo.availability, 'N/A')}</div>
-        <div><b>Work Mode:</b> ${safeText(additionalInfo.workPreference, 'N/A')}</div>
-        <div><b>Languages:</b> ${safeArray(additionalInfo.languages).join(', ') || 'N/A'}</div>
-        <div style="margin-top:5px"><b>Soft Skills:</b> ${safeArray(p.softSkills).join(', ') || 'N/A'}</div>
-    `;
-}
-
-// PDF Generation Logic
 window.downloadAsPDF = function() {
-    const element = document.getElementById('main-resume');
     const opt = {
         margin: 0,
         filename: 'A_MOHAMED_YASAR_RESUME.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 3, useCORS: true, letterRendering: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
-    
-    // New Promise-based usage:
-    html2pdf().set(opt).from(element).save();
-}
+    html2pdf().set(opt).from(UI.main).save();
+};
 
-/**
- * Returns the PDF as a Blob for sharing or other purposes.
- */
-window.getPDFBlob = async function() {
-    const element = document.getElementById('main-resume');
-    const opt = {
-        margin: 0,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-    return html2pdf().set(opt).from(element).output('blob');
-}
+document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode-interactive');
+    const isDark = document.body.classList.contains('dark-mode-interactive');
+    console.log('Interactive Mode:', isDark ? 'ON' : 'OFF');
+});
 
-// Ignition
+// Run
 init();

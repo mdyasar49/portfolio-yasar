@@ -35,25 +35,95 @@ li { font-size: 11.5px; margin-bottom: 3px; }
 #loading-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: white;
+    background: #0f172a;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: sans-serif;
-    color: #4b5563;
-    z-index: 999;
+    z-index: 1000;
+    color: #38bdf8;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
+.loader-content { width: 300px; text-align: center; }
+.loader-text { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+.loader-bar { height: 2px; width: 100%; background: rgba(56, 189, 248, 0.1); overflow: hidden; position: relative; }
+.loader-progress { position: absolute; top: 0; left: 0; height: 100%; background: #38bdf8; width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px #38bdf8; }
+
+#resume-actions {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+}
+.action-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.action-btn:hover { background: #f8fafc; color: #0284c7; transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+.action-btn svg { transition: transform 0.2s; }
+.action-btn:active { transform: scale(0.95); }
+
+/* Layout Grid */
+.resume-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 15px; }
+.side-col { border-left: 1px solid #e5e7eb; padding-left: 20px; }
+
 .hidden { display: none !important; }
+
+/* Animations */
+.fade-in { animation: fadeIn 0.6s ease-out forwards; opacity: 0; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Interactive Theme (Optional) */
+body.dark-mode-interactive {
+    background: #0f172a;
+    color: #e2e8f0;
+}
+body.dark-mode-interactive .resume-container {
+    background: #1e293b;
+    color: #f1f5f9;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border-radius: 16px;
+    border: 1px solid #334155;
+    padding: 50px;
+}
+body.dark-mode-interactive .section-header {
+    border-bottom: 2px solid #38bdf8;
+    color: #38bdf8;
+}
+body.dark-mode-interactive .side-col { border-left-color: #334155; }
+body.dark-mode-interactive b { color: #38bdf8; }
 
 /* Print Optimizations */
 @media print {
-    body { background: #fff !important; margin: 0; padding: 0; }
-    .resume-container { 
-        width: 100% !important; 
-        max-width: none !important; 
-        padding: 0 !important; 
-        margin: 0 !important;
-    }
-    #loading-overlay { display: none !important; }
-    .section-header { border-bottom: 2px solid #000 !important; -webkit-print-color-adjust: exact; }
+    body { background: #fff !important; color: #000 !important; margin: 0; padding: 0; }
+    .resume-container { width: 100% !important; max-width: none !important; padding: 0 !important; margin: 0 !important; color: #000 !important; background: #fff !important; border: none !important; box-shadow: none !important; }
+    #loading-overlay, #resume-actions, .hidden-print { display: none !important; }
+    .resume-grid { display: block !important; }
+    .side-col { border-left: none !important; padding-left: 0 !important; margin-top: 20px; }
+    .section-header { border-bottom: 2.5px solid #000 !important; color: #000 !important; -webkit-print-color-adjust: exact; }
+    .fade-in { animation: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+/* Mobile Tweak */
+@media screen and (max-width: 768px) {
+    .resume-grid { grid-template-columns: 1fr; }
+    .side-col { border-left: none; padding-left: 0; }
+    #resume-actions { right: 20px; bottom: 20px; }
 }
