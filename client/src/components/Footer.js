@@ -57,13 +57,16 @@ const Footer = ({ socials, name }) => {
           
           {/* Logo & Status */}
           <Stack spacing={1} alignItems="center" sx={{ mb: 4 }}>
-            <Typography variant="h4" sx={{ 
-              fontWeight: 900, fontFamily: 'Syncopate', 
-              letterSpacing: -1, color: 'white',
-              textShadow: '0 0 20px rgba(255, 255, 255, 0.2)'
-            }}>
-              {name.toUpperCase()}
-            </Typography>
+            <Box 
+              component="img"
+              src="/logo.png"
+              alt="Logo"
+              sx={{ 
+                height: 50, 
+                width: 'auto',
+                filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))'
+              }}
+            />
             <Stack direction="row" spacing={2} sx={{ opacity: 0.5 }}>
               <Typography variant="caption" sx={{ fontFamily: 'monospace', color: '#00ffcc' }}>[SESSION_ID: {sessionId}]</Typography>
               <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>[STATUS: SECURED]</Typography>

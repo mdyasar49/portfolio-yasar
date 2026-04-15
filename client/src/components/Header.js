@@ -171,30 +171,17 @@ const Header = () => {
                 '&:hover': { transform: 'scale(1.05)' }
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'baseline' }}>
-                <Typography 
-                  variant="h3" 
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box 
+                  component="img"
+                  src="/logo.png"
+                  alt="Mohamed Yasar"
                   sx={{ 
-                    fontWeight: 900,
-                    fontFamily: 'Syncopate', 
-                    letterSpacing: -1,
-                    fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' },
-                    background: 'linear-gradient(270deg, #ff3366, #ff9933)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 15px rgba(255, 51, 102, 0.5))'
+                    height: { xs: 35, sm: 40, md: 45 },
+                    width: 'auto',
+                    filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.3))'
                   }}
-                >
-                  MY
-                </Typography>
-                <Box sx={{ 
-                  width: 8, 
-                  height: 8, 
-                  bgcolor: '#33ccff', 
-                  borderRadius: '50%',
-                  ml: 1,
-                  boxShadow: '0 0 15px #33ccff'
-                }} />
+                />
               </Box>
             </Box>
             

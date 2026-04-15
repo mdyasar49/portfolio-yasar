@@ -99,16 +99,18 @@ const PublicApp = () => {
             }} />
             
             {/* Inner signature core */}
-            <Box sx={{ display: 'flex', alignItems: 'baseline', zIndex: 1 }}>
-              <Typography variant="h4" sx={{ 
-                fontWeight: 900, 
-                fontFamily: 'Syncopate', 
-                background: 'linear-gradient(270deg, #ff3366, #ff9933)', 
-                WebkitBackgroundClip: 'text', 
-                WebkitTextFillColor: 'transparent',
-                filter: 'drop-shadow(0 0 10px rgba(255, 51, 102, 0.3))'
-              }}>MY</Typography>
-              <Box sx={{ width: 8, height: 8, bgcolor: '#33ccff', borderRadius: '50%', ml: 0.5, boxShadow: '0 0 15px #33ccff', animation: `${pulseGlow} 1.5s infinite` }} />
+            <Box sx={{ zIndex: 1 }}>
+              <Box 
+                component="img"
+                src="/logo.png"
+                alt="Logo"
+                sx={{ 
+                  height: 40,
+                  width: 'auto',
+                  filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.4))',
+                  animation: `${pulseGlow} 2s infinite ease-in-out`
+                }}
+              />
             </Box>
           </Box>
           <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_OPERATIONS</Typography>
@@ -145,10 +147,18 @@ const PublicApp = () => {
       <Box sx={{ pt: 10 }}>
         <Suspense fallback={
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 20 }}>
-            <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
-              <Typography variant="h3" sx={{ fontWeight: 900, fontFamily: 'Syncopate', background: 'linear-gradient(270deg, #ff3366, #ff9933)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MY</Typography>
-              <Box sx={{ width: 10, height: 10, bgcolor: '#33ccff', borderRadius: '50%', ml: 1, boxShadow: '0 0 20px #33ccff', animation: `${pulseGlow} 1.5s infinite` }} />
-            </Box>
+            <Box 
+              component="img"
+              src="/logo.png"
+              alt="Logo"
+              sx={{ 
+                height: 60,
+                width: 'auto',
+                mb: 2,
+                filter: 'drop-shadow(0 0 15px rgba(51, 204, 255, 0.3))',
+                animation: `${pulseGlow} 2s infinite ease-in-out`
+              }}
+            />
             <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_MODULE</Typography>
           </Box>
         }>
@@ -174,10 +184,18 @@ const AppRoutes = () => {
     return (
       <Suspense fallback={
         <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#010409' }}>
-          <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
-            <Typography variant="h3" sx={{ fontWeight: 900, fontFamily: 'Syncopate', background: 'linear-gradient(270deg, #ff3366, #ff9933)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>MY</Typography>
-            <Box sx={{ width: 10, height: 10, bgcolor: '#33ccff', borderRadius: '50%', ml: 1, boxShadow: '0 0 20px #33ccff', animation: 'pulse-glow 1.5s infinite' }} />
-          </Box>
+          <Box 
+            component="img"
+            src="/logo.png"
+            alt="Logo"
+            sx={{ 
+              height: 60,
+              width: 'auto',
+              mb: 2,
+              filter: 'drop-shadow(0 0 15px rgba(51, 204, 255, 0.3))',
+              animation: `${pulseGlow} 2s infinite ease-in-out`
+            }}
+          />
           <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>SECURE_AUTH_INIT</Typography>
         </Box>
       }>

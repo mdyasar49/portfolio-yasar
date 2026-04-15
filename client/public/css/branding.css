@@ -22,14 +22,13 @@ body { background: var(--brand-bg); margin: 0; padding: 0; font-family: 'Outfit'
   z-index: 9999; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.loader-branding { position: relative; display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
-.brand-title {
-  font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 3rem;
-  background: linear-gradient(270deg, var(--brand-accent), #ff9933);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+.loader-branding { position: relative; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
+.brand-logo {
+  height: 80px;
+  width: auto;
+  filter: drop-shadow(0 0 15px rgba(51, 204, 255, 0.4));
   animation: brandPulse 2s infinite ease-in-out;
 }
-.brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand-primary); box-shadow: 0 0 30px var(--brand-primary); animation: glowPulse 1.5s infinite; }
 
 .system-status {
   font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 4px;

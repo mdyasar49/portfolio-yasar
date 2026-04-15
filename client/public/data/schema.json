@@ -5,7 +5,8 @@
       "@type": "WebSite",
       "@id": "https://mern-portfolio-yasar-1.onrender.com/#website",
       "url": "https://mern-portfolio-yasar-1.onrender.com/",
-      "name": "Mohamed Yasar",
+      "name": "Mohamed Yasar Portfolio",
+      "alternateName": "Mohamed Yasar",
       "publisher": { "@id": "https://mern-portfolio-yasar-1.onrender.com/#person" }
     },
     {
