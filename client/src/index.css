@@ -182,31 +182,25 @@ img, video, canvas {
   .no-print { display: none !important; }
 }
 
-/* ─── Media Protection Protocol ───────────────────────────────── */
-/* Adds a supportive background to all logos and icons (PNG/SVG) 
-   to ensure visibility and premium presentation on the dark UI. */
-img[src$=".png"]:not(.project-img), 
-img[src$=".svg"],
+/* ─── Branding Asset Protection ─────────────────────────────── */
+/* Applies a professional black container specifically to core 
+   branding assets to ensure high visibility and consistency. */
+img[src*="logo"], 
+img[src*="favicon"], 
+img[src*="og-image"],
 .brand-logo {
-  background-color: #000000; /* Solid Black Base */
+  background-color: #000000; 
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   padding: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   transition: all 0.3s ease;
+  display: inline-block;
 }
 
-img[src$=".png"]:not(.project-img):hover, 
-img[src$=".svg"]:hover {
-  background-color: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px);
+img[src*="logo"]:hover, 
+img[src*="favicon"]:hover {
   border-color: rgba(51, 204, 255, 0.4);
-}
-
-/* Ensure project images don't get the icon-style background */
-.project-img {
-  background: none !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
+  transform: translateY(-2px);
 }
