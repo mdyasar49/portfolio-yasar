@@ -54,15 +54,15 @@
     </script>
   </head>
   <body>
-    <!-- Instant Component Loader -->
-    <div id="loader-injection-point"></div>
-    <script>
-      (function() {
-        fetch('/components/splash-loader.html')
-          .then(r => r.text())
-          .then(html => document.getElementById('loader-injection-point').innerHTML = html);
-      })();
-    </script>
+    <!-- Instant Component Loader (Inlined for Performance) -->
+    <div id="loader-injection-point">
+      <div id="initial-loader">
+        <div class="loader-branding">
+          <img src="/logo.png" alt="Logo" class="brand-logo" />
+        </div>
+        <div class="system-status">STATUS: INITIALIZING_ENGINE_MODULES...</div>
+      </div>
+    </div>
 
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
