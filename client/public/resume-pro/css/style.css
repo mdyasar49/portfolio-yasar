@@ -171,7 +171,6 @@ body.dark-mode-interactive b { color: #38bdf8; }
 @keyframes scan { 0% { top: 0% } 100% { top: 100% } }
 @keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
 
-
 /* Responsiveness Enhancements */
 @media screen and (max-width: 850px) {
     body { padding: 0; }

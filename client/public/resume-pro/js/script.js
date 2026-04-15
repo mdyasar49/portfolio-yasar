@@ -228,7 +228,6 @@ async function init() {
 }
 
 // --- Global Actions ---
-
 function getPDFEngine() {
     const engine = window.html2pdf;
     if (!engine) {
