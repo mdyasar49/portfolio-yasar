@@ -10,23 +10,33 @@ const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Global Request Logger
+// Global Request Orchestration - Attaching Credentials
 api.interceptors.request.use((config) => {
-    // console.log(`🚀 [API Request] ${config.method.toUpperCase()} ${config.url}`);
+    const token = localStorage.getItem('token');
+    if (token && token !== 'null') {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
 }, (error) => {
     return Promise.reject(error);
 });
 
-// Global Response Error Handler
+// Global Response Interceptor
 api.interceptors.response.use(
     (response) => response,
-    (error) => Promise.reject(error)
+    (error) => {
+        // Handle session expiration
+        if (error.response?.status === 401) {
+            // Optional: Redirect to login or clear token
+            // localStorage.removeItem('token');
+        }
+        return Promise.reject(error);
+    }
 );
 
 export const getProfile = async () => {
-  const response = await api.get('/profile');
-  return response.data;
+    const response = await api.get('/profile');
+    return response.data;
 };
 
 export const getVisitors = async (increment = false) => {
@@ -57,6 +67,72 @@ export const submitContact = async (formData) => {
             error: error.response?.data?.error || 'System core failure during transmission.' 
         };
     }
+};
+
+// [AUTHENTICATED_ENDPOINTS]
+
+/**
+ * Identify current admin session
+ */
+export const getMe = async () => {
+    const response = await api.get('/auth/me');
+    return response.data;
+};
+
+/**
+ * Update portfolio architecture
+ */
+export const updateProfile = async (profileData) => {
+    const response = await api.put('/profile', profileData);
+    return response.data;
+};
+
+/**
+ * Retrieve all contact transmissions
+ */
+export const getContacts = async () => {
+    const response = await api.get('/contact');
+    return response.data;
+};
+
+/**
+ * Purge a specific transmission
+ */
+export const deleteContact = async (id) => {
+    const response = await api.delete(`/contact/${id}`);
+    return response.data;
+};
+
+/**
+ * Approve architectural proposal
+ */
+export const approveProposal = async (id) => {
+    const response = await api.put(`/proposals/approve/${id}`);
+    return response.data;
+};
+
+/**
+ * Reject architectural proposal
+ */
+export const rejectProposal = async (id) => {
+    const response = await api.put(`/proposals/reject/${id}`);
+    return response.data;
+};
+
+/**
+ * Update security credentials
+ */
+export const changePassword = async (passData) => {
+    const response = await api.put('/auth/change-password', passData);
+    return response.data;
+};
+
+/**
+ * Toggle system maintenance lock
+ */
+export const toggleMaintenance = async (enabled) => {
+    const response = await api.put('/health/maintenance', { enabled });
+    return response.data;
 };
 
 export default api;

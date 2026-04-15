@@ -121,24 +121,43 @@ exports.getContacts = asyncHandler(async (req, res, next) => {
 exports.deleteContact = asyncHandler(async (req, res, next) => {
     const { id } = req.params;
 
-    // 1. Remove from MongoDB
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        await Contact.findByIdAndDelete(id);
+    if (!id) {
+        return res.status(400).json({ success: false, message: 'IDENTIFIER_REQUIRED_FOR_PURGE' });
     }
 
-    // 2. Remove from Local JSON (Filter by date as unique identifier for portable mode)
+    // 1. Remove from MongoDB
+    if (mongoose.connection && mongoose.connection.readyState === 1) {
+        try {
+            await Contact.findByIdAndDelete(id);
+        } catch (e) {
+            console.error('DB_DELETE_FAIL:', e.message);
+        }
+    }
+
+    // 2. Remove from Local JSON (Filter by ID or Timestamp)
     try {
         if (fs.existsSync(contactsFile)) {
-            let contacts = JSON.parse(fs.readFileSync(contactsFile, 'utf-8'));
-            // Note: In portable mode without Mongo IDs, we find by timestamp/match
-            contacts = contacts.filter(c => c._id !== id && c.createdAt !== id); 
-            fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
+            const content = fs.readFileSync(contactsFile, 'utf-8');
+            let contacts = JSON.parse(content || '[]');
+            
+            // Resilience: Check against multiple ID patterns used in local persistence
+            const initialCount = contacts.length;
+            contacts = contacts.filter(c => {
+                const cid = String(c._id || '');
+                const ctime = String(c.createdAt || '');
+                return cid !== id && ctime !== id;
+            });
+
+            if (contacts.length !== initialCount) {
+                fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
+                console.log(`🗑️ [Storage] LOCAL_TRANSMISSION_PURGED: ${id}`);
+            }
         }
     } catch (e) {
         console.error('LOCAL_DELETE_FAIL:', e.message);
     }
 
-    res.status(200).json({ success: true, message: 'Message purged from system.' });
+    res.status(200).json({ success: true, message: 'Message purged from system successfully.' });
 });
 
 

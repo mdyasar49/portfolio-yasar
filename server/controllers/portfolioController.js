@@ -123,7 +123,7 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
     // 2. If JSON fails or is missing, try to fetch from MongoDB
     if (!profile && mongoose.connection && mongoose.connection.readyState === 1) {
         try {
-            profile = await Profile.findOne();
+            profile = await Profile.findOne().lean();
         } catch (error) {
             console.error("MongoDB Query Error:", error.message);
         }
@@ -210,8 +210,9 @@ exports.getVisitors = asyncHandler(async (req, res, next) => {
 exports.updateProfile = asyncHandler(async (req, res, next) => {
     const newData = req.body;
 
-    if (!newData || typeof newData !== 'object') {
-        return res.status(400).json({ success: false, message: 'Invalid payload provided.' });
+    // Safety Protocol: Prevent overwriting with empty data
+    if (!newData || typeof newData !== 'object' || Object.keys(newData).length === 0) {
+        return res.status(400).json({ success: false, message: 'Invalid or empty payload. Synchronization aborted.' });
     }
 
     // 1. Persist to Local JSON (Primary for current architecture)

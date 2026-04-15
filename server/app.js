@@ -30,7 +30,7 @@ app.use(helmet({
 // 3. Resource Protection (Rate Limiting)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, 
-    max: 100, 
+    max: 500, // Increased for development and heavy local testing
     message: { success: false, message: 'Too many requests from this IP.' }
 });
 
@@ -42,18 +42,25 @@ const contactLimiter = rateLimit({
 
 // Middlewares (Express.js)
 app.use(logger);
+
+// 3. Resource Protection (Rate Limiting)
+// General API Rate Limiting
 app.use('/api', limiter);
-app.use('/api/contact', contactLimiter);
+
+// Moved specific contactLimiter to routes for better control
 
 
 // 2. Direct Browser Access Protection (Applied to ALL endpoints)
 app.use((req, res, next) => {
-    // Skip protection for the health check root path if needed, 
-    // or apply globally for maximum security.
     const origin = req.headers.origin;
     const referer = req.headers.referer;
+    const accept = req.headers.accept || '';
 
-    if (!origin && !referer && req.method === 'GET' && req.path !== '/') {
+    // Allow requests that explicitly accept JSON (e.g. API debugging tools)
+    // or requests accompanied by a valid CORS origin/referer
+    const isApiDiagnostic = req.path.startsWith('/api') && accept.includes('application/json');
+    
+    if (req.method === 'GET' && req.path !== '/' && !origin && !referer && !isApiDiagnostic) {
         // Use the first production URL for the return link if available
         const returnUrl = allowedOrigins.find(o => o.includes('onrender.com')) || 'https://mern-portfolio-yasar-1.onrender.com';
         
@@ -68,7 +75,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(express.json());
+// 4. Request Body Parsing Orchestration
+// Increased limit for complex portfolio data synchronization
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 const authRoutes = require('./routes/authRoutes');
 
