@@ -133,6 +133,7 @@ const Projects = memo(({ projects }) => {
                     <Box sx={{ position: 'relative', overflow: 'hidden', height: 320 }}>
                       <CardMedia
                         component="img"
+                        className="project-img"
                         height="100%"
                         image={project.image}
                         alt={project.name}
