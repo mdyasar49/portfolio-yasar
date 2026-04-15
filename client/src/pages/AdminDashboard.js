@@ -245,7 +245,7 @@ const AdminDashboard = () => {
                                             />
                                             <YAxis hide />
                                             <Tooltip 
-                                                contentStyle={{ bgcolor: '#010409', border: '1px solid rgba(51, 204, 255, 0.2)', borderRadius: 8, fontSize: '0.7rem', fontFamily: 'Syncopate' }}
+                                                contentStyle={{ bgcolor: '#000000', border: '1px solid rgba(51, 204, 255, 0.2)', borderRadius: 8, fontSize: '0.7rem', fontFamily: 'Syncopate' }}
                                                 itemStyle={{ color: '#33ccff', fontWeight: 900 }}
                                             />
                                             <Area 

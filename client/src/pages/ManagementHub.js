@@ -97,7 +97,7 @@ const ManagementHub = ({ publicView = false }) => {
 
     if (initialLoading || !profile) {
         return (
-            <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#010409' }}>
+            <Box sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', bgcolor: '#000000' }}>
                 <CircularProgress sx={{ color: '#33ccff' }} />
             </Box>
         );
@@ -822,7 +822,7 @@ const ManagementHub = ({ publicView = false }) => {
 
 
     return (
-        <Box sx={{ py: 4, pb: 10, bgcolor: publicView ? 'transparent' : '#010409', color: 'white' }}>
+        <Box sx={{ py: 4, pb: 10, bgcolor: publicView ? 'transparent' : '#000000', color: 'white' }}>
             <Container maxWidth={publicView ? "xl" : "lg"}>
                 {!publicView && (
                     <Box sx={{ mb: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>

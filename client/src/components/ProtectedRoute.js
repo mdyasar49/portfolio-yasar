@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
         return (
             <Box sx={{ 
                 height: '100vh', display: 'flex', flexDirection: 'column', 
-                alignItems: 'center', justifyContent: 'center', bgcolor: '#010409' 
+                alignItems: 'center', justifyContent: 'center', bgcolor: '#000000' 
             }}>
                 <CircularProgress sx={{ color: '#33ccff', mb: 2 }} />
                 <Typography sx={{ color: '#444', fontFamily: 'Syncopate', fontSize: '0.6rem' }}>

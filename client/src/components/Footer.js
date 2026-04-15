@@ -36,7 +36,7 @@ const Footer = ({ socials, name }) => {
     <Box 
       component="footer" 
       sx={{ 
-        bgcolor: '#010409',
+        bgcolor: '#000000',
         borderTop: '1px solid rgba(51, 204, 255, 0.1)', 
         pt: 12,
         pb: 12,

@@ -126,7 +126,7 @@ const Contact = () => {
                                 variant="contained"
                                 endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Send size={20} />}
                                 sx={{ 
-                                    py: 2, mt: 2, bgcolor: '#33ccff', color: '#010409', fontWeight: 900, 
+                                    py: 2, mt: 2, bgcolor: '#33ccff', color: '#000000', fontWeight: 900, 
                                     fontFamily: 'Syncopate', letterSpacing: 2,
                                     '&:hover': { bgcolor: '#00ffcc', boxShadow: '0 0 30px rgba(0, 255, 204, 0.3)' }
                                 }}

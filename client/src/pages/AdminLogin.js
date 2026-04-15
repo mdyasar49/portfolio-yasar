@@ -52,7 +52,7 @@ const AdminLogin = () => {
 
     return (
         <Box sx={{ 
-            height: '100vh', width: '100vw', bgcolor: '#010409', 
+            height: '100vh', width: '100vw', bgcolor: '#000000', 
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             position: 'relative', overflow: 'hidden' 
         }}>
