@@ -26,18 +26,32 @@ const CONFIG = {
         projects: './templates/projects.html',
         education: './templates/education.html',
         footer: './templates/footer.html'
+    },
+    components: {
+        'component-loading-overlay': './components/loading-overlay.html',
+        'component-resume-actions': './components/resume-actions.html',
+        'component-more-modal': './components/more-modal.html',
+        'component-dispatch-overlay': './components/dispatch-overlay.html'
     }
 };
 
 // --- Utilities ---
-const UI = {
-    overlay: document.getElementById('loading-overlay'),
-    message: document.getElementById('loader-message'),
-    progress: document.getElementById('loader-progress'),
-    main: document.getElementById('main-resume'),
-    actions: document.getElementById('resume-actions'),
-    shareModal: document.getElementById('more-modal'),
-    dispatchOverlay: document.getElementById('dispatch-overlay')
+let UI = {};
+
+const initUI = () => {
+    UI = {
+        overlay: document.getElementById('loading-overlay'),
+        message: document.getElementById('loader-message'),
+        progress: document.getElementById('loader-progress'),
+        main: document.getElementById('main-resume'),
+        actions: document.getElementById('resume-actions'),
+        shareModal: document.getElementById('more-modal'),
+        dispatchOverlay: document.getElementById('dispatch-overlay'),
+        themeToggle: document.getElementById('theme-toggle'),
+        moreToggle: document.getElementById('more-toggle'),
+        moreClose: document.getElementById('more-close'),
+        shareToggle: document.getElementById('share-toggle')
+    };
 };
 
 const setProgress = (percent, message) => {
@@ -89,6 +103,26 @@ async function loadTemplates() {
     });
     await Promise.all(promises);
     return results;
+}
+
+async function loadComponents() {
+    const keys = Object.keys(CONFIG.components);
+    const promises = keys.map(async (id) => {
+        const r = await fetch(CONFIG.components[id]);
+        const html = await r.text();
+        const container = document.getElementById(id);
+        if (container) container.innerHTML = html;
+    });
+    await Promise.all(promises);
+    initUI();
+    setupEventListeners();
+}
+
+function setupEventListeners() {
+    UI.shareToggle?.addEventListener('click', () => UI.shareModal.classList.remove('hidden'));
+    UI.moreToggle?.addEventListener('click', () => UI.shareModal.classList.remove('hidden'));
+    UI.moreClose?.addEventListener('click', () => UI.shareModal.classList.add('hidden'));
+    UI.themeToggle?.addEventListener('click', () => document.body.classList.toggle('dark-mode-interactive'));
 }
 
 // --- Renderers ---
@@ -179,6 +213,7 @@ const RenderEngine = {
 
 async function init() {
     try {
+        await loadComponents();
         const profile = await fetchProfile();
 
         // --- Apply Resume Content Overrides (Legacy details restoration) ---
@@ -300,35 +335,23 @@ async function executeAssetExtraction() {
 }
 window.executeAssetExtraction = executeAssetExtraction;
 
-document.getElementById('share-toggle')?.addEventListener('click', () => UI_MORE.modal.classList.remove('hidden'));
-
-// More Actions Logic
-const UI_MORE = {
-    modal: document.getElementById('more-modal'),
-    toggle: document.getElementById('more-toggle'),
-    close: document.getElementById('more-close')
-};
-
-UI_MORE.toggle?.addEventListener('click', () => UI_MORE.modal.classList.remove('hidden'));
-UI_MORE.close?.addEventListener('click', () => UI_MORE.modal.classList.add('hidden'));
-
 window.dispatchWhatsApp = () => {
     const url = window.location.origin + window.location.pathname;
     const text = encodeURIComponent(`Check out A. Mohamed Yasar's Elite Engineering Portfolio: ${url}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
-    UI_MORE.modal.classList.add('hidden');
+    UI.shareModal.classList.add('hidden');
 };
 
 window.copyPortfolioLink = () => {
     const url = window.location.origin + window.location.pathname;
     navigator.clipboard.writeText(url).then(() => {
         alert("PORTFOLIO_LINK_COPIED_TO_SYSTEM_CLIPBOARD");
-        UI_MORE.modal.classList.add('hidden');
+        UI.shareModal.classList.add('hidden');
     });
 };
 
 window.runAIAudit = async () => {
-    UI_MORE.modal.classList.add('hidden');
+    UI.shareModal.classList.add('hidden');
     UI.overlay.classList.remove('hidden');
     const messages = ["ANALYZING_STRUCTURE...", "PARSING_KEYWORDS...", "CALCULATING_ATS_SCORE...", "OPTIMIZING_VECTORS...", "VALIDATING_MODULES..."];
     for (const msg of messages) {
@@ -340,7 +363,5 @@ window.runAIAudit = async () => {
     UI.overlay.classList.add('hidden');
     alert("SYSTEM_DIAGNOSTICS_REPORT: Core architecture is optimized for high-performance indexing. All security protocols are active.");
 };
-
-document.getElementById('theme-toggle')?.addEventListener('click', () => document.body.classList.toggle('dark-mode-interactive'));
 
 init();

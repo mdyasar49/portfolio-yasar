@@ -1,0 +1,45 @@
+:root {
+  --brand-bg: #010409;
+  --brand-primary: #33ccff;
+  --brand-accent: #ff3366;
+  --brand-surface: #0d1117;
+}
+
+/* Elite Branding: Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--brand-bg); }
+::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 10px; border: 2px solid var(--brand-bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); box-shadow: 0 0 10px var(--brand-primary); }
+
+/* Pre-Bootstrap Elite UI Styles */
+body { background: var(--brand-bg); margin: 0; padding: 0; font-family: 'Outfit', sans-serif; overflow: hidden; color: #ffffff; }
+
+/* Hacker-Noir Splash Loader */
+#initial-loader {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: radial-gradient(circle at center, var(--brand-surface) 0%, var(--brand-bg) 100%);
+  z-index: 9999; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loader-branding { position: relative; display: flex; align-items: baseline; gap: 10px; margin-bottom: 20px; }
+.brand-title {
+  font-family: 'Syncopate', sans-serif; font-weight: 700; font-size: 3rem;
+  background: linear-gradient(270deg, var(--brand-accent), #ff9933);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  animation: brandPulse 2s infinite ease-in-out;
+}
+.brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--brand-primary); box-shadow: 0 0 30px var(--brand-primary); animation: glowPulse 1.5s infinite; }
+
+.system-status {
+  font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 4px;
+  color: rgba(255, 255, 255, 0.4); text-transform: uppercase;
+  position: relative; overflow: hidden; white-space: nowrap;
+  border-right: 2px solid var(--brand-primary);
+  animation: typing 3s steps(30, end) infinite, blink-caret .75s step-end infinite;
+}
+
+@keyframes brandPulse { 0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 51, 102, 0.2)); opacity: 0.9; } 50% { filter: drop-shadow(0 0 20px rgba(255, 51, 102, 0.6)); opacity: 1; } }
+@keyframes glowPulse { 0%, 100% { transform: scale(0.9); opacity: 0.6; } 50% { transform: scale(1.1); opacity: 1; } }
+@keyframes typing { from { width: 0 } to { width: 100% } }
+@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--brand-primary); } }

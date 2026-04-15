@@ -12,30 +12,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div id="loading-overlay">
-        <div class="loader-content">
-            <div class="loader-text" id="loader-message">INITIALIZING CORE...</div>
-            <div class="loader-bar"><div class="loader-progress" id="loader-progress"></div></div>
-        </div>
-    </div>
-    <!-- UI Controls -->
-    <div id="resume-actions" class="hidden-print">
-        <button onclick="window.downloadAsPDF()" title="Download PDF" class="action-btn">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/></svg>
-        </button>
-        <button onclick="window.print()" title="Print Resume" class="action-btn">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18,3H6V7H18M19,12A1,1 0 0,1 18,11A1,1 0 0,1 19,10A1,1 0 0,1 20,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z"/></svg>
-        </button>
-        <button id="share-toggle" title="Share Logic" class="action-btn" style="color: #00ffcc;">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.19C16.5,7.69 17.21,8 18,8A3,3 0 0,0 21,5A3,3 0 0,0 18,2A3,3 0 0,0 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.81C7.5,9.31 6.79,9 6,9A3,3 0 0,0 3,12A3,3 0 0,0 6,15C6.79,15 7.5,14.69 8.04,14.19L15.16,18.34C15.11,18.55 15.08,18.77 15.08,19C15.08,20.61 16.39,21.91 18,21.91C19.61,21.91 20.92,20.61 20.92,19C20.92,17.39 19.61,16.08 18,16.08Z"/></svg>
-        </button>
-        <button id="theme-toggle" title="Toggle Interactive Mode" class="action-btn">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20V4Z"/></svg>
-        </button>
-        <button id="more-toggle" title="More Protocols" class="action-btn" style="color: #ff3366;">
-            <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"/></svg>
-        </button>
-    </div>
+    <!-- UI Dynamic Components -->
+    <div id="component-loading-overlay"></div>
+    <div id="component-resume-actions"></div>
     <div class="resume-container hidden" id="main-resume">
         <header id="header-module"></header>
         <section id="summary-module"></section>
@@ -48,64 +27,8 @@
     <style>
         section { page-break-inside: avoid; }
     </style>
-    <!-- More Actions Modal -->
-    <div id="more-modal" class="modal hidden">
-        <div class="modal-backdrop"></div>
-        <div class="modal-content" style="border-color: rgba(51, 204, 255, 0.4);">
-            <div class="modal-header">
-                <div class="modal-subtitle">CORE_SYSTEM_PROTOCOLS</div>
-                <button class="modal-close" id="more-close">&times;</button>
-            </div>
-            <div class="modal-options">
-                <!-- Standard Share Protocols -->
-                <button class="share-opt" onclick="window.executeEmailDispatch()">
-                    <div class="opt-icon" style="color: #38bdf8;"><svg viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg></div>
-                    <div class="opt-text">
-                        <div class="opt-title">SYSTEM_DISPATCH [EMAIL]</div>
-                        <div class="opt-desc">Direct browser-bound sharing via Gmail</div>
-                    </div>
-                </button>
-                <button class="share-opt" onclick="window.executeAssetExtraction()">
-                    <div class="opt-icon" style="color: #00ffcc;"><svg viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/></svg></div>
-                    <div class="opt-text">
-                        <div class="opt-title">ASSET_EXTRACTION [PDF]</div>
-                        <div class="opt-desc">Local PDF compilation and direct share</div>
-                    </div>
-                </button>
-                <!-- Extended Protocols -->
-                <button class="share-opt" onclick="window.dispatchWhatsApp()">
-                    <div class="opt-icon" style="color: #25D366;"><svg viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.66 20.15 9.3 19.81 8.1 19.14L7.81 18.96L4.69 19.79L5.53 16.74L5.33 16.42C4.6 15.26 4.22 13.92 4.22 12.54C4.22 8.01 7.73 4.5 12.26 4.5C12.19 4.5 12.12 4.5 12.05 3.67M9.75 7.39C9.46 7.39 9 7.5 8.71 7.82C8.42 8.13 7.58 8.97 7.58 10.66C7.58 12.35 8.81 13.97 8.97 14.19C9.14 14.41 11.4 17.92 14.88 19.42C15.71 19.78 16.35 19.99 16.85 20.15C17.68 20.41 18.43 20.37 19.04 20.28C19.71 20.18 21.1 19.43 21.39 18.58C21.68 17.73 21.68 17.01 21.59 16.86C21.5 16.71 21.26 16.62 20.89 16.43C20.5 16.25 18.61 15.31 18.25 15.19C17.9 15.07 17.64 15.01 17.39 15.39C17.14 15.77 16.41 16.62 16.19 16.87C15.96 17.13 15.74 17.16 15.37 16.97C15 16.79 13.82 16.4 12.42 15.15C11.33 14.17 10.59 12.97 10.38 12.6C10.16 12.22 10.36 12.02 10.55 11.83C10.72 11.66 10.93 11.39 11.12 11.17C11.3 10.95 11.37 10.78 11.5 10.54C11.62 10.3 11.56 10.09 11.47 9.9C11.37 9.71 10.66 7.97 10.37 7.39C10.09 6.8 9.8 6.89 9.58 6.89C9.37 6.89 9.15 6.89 8.93 6.89L9.75 7.39Z"/></svg></div>
-                    <div class="opt-text">
-                        <div class="opt-title">WHATSAPP_DISPATCH</div>
-                        <div class="opt-desc">Direct text sharing via WhatsApp</div>
-                    </div>
-                </button>
-                <button class="share-opt" onclick="window.copyPortfolioLink()">
-                    <div class="opt-icon" style="color: #a855f7;"><svg viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg></div>
-                    <div class="opt-text">
-                        <div class="opt-title">COPY_ACCESS_LINK</div>
-                        <div class="opt-desc">Copy portfolio URL to clipboard</div>
-                    </div>
-                </button>
-                <button class="share-opt" onclick="window.runAIAudit()">
-                    <div class="opt-icon" style="color: #ff9933;"><svg viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M13,9V3.5L18.5,9M6,2C4.89,2 4,2.89 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2H6M10,18L7,15L8.41,13.58L10,15.17L13.59,11.58L15,13L10,18Z"/></svg></div>
-                    <div class="opt-text">
-                        <div class="opt-title">SYSTEM_DIAGNOSTICS</div>
-                        <div class="opt-desc">Initiate AI-Resume Audit [STABLE]</div>
-                    </div>
-                </button>
-            </div>
-        </div>
-    </div>
-    <!-- Dispatch Overlay -->
-    <div id="dispatch-overlay" class="dispatch-screen hidden">
-        <div class="dispatch-loader">
-            <div class="scan-line"></div>
-            <div class="dispatch-icon"><svg viewBox="0 0 24 24" width="48"><path fill="#38bdf8" d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7L18,11V15H12V7Z"/></svg></div>
-            <div class="dispatch-title">DISPATCHING_ASSET</div>
-            <div class="dispatch-status">SECURE_CHANNEL_ESTABLISHED</div>
-        </div>
-    </div>
+    <div id="component-more-modal"></div>
+    <div id="component-dispatch-overlay"></div>
     <!-- Main Engine -->
     <script src="js/script.js"></script>
 </body>
