@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, Fade } from '@mui/material';
-import { Shield, Cpu, Zap, Terminal } from 'lucide-react';
+import { Cpu, Zap, Terminal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
 
@@ -32,23 +32,39 @@ const SystemInterfaceHUD = () => {
     }}>
       <Fade in={isVisible} timeout={2000}>
         <Stack spacing={2}>
-          {/* Main Status Block */}
+          {/* Main Status Block with Holographic Scan Line */}
           <Box sx={{ 
-            p: 1.5, px: 2, 
-            background: 'rgba(1, 4, 9, 0.75)', 
-            backdropFilter: 'blur(15px)', 
-            border: '1px solid rgba(51, 204, 255, 0.15)', 
-            borderRadius: 2,
-            boxShadow: '0 20px 40px rgba(0,0,0,0.6)'
+            p: 2, 
+            background: 'rgba(5, 7, 10, 0.7)', 
+            backdropFilter: 'blur(20px)', 
+            border: '1px solid rgba(51, 204, 255, 0.2)', 
+            borderRadius: '20px 20px 20px 4px',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0, left: 0, right: 0, height: '100%',
+                background: 'linear-gradient(to bottom, transparent, rgba(51, 204, 255, 0.05), transparent)',
+                animation: 'hudScan 4s linear infinite',
+                pointerEvents: 'none'
+            }
           }}>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Box sx={{ 
-                width: 10, height: 10, borderRadius: '50%', bgcolor: '#00ffcc', 
-                animation: 'pulse 2s infinite', boxShadow: '0 0 10px #00ffcc' 
-              }} />
+            <Stack direction="row" spacing={3} alignItems="center">
+              <Box sx={{ position: 'relative' }}>
+                <Box sx={{ 
+                  width: 12, height: 12, borderRadius: '50%', bgcolor: '#00ffcc', 
+                  animation: 'pulse 2s infinite', boxShadow: '0 0 15px #00ffcc' 
+                }} />
+                <Box sx={{ 
+                  position: 'absolute', inset: -4, border: '1px solid #00ffcc', 
+                  borderRadius: '50%', opacity: 0.3, animation: 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite' 
+                }} />
+              </Box>
               <Box>
-                <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.62rem', display: 'block', letterSpacing: 2, fontFamily: 'Syncopate' }}>SESSION_DURATION</Typography>
-                <Typography variant="caption" sx={{ color: 'white', fontWeight: 800, fontFamily: 'monospace', fontSize: '0.75rem', opacity: 0.9 }}>{formatUptime(uptime)}</Typography>
+                <Typography variant="caption" sx={{ color: 'rgba(51, 204, 255, 0.6)', fontWeight: 900, fontSize: '0.6rem', display: 'block', letterSpacing: 3, fontFamily: 'Syncopate', mb: 0.5 }}>CORE_SESSION_RUNTIME</Typography>
+                <Typography variant="h6" sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1rem', letterSpacing: 2, textShadow: '0 0 10px rgba(255,255,255,0.3)' }}>{formatUptime(uptime)}</Typography>
               </Box>
             </Stack>
           </Box>
@@ -56,30 +72,34 @@ const SystemInterfaceHUD = () => {
           {/* Real-time Telemetry Widgets */}
           <Stack direction="row" spacing={1.5} sx={{ pointerEvents: 'auto' }}>
             {[
-              { icon: <Cpu size={12} color="#ff3366" />, label: 'SYSTEM_STABLE', color: '#ff3366' },
-              { icon: <Zap size={12} color="#33ccff" />, label: `${activeSessions}_ACTIVE_SESSIONS`, color: '#33ccff', active: true },
-              { icon: <Shield size={12} color="#888" />, label: 'ENCRYPTED', color: '#888' },
-              { icon: <Terminal size={12} color="#00ffcc" />, label: 'SIMULATE_COMMAND', color: '#00ffcc', active: true, link: '/#terminal' }
-
+              { icon: <Cpu size={14} />, label: 'SYSTEM_LOAD', value: '4.2%', color: '#ff3366' },
+              { icon: <Zap size={14} />, label: 'LIVE_NODES', value: activeSessions, color: '#33ccff', active: true },
+              { icon: <Terminal size={14} />, label: 'ACCESS_TERM', color: '#00ffcc', active: true, link: '/#terminal' }
             ].map((item, i) => {
               const content = (
                 <Box key={i} sx={{ 
-                  p: 1, px: 1.5, borderRadius: 1.5, 
-                  bgcolor: 'rgba(255,255,255,0.02)', 
-                  border: `1px solid ${item.active ? item.color + '44' : 'rgba(255,255,255,0.05)'}`,
-                  display: 'flex', alignItems: 'center', gap: 1, 
-                  color: item.active ? item.color : '#555',
-                  boxShadow: item.active ? `0 0 15px ${item.color}11` : 'none',
-                  transition: '0.3s ease',
+                  p: 1.5, px: 2, borderRadius: '12px', 
+                  bgcolor: 'rgba(5, 7, 10, 0.6)', 
+                  backdropFilter: 'blur(10px)',
+                  border: `1px solid ${item.active ? item.color + '33' : 'rgba(255,255,255,0.05)'}`,
+                  display: 'flex', flexDirection: 'column', gap: 0.5,
+                  minWidth: 100,
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                   cursor: item.link ? 'pointer' : 'default',
                   '&:hover': item.link ? { 
-                    bgcolor: 'rgba(255,255,255,0.05)',
+                    transform: 'translateY(-5px)',
                     borderColor: item.color,
-                    boxShadow: `0 0 20px ${item.color}33`
+                    boxShadow: `0 10px 20px -5px ${item.color}33`,
+                    bgcolor: `${item.color}08`
                   } : {}
                 }}>
-                  {item.icon}
-                  <Typography variant="caption" sx={{ fontSize: '0.58rem', fontWeight: 900, letterSpacing: 1.5, fontFamily: 'Syncopate' }}>{item.label}</Typography>
+                  <Stack direction="row" alignItems="center" spacing={1} sx={{ color: item.color, mb: 0.5 }}>
+                    {item.icon}
+                    <Typography variant="caption" sx={{ fontSize: '0.55rem', fontWeight: 900, letterSpacing: 1, fontFamily: 'Syncopate' }}>{item.label}</Typography>
+                  </Stack>
+                  {item.value && (
+                    <Typography sx={{ color: 'white', fontSize: '0.75rem', fontWeight: 900, fontFamily: 'monospace', pl: 3.5 }}>{item.value}</Typography>
+                  )}
                 </Box>
               );
 
@@ -93,10 +113,11 @@ const SystemInterfaceHUD = () => {
         </Stack>
       </Fade>
 
-
       <style>
         {`
           @keyframes pulse { 0% { opacity: 0.5; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } 100% { opacity: 0.5; transform: scale(0.9); } }
+          @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+          @keyframes hudScan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
         `}
       </style>
     </Box>

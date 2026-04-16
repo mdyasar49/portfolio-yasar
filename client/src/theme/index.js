@@ -8,38 +8,46 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#6366f1', // Indigo
-      light: '#818cf8',
-      dark: '#4f46e5',
+      main: '#33ccff', // Engineering Cyan
+      light: '#70e0ff',
+      dark: '#0099cc',
     },
     secondary: {
-      main: '#ec4899', // Pink/Magenta
+      main: '#ff3366', // Crimson Accent
     },
     background: {
-      default: '#030712', // Deep near-black
-      paper: '#111827',
+      default: '#010409', // Deepest Obsidian
+      paper: 'rgba(13, 17, 23, 0.7)',
     },
     text: {
-      primary: '#f9fafb',
-      secondary: '#9ca3af',
+      primary: '#f0f6fc',
+      secondary: '#94a3b8',
     },
   },
   typography: {
-    fontFamily: '"Outfit", "Inter", "Roboto", sans-serif',
+    fontFamily: '"Outfit", "Inter", sans-serif',
     h1: {
-      fontSize: '4.5rem',
-      fontWeight: 800,
-      letterSpacing: '-0.02em',
-      lineHeight: 1.1,
+      fontFamily: '"Syncopate", sans-serif',
+      fontWeight: 900,
+      letterSpacing: '-2px',
     },
     h2: {
-      fontSize: '2.5rem',
-      fontWeight: 700,
-      letterSpacing: '-0.01em',
+      fontFamily: '"Syncopate", sans-serif',
+      fontWeight: 900,
+      letterSpacing: '-1px',
     },
     h3: {
-      fontSize: '1.75rem',
-      fontWeight: 600,
+      fontFamily: '"Syncopate", sans-serif',
+      fontWeight: 800,
+    },
+    h4: {
+      fontFamily: '"Syncopate", sans-serif',
+      fontWeight: 800,
+    },
+    button: {
+      fontFamily: '"Syncopate", sans-serif',
+      fontWeight: 900,
+      letterSpacing: '1px',
     },
   },
   shape: {
@@ -49,17 +57,16 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
-          padding: '10px 24px',
-          fontWeight: 600,
+          textTransform: 'uppercase',
+          padding: '12px 28px',
           borderRadius: 12,
-          transition: 'all 0.3s ease',
+          transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         },
         containedPrimary: {
-          background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-          boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.39)',
+          background: 'linear-gradient(45deg, #00F2FE 0%, #4FACFE 100%)',
+          boxShadow: '0 10px 20px -10px rgba(0, 242, 254, 0.5)',
           '&:hover': {
-            boxShadow: '0 6px 20px rgba(99, 102, 241, 0.45)',
+            boxShadow: '0 15px 30px -10px rgba(0, 242, 254, 0.6)',
             transform: 'translateY(-2px)',
           },
         },
@@ -69,6 +76,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
         },
       },
     },

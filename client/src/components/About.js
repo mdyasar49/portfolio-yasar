@@ -1,117 +1,141 @@
 import React, { memo } from 'react';
-import { Box, Typography, Grid, Paper, Stack } from '@mui/material';
+import { Box, Typography, Grid, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
 
 const About = memo(({ profile }) => {
   if (!profile) return null;
   return (
-    <Box id="about" sx={{ py: 15 }}>
+    <Box id="about" sx={{ py: 20, position: 'relative' }}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 1 }}
         viewport={{ once: true }}
       >
-        <Typography variant="h2" sx={{ 
-          fontFamily: 'Syncopate', fontWeight: 900, mb: 8, textAlign: 'center', letterSpacing: 4, fontSize: { xs: '2rem', md: '3.5rem' } 
-        }}>
-          ENGINEERING <Box component="span" sx={{ color: '#ff3366' }}>PROFILE</Box>
-        </Typography>
-
-        <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={7}>
-            <Box sx={{ p: 4, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', backdropFilter: 'blur(10px)' }}>
-              <Typography variant="body1" sx={{ color: '#cbd5e1', lineHeight: 2, fontSize: '1.1rem', textAlign: 'justify', mb: 4 }}>
-                {profile?.summary}
-              </Typography>
+        <Grid container spacing={8} alignItems="center">
+          {/* Creative Identity Panel */}
+          <Grid item xs={12} md={5}>
+            <Box sx={{ position: 'relative' }}>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+                style={{
+                  position: 'absolute',
+                  inset: -40,
+                  border: '1px solid rgba(51, 204, 255, 0.1)',
+                  borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%',
+                  pointerEvents: 'none'
+                }}
+              />
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                style={{
+                  position: 'absolute',
+                  inset: -20,
+                  border: '1px dashed rgba(255, 51, 102, 0.1)',
+                  borderRadius: '62% 38% 37% 63% / 56% 59% 41% 44%',
+                  pointerEvents: 'none'
+                }}
+              />
               
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} sx={{ mb: 4 }}>
-                <Box sx={{ 
-                    flex: 1, p: 3, borderRadius: '20px', 
-                    border: '1px solid rgba(51, 204, 255, 0.2)', 
-                    background: 'linear-gradient(135deg, rgba(51, 204, 255, 0.05), transparent)',
-                    position: 'relative', overflow: 'hidden'
+              <Box sx={{ 
+                position: 'relative', 
+                aspectRatio: '1/1',
+                background: 'rgba(255, 255, 255, 0.02)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '30px',
+                border: '1px solid rgba(255, 255, 255, 0.05)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                boxShadow: '0 40px 80px rgba(0,0,0,0.5)'
+              }}>
+                <Typography variant="h1" sx={{ 
+                  fontSize: '12rem', fontWeight: 900, color: 'white', 
+                  opacity: 0.03, position: 'absolute', fontFamily: 'Syncopate' 
                 }}>
-                  <Typography variant="caption" sx={{ color: '#33ccff88', fontWeight: 900, letterSpacing: 2, display: 'block', mb: 1 }}>[OPERATIONAL_HISTORY]</Typography>
-                  <Typography variant="h3" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'monospace' }}>2.5+</Typography>
-                  <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>ANNUAL_CYCLES</Typography>
-                </Box>
-                <Box sx={{ 
-                    flex: 1, p: 3, borderRadius: '20px', 
-                    border: '1px solid rgba(255, 51, 102, 0.2)', 
-                    background: 'linear-gradient(135deg, rgba(255, 51, 102, 0.05), transparent)',
-                    position: 'relative', overflow: 'hidden'
-                }}>
-                  <Typography variant="caption" sx={{ color: '#ff336688', fontWeight: 900, letterSpacing: 2, display: 'block', mb: 1 }}>[DELIVERED_ASSETS]</Typography>
-                  <Typography variant="h3" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'monospace' }}>15+</Typography>
-                  <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>PRODUCTION_DEPLOYS</Typography>
-                </Box>
-              </Stack>
-
-              {profile?.softSkills && (
-                <Stack direction="row" flexWrap="wrap" gap={1.5}>
-                  {profile.softSkills.map((skill) => (
-                    <Typography key={skill} sx={{ 
-                      fontSize: '0.7rem', fontWeight: 900, color: '#33ccff', px: 1.5, py: 0.5, borderRadius: 1, border: '1px solid rgba(51, 204, 255, 0.1)', bgcolor: 'rgba(51, 204, 255, 0.03)', letterSpacing: 1
-                    }}>
-                      {skill.toUpperCase()}
-                    </Typography>
-                  ))}
+                  BIO
+                </Typography>
+                
+                <Stack spacing={1} alignItems="center" sx={{ zIndex: 1 }}>
+                   <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2 }}>IDENTITY</Typography>
+                   <Box sx={{ height: 2, width: 60, bgcolor: '#ff3366', boxShadow: '0 0 10px #ff3366' }} />
+                   <Typography variant="overline" sx={{ color: '#666', letterSpacing: 4, mt: 2 }}>CORE_MODULE_v2</Typography>
                 </Stack>
-              )}
+
+                {/* Corner Accents */}
+                <Box sx={{ position: 'absolute', top: 20, left: 20, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' }} />
+                <Box sx={{ position: 'absolute', bottom: 20, right: 20, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' }} />
+              </Box>
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={5}>
-            <Box sx={{ position: 'relative', p: { xs: 2, md: 4 } }}>
-              {/* Complex HUD Overlay */}
-              <Box sx={{ 
-                  position: 'absolute', inset: 0, 
-                  border: '1px solid rgba(51, 204, 255, 0.08)', 
-                  borderRadius: '50%',
-                  animation: 'spin 60s linear infinite',
-                  pointerEvents: 'none',
-                  display: { xs: 'none', md: 'block' }
-              }} />
-              <Box sx={{ 
-                  position: 'absolute', inset: 20, 
-                  border: '2px dashed rgba(255, 51, 102, 0.05)', 
-                  borderRadius: '50%',
-                  animation: 'spin-reverse 40s linear infinite',
-                  pointerEvents: 'none',
-                  display: { xs: 'none', md: 'block' }
-              }} />
-              
-              <Paper sx={{ 
-                  p: 2, borderRadius: 10, bgcolor: 'rgba(1, 4, 9, 0.5)', 
-                  backdropFilter: 'blur(30px)',
-                  border: '1px solid rgba(255,255,255,0.05)', 
-                  position: 'relative',
-                  overflow: 'hidden',
-                  aspectRatio: '1/1',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxShadow: '0 50px 100px rgba(0,0,0,0.5)'
-              }}>
-                <Box sx={{ textAlign: 'center' }}>
-                   <Typography variant="h1" sx={{ 
-                       color: '#111', fontWeight: 900, 
-                       fontSize: { xs: '6rem', md: '12rem' }, 
-                       opacity: 0.8,
-                       textShadow: '0 0 40px rgba(51, 204, 255, 0.1)'
-                   }}>
-                       MY
-                   </Typography>
+          {/* Data & Narrative Panel */}
+          <Grid item xs={12} md={7}>
+            <Stack spacing={5}>
+              <Box>
+                <Typography variant="overline" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 5, mb: 1, display: 'block' }}>&gt; SYSTEM_DESCRIPTION</Typography>
+                <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '1.8rem' }}>
+                  Engineering <span style={{ color: '#ff3366' }}>Scalable</span> Realities
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#94a3b8', fontSize: '1.1rem', lineHeight: 2, textAlign: 'justify' }}>
+                  {profile.summary}
+                </Typography>
+              </Box>
+
+              <Grid container spacing={3}>
+                {[
+                  { label: 'OPERATIONAL_LEVEL', value: 'SENIOR_FULL_STACK', color: '#33ccff' },
+                  { label: 'RUNTIME_EXPERIENCE', value: '2.5_ANNUAL_CYCLES', color: '#ff3366' },
+                  { label: 'DEPLOYMENT_SUCCESS', value: '15+_UNITS', color: '#00ffcc' }
+                ].map((stat, i) => (
+                  <Grid item xs={12} sm={4} key={i}>
+                    <Box sx={{ 
+                      p: 2.5, borderRadius: '16px', 
+                      bgcolor: 'rgba(255, 255, 255, 0.02)', 
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      transition: '0.3s ease',
+                      '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)', borderColor: stat.color }
+                    }}>
+                      <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1.5, display: 'block', mb: 1, fontSize: '0.6rem', fontFamily: 'Syncopate' }}>{stat.label}</Typography>
+                      <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '0.85rem' }}>{stat.value}</Typography>
+                      <Box sx={{ mt: 1.5, height: 2, width: '100%', bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 10, overflow: 'hidden' }}>
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          whileInView={{ width: '100%' }}
+                          transition={{ duration: 1, delay: 0.5 + i * 0.2 }}
+                          style={{ height: '100%', backgroundColor: stat.color, boxShadow: `0 0 10px ${stat.color}` }}
+                        />
+                      </Box>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
+
+              {profile?.softSkills && (
+                <Box>
+                  <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 3, mb: 2, display: 'block' }}>&gt; CORE_COMPETENCIES</Typography>
+                  <Stack direction="row" flexWrap="wrap" gap={1.5}>
+                    {profile.softSkills.map((skill) => (
+                      <Box key={skill} sx={{ 
+                        px: 2, py: 0.8, borderRadius: '8px', 
+                        border: '1px solid rgba(255, 255, 255, 0.05)',
+                        bgcolor: 'rgba(255, 255, 255, 0.01)',
+                        color: 'rgba(255, 255, 255, 0.6)',
+                        fontSize: '0.65rem', fontWeight: 900, letterSpacing: 1,
+                        transition: '0.3s',
+                        '&:hover': { color: '#33ccff', borderColor: '#33ccff', transform: 'translateY(-2px)' }
+                      }}>
+                        {skill.toUpperCase()}
+                      </Box>
+                    ))}
+                  </Stack>
                 </Box>
-                
-                {/* Real-time Data Labels */}
-                <Box sx={{ position: 'absolute', bottom: 30, left: 30 }}>
-                    <Typography sx={{ color: '#33ccff', fontWeight: 900, fontSize: '0.55rem', fontFamily: 'monospace', opacity: 0.6 }}>BIOMETRIC_ID: AUTHORIZED</Typography>
-                    <Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.55rem', fontFamily: 'monospace', opacity: 0.6 }}>ENCRYPTION: ACTIVE</Typography>
-                </Box>
-              </Paper>
-            </Box>
+              )}
+            </Stack>
           </Grid>
         </Grid>
       </motion.div>

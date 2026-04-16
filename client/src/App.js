@@ -7,6 +7,7 @@ import React, { useEffect, lazy, Suspense } from 'react';
 import { ThemeProvider, CssBaseline, Box, keyframes, Typography, Stack } from '@mui/material';
 
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import theme from './theme/index';
 import useProfile from './hooks/useProfile';
 import Header from './components/Header';
@@ -70,6 +71,7 @@ const ScrollToHash = () => {
 };
 
 const PublicApp = () => {
+  const location = useLocation();
   const { profile, loading, error, errorType, maintenanceMode, retry } = useProfile();
 
   // ── Elite System Boot Sequence ──
@@ -210,32 +212,41 @@ const PublicApp = () => {
       <Header />
       <SystemInterfaceHUD />
       <Box sx={{ pt: 10 }}>
-        <Suspense fallback={
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 20 }}>
-            <Box 
-              component="img"
-              src="/logo.png"
-              alt="Logo"
-              sx={{ 
-                height: 60,
-                width: 'auto',
-                mb: 2,
-                filter: 'drop-shadow(0 0 15px rgba(51, 204, 255, 0.3))',
-                animation: `${pulseGlow} 2s infinite ease-in-out`
-              }}
-            />
-            <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_MODULE</Typography>
-          </Box>
-        }>
-          <Routes>
-            <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
-            <Route path="/resume"       element={<Resume profile={profile} />} />
-            <Route path="/architecture" element={<Documentation profile={profile} />} />
-            <Route path="/terminal"     element={<AdministrativeTerminal publicView={true} />} />
-            <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
-
-          </Routes>
-        </Suspense>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <Suspense fallback={
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 20 }}>
+                <Box 
+                  component="img"
+                  src="/logo.png"
+                  alt="Logo"
+                  sx={{ 
+                    height: 60,
+                    width: 'auto',
+                    mb: 2,
+                    filter: 'drop-shadow(0 0 15px rgba(51, 204, 255, 0.3))',
+                    animation: `${pulseGlow} 2s infinite ease-in-out`
+                  }}
+                />
+                <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_MODULE</Typography>
+              </Box>
+            }>
+              <Routes location={location}>
+                <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
+                <Route path="/resume"       element={<Resume profile={profile} />} />
+                <Route path="/architecture" element={<Documentation profile={profile} />} />
+                <Route path="/terminal"     element={<AdministrativeTerminal publicView={true} />} />
+                <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
+              </Routes>
+            </Suspense>
+          </motion.div>
+        </AnimatePresence>
       </Box>
     </>
   );
