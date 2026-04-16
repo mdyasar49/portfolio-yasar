@@ -90,6 +90,46 @@ export const synchronizeArchitecture = async (architecturePayload) => {
 };
 
 /**
+ * fetchPendingModifications
+ * @desc Retrieves all architectural proposals waiting for approval.
+ */
+export const fetchPendingModifications = async () => {
+    return await axiosInstance.get('/proposals');
+};
+
+/**
+ * authorizeArchitecturalChange
+ * @desc Approves a specific proposal and hydrates the live profile with its content.
+ */
+export const authorizeArchitecturalChange = async (proposalId) => {
+    return await axiosInstance.put(`/proposals/approve/${proposalId}`);
+};
+
+/**
+ * dismissArchitecturalChange
+ * @desc Rejects a proposed change and moves it to history.
+ */
+export const dismissArchitecturalChange = async (proposalId) => {
+    return await axiosInstance.put(`/proposals/reject/${proposalId}`);
+};
+
+/**
+ * dispatchArchitecturalProposal
+ * @desc Submits a new proposal for system refinement from the public interface.
+ */
+export const dispatchArchitecturalProposal = async (proposalPayload) => {
+    return await axiosInstance.post('/proposals/submit', proposalPayload);
+};
+
+/**
+ * rotateSecurityCredentials
+ * @desc Updates administrative password credentials.
+ */
+export const rotateSecurityCredentials = async (credentials) => {
+    return await axiosInstance.put('/auth/change-password', credentials);
+};
+
+/**
  * fetchTransmissionLogs
  * @desc Retrieves the list of messages sent through the contact form.
  */

@@ -32,12 +32,6 @@ const spin = keyframes`
   100% { transform: rotate(360deg); }
 `;
 
-const pulseGlow = keyframes`
-  0%   { transform: scale(0.9); opacity: 0.5; box-shadow: 0 0 5px #33ccff; }
-  50%  { transform: scale(1.1); opacity: 1; box-shadow: 0 0 20px #33ccff; }
-  100% { transform: scale(0.9); opacity: 0.5; box-shadow: 0 0 5px #33ccff; }
-`;
-
 /**
  * ScrollToTop Helper
  * Resets the window scroll position to zero on route changes.
