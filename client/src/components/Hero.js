@@ -101,18 +101,43 @@ const Hero = memo(({ profile }) => {
               }}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00ffcc', animation: 'pulse 1.5s infinite' }} />
                 <Typography sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.75rem', letterSpacing: 3, fontFamily: 'monospace' }}>
-                  SYSTEM_ACTIVE // AVAILABLE_FOR_HIRE
+                  Available to join immediately
                 </Typography>
               </Box>
             </motion.div>
 
             {/* Name Heading */}
             <Box sx={{ position: 'relative' }}>
-              <Typography variant="h1" className="hero-gradient-text" sx={{ 
-                fontSize: { xs: '3.5rem', md: '8rem', lg: '10rem' },
-                lineHeight: 0.9, fontWeight: 900,
-                filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))'
-              }}>
+              <Typography 
+                variant="h1" 
+                className="hero-gradient-text" 
+                sx={{ 
+                  fontSize: { xs: '3.5rem', md: '7rem', lg: '9rem' },
+                  lineHeight: 0.9, 
+                  fontWeight: 900,
+                  filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
+                  position: 'relative',
+                  '&::before, &::after': {
+                    content: `"${profile.name}"`,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    opacity: 0.8,
+                  },
+                  '&::before': {
+                    color: '#ff3366',
+                    zIndex: -1,
+                    animation: 'glitch 3s infinite linear alternate-reverse',
+                  },
+                  '&::after': {
+                    color: '#33ccff',
+                    zIndex: -2,
+                    animation: 'glitch 2s infinite linear alternate-reverse',
+                  }
+                }}
+              >
                 {profile.name}
               </Typography>
               {/* Floating tech label */}
@@ -139,14 +164,24 @@ const Hero = memo(({ profile }) => {
               </Typography>
             </motion.div>
 
-            {/* Summary */}
-            <Typography variant="body1" sx={{ 
-              maxWidth: '800px', color: '#64748b', 
-              fontSize: { xs: '0.9rem', md: '1.2rem' },
-              lineHeight: 1.8, fontWeight: 500
-            }}>
-              {profile.summary}
-            </Typography>
+            {/* Sumary */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 0.8 }}
+            >
+              <Typography variant="body1" sx={{ 
+                maxWidth: '850px', 
+                color: 'text.secondary', 
+                fontSize: { xs: '1rem', md: '1.25rem' },
+                lineHeight: 1.8, 
+                fontWeight: 400,
+                letterSpacing: '0.01em',
+                textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+              }}>
+                {profile.summary}
+              </Typography>
+            </motion.div>
 
             {/* CTAs */}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mt: 2 }}>
@@ -165,7 +200,7 @@ const Hero = memo(({ profile }) => {
                   '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 25px 50px rgba(0, 210, 255, 0.5)' }
                 }}
               >
-                ACCESS_RESUME
+                VIEW_RESUME
               </Button>
               <Button 
                 variant="outlined" 
@@ -181,7 +216,7 @@ const Hero = memo(({ profile }) => {
                   '&:hover': { borderColor: 'white', background: 'rgba(255,255,255,0.05)' }
                 }}
               >
-                EXPLORE_PROJECTS
+                VIEW_PORTFOLIO
               </Button>
             </Stack>
           </Stack>

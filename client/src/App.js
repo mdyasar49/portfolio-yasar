@@ -16,6 +16,7 @@ import NetworkErrorScreen from './components/NetworkErrorScreen';
 import SystemInterfaceHUD from './components/SystemInterfaceHUD';
 import ProtectedRoute from './components/ProtectedRoute';
 import MaintenancePage from './pages/MaintenancePage';
+import DynamicBackground from './components/DynamicBackground';
 
 // ─── Lazy Loaded Modules ──────────────────────────────────
 const Resume = lazy(() => import('./pages/Resume'));
@@ -141,8 +142,8 @@ const PublicApp = () => {
           <Stack spacing={2} alignItems="center" sx={{ width: '100%', maxWidth: 400 }}>
             <Box sx={{ width: '100%', px: 4 }}>
                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography variant="overline" sx={{ color: '#00F2FE', fontWeight: 900, letterSpacing: 2 }}>BOOT_INIT</Typography>
-                  <Typography variant="overline" sx={{ color: '#444', fontWeight: 900 }}>99.9%_STABLE</Typography>
+                  <Typography variant="overline" sx={{ color: '#00F2FE', fontWeight: 900, letterSpacing: 2 }}>RESOURCES_LOADING</Typography>
+                  <Typography variant="overline" sx={{ color: '#444', fontWeight: 900 }}>SYSTEM_STABILITY: 100%</Typography>
                </Box>
                <Box sx={{ height: 4, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 10, position: 'relative', overflow: 'hidden' }}>
                   <Box sx={{ 
@@ -155,13 +156,13 @@ const PublicApp = () => {
 
             <Box sx={{ mt: 4, px: 2, py: 1, bgcolor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
                <Typography variant="caption" sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.65rem', display: 'block', mb: 0.5 }}>
-                 >_ INITIALIZING_ENGINE_CORES... [OK]
+                 >_ INITIALIZING_RESOURCE_CORE... [OK]
                </Typography>
                <Typography variant="caption" sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.65rem', display: 'block', mb: 0.5 }}>
-                 >_ CALIBRATING_UI_MANIFEST... [OK]
+                 >_ CALIBRATING_USER_INTERFACE... [OK]
                </Typography>
                <Typography variant="caption" sx={{ color: '#00F2FE', fontFamily: 'monospace', fontSize: '0.65rem', display: 'block', animation: 'blink 0.5s infinite' }}>
-                 >_ DEPLOYING_VISUAL_INTERFACE...
+                 >_ DEPLOYING_CORE_EXPERIENCE...
                </Typography>
             </Box>
           </Stack>
@@ -210,6 +211,7 @@ const PublicApp = () => {
   return (
     <>
       <Header />
+      <DynamicBackground />
       <SystemInterfaceHUD />
       <Box sx={{ pt: 10 }}>
         <AnimatePresence mode="wait">
@@ -234,7 +236,7 @@ const PublicApp = () => {
                     animation: `${pulseGlow} 2s infinite ease-in-out`
                   }}
                 />
-                <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>INITIALIZING_MODULE</Typography>
+                <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>CORE_MODULE_LOADING</Typography>
               </Box>
             }>
               <Routes location={location}>
@@ -272,7 +274,7 @@ const AppRoutes = () => {
               animation: `${pulseGlow} 2s infinite ease-in-out`
             }}
           />
-          <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>SECURE_AUTH_INIT</Typography>
+          <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>SECURE_AUTHENTICATION_LOADING</Typography>
         </Box>
       }>
         <Routes>
@@ -311,15 +313,24 @@ const App = () => {
       setTimeout(() => {
         loader.remove();
         document.body.style.overflow = 'auto'; // Re-enable scrolling
-      }, 800); // Match transition duration in branding.css
+      }, 800); 
     } else {
       document.body.style.overflow = 'auto';
     }
+
+    // Global Spotlight Tracking
+    const handleMouseMove = (e) => {
+      document.documentElement.style.setProperty('--x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--y', `${e.clientY}px`);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <div id="spotlight" />
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <ScrollToHash />

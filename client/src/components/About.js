@@ -61,9 +61,9 @@ const About = memo(({ profile }) => {
                 </Typography>
                 
                 <Stack spacing={1} alignItems="center" sx={{ zIndex: 1 }}>
-                   <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2 }}>IDENTITY</Typography>
+                   <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2 }}>SUMMARY</Typography>
                    <Box sx={{ height: 2, width: 60, bgcolor: '#ff3366', boxShadow: '0 0 10px #ff3366' }} />
-                   <Typography variant="overline" sx={{ color: '#666', letterSpacing: 4, mt: 2 }}>CORE_MODULE_v2</Typography>
+                   <Typography variant="overline" sx={{ color: '#00ffcc', letterSpacing: 4, mt: 2, fontWeight: 900 }}>PROFESSIONAL_DATA</Typography>
                 </Stack>
 
                 {/* Corner Accents */}
@@ -77,9 +77,9 @@ const About = memo(({ profile }) => {
           <Grid item xs={12} md={7}>
             <Stack spacing={5}>
               <Box>
-                <Typography variant="overline" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 5, mb: 1, display: 'block' }}>&gt; SYSTEM_DESCRIPTION</Typography>
+                <Typography variant="overline" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 5, mb: 1, display: 'block' }}>&gt; EXECUTIVE_SUMMARY</Typography>
                 <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '1.8rem' }}>
-                  Engineering <span style={{ color: '#ff3366' }}>Scalable</span> Realities
+                  Engineering <span style={{ color: '#ff3366' }}>Modern</span> Solutions
                 </Typography>
                 <Typography variant="body1" sx={{ color: '#94a3b8', fontSize: '1.1rem', lineHeight: 2, textAlign: 'justify' }}>
                   {profile.summary}
@@ -88,9 +88,9 @@ const About = memo(({ profile }) => {
 
               <Grid container spacing={3}>
                 {[
-                  { label: 'OPERATIONAL_LEVEL', value: 'SENIOR_FULL_STACK', color: '#33ccff' },
-                  { label: 'RUNTIME_EXPERIENCE', value: '2.5_ANNUAL_CYCLES', color: '#ff3366' },
-                  { label: 'DEPLOYMENT_SUCCESS', value: '15+_UNITS', color: '#00ffcc' }
+                  { label: 'EXPERTISE_LEVEL', value: 'FULL_STACK_DEVELOPER', color: '#33ccff' },
+                  { label: 'WORK_EXPERIENCE', value: '2.5_YEARS', color: '#ff3366' },
+                  { label: 'PROJECTS_LAUNCHED', value: '15+_TOTAL', color: '#00ffcc' }
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>
                     <Box sx={{ 

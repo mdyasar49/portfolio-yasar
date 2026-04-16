@@ -68,8 +68,8 @@ const Footer = ({ socials, name }) => {
               }}
             />
             <Stack direction="row" spacing={2} sx={{ opacity: 0.5 }}>
-              <Typography variant="caption" sx={{ fontFamily: 'monospace', color: '#00ffcc' }}>[SESSION_ID: {sessionId}]</Typography>
-              <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>[STATUS: SECURED]</Typography>
+              <Typography variant="caption" sx={{ fontFamily: 'monospace', color: '#00ffcc' }}>[LICENSE_ID: {sessionId}]</Typography>
+              <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>[STATUS: VERIFIED]</Typography>
             </Stack>
           </Stack>
 
@@ -116,14 +116,14 @@ const Footer = ({ socials, name }) => {
           {/* Analytics HUD */}
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} sx={{ mb: 8, width: '100%', justifyContent: 'center' }}>
              <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
-                <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>VISITOR_ANALYTICS</Typography>
+                <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>TRAFFIC_METRICS</Typography>
                 <Stack direction="row" spacing={2} alignItems="center">
                    <Box sx={{ width: 40, height: 40, bgcolor: 'rgba(51, 204, 255, 0.05)', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Terminal size={18} color="#33ccff" />
                    </Box>
                    <Box>
                       <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1.2rem' }}>{visitorCount > 0 ? visitorCount.toLocaleString() : '...'}</Typography>
-                      <Typography variant="caption" sx={{ color: '#00ffcc', fontSize: '0.6rem' }}>NODES_REGISTERED_TOTAL</Typography>
+                      <Typography variant="caption" sx={{ color: '#00ffcc', fontSize: '0.6rem' }}>UNIQUE_VISITORS_TOTAL</Typography>
                    </Box>
                 </Stack>
              </Box>
@@ -138,7 +138,7 @@ const Footer = ({ socials, name }) => {
                    </Box>
                    <Box>
                       <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1.2rem' }}>AES-256</Typography>
-                      <Typography variant="caption" sx={{ color: '#ff3366', fontSize: '0.6rem' }}>PROTOCOL_ACTIVE</Typography>
+                      <Typography variant="caption" sx={{ color: '#ff3366', fontSize: '0.6rem' }}>DATA_SECURITY_ACTIVE</Typography>
                    </Box>
                 </Stack>
              </Box>

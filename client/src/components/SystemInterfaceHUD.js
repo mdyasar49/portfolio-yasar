@@ -2,18 +2,29 @@ import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, Fade } from '@mui/material';
 import { Cpu, Zap, Terminal } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
 
 
 const SystemInterfaceHUD = () => {
   const [uptime, setUptime] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { activeSessions } = useLiveAnalytics();
 
   useEffect(() => {
+    const handleScroll = () => {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      setScrollProgress((currentScroll / totalScroll) * 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
     const timer = setInterval(() => setUptime(u => u + 1), 1000);
     const showTimer = setTimeout(() => setIsVisible(true), 1500);
+    
     return () => {
+      window.removeEventListener('scroll', handleScroll);
       clearInterval(timer);
       clearTimeout(showTimer);
     };
@@ -63,7 +74,7 @@ const SystemInterfaceHUD = () => {
                 }} />
               </Box>
               <Box>
-                <Typography variant="caption" sx={{ color: 'rgba(51, 204, 255, 0.6)', fontWeight: 900, fontSize: '0.6rem', display: 'block', letterSpacing: 3, fontFamily: 'Syncopate', mb: 0.5 }}>CORE_SESSION_RUNTIME</Typography>
+                <Typography variant="caption" sx={{ color: 'rgba(51, 204, 255, 0.6)', fontWeight: 900, fontSize: '0.6rem', display: 'block', letterSpacing: 3, fontFamily: 'Syncopate', mb: 0.5 }}>ACTIVE_SESSION_RUNTIME</Typography>
                 <Typography variant="h6" sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1rem', letterSpacing: 2, textShadow: '0 0 10px rgba(255,255,255,0.3)' }}>{formatUptime(uptime)}</Typography>
               </Box>
             </Stack>
@@ -72,9 +83,9 @@ const SystemInterfaceHUD = () => {
           {/* Real-time Telemetry Widgets */}
           <Stack direction="row" spacing={1.5} sx={{ pointerEvents: 'auto' }}>
             {[
-              { icon: <Cpu size={14} />, label: 'SYSTEM_LOAD', value: '4.2%', color: '#ff3366' },
-              { icon: <Zap size={14} />, label: 'LIVE_NODES', value: activeSessions, color: '#33ccff', active: true },
-              { icon: <Terminal size={14} />, label: 'ACCESS_TERM', color: '#00ffcc', active: true, link: '/#terminal' }
+              { icon: <Cpu size={14} />, label: 'SERVER_LOAD', value: '4.2%', color: '#ff3366' },
+              { icon: <Zap size={14} />, label: 'LIVE_SESSIONS', value: activeSessions, color: '#33ccff', active: true },
+              { icon: <Terminal size={14} />, label: 'SYSTEM_CONSOLE', color: '#00ffcc', active: true, link: '/#terminal' }
             ].map((item, i) => {
               const content = (
                 <Box key={i} sx={{ 
@@ -112,6 +123,35 @@ const SystemInterfaceHUD = () => {
           </Stack>
         </Stack>
       </Fade>
+
+      {/* Vertical Scroll Progress HUD */}
+      <Box sx={{ 
+        position: 'fixed', right: 40, top: '50%', transform: 'translateY(-50%)', 
+        zIndex: 9999, display: { xs: 'none', md: 'flex' }, flexDirection: 'column', alignItems: 'center', gap: 4
+      }}>
+        <Typography variant="overline" sx={{ 
+          writingMode: 'vertical-rl', transform: 'rotate(180deg)', 
+          color: 'rgba(51, 204, 255, 0.4)', fontWeight: 900, letterSpacing: 4, fontSize: '0.6rem' 
+        }}>
+          SCROLL_PERCENTAGE
+        </Typography>
+        <Box sx={{ width: 2, height: 100, bgcolor: 'rgba(255,255,255,0.05)', position: 'relative', borderRadius: 10 }}>
+          <motion.div 
+            style={{ 
+              position: 'absolute', top: 0, left: 0, width: '100%', 
+              background: 'linear-gradient(to bottom, #33ccff, #ff3366)',
+              borderRadius: 10,
+              boxShadow: '0 0 10px rgba(51, 204, 255, 0.5)'
+            }}
+            animate={{ 
+               height: `${scrollProgress}%` 
+            }}
+          />
+        </Box>
+        <Typography variant="caption" sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '0.7rem' }}>
+          {Math.round(scrollProgress)}%
+        </Typography>
+      </Box>
 
       <style>
         {`

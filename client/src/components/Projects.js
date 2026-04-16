@@ -85,7 +85,7 @@ const Projects = memo(({ projects }) => {
         <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 1 }}>
            <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
            <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 6, fontFamily: 'Syncopate', fontSize: '0.65rem' }}>
-             ARCHIVE_SYSTEM_v4.5.1
+             PORTFOLIO_COLLECTION_v4.5
            </Typography>
            <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
         </Box>
@@ -166,7 +166,7 @@ const Projects = memo(({ projects }) => {
                               boxShadow: `0 0 10px ${accent}22`
                             }}>
                                <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: accent, animation: 'pulse 1s infinite' }} />
-                               <Typography sx={{ color: accent, fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', letterSpacing: 1 }}>PRODUCTION_SECURED</Typography>
+                               <Typography sx={{ color: accent, fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', letterSpacing: 1 }}>PRODUCTION_READY</Typography>
                             </Box>
                             <Box sx={{ 
                               display: 'flex', alignItems: 'center', gap: 1,
@@ -254,7 +254,7 @@ const Projects = memo(({ projects }) => {
                             }
                           }}
                          >
-                           VIEW_DETAILS
+                           PROJECT_DETAILS
                          </Button>
                       </Box>
                     </CardContent>
@@ -309,7 +309,7 @@ const Projects = memo(({ projects }) => {
                     <LayoutDashboard size={28} />
                   </Box>
                   <Box>
-                    <Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.7rem', display: 'block', letterSpacing: 4, fontFamily: 'monospace' }}>&gt; PROJECT_SPECIFICATIONS</Typography>
+                    <Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.7rem', display: 'block', letterSpacing: 4, fontFamily: 'monospace' }}>&gt; TECHNICAL_SPECIFICATIONS</Typography>
                     <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -1 }}>{selectedProject.name.toUpperCase()}</Typography>
                   </Box>
                 </Stack>
@@ -424,7 +424,7 @@ const Projects = memo(({ projects }) => {
                     '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.05)', color: '#222' }
                   }}
                 >
-                  VIEW_LIVE_SYSTEM
+                  VIEW_LIVE_PROJECT
                 </Button>
               </DialogActions>
             </motion.div>

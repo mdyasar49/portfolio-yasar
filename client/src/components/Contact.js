@@ -59,7 +59,7 @@ const Contact = () => {
                         viewport={{ once: true }}
                     >
                         <Typography sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 4, mb: 2, fontSize: '0.7rem' }}>
-                            [ GET_IN_TOUCH ]
+                            [ CONTACT_INFORMATION ]
                         </Typography>
                         <Typography variant="h3" sx={{ fontWeight: 900, color: 'white', mb: 3, fontFamily: 'Syncopate', letterSpacing: -1 }}>
                             SEND A<br/><span style={{ color: '#33ccff' }}>MESSAGE</span>
@@ -70,8 +70,8 @@ const Contact = () => {
 
                         <Stack spacing={3}>
                             {[
-                                { icon: <Terminal size={18} />, label: 'SYSTEM_PATH', val: 'node/socket/nodemailer' },
-                                { icon: <ShieldCheck size={18} />, label: 'ENCRYPTION', val: 'TLS_v1.3_AUTH' },
+                                { icon: <Terminal size={18} />, label: 'MAIN_STACK', val: 'Node.js / Express / MongoDB' },
+                                { icon: <ShieldCheck size={18} />, label: 'ENCRYPTION_PROTOCOL', val: 'SECURE_TLS_v1.3' },
                                 { 
                                     icon: <Mail size={18} />, 
                                     label: 'DIRECT_DISPATCH', 
