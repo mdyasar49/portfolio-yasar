@@ -195,7 +195,19 @@ const Header = () => {
         </Container>
       </AppBar>
 
-      <Drawer anchor="right" open={mobileOpen} onClose={handleDrawerToggle} PaperProps={{ sx: { bgcolor: '#030712', width: 280 } }}>
+      <Drawer 
+        anchor="right" 
+        open={mobileOpen} 
+        onClose={handleDrawerToggle} 
+        PaperProps={{ 
+          sx: { 
+            bgcolor: 'rgba(3, 7, 18, 0.95)', 
+            width: 280,
+            backdropFilter: 'blur(20px) saturate(180%)',
+            borderLeft: '1px solid rgba(255,255,255,0.08)'
+          } 
+        }}
+      >
         <Box sx={{ p: 4 }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 4 }}>
             <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}><X /></IconButton>

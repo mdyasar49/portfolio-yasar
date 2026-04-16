@@ -135,7 +135,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
 
     const ProfileTab = ({ publicView }) => (
         <Stack spacing={4}>
-            <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+            <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                 <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>IDENTITY_CORE</Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
@@ -186,7 +186,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 </Grid>
             </Paper>
 
-            <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+            <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                 <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SOCIAL_DISPATCH_HANDLES</Typography>
                 <Grid container spacing={3}>
                     {Object.keys(profile.socials || {}).map((key) => (
@@ -464,7 +464,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 </Card>
             ))}
 
-            <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+            <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                 <Typography variant="h6" sx={{ color: '#ff9933', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem' }}>CERTIFICATION_STACK</Typography>
                 <TextField 
                     fullWidth multiline rows={2} 
@@ -484,7 +484,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
     const SkillsTab = ({ publicView }) => (
         <Stack spacing={4}>
             {Object.keys(profile.technicalSkills || {}).map((category) => (
-                <Paper key={category} sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper key={category} sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem' }}>{category.toUpperCase()}_STACK</Typography>
                     <TextField 
                         fullWidth multiline rows={2} 
@@ -605,7 +605,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     </Button>
                 </Box>
                 {telemetryEntries.length === 0 ? (
-                    <Paper sx={{ p: 4, textAlign: 'center', bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Paper sx={{ p: { xs: 2.5, md: 4 }, textAlign: 'center', bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
                         <Typography sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900 }}>EMPTY_TELEMETRY_LOG</Typography>
                     </Paper>
                 ) : telemetryEntries.map((transmissionManifest, entryIndex) => (
@@ -776,7 +776,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
         return (
             <Stack spacing={4}>
                 {/* System Intelligence Dashboard */}
-                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#00ffcc', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 3 }}>System Telemetry Dashboard</Typography>
 
                     <Grid container spacing={3}>
@@ -797,7 +797,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 </Paper>
 
                 {/* Analytics Intelligence Exhibit */}
-                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 4 }}>Visitor Analytics Exhibit</Typography>
 
                     <Grid container spacing={4}>
@@ -852,7 +852,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 </Paper>
 
 
-                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                         <Box>
                             <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 1 }}>System Access Protocol</Typography>
@@ -870,7 +870,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     </Box>
                 </Paper>
 
-                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>Security Credentials</Typography>
                     <Box component="form" onSubmit={handlePasswordChange}>
                         <Grid container spacing={3}>
@@ -919,7 +919,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
     const DocsTab = ({ publicView }) => {
         return (
             <Stack spacing={4}>
-                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#00ffcc', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SYSTEM_OVERVIEW_MARKDOWN</Typography>
                     <TextField 
                         fullWidth multiline rows={15}
@@ -931,7 +931,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     />
                 </Paper>
 
-                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#ff3366', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>CORE_ARCHITECTURE_MARKDOWN</Typography>
                     <TextField 
                         fullWidth multiline rows={15}
@@ -999,12 +999,15 @@ const AdministrativeTerminal = ({ publicView = false }) => {
 
 
 
-                <Typography variant="h3" sx={{ textAlign: 'center', mb: 2, fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2 }}>
+                <Typography variant="h3" sx={{ 
+                    textAlign: 'center', mb: 2, fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2,
+                    fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
+                }}>
                     MANAGEMENT <Box component="span" sx={{ color: '#33ccff' }}>HUB</Box>
                 </Typography>
                 
                 {publicView && (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 8, gap: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4, gap: 1.5, flexWrap: 'wrap' }}>
                         <Typography variant="overline" sx={{ color: '#444', letterSpacing: 2 }}>
                             SYSTEM_TERMINAL_BLUEPRINT
                         </Typography>
@@ -1058,11 +1061,21 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                         searchParams.set('tab', v);
                         navigate({ search: searchParams.toString() }, { replace: true });
                     }}
-                    centered
+                    centered={false}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    allowScrollButtonsMobile
                     sx={{
                         mb: 8,
                         '& .MuiTabs-indicator': { bgcolor: '#33ccff', height: 3 },
-                        '& .MuiTab-root': { color: '#444', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem', '&.Mui-selected': { color: 'white' } }
+                        '& .MuiTab-root': { 
+                            color: '#444', 
+                            fontFamily: 'Syncopate', 
+                            fontWeight: 900, 
+                            fontSize: { xs: '0.65rem', md: '0.8rem' }, 
+                            minHeight: 64,
+                            '&.Mui-selected': { color: 'white' } 
+                        }
                     }}
                 >
                     <Tab label="Profile Intelligence" icon={<User size={18} />} iconPosition="start" />

@@ -84,7 +84,7 @@ const SystemLogStream = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Stack direction="row" spacing={2} sx={{ mb: 1.5, alignItems: 'center' }}>
+                  <Stack direction="row" spacing={2} sx={{ mb: 1.5, alignItems: 'center', flexWrap: 'wrap' }}>
                     <Typography sx={{ color: '#444', fontSize: '0.75rem', fontWeight: 900 }}>[{log.time}]</Typography>
                     <Box sx={{ color: log.color, display: 'flex', alignItems: 'center', gap: 1 }}>
                       {log.icon}
