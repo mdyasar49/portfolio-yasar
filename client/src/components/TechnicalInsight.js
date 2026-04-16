@@ -50,7 +50,7 @@ const TechnicalInsight = () => {
                     <Typography variant="caption" sx={{ fontWeight: 900 }}>+45.2% ACCELERATION</Typography>
                   </Box>
                 </Stack>
-                <Box sx={{ flexGrow: 1, width: '100%', minHeight: 300 }}>
+                <Box sx={{ flexGrow: 1, width: '100%', minHeight: 300, minWidth: 0 }}>
                   <ResponsiveContainer width="100%" height="100%" debounce={1}>
                     <AreaChart data={performanceData}>
                       <defs>
@@ -85,7 +85,7 @@ const TechnicalInsight = () => {
                 <Typography variant="h6" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Zap color="#ff3366" size={24} /> TECH_STACK_MASTERY
                 </Typography>
-                <Box sx={{ flexGrow: 1, width: '100%', minHeight: 250 }}>
+                <Box sx={{ flexGrow: 1, width: '100%', minHeight: 250, minWidth: 0 }}>
                   <ResponsiveContainer width="100%" height="100%" debounce={1}>
                     <BarChart data={skillDistribution} layout="vertical">
                       <XAxis type="number" hide />
