@@ -297,8 +297,9 @@ const Resume = () => {
           <Box sx={{ position: 'absolute', bottom: -30, right: -30, width: 80, height: 80, borderBottom: '4px solid #ff3366', borderRight: '4px solid #ff3366', borderRadius: '0 0 20px 20px', opacity: 0.6 }} />
 
           {/* IFrame Container (The Document Itself) */}
-          <Box sx={{ 
-            width: { xs: '95vw', sm: '85vw', md: '210mm' }, height: { xs: '120vw', sm: '120vh', md: '297mm' }, 
+          <Box className="holographic-border animate-cyber-reveal" sx={{ 
+            width: { xs: '95vw', sm: '85vw', md: '210mm' }, 
+            height: { xs: '135vw', sm: '120vh', md: '297mm' }, 
             backgroundColor: 'white', position: 'relative', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.05)',
             boxShadow: '0 80px 160px rgba(0,0,0,0.9), 0 0 100px rgba(51, 204, 255, 0.15)'
           }}>

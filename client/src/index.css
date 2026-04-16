@@ -110,17 +110,6 @@ body::after {
   100% { clip-path: inset(58% 0 43% 0); transform: translate(20px, 10px); }
 }
 
-@keyframes scanLine {
-  0% { top: 0%; opacity: 0; }
-  50% { opacity: 0.8; }
-  100% { top: 100%; opacity: 0; }
-}
-
-@keyframes floatBG {
-  from { background-position: 0 0; }
-  to { background-position: 600px 600px; }
-}
-
 .glass-panel {
   background: rgba(13, 17, 23, 0.4) !important;
   backdrop-filter: blur(25px) saturate(200%) !important;
@@ -175,9 +164,6 @@ body::after {
   background: linear-gradient(180deg, rgba(51, 204, 255, 0.7), rgba(255, 51, 102, 0.7));
 }
 
-
-
-
 /* Scrollbar (Firefox) */
 * {
   scrollbar-color: rgba(51, 204, 255, 0.35) rgba(255, 255, 255, 0.02);
@@ -198,11 +184,6 @@ body::after {
 a, button, .clickable {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="%23ff3366" opacity="0.9"/><circle cx="12" cy="12" r="10" fill="none" stroke="%23ff3366" stroke-width="1" opacity="0.4"/></svg>') 12 12, pointer !important;
 }
-
-/* 
-   Noise Texture is now handled via a separate overlay component 
-   to maintain 16K Grid Integrity.
-*/
 
 /* Global Spotlight Effect */
 #spotlight {
@@ -299,4 +280,59 @@ img, video, canvas {
 ::-moz-selection {
   background: rgba(51, 204, 255, 0.2);
   color: #33ccff;
-}
+}
+
+/* [ELITE_ANIMATION_SUITE] */
+
+/* 1. Cyber-Reveal: Materializes text with a digital glitch feel */
+@keyframes cyberReveal {
+  0% { opacity: 0; filter: blur(10px); transform: translateY(20px) skewX(-10deg); }
+  70% { opacity: 0.5; filter: blur(5px); transform: translateY(-5px) skewX(2deg); }
+  100% { opacity: 1; filter: blur(0); transform: translateY(0) skewX(0); }
+}
+
+.animate-cyber-reveal { animation: cyberReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* 2. Kinetic Pulse: Adds a liquid-energy glow to interactive components */
+@keyframes kineticPulse {
+  0% { box-shadow: 0 0 0 0 rgba(51, 204, 255, 0.4); }
+  70% { box-shadow: 0 0 25px 15px rgba(51, 204, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(51, 204, 255, 0); }
+}
+
+.kinetic-button {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.kinetic-button:hover {
+  animation: kineticPulse 1.5s infinite !important;
+  transform: translateY(-5px) scale(1.05) !important;
+}
+
+/* 3. Holographic Scanline: A vertical scanning beam for the UI */
+@keyframes scanLineMove {
+  0% { top: 0%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.holographic-border {
+  position: relative;
+  border: 1px solid rgba(51, 204, 255, 0.2);
+  border-radius: 20px;
+}
+
+.holographic-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #33ccff, transparent);
+  animation: scanLineMove 4s linear infinite;
+  box-shadow: 0 0 15px #33ccff;
+  opacity: 0.6;
+}

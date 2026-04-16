@@ -244,6 +244,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div id="spotlight" />
+      <div id="noise-overlay" />
       <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <ScrollToTop />
         <ScrollToHash />

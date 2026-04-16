@@ -146,7 +146,7 @@ const Hero = memo(({ profile }) => {
                 variant="h1" 
                 className="hero-gradient-text" 
                 sx={{ 
-                  fontSize: { xs: '3.5rem', md: '7rem', lg: '9rem' },
+                  fontSize: { xs: '2.2rem', sm: '4rem', md: '7rem', lg: '9rem' },
                   lineHeight: 0.9, 
                   fontWeight: 900,
                   filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
@@ -228,6 +228,7 @@ const Hero = memo(({ profile }) => {
                 component={RouterLink} 
                 to="/resume" 
                 startIcon={<Terminal size={20} />}
+                className="kinetic-button"
                 sx={{
                   background: 'linear-gradient(45deg, #00d2ff, #3a7bd5)',
                   color: 'white', px: 6, py: 2.5,
