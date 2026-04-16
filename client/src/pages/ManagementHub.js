@@ -27,7 +27,32 @@ const ManagementHub = ({ publicView = false }) => {
         const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
         if (tab) setActiveTab(parseInt(tab, 10));
-    }, [location]);
+
+        // [SECURE_LINK_ACTION_PROTOCOL]
+        const approveId = params.get('approve');
+        const rejectId = params.get('reject');
+
+        if (approveId) {
+            const executeApprove = async () => {
+                try {
+                    await api.put(`/proposals/approve/${approveId}`);
+                    setSuccess('ARCHITECTURAL_BLUEPRINT_SYNCHRONIZED_SUCCESSFULLY');
+                    // Remove param from URL without reload
+                    navigate('/admin/management?tab=5', { replace: true });
+                } catch (e) { setError('SYNC_FAILURE: LINK_EXPIRED_OR_INVALID'); }
+            };
+            executeApprove();
+        } else if (rejectId) {
+            const executeReject = async () => {
+                try {
+                    await api.put(`/proposals/reject/${rejectId}`);
+                    setSuccess('ARCHITECTURAL_PROPOSAL_REJECTED');
+                    navigate('/admin/management?tab=5', { replace: true });
+                } catch (e) { setError('REJECTION_FAILURE: LINK_EXPIRED_OR_INVALID'); }
+            };
+            executeReject();
+        }
+    }, [location, navigate]);
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -467,24 +492,43 @@ const ManagementHub = ({ publicView = false }) => {
 
 
     const MessagesTab = () => {
-        const [messages, setMessages] = useState([]);
+        const [items, setItems] = useState([]);
         const [msgLoading, setMsgLoading] = useState(false);
 
         useEffect(() => {
-            const fetchMessages = async () => {
+            const fetchData = async () => {
                 setMsgLoading(true);
                 try {
-                    const res = await api.get('/contact');
-                    if (res.data.success) setMessages(res.data.data);
+                    const [contactsRes, proposalsRes] = await Promise.all([
+                        api.get('/contact'),
+                        api.get('/proposals')
+                    ]);
+                    
+                    const contacts = (contactsRes.data.data || []).map(c => ({ ...c, type: 'INQUIRY' }));
+                    const proposals = (proposalsRes.data.data || []).map(p => ({ 
+                        ...p, 
+                        type: 'PROPOSAL', 
+                        name: 'SYSTEM_USER',
+                        email: p.clientIp || '0.0.0.0',
+                        subject: `ARCHITECTURAL_BLUEPRINT_v${p._id.toString().slice(-4).toUpperCase()}`,
+                        message: `A refinement proposal has been logged for the system core. Status: ${p.status.toUpperCase()}`
+                    }));
+
+                    const merged = [...contacts, ...proposals].sort((a, b) => 
+                        new Date(b.createdAt) - new Date(a.createdAt)
+                    );
+
+                    setItems(merged);
                 } catch (e) {
-                    console.error('MSG_FETCH_FAIL');
+                    console.error('TELEMETRY_FETCH_FAIL');
                 } finally {
                     setMsgLoading(false);
                 }
             };
 
-            fetchMessages();
+            fetchData();
         }, []);
+
         if (msgLoading) return <CircularProgress sx={{ display: 'block', m: 'auto', color: '#ff3366' }} />;
 
         return (
@@ -494,12 +538,14 @@ const ManagementHub = ({ publicView = false }) => {
                         variant="outlined"
                         size="small"
                         onClick={async () => {
-                            if (window.confirm('CRITICAL_ACTION: PERMANENTLY_PURGE_ALL_TRANSMISSIONS?')) {
+                            if (window.confirm('CRITICAL_ACTION: PERMANENTLY_PURGE_ALL_TELEMETRY?')) {
                                 try {
-                                    const deletePromises = messages.map(m => api.delete(`/contact/${m._id || m.createdAt}`));
+                                    // Primary purge logic for contacts
+                                    const contacts = items.filter(i => i.type === 'INQUIRY');
+                                    const deletePromises = contacts.map(m => api.delete(`/contact/${m._id || m.createdAt}`));
                                     await Promise.all(deletePromises);
-                                    setMessages([]);
-                                    setSuccess('Communications Array Cleared.');
+                                    setItems([]);
+                                    setSuccess('Telemetry Array Cleared.');
                                 } catch (e) {
                                     setError('Failed to execute bulk purge.');
                                 }
@@ -511,16 +557,17 @@ const ManagementHub = ({ publicView = false }) => {
                             '&:hover': { borderColor: '#ff3366', bgcolor: 'rgba(255, 51, 102, 0.05)' }
                         }}
                     >
-                        PURGE_ALL
+                        PURGE_INQUIRIES
                     </Button>
                     <Button
                         variant="outlined"
                         size="small"
-                        disabled={messages.length === 0}
+                        disabled={items.length === 0}
                         onClick={() => {
-                            const headers = ['Date', 'Name', 'Email', 'Subject', 'Message'];
-                            const rows = messages.map(m => [
+                            const headers = ['Date', 'Type', 'Name', 'Email', 'Subject', 'Message'];
+                            const rows = items.map(m => [
                                 new Date(m.createdAt).toLocaleString(),
+                                m.type,
                                 `"${m.name.replace(/"/g, '""')}"`,
                                 m.email,
                                 `"${m.subject.replace(/"/g, '""')}"`,
@@ -530,7 +577,7 @@ const ManagementHub = ({ publicView = false }) => {
                             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                             const link = document.createElement('a');
                             link.href = URL.createObjectURL(blob);
-                            link.setAttribute('download', `correspondence_export_${new Date().toISOString().split('T')[0]}.csv`);
+                            link.setAttribute('download', `system_telemetry_export_${new Date().toISOString().split('T')[0]}.csv`);
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
@@ -544,33 +591,100 @@ const ManagementHub = ({ publicView = false }) => {
                         DOWNLOAD_LOGS (.CSV)
                     </Button>
                 </Box>
-                {messages.length === 0 ? (
+                {items.length === 0 ? (
                     <Paper sx={{ p: 4, textAlign: 'center', bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <Typography sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900 }}>EMPTY_INBOX</Typography>
+                        <Typography sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900 }}>EMPTY_TELEMETRY_LOG</Typography>
                     </Paper>
-                ) : messages.map((m, idx) => (
-
-                    <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                ) : items.map((m, idx) => (
+                    <Card key={idx} sx={{ 
+                        bgcolor: 'rgba(255,255,255,0.02)', 
+                        border: '1px solid rgba(255,255,255,0.05)',
+                        borderLeft: m.type === 'PROPOSAL' ? '4px solid #ff3366' : '1px solid rgba(255,255,255,0.05)'
+                    }}>
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                                <Typography sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'monospace' }}>FROM: {m.name} &lt;{m.email}&gt;</Typography>
+                                <Stack direction="row" spacing={2} alignItems="center">
+                                    <Typography sx={{ 
+                                        color: m.type === 'PROPOSAL' ? '#ff3366' : '#33ccff', 
+                                        fontWeight: 900, fontFamily: 'monospace', fontSize: '0.7rem' 
+                                    }}>
+                                        [{m.type}]
+                                    </Typography>
+                                <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace' }}>
+                                    {m.type === 'INQUIRY' ? (
+                                        <>
+                                            FROM: {m.name} &lt;
+                                            <Box 
+                                                component="a" 
+                                                href={`mailto:${m.email}`} 
+                                                sx={{ 
+                                                    color: '#00ffcc', 
+                                                    textDecoration: 'none',
+                                                    '&:hover': { textDecoration: 'underline' }
+                                                }}
+                                            >
+                                                {m.email}
+                                            </Box>
+                                            &gt;
+                                        </>
+                                    ) : `BLUEPRINT_ACTION: ${m.status.toUpperCase()}`}
+                                </Typography>
+                                </Stack>
                                 <Stack direction="row" spacing={2} alignItems="center">
                                     <Typography sx={{ color: '#444', fontSize: '0.7rem' }}>{new Date(m.createdAt).toLocaleString()}</Typography>
-                                    <IconButton size="small" color="error" onClick={async () => {
-                                        try {
-                                            await api.delete(`/contact/${m._id || m.createdAt}`);
-                                            setMessages(messages.filter(msg => msg._id !== m._id && msg.createdAt !== m.createdAt));
-                                        } catch (e) {
-                                            setError('Failed to purge transmission.');
-                                        }
-                                    }}>
-
-                                        <Trash2 size={16} />
-                                    </IconButton>
+                                    {m.type === 'INQUIRY' && (
+                                        <IconButton size="small" color="error" onClick={async () => {
+                                            try {
+                                                await api.delete(`/contact/${m._id || m.createdAt}`);
+                                                setItems(items.filter(item => item._id !== m._id));
+                                            } catch (e) {
+                                                setError('Failed to purge transmission.');
+                                            }
+                                        }}>
+                                            <Trash2 size={16} />
+                                        </IconButton>
+                                    )}
                                 </Stack>
                             </Box>
-                            <Typography sx={{ color: 'white', fontWeight: 900, mb: 1 }}>{m.subject}</Typography>
+                            
+                            <Typography sx={{ color: '#888', mb: 1.5, fontSize: '0.8rem', fontFamily: 'monospace' }}>
+                                TARGET_DOMAIN: {m.email}
+                            </Typography>
+
+                            <Typography sx={{ color: 'white', fontWeight: 900, mb: 1, fontSize: '1rem' }}>{m.subject}</Typography>
                             <Typography sx={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.6 }}>{m.message}</Typography>
+
+                            {m.type === 'PROPOSAL' && m.status === 'pending' && (
+                                <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+                                    <Button 
+                                        size="small" variant="contained" 
+                                        onClick={async () => {
+                                            try {
+                                                await api.put(`/proposals/approve/${m._id}`);
+                                                setSuccess('System architecturally synchronized.');
+                                                // Refresh logic here or just update local status
+                                                setItems(items.map(i => i._id === m._id ? {...i, status: 'approved', message: 'A refinement proposal has been logged for the system core. Status: APPROVED'} : i));
+                                            } catch (e) { setError('Sync failure.'); }
+                                        }}
+                                        sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, fontSize: '0.6rem' }}
+                                    >
+                                        APPROVE_NOW
+                                    </Button>
+                                    <Button 
+                                        size="small" variant="outlined" 
+                                        onClick={async () => {
+                                            try {
+                                                await api.put(`/proposals/reject/${m._id}`);
+                                                setSuccess('Proposal rejected.');
+                                                setItems(items.map(i => i._id === m._id ? {...i, status: 'rejected', message: 'A refinement proposal has been logged for the system core. Status: REJECTED'} : i));
+                                            } catch (e) { setError('Rejection failure.'); }
+                                        }}
+                                        sx={{ color: '#ff3366', borderColor: '#ff3366', fontWeight: 900, fontSize: '0.6rem' }}
+                                    >
+                                        REJECT
+                                    </Button>
+                                </Box>
+                            )}
                         </CardContent>
                     </Card>
                 ))}

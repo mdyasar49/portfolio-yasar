@@ -17,8 +17,8 @@ exports.sendProposalAlert = async (proposalId) => {
         // Construct the Secure Approval Link
         // Use the first valid URL from CLIENT_URL for the link
         const clientBase = (process.env.CLIENT_URL || '').split(',')[0];
-        const approveLink = `${clientBase}/admin/management?tab=0&approve=${proposalId}`;
-        const rejectLink = `${clientBase}/admin/management?tab=0&reject=${proposalId}`;
+        const approveLink = `${clientBase}/admin/management?tab=5&approve=${proposalId}`;
+        const rejectLink = `${clientBase}/admin/management?tab=5&reject=${proposalId}`;
 
         const mailOptions = {
             from: `"ARCHITECTURAL_LOGISTICS" <${process.env.EMAIL_USER}>`,

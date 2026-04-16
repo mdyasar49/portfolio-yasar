@@ -96,7 +96,7 @@ const Footer = ({ socials, name }) => {
               <Tooltip key={index} title={item.link ? "OPEN_LINK" : "N/A"}>
                 <IconButton 
                   href={item.link || '#'} 
-                  target="_blank" 
+                  target={item.link?.startsWith('mailto:') ? undefined : "_blank"} 
                   sx={{ 
                     color: '#444', 
                     transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',

@@ -20,6 +20,7 @@ router.put('/profile', protect, portfolioController.updateProfile);
 
 // [PROPOSALS_PROTOCOL]
 router.post('/proposals/submit', proposalController.submitProposal);
+router.get('/proposals', protect, proposalController.getProposals);
 router.get('/proposals/:id', proposalController.getProposal);
 router.put('/proposals/approve/:id', protect, proposalController.approveProposal);
 router.put('/proposals/reject/:id', protect, proposalController.rejectProposal);

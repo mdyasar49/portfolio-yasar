@@ -135,4 +135,12 @@ export const toggleMaintenance = async (enabled) => {
     return response.data;
 };
 
+/**
+ * Retrieve all architectural proposals
+ */
+export const getProposals = async () => {
+    const response = await api.get('/proposals');
+    return response.data;
+};
+
 export default api;

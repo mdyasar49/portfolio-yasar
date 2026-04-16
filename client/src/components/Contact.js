@@ -72,15 +72,28 @@ const Contact = () => {
                             {[
                                 { icon: <Terminal size={18} />, label: 'SYSTEM_PATH', val: 'node/socket/nodemailer' },
                                 { icon: <ShieldCheck size={18} />, label: 'ENCRYPTION', val: 'TLS_v1.3_AUTH' },
-                                { icon: <Mail size={18} />, label: 'UPTIME', val: '99.9%_OPERATIONAL' }
+                                { 
+                                    icon: <Mail size={18} />, 
+                                    label: 'DIRECT_DISPATCH', 
+                                    val: 'mohamedyasar081786@gmail.com',
+                                    isLink: true 
+                                }
                             ].map((item, i) => (
-                                <Stack key={i} direction="row" spacing={3} alignItems="center">
+                                <Stack 
+                                    key={i} 
+                                    direction="row" 
+                                    spacing={3} 
+                                    alignItems="center"
+                                    component={item.isLink ? 'a' : 'div'}
+                                    href={item.isLink ? `mailto:${item.val}` : undefined}
+                                    sx={{ textDecoration: 'none', cursor: item.isLink ? 'pointer' : 'default' }}
+                                >
                                     <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: 'rgba(51, 204, 255, 0.05)', color: '#33ccff' }}>
                                         {item.icon}
                                     </Box>
                                     <Box>
                                         <Typography variant="caption" sx={{ color: '#222', fontWeight: 900, display: 'block', letterSpacing: 1 }}>{item.label}</Typography>
-                                        <Typography sx={{ color: '#888', fontFamily: 'monospace', fontSize: '0.8rem' }}>{item.val}</Typography>
+                                        <Typography sx={{ color: item.isLink ? '#33ccff' : '#888', fontFamily: 'monospace', fontSize: '0.8rem' }}>{item.val}</Typography>
                                     </Box>
                                 </Stack>
                             ))}

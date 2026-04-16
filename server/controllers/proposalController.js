@@ -41,6 +41,20 @@ exports.submitProposal = asyncHandler(async (req, res) => {
 });
 
 
+exports.getProposals = asyncHandler(async (req, res) => {
+    let proposals = [];
+    const mongoose = require('mongoose');
+
+    if (mongoose.connection.readyState === 1) {
+        proposals = await Proposal.find().sort({ createdAt: -1 }).lean();
+    } else {
+        // Portable mode: Proposals are mostly transient or held in memory/logs
+        console.log("📡 [Telemetry] Proposals list requested in portable mode.");
+    }
+
+    res.json({ success: true, count: proposals.length, data: proposals });
+});
+
 exports.getProposal = asyncHandler(async (req, res) => {
     const proposal = await Proposal.findById(req.params.id);
     if (!proposal) return res.status(404).json({ success: false, message: 'PROPOSAL_NOT_FOUND' });
