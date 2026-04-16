@@ -1,10 +1,20 @@
+/**
+ * [React.js & Recharts - Data Visualization Architecture]
+ * Technologies: React.js, Material UI (Grid, Paper, Stack), Recharts (ResponsiveContainer, AreaChart, BarChart), Framer Motion
+ * Purpose: This component visualizes technical throughput and skill distribution using interactive charts.
+ */
 import React from 'react';
 import { Box, Container, Typography, Grid, Paper, Stack } from '@mui/material';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Cell } from 'recharts';
 import { motion } from 'framer-motion';
 import { Zap, Activity, Cpu, Database } from 'lucide-react';
 
+/**
+ * TechnicalInsight Component
+ * Renders two primary data visualizations: Performance Optimization and Tech Stack Mastery.
+ */
 const TechnicalInsight = () => {
+  // Static data used for performance trend visualization
   const performanceData = [
     { name: 'JAN', optimization: 45, latency: 120 },
     { name: 'FEB', optimization: 58, latency: 110 },
@@ -13,6 +23,7 @@ const TechnicalInsight = () => {
     { name: 'MAY', optimization: 94, latency: 65 },
   ];
 
+  // Static data for skill competency levels mapping
   const skillDistribution = [
     { name: 'React', value: 95, color: '#61dafb' },
     { name: 'Node.js', value: 88, color: '#68a063' },
@@ -24,6 +35,8 @@ const TechnicalInsight = () => {
   return (
     <Box id="insights" sx={{ py: { xs: 10, md: 20 }, position: 'relative', bgcolor: 'rgba(2, 4, 10, 0.5)' }}>
       <Container maxWidth="xl">
+        
+        {/* Section Header: Metric Definitions */}
         <Stack spacing={2} sx={{ mb: 12, textAlign: 'center' }}>
           <Typography variant="overline" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: 8, fontFamily: 'Syncopate' }}>
             ENGINEERING_METRICS
@@ -34,7 +47,7 @@ const TechnicalInsight = () => {
         </Stack>
 
         <Grid container spacing={4}>
-          {/* Performance Trend */}
+          {/* [Visualization A] - Performance Trend (Area Chart) */}
           <Grid item xs={12} lg={8}>
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -50,6 +63,12 @@ const TechnicalInsight = () => {
                     <Typography variant="caption" sx={{ fontWeight: 900 }}>+45.2% ACCELERATION</Typography>
                   </Box>
                 </Stack>
+                
+                {/* 
+                  Chart Container 
+                  'minWidth: 0' and 'width: 100%' are essential fix for Recharts 
+                  ResponsiveContainer initialization issues in flex/grid layouts.
+                */}
                 <Box sx={{ flexGrow: 1, width: '100%', minHeight: 300, minWidth: 0 }}>
                   <ResponsiveContainer width="100%" height="100%" debounce={1}>
                     <AreaChart data={performanceData}>
@@ -74,7 +93,7 @@ const TechnicalInsight = () => {
             </motion.div>
           </Grid>
 
-          {/* Skill Distribution */}
+          {/* [Visualization B] - Skill Distribution (Horizontal Bar Chart) */}
           <Grid item xs={12} lg={4}>
             <motion.div
               initial={{ opacity: 0, x: 30 }}
@@ -111,7 +130,7 @@ const TechnicalInsight = () => {
             </motion.div>
           </Grid>
 
-          {/* Static Stats Cards */}
+          {/* Static Stats Cards: Supplementary Evidence */}
           {[
             { label: 'API_STABILITY', value: '99.9%', icon: <Database color="#33ccff" />, color: '#33ccff' },
             { label: 'CODE_COVERAGE', value: '92%', icon: <ShieldCheck color="#00ffcc" />, color: '#00ffcc' },
@@ -139,7 +158,7 @@ const TechnicalInsight = () => {
   );
 };
 
-// Internal icon if not found in lucide
+// Internal icon for Security Certification badge
 const ShieldCheck = ({ color, size = 24 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />

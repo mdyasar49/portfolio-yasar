@@ -1,12 +1,31 @@
+/**
+ * [Node.js & Express.js - Backend Architecture]
+ * Technologies: Node.js Runtime, Express.js Framework, MongoDB/Mongoose (NoSQL), File System (fs)
+ * Purpose: This controller handles the core business logic for the portfolio data, 
+ * including profile retrieval, visitor tracking, and system health diagnostics.
+ */
 const fs = require('fs');
 const path = require('path');
 const Profile = require('../models/Profile');
-
 const asyncHandler = require('../middleware/asyncHandler');
+const mongoose = require('mongoose');
+const Stats = require('../models/Stats');
+
+/**
+ * Utility: Safety Normalizers
+ * These helpers ensure that even if data is missing or corrupted, 
+ * the frontend receives valid data types (arrays, strings, objects).
+ */
 const safeArray = (value) => Array.isArray(value) ? value : [];
 const safeObject = (value) => (value && typeof value === 'object' ? value : {});
 const safeString = (value, fallback = '') => (typeof value === 'string' ? value : fallback);
 
+/**
+ * normalizeProfile
+ * Transforms the raw database/JSON object into a strictly structured format 
+ * expected by the React.js frontend.
+ * @param {Object} source - Raw profile data from DB or local JSON.
+ */
 const normalizeProfile = (source) => {
     const profile = safeObject(source);
     const technicalSkills = safeObject(profile.technicalSkills);
@@ -14,14 +33,14 @@ const normalizeProfile = (source) => {
     const socials = safeObject(profile.socials);
 
     return {
-        name: safeString(profile.name, 'Profile Unavailable'),
+        // Enforce a hardcoded fallback if 'name' is missing completely
+        name: safeString(profile.name, 'A. MOHAMED YASAR'),
         title: safeString(profile.title, 'Full Stack Developer'),
         email: safeString(profile.email),
         phone: safeString(profile.phone),
         location: safeString(profile.location),
         summary: safeString(profile.summary),
         technicalSkills: {
-
             frontend: safeArray(technicalSkills.frontend),
             backend: safeArray(technicalSkills.backend),
             database: safeArray(technicalSkills.database),
@@ -49,7 +68,6 @@ const normalizeProfile = (source) => {
             highlights: safeArray(project?.highlights),
             stats: safeObject(project?.stats)
         })),
-
         education: safeArray(profile.education).map(edu => ({
             degree: safeString(edu?.degree, 'Education'),
             institution: safeString(edu?.institution, 'Institution'),
@@ -74,30 +92,32 @@ const normalizeProfile = (source) => {
     };
 };
 
-
 /**
- * Portability Logic: Fallback to local data if MongoDB is off or empty
+ * getLocalData
+ * Resilience Strategy: Reads synchronous data from data.json if MongoDB is offline.
  */
 const getLocalData = () => {
     try {
         const data = fs.readFileSync(path.join(__dirname, '../data.json'), 'utf-8');
         return JSON.parse(data);
     } catch (err) {
+        console.error("Local Data Fetch Error:", err.message);
         return null;
     }
 };
 
 /**
- * Persistence for Visitors when MongoDB is offline
+ * Persistence Logic for system stats (Visitors/Maintenance) when DB is down.
  */
 const statsFile = path.join(__dirname, '../stats.json');
+
 const getLocalStats = () => {
     try {
         if (fs.existsSync(statsFile)) {
             return JSON.parse(fs.readFileSync(statsFile, 'utf-8'));
         }
     } catch (e) {}
-    return { visitors: 0, maintenanceMode: false }; // Starting from zero as requested
+    return { visitors: 0, maintenanceMode: false };
 };
 
 const saveLocalStats = (stats) => {
@@ -106,21 +126,19 @@ const saveLocalStats = (stats) => {
     } catch (e) {}
 };
 
-const mongoose = require('mongoose');
-const Stats = require('../models/Stats');
-
 /**
- * @desc    Get complete portfolio profile
+ * [API_METHOD] getProfile
+ * @desc    Retrieves the complete portfolio profile. 
+ *          Prioritizes Local JSON for zero-latency development.
  * @route   GET /api/profile
- * @access  Public
  */
 exports.getProfile = asyncHandler(async (req, res, next) => {
     let profile = null;
 
-    // 1. Force prioritize Local JSON for immediate development updates
+    // Phase 1: Try Local Storage (High Speed)
     profile = getLocalData();
 
-    // 2. If JSON fails or is missing, try to fetch from MongoDB
+    // Phase 2: If Local fails, Fallback to MongoDB (High Durability)
     if (!profile && mongoose.connection && mongoose.connection.readyState === 1) {
         try {
             profile = await Profile.findOne().lean();
@@ -129,12 +147,15 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
         }
     }
 
+    // Safety: If no data found in either source, return error
     if (!profile) {
         return res.status(404).json({ success: false, message: "Portfolio data not found." });
     }
 
+    // Fetch site orchestration stats (maintenance mode status)
     const stats = mongoose.connection.readyState === 1 ? await Stats.findOne() : getLocalStats();
 
+    // Send normalized response
     res.status(200).json({
         ...normalizeProfile(profile),
         maintenanceMode: stats?.maintenanceMode || false
@@ -142,15 +163,15 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
 });
 
 /**
- * @desc    Get site visitors (Optional Increment)
+ * [API_METHOD] getVisitors
+ * @desc    Get visitor statistics and optionally increment the counter.
  * @route   GET /api/visitors?inc=true
- * @access  Public
  */
 exports.getVisitors = asyncHandler(async (req, res, next) => {
     const shouldIncrement = req.query.inc === 'true';
     const today = new Date().toISOString().split('T')[0];
     
-    // 1. Portable/Offline Logic
+    // Portable Logic: If DB is offline, use local JSON storage for counts
     if (!mongoose.connection || mongoose.connection.readyState !== 1) {
         const stats = getLocalStats();
         if (!stats.history) stats.history = [];
@@ -171,6 +192,7 @@ exports.getVisitors = asyncHandler(async (req, res, next) => {
         });
     }
 
+    // Standard Logic: Cloud Persistence via MongoDB
     try {
         let stats = await Stats.findOne();
         if (!stats) {
@@ -194,64 +216,53 @@ exports.getVisitors = asyncHandler(async (req, res, next) => {
         });
     } catch (error) {
         console.error("STATS_SERVICE_FAILURE:", error.message);
-        res.status(200).json({ 
-            success: true, 
-            count: 0, 
-            history: req.headers.authorization ? [] : undefined 
-        });
+        res.status(200).json({ success: true, count: 0 });
     }
 });
 
 /**
- * @desc    Update portfolio profile (Full Sync)
+ * [API_METHOD] updateProfile
+ * @desc    Updates the profile data. Synchronizes both local JSON and MongoDB.
  * @route   PUT /api/profile
- * @access  Private
  */
 exports.updateProfile = asyncHandler(async (req, res, next) => {
     const newData = req.body;
 
-    // Safety Protocol: Prevent overwriting with empty data
+    // payload validation
     if (!newData || typeof newData !== 'object' || Object.keys(newData).length === 0) {
-        return res.status(400).json({ success: false, message: 'Invalid or empty payload. Synchronization aborted.' });
+        return res.status(400).json({ success: false, message: 'Invalid payload.' });
     }
 
-    // 1. Persist to Local JSON (Primary for current architecture)
+    // 1. Persist to Local File System
     try {
         fs.writeFileSync(path.join(__dirname, '../data.json'), JSON.stringify(newData, null, 2));
-        console.log("💾 [Storage] Local JSON synchronization complete.");
     } catch (err) {
-        console.error("LOCAL_STORAGE_SYNC_ERROR:", err.message);
-        return res.status(500).json({ success: false, message: 'Failed to sync local data storage.' });
+        return res.status(500).json({ success: false, message: 'Failed to sync local disk storage.' });
     }
 
-    // 2. Sync with MongoDB Cloud (Optional persistence)
+    // 2. Persist to MongoDB Cloud
     if (mongoose.connection && mongoose.connection.readyState === 1) {
         try {
-            await Profile.findOneAndUpdate({}, newData, { upsert: true, new: true, runValidators: true });
-            console.log("☁️ [Cloud] MongoDB persistence finalized.");
+            await Profile.findOneAndUpdate({}, newData, { upsert: true, new: true });
         } catch (error) {
-            console.error("CLOUD_SYNC_ERROR:", error.message);
+            console.error("Cloud Storage Sync Fail:", error.message);
         }
     }
 
-    res.status(200).json({ 
-        success: true, 
-        message: 'Portfolio architecture updated successfully.',
-        timestamp: new Date().toISOString()
-    });
+    res.status(200).json({ success: true, message: 'Portfolio updated.' });
 });
 
 /**
- * @desc    Get live system health metrics
+ * [API_METHOD] getSystemHealth
+ * @desc    Retrieves live system metrics like uptime and memory usage.
  * @route   GET /api/health
- * @access  Private
  */
 exports.getSystemHealth = asyncHandler(async (req, res, next) => {
     const uptime = process.uptime();
     const memory = process.memoryUsage();
-    
     const memUsage = Math.round((memory.heapUsed / memory.heapTotal) * 100);
     
+    // DB Latency Check
     const dbStart = Date.now();
     let dbStatus = 'OFFLINE';
     let dbLatency = 0;
@@ -271,21 +282,16 @@ exports.getSystemHealth = asyncHandler(async (req, res, next) => {
         data: {
             uptimeSeconds: Math.floor(uptime),
             memoryUsage: memUsage,
-            db: {
-                status: dbStatus,
-                latency: dbLatency
-            },
-            api: 'STABLE',
-            maintenance: mongoose.connection.readyState === 1 ? (await Stats.findOne())?.maintenanceMode : getLocalStats().maintenanceMode,
+            db: { status: dbStatus, latency: dbLatency },
             timestamp: new Date()
         }
     });
 });
 
 /**
- * @desc    Toggle Maintenance Mode
+ * [API_METHOD] toggleMaintenance
+ * @desc    Locks or Unlocks the site for maintenance.
  * @route   PUT /api/health/maintenance
- * @access  Private
  */
 exports.toggleMaintenance = asyncHandler(async (req, res, next) => {
     const { enabled } = req.body;
@@ -301,11 +307,7 @@ exports.toggleMaintenance = asyncHandler(async (req, res, next) => {
         saveLocalStats(stats);
     }
 
-    res.status(200).json({ 
-        success: true, 
-        message: enabled ? 'System placed in MAINTENANCE_LOCK.' : 'System restored to PRODUCTION_STATUS.' 
-    });
+    res.status(200).json({ success: true, message: 'Maintenance status toggled.' });
 });
-
 
 

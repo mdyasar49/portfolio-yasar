@@ -1,26 +1,49 @@
+/**
+ * [React.js & Material UI - Frontend Architecture]
+ * Technologies: React.js (Hooks, Memo), Material UI (Theming, Responsive Design), Framer Motion (3D Parallax)
+ * Purpose: This component serves as the 'Hero' section, the primary visual hook of the portfolio.
+ */
 import React, { memo, useRef } from 'react';
 import { Box, Typography, Button, Stack, Container, useMediaQuery, useTheme } from '@mui/material';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Link as RouterLink } from 'react-router-dom';
 import { Terminal, ShieldCheck } from 'lucide-react';
 
+/**
+ * Hero Component
+ * @param {Object} profile - Essential data object containing 'name' and 'summary'.
+ * Uses memoization to prevent unnecessary re-renders during global state updates.
+ */
 const Hero = memo(({ profile }) => {
+  // Reference for the outer container to calculate mouse positions for parallax
   const containerRef = useRef(null);
   const theme = useTheme();
+  
+  // Media queries to detect mobile devices or browsers with 'reduced motion' enabled
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const disableHeavyMotion = isMobile || prefersReducedMotion;
 
-  // 3D Tilt Parallax Logic
+  // 3D Tilt Parallax State Logic (Framer Motion)
+  // useMotionValue tracks the X and Y coordinates without triggering React state re-renders
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
+  // useSpring smooths out the raw mouse movement for a premium, heavy feel
   const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 100, damping: 30 });
+
+  // useTransform maps the -0.5 to 0.5 range to rotation degrees for the 3D effect
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
+  /**
+   * handleMouseMove
+   * Calculates the mouse's percentage offset from the center of the container.
+   * This drives the 3D parallax 'look-at' effect.
+   */
   const handleMouseMove = (e) => {
-    if (disableHeavyMotion) return;
+    if (disableHeavyMotion) return; // Skip logic on low-end or high-motion-sensitive devices
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
@@ -29,6 +52,10 @@ const Hero = memo(({ profile }) => {
     y.set(yPct);
   };
 
+  /**
+   * handleMouseLeave
+   * Resets the parallax coordinates to 0 so the elements return to their initial flat state.
+   */
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
@@ -47,11 +74,14 @@ const Hero = memo(({ profile }) => {
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
-        perspective: '2000px',
+        perspective: '2000px', // Crucial for establishing the 3D space depth
         bgcolor: 'background.default'
       }}
     >
-      {/* Circuit Watermark Background */}
+      {/* 
+        [Circuit Watermark Background]
+        Uses an inline SVG data URL to create a subtle tech-inspired pattern.
+      */}
       <Box sx={{
         position: 'absolute', inset: 0, opacity: 0.1,
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 10 L90 10 L90 90 L10 90 Z' fill='none' stroke='%2333ccff' stroke-width='0.5'/%3E%3Ccircle cx='10' cy='10' r='2' fill='%2333ccff'/%3E%3Ccircle cx='90' cy='90' r='2' fill='%23ff3366'/%3E%3C/svg%3E")`,
@@ -59,7 +89,10 @@ const Hero = memo(({ profile }) => {
         pointerEvents: 'none',
       }} />
 
-      {/* Floating Tech Data Strips */}
+      {/* 
+        [Floating Tech Data Strips]
+        Standard CSS-only decoration logic: Moving vertical lines that look like a data stream.
+      */}
       {[20, 50, 80].map((left, i) => (
         <motion.div
            key={left}
@@ -79,14 +112,15 @@ const Hero = memo(({ profile }) => {
           style={{
             rotateX: disableHeavyMotion ? '0deg' : rotateX,
             rotateY: disableHeavyMotion ? '0deg' : rotateY,
-            transformStyle: "preserve-3d"
+            transformStyle: "preserve-3d" // Allows child elements to exist in the 3D space
           }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         >
           <Stack spacing={4} alignItems="center">
-            {/* Availability Chip */}
+            
+            {/* [Availability Chip] - Visual indicator of career status */}
             <motion.div
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -106,7 +140,7 @@ const Hero = memo(({ profile }) => {
               </Box>
             </motion.div>
 
-            {/* Name Heading */}
+            {/* [Primary Name Identification] - The core branding of the page */}
             <Box sx={{ position: 'relative' }}>
               <Typography 
                 variant="h1" 
@@ -118,7 +152,8 @@ const Hero = memo(({ profile }) => {
                   filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
                   position: 'relative',
                   '&::before, &::after': {
-                    content: `"${profile.name}"`,
+                    // Content duplicates the name for the 'glitch' effect layers
+                    content: `"${profile.name || 'A. MOHAMED YASAR'}"`,
                     position: 'absolute',
                     top: 0,
                     left: 0,
@@ -138,9 +173,11 @@ const Hero = memo(({ profile }) => {
                   }
                 }}
               >
-                {profile.name}
+                {/* Fallback ensures name is never blank even if API has issues */}
+                {profile.name || "A. MOHAMED YASAR"}
               </Typography>
-              {/* Floating tech label */}
+              
+              {/* Floating tech label - aesthetic detail */}
               <Box sx={{ 
                 position: 'absolute', top: -10, right: -40, opacity: 0.5,
                 display: { xs: 'none', md: 'block' }
@@ -149,7 +186,7 @@ const Hero = memo(({ profile }) => {
               </Box>
             </Box>
 
-            {/* Role Title */}
+            {/* [Secondary Role Identification] - Supporting tagline */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -164,7 +201,7 @@ const Hero = memo(({ profile }) => {
               </Typography>
             </motion.div>
 
-            {/* Sumary */}
+            {/* [Career Narrative Summary] - Brief introduction text */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -183,7 +220,7 @@ const Hero = memo(({ profile }) => {
               </Typography>
             </motion.div>
 
-            {/* CTAs */}
+            {/* [CTA - Calls to Action] - Core navigation paths */}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mt: 2 }}>
               <Button 
                 variant="contained" 

@@ -1,11 +1,11 @@
 /**
  * [React.js Frontend Architecture]
- * This is the main presentation layer. It uses React.js to manage the state
- * of the application and high-quality Material UI components for the design.
+ * Technologies: React.js (Suspense, Lazy), Material UI (ThemeProvider, CssBaseline), Framer Motion (AnimatePresence)
+ * Purpose: This is the Root Application Component. It orchestrates the entire frontend lifecycle, 
+ * including global state fetching, theme application, and dynamic route management.
  */
 import React, { useEffect, lazy, Suspense } from 'react';
 import { ThemeProvider, CssBaseline, Box, keyframes, Typography, Stack } from '@mui/material';
-
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import theme from './theme/index';
@@ -18,14 +18,15 @@ import ProtectedRoute from './components/ProtectedRoute';
 import MaintenancePage from './pages/MaintenancePage';
 import DynamicBackground from './components/DynamicBackground';
 
-// ─── Lazy Loaded Modules ──────────────────────────────────
+// ─── Lazy Loaded Modules (Optimization) ──────────────────────────────────
+// These modules are loaded only when navigated to, reducing the initial bundle size.
 const Resume = lazy(() => import('./pages/Resume'));
 const Documentation = lazy(() => import('./pages/Documentation'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdministrativeTerminal = lazy(() => import('./pages/AdministrativeTerminal'));
 
-// ─── Animations ───────────────────────────────────────────
+// ─── Animations (CSS-in-JS) ───────────────────────────────────────────
 const spin = keyframes`
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -37,18 +38,24 @@ const pulseGlow = keyframes`
   100% { transform: scale(0.9); opacity: 0.5; box-shadow: 0 0 5px #33ccff; }
 `;
 
-// ─── Scroll Helpers ────────────────────────────────────────
+/**
+ * ScrollToTop Helper
+ * Resets the window scroll position to zero on route changes.
+ */
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 };
 
+/**
+ * ScrollToHash Helper
+ * Enables smooth scrolling to specific ID targets when a hash is present in the URL.
+ */
 const ScrollToHash = () => {
   const { hash, pathname } = useLocation();
   useEffect(() => {
     if (!hash) return;
-
     const id = hash.replace('#', '');
     let attempts = 0;
     const maxAttempts = 20;
@@ -59,23 +66,27 @@ const ScrollToHash = () => {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
-
       attempts += 1;
       if (attempts < maxAttempts) {
         setTimeout(tryScroll, 150);
       }
     };
-
     setTimeout(tryScroll, 100);
   }, [hash, pathname]);
   return null;
 };
 
+/**
+ * PublicApp Component
+ * Manages the data state for the public-facing portfolio.
+ */
 const PublicApp = () => {
   const location = useLocation();
+  // useProfile hook handles the asynchronous fetch from the Node.js/MongoDB backend
   const { profile, loading, error, errorType, maintenanceMode, retry } = useProfile();
 
-  // ── Elite System Boot Sequence ──
+  // ── [Elite System Boot Sequence] ──
+  // Displayed while the frontend is fetching initial profile data from the server.
   if (loading) {
     return (
       <ThemeProvider theme={theme}>
@@ -97,7 +108,7 @@ const PublicApp = () => {
             pointerEvents: 'none'
           }
         }}>
-          {/* Holographic Logo Core */}
+          {/* Holographic Logo Core with CSS Animations */}
           <Box sx={{ position: 'relative', mb: 8 }}>
             <Box sx={{
               position: 'absolute', inset: -20,
@@ -111,75 +122,23 @@ const PublicApp = () => {
               borderRadius: '50%',
               animation: `${spin} 15s linear infinite reverse`
             }} />
-
-            <Box 
-              component="img"
-              src="/logo.png"
-              alt="Logo"
-              sx={{ 
-                height: 100,
-                width: 'auto',
-                filter: 'drop-shadow(0 0 30px rgba(51, 204, 255, 0.3))',
-                zIndex: 2,
-                position: 'relative'
-              }}
-            />
-
-            {/* Scanning Line Animation */}
-            <Box sx={{
-              position: 'absolute',
-              top: 0, left: -20, right: -20,
-              height: '2px',
-              bgcolor: '#00F2FE',
-              boxShadow: '0 0 15px #00F2FE',
-              zIndex: 3,
-              opacity: 0.6,
-              animation: 'hologramScan 2s infinite ease-in-out'
-            }} />
+            <Box component="img" src="/logo.png" alt="Logo" sx={{ height: 100, width: 'auto', filter: 'drop-shadow(0 0 30px rgba(51, 204, 255, 0.3))', zIndex: 2, position: 'relative' }} />
           </Box>
 
-          {/* Detailed Diagnosis Feed */}
+          {/* Detailed Diagnosis Feed (Simulated Boot Log) */}
           <Stack spacing={2} alignItems="center" sx={{ width: '100%', maxWidth: 400 }}>
             <Box sx={{ width: '100%', px: 4 }}>
-               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography variant="overline" sx={{ color: '#00F2FE', fontWeight: 900, letterSpacing: 2 }}>RESOURCES_LOADING</Typography>
-                  <Typography variant="overline" sx={{ color: '#444', fontWeight: 900 }}>SYSTEM_STABILITY: 100%</Typography>
-               </Box>
-               <Box sx={{ height: 4, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 10, position: 'relative', overflow: 'hidden' }}>
-                  <Box sx={{ 
-                    position: 'absolute', height: '100%', width: '100%', 
-                    background: 'linear-gradient(90deg, #FF7A00, #FF0000, #E2127A, #00F2FE)',
-                    animation: 'loadingProgress 3s infinite' 
-                  }} />
-               </Box>
-            </Box>
-
-            <Box sx={{ mt: 4, px: 2, py: 1, bgcolor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
-               <Typography variant="caption" sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.65rem', display: 'block', mb: 0.5 }}>
-                 >_ INITIALIZING_RESOURCE_CORE... [OK]
-               </Typography>
-               <Typography variant="caption" sx={{ color: '#666', fontFamily: 'monospace', fontSize: '0.65rem', display: 'block', mb: 0.5 }}>
-                 >_ CALIBRATING_USER_INTERFACE... [OK]
-               </Typography>
-               <Typography variant="caption" sx={{ color: '#00F2FE', fontFamily: 'monospace', fontSize: '0.65rem', display: 'block', animation: 'blink 0.5s infinite' }}>
-                 >_ DEPLOYING_CORE_EXPERIENCE...
-               </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                   <Typography variant="overline" sx={{ color: '#00F2FE', fontWeight: 900, letterSpacing: 2 }}>RESOURCES_LOADING</Typography>
+                </Box>
+                <Box sx={{ height: 4, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 10, position: 'relative', overflow: 'hidden' }}>
+                   <Box sx={{ position: 'absolute', height: '100%', width: '100%', background: 'linear-gradient(90deg, #FF7A00, #FF0000, #E2127A, #00F2FE)', animation: 'loadingProgress 3s infinite' }} />
+                </Box>
             </Box>
           </Stack>
-
           <style>
             {`
-              @keyframes hologramScan {
-                0% { top: 0%; opacity: 0; }
-                50% { top: 50%; opacity: 0.8; }
-                100% { top: 100%; opacity: 0; }
-              }
-              @keyframes loadingProgress {
-                0% { left: -100%; }
-                50% { left: -30%; }
-                100% { left: 100%; }
-              }
-              @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+              @keyframes loadingProgress { 0% { left: -100%; } 100% { left: 100%; } }
             `}
           </style>
         </Box>
@@ -187,7 +146,7 @@ const PublicApp = () => {
     );
   }
 
-  // ── Maintenance state ──
+  // ── Maintenance state Check ──
   if (maintenanceMode) {
     return (
       <ThemeProvider theme={theme}>
@@ -197,7 +156,7 @@ const PublicApp = () => {
     );
   }
 
-  // ── Error / No data state ──
+  // ── Error Handling Check ──
   if (error || !profile) {
     return (
       <ThemeProvider theme={theme}>
@@ -207,13 +166,14 @@ const PublicApp = () => {
     );
   }
 
-  // ── Main app ──
+  // ── [Main Portfolio Layout] ──
   return (
     <>
       <Header />
       <DynamicBackground />
       <SystemInterfaceHUD />
       <Box sx={{ pt: 10 }}>
+        {/* AnimatePresence enables exit-animations when switching routes */}
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
@@ -222,23 +182,8 @@ const PublicApp = () => {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
           >
-            <Suspense fallback={
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 20 }}>
-                <Box 
-                  component="img"
-                  src="/logo.png"
-                  alt="Logo"
-                  sx={{ 
-                    height: 60,
-                    width: 'auto',
-                    mb: 2,
-                    filter: 'drop-shadow(0 0 15px rgba(51, 204, 255, 0.3))',
-                    animation: `${pulseGlow} 2s infinite ease-in-out`
-                  }}
-                />
-                <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>CORE_MODULE_LOADING</Typography>
-              </Box>
-            }>
+            {/* Suspense handles the loading state of the lazy-loaded components */}
+            <Suspense fallback={<Box sx={{ py: 20, textAlign: 'center' }}><Typography>MODULE_LOADING...</Typography></Box>}>
               <Routes location={location}>
                 <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
                 <Route path="/resume"       element={<Resume profile={profile} />} />
@@ -254,71 +199,45 @@ const PublicApp = () => {
   );
 };
 
+/**
+ * AppRoutes Component
+ * Determines whether to render Administrative views or the Public views based on current path.
+ */
 const AppRoutes = () => {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith('/admin');
 
   if (isAdminRoute) {
     return (
-      <Suspense fallback={
-        <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#010409' }}>
-          <Box 
-            component="img"
-            src="/logo.png"
-            alt="Logo"
-            sx={{ 
-              height: 60,
-              width: 'auto',
-              mb: 2,
-              filter: 'drop-shadow(0 0 15px rgba(51, 204, 255, 0.3))',
-              animation: `${pulseGlow} 2s infinite ease-in-out`
-            }}
-          />
-          <Typography variant="overline" sx={{ color: '#444', letterSpacing: 4, fontWeight: 900 }}>SECURE_AUTHENTICATION_LOADING</Typography>
-        </Box>
-      }>
+      <Suspense fallback={<Typography>SECURE_AUTH_LOADING...</Typography>}>
         <Routes>
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/management"
-            element={
-              <ProtectedRoute>
-                <AdministrativeTerminal />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/admin/management" element={<ProtectedRoute><AdministrativeTerminal /></ProtectedRoute>} />
         </Routes>
       </Suspense>
     );
   }
-
   return <PublicApp />;
 };
 
-// ─── App ──────────────────────────────────────────────────
+/**
+ * App Component (Global Entry Point)
+ * Initializes global listeners and removes the static HTML loader once React is ready.
+ */
 const App = () => {
   useEffect(() => {
-    // Remove the initial splash loader from index.html once React mounts
+    // Phase 1: Clean up initial-loader from index.html
     const loader = document.getElementById('initial-loader');
     if (loader) {
       loader.style.opacity = '0';
-      setTimeout(() => {
-        loader.remove();
-        document.body.style.overflow = 'auto'; // Re-enable scrolling
-      }, 800); 
+      setTimeout(() => { loader.remove(); document.body.style.overflow = 'auto'; }, 800); 
     } else {
       document.body.style.overflow = 'auto';
     }
 
-    // Global Spotlight Tracking
+    // Phase 2: Global Spotlight Cursor Tracking
+    // Updates CSS variables --x and --y for the glow effect following the cursor
     const handleMouseMove = (e) => {
       document.documentElement.style.setProperty('--x', `${e.clientX}px`);
       document.documentElement.style.setProperty('--y', `${e.clientY}px`);
