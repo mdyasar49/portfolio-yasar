@@ -1,7 +1,8 @@
 /**
- * [Express.js Core Framework]
- * This file configures the Express.js application, including route handling and 
- * implementation of global middlewares like CORS and JSON parsing.
+ * [Node.js & Express.js - Application Core]
+ * Technologies: Node.js (Runtime), Express.js (Framework), CORS (Inter-origin policy), Helmet (Security), Compression (Gzip)
+ * Purpose: This is the entry point for the backend logic. It initializes the Express application, 
+ * configures middleware pipelines, and orchestrates the routing for API and static build delivery.
  */
 const express = require('express');
 const cors = require('cors');
@@ -19,103 +20,105 @@ const { createCorsOptions } = require('./config/cors');
 
 const app = express();
 
-// 0. Payload Optimization (Gzip Compression)
+/**
+ * [LAYER 0] Performance Optimization
+ * Enabling Gzip compression reduces the payload size of the JSON and static assets.
+ */
 app.use(compression());
 
-// 1. CORS Orchestration (Must be first to handle preflights)
+/**
+ * [LAYER 1] CORS (Cross-Origin Resource Sharing)
+ * This layer validates if the incoming request origin is allowed based on the production security policy.
+ */
 const { allowedOrigins, corsOptions } = createCorsOptions();
 console.log(`🔐 [CORS] Allowed origins: ${allowedOrigins.join(', ')}`);
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle pre-flight requests globally
 
-// 2. Production Security Headers (Helmet)
+/**
+ * [LAYER 2] Security Headers (Helmet)
+ * Injects 15+ automated security headers (Content-Security-Policy, X-Frame-Options, etc.).
+ */
 app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
-    contentSecurityPolicy: false, 
+    contentSecurityPolicy: false, // Disabled to allow direct Google Font/Image loading during hydration
 }));
 
-
-// 3. Resource Protection (Rate Limiting)
+/**
+ * [LAYER 3] Protection & Telemetry
+ * Implements rate limiting to prevent brute-force attacks and logs incoming traffic.
+ */
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, 
-    max: 500, // Increased for development and heavy local testing
+    max: 500, 
     message: { success: false, message: 'Too many requests from this IP.' }
 });
 
-const contactLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, 
-    max: 5, 
-    message: { success: false, message: 'Spam protection active.' }
-});
+app.use(logger); // Visualizes incoming traffic in the terminal
+app.use(responseWrapper); // Standardizes the JSON output format
+app.use('/api', limiter); // Applies general rate limiting to all API endpoints
 
-// Middlewares (Express.js)
-app.use(logger);
-app.use(responseWrapper);
-
-// 3. Resource Protection (Rate Limiting)
-// General API Rate Limiting
-app.use('/api', limiter);
-
-// Moved specific contactLimiter to routes for better control
-
-
-// 2. Direct Browser Access Protection (Applied to ALL endpoints)
+/**
+ * [LAYER 4] Direct Access Shield
+ * Prevents direct browser access to the API endpoints to hide backend implementation details.
+ */
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     const referer = req.headers.referer;
     const accept = req.headers.accept || '';
 
-    // Allow requests that explicitly accept JSON (e.g. API debugging tools)
-    // or requests accompanied by a valid CORS origin/referer
     const isApiRequest = req.path.startsWith('/api');
     const isApiDiagnostic = isApiRequest && accept.includes('application/json');
     
-    // In production, we allow non-API GET requests to pass through to the static file server
-    const isProduction = process.env.NODE_ENV === 'production';
-    
+    // Logic: If user tries to visit /api/profile directly in a URL bar, show a custom 403 page
     if (req.method === 'GET' && isApiRequest && req.path !== '/api' && !origin && !referer && !isApiDiagnostic) {
-        // Use the first production URL for the return link if available
         const returnUrl = allowedOrigins.find(o => o.includes('onrender.com')) || 'https://mern-portfolio-yasar-1.onrender.com';
         
         return res.status(403).send(`
             <div style="background:#010409; color:#ff3366; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; padding:20px;">
                 <h1 style="font-size:3rem; margin-bottom:10px;">🚫 ACCESS_DENIED</h1>
                 <p style="color:#64748b; font-size:1.2rem;">Direct API access via browser is restricted to maintain MERN core integrity.</p>
-                <a href="${returnUrl}" style="color:#33ccff; text-decoration:none; border:1px solid #33ccff; padding:12px 30px; border-radius:8px; margin-top:30px; font-weight:bold; transition: 0.3s;">RETURN_TO_PORTFOLIO</a>
+                <a href="${returnUrl}" style="color:#33ccff; text-decoration:none; border:1px solid #33ccff; padding:12px 30px; border-radius:8px; margin-top:30px; font-weight:bold;">RETURN_TO_PORTFOLIO</a>
             </div>
         `);
     }
     next();
 });
 
-// 4. Request Body Parsing Orchestration
-// Increased limit for complex portfolio data synchronization
+/**
+ * [LAYER 5] Data Handlers
+ * Configures the application to handle high-payload JSON sync (up to 50MB).
+ */
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
+// Routing Orchestration
 const authRoutes = require('./routes/authRoutes');
 
-// 4. API Documentation (Swagger)
+// API Documentation (Swagger)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
-// Routes (Express.js) - Consolidating all API routes under /api prefix
+// Main API Routes
 app.use('/api', portfolioRoutes);
 app.use('/api/auth', authRoutes);
 
-// JSON 404 Handler for API
+// JSON 404 Handler for undefined API paths
 app.use('/api', (req, res) => {
     res.status(404).json({ success: false, message: 'API Endpoint not found' });
 });
 
-// Error Handler
+// Final Error Handling Middleware
 app.use(errorHandler);
 
-// 5. Production Static File Orchestration
+/**
+ * [LAYER 6] Production File Delivery
+ * In production mode, Express serves the compiled React build and handles SPA routing.
+ */
 if (process.env.NODE_ENV === 'production') {
     const buildPath = path.join(__dirname, '../client/build');
     app.use(express.static(buildPath));
 
-    // Handle SPA routing - deliver index.html for unknown non-API routes
+    // Wildcard route to deliver index.html (SPA support)
     app.get('*', (req, res) => {
         if (!req.path.startsWith('/api')) {
             res.sendFile(path.join(buildPath, 'index.html'));
@@ -125,18 +128,9 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-// Health Check (Legacy support for / root in dev)
+// Health Check Endpoint
 app.get('/', (req, res) => {
-    const isProduction = process.env.NODE_ENV === 'production';
-    if (isProduction) return res.status(200).send('System Operational');
-    
-    res.status(200).json({
-        status: 'Online',
-        message: '[Express.js API] - Systems Operational',
-        timestamp: new Date().toISOString(),
-        version: '1.0.0',
-        mode: 'Development'
-    });
+    res.status(200).json({ status: 'Online', timestamp: new Date() });
 });
 
 module.exports = app;

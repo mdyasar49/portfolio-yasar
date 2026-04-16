@@ -1,39 +1,67 @@
+/**
+ * [React.js & Material UI - Communication Architecture]
+ * Technologies: React.js (useState), Material UI (Forms, Snackbar, Grid), Lucide Icons, Framer Motion
+ * Purpose: This component provides a secure communication interface (Contact Form) 
+ * for users to reach out to the developer via an API-driven dispatch system.
+ */
 import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Stack, Container, Grid, CircularProgress, Alert, Snackbar, useMediaQuery, useTheme } from '@mui/material';
 import { Send, Mail, Terminal, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { dispatchCommunication } from '../services/api';
 
+/**
+ * Contact Component
+ * Manages form state, validation, and asynchronous dispatch of messages to the backend.
+ */
 const Contact = () => {
     const theme = useTheme();
+    // Responsive hook to adjust UI layout on smaller screens
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+    // ── Local State Management ──
     const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
     const [loading, setLoading] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [open, setOpen] = useState(false);
 
+    /**
+     * handleChange
+     * Standard input change handler for controlled component form state.
+     */
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    /**
+     * handleSubmit
+     * Orchestrates the secure dispatch of form data to the Node/Express backend.
+     */
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         
+        // Asynchronous API call to the communication endpoint
         const result = await dispatchCommunication(formData);
         
         setLoading(false);
         if (result.success) {
+            // Positive feedback state
             setStatus({ type: 'success', message: 'MESSAGE_DISPATCHED // SECURE_CHANNEL_READY' });
+            // Clear form on success
             setFormData({ name: '', email: '', subject: '', message: '' });
         } else {
+            // Negative feedback state (error handling)
             setStatus({ type: 'error', message: `DISPATCH_FAILURE // ${result.error}` });
         }
+        // Trigger the feedback snackbar notification
         setOpen(true);
     };
 
+    // Close handler for the snackbar notification
     const handleClose = () => setOpen(false);
 
+    // ── High-Fidelity UI Styling (MUI Overrides) ──
     const inputStyles = {
         '& .MuiOutlinedInput-root': {
             color: 'white',
@@ -51,7 +79,8 @@ const Contact = () => {
     return (
         <Container maxWidth="lg" id="contact" sx={{ py: 15 }}>
             <Grid container spacing={8} alignItems="center">
-                {/* Visual HUD Side */}
+                
+                {/* [Visual HUD Side] - Static Info & Branding */}
                 <Grid item xs={12} md={5}>
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
@@ -68,6 +97,7 @@ const Contact = () => {
                             Have a project in mind or just want to say hi? Feel free to reach out. I'm always open to discussing new opportunities and technical challenges.
                         </Typography>
 
+                        {/* Informational HUD Blocks */}
                         <Stack spacing={3}>
                             {[
                                 { icon: <Terminal size={18} />, label: 'MAIN_STACK', val: 'Node.js / Express / MongoDB' },
@@ -101,7 +131,7 @@ const Contact = () => {
                     </motion.div>
                 </Grid>
 
-                {/* Form Side */}
+                {/* [Form Side] - User Interaction Layer */}
                 <Grid item xs={12} md={7}>
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
@@ -114,9 +144,10 @@ const Contact = () => {
                             border: '1px solid rgba(255,255,255,0.05)',
                             position: 'relative', overflow: 'hidden'
                         }}>
-                             {/* Form Decoration */}
+                             {/* Static Aesthetic Glimmer */}
                             <Box sx={{ position: 'absolute', top: 0, right: 0, width: 100, height: 100, background: 'radial-gradient(circle at top right, rgba(51, 204, 255, 0.1), transparent)' }} />
                             
+                            {/* Controlled Form Fields */}
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
                                     <TextField fullWidth label="FULL_NAME" name="name" value={formData.name} onChange={handleChange} required sx={inputStyles} />
@@ -151,6 +182,7 @@ const Contact = () => {
                 </Grid>
             </Grid>
 
+            {/* Global Communication Feedback (Snackbar) */}
             <Snackbar 
                 open={open} 
                 autoHideDuration={6000} 

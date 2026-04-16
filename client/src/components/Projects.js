@@ -1,8 +1,17 @@
+/**
+ * [React.js & Material UI - Portfolio Showcase]
+ * Technologies: React.js (Memo, useState), Material UI (Cards, Dialogs, Tabs), Framer Motion (useMotionValue, useSpring, AnimatePresence)
+ * Purpose: This component renders the 'Featured Projects' section with high-end tilt effects and a technical inspection modal.
+ */
 import React, { useState, memo } from 'react';
 import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, useMediaQuery, useTheme, Tabs, Tab } from '@mui/material';
 import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard, Cpu } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
+/**
+ * TiltCard Component
+ * High-performance 3D parallax effect component for individual project cards.
+ */
 const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -13,6 +22,10 @@ const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
 
+  /**
+   * handleMouseMove
+   * Calculates the percentage offset of the cursor from the center of the card.
+   */
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
@@ -21,6 +34,10 @@ const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
     y.set(yPct);
   };
 
+  /**
+   * handleMouseLeave
+   * Resets the springs to return the card to its natural flat state.
+   */
   const handleMouseLeave = () => {
     x.set(0);
     y.set(0);
@@ -64,6 +81,11 @@ const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
   );
 });
 
+/**
+ * Projects Component
+ * Primary container for the project catalog. Handles modal state and layout distribution.
+ * @param {Array} projects - Array of project objects from the backend profile.
+ */
 const Projects = memo(({ projects }) => {
   const [selectedProject, setSelectedProject] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -129,7 +151,7 @@ const Projects = memo(({ projects }) => {
                       boxShadow: `0 40px 100px rgba(0,0,0,0.9), 0 0 40px ${accent}22`
                     }
                   }}>
-                    {/* MEDIA ENGINE with Holographic Scanners */}
+                    {/* [MEDIA ENGINE] Holographic scanner effect on project image */}
                     <Box sx={{ position: 'relative', overflow: 'hidden', height: 320 }}>
                       <CardMedia
                         component="img"

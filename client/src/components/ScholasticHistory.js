@@ -1,13 +1,25 @@
+/**
+ * [React.js & Material UI - Academic Foundations]
+ * Technologies: React.js (Memo), Material UI (Paper, Stack), Lucide Icons, Framer Motion
+ * Purpose: This component renders the 'Academic Background' section, mapping formal 
+ * educational qualifications with high-fidelity visual cards.
+ */
 import React, { memo } from 'react';
 import { Box, Typography, Stack, Paper } from '@mui/material';
 import { GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+/**
+ * AcademicTimeline Component
+ * Displays a list of educational milestones.
+ * @param {Array} education - Array of education objects containing degree, institution, and year.
+ */
 const AcademicTimeline = memo(({ education }) => {
   if (!education || !Array.isArray(education)) return null;
 
   return (
     <Box id="education" sx={{ py: 15 }}>
+      {/* ─── SECTION HEADER ─── */}
       <Typography variant="h2" gutterBottom sx={{ mb: 10, textAlign: 'center', fontFamily: 'Syncopate', fontWeight: 800, letterSpacing: 2 }}>
         ACADEMIC <Box component="span" sx={{ color: '#ff3366' }}>BACKGROUND</Box>
       </Typography>
@@ -21,6 +33,7 @@ const AcademicTimeline = memo(({ education }) => {
             transition={{ duration: 0.8, delay: index * 0.2, type: 'spring', bounce: 0.4 }}
             viewport={{ once: true, margin: '-50px' }}
           >
+            {/* [Education Card] - Glassmorphic design with central iconography */}
             <Paper className="glass-panel" sx={{ 
               p: { xs: 4, md: 6 }, 
               display: 'flex', 
@@ -31,6 +44,7 @@ const AcademicTimeline = memo(({ education }) => {
               borderRadius: '24px',
               background: 'transparent'
             }}>
+              {/* Specialized Graduation Icon with pulse-like shadow */}
               <Box sx={{ 
                 p: 3, 
                 borderRadius: '50%', 
@@ -41,6 +55,7 @@ const AcademicTimeline = memo(({ education }) => {
               }}>
                 <GraduationCap size={40} />
               </Box>
+              
               <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
                 <Typography variant="h3" sx={{ 
                   mb: 1,
@@ -52,6 +67,8 @@ const AcademicTimeline = memo(({ education }) => {
                 }}>
                   {edu.degree}
                 </Typography>
+                
+                {/* Institution name with dynamic link support */}
                 {edu.institutionUrl ? (
                   <Typography 
                     variant="h6" 
@@ -67,6 +84,8 @@ const AcademicTimeline = memo(({ education }) => {
                     {edu.institution}
                   </Typography>
                 )}
+                
+                {/* Graduation Validation Badge */}
                 <Typography variant="body2" sx={{ color: '#ccc', fontWeight: 600, letterSpacing: 1, background: 'rgba(255,255,255,0.05)', px: 2, py: 1, borderRadius: 2, display: 'inline-block' }}>
                   GRADUATED: {edu.year}
                 </Typography>

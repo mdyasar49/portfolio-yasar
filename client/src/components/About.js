@@ -1,9 +1,20 @@
+/**
+ * [React.js & Material UI - Identity Architecture]
+ * Technologies: React.js (Memo), Material UI (Grid, Box, Stack), Framer Motion (Scroll Animations)
+ * Purpose: This component displays the 'About Me' section, focusing on professional summary and key stats.
+ */
 import React, { memo } from 'react';
 import { Box, Typography, Grid, Stack } from '@mui/material';
 import { motion } from 'framer-motion';
 
+/**
+ * About Component
+ * @param {Object} profile - Data object containing 'summary', 'softSkills', and other professional details.
+ */
 const About = memo(({ profile }) => {
+  // Safety check: Don't render if profile data is missing
   if (!profile) return null;
+
   return (
     <Box id="about" sx={{ py: 20, position: 'relative' }}>
       <motion.div
@@ -13,9 +24,11 @@ const About = memo(({ profile }) => {
         viewport={{ once: true }}
       >
         <Grid container spacing={8} alignItems="center">
-          {/* Creative Identity Panel */}
+          
+          {/* [Left Column] - Creative Identity Panel */}
           <Grid item xs={12} md={5}>
             <Box sx={{ position: 'relative' }}>
+              {/* Background abstract animation - Outer Ring */}
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
@@ -27,6 +40,7 @@ const About = memo(({ profile }) => {
                   pointerEvents: 'none'
                 }}
               />
+              {/* Background abstract animation - Inner Ring */}
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
@@ -66,16 +80,17 @@ const About = memo(({ profile }) => {
                    <Typography variant="overline" sx={{ color: '#00ffcc', letterSpacing: 4, mt: 2, fontWeight: 900 }}>PROFESSIONAL_DATA</Typography>
                 </Stack>
 
-                {/* Corner Accents */}
+                {/* Aesthetic Corner Accents */}
                 <Box sx={{ position: 'absolute', top: 20, left: 20, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' }} />
                 <Box sx={{ position: 'absolute', bottom: 20, right: 20, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' }} />
               </Box>
             </Box>
           </Grid>
 
-          {/* Data & Narrative Panel */}
+          {/* [Right Column] - Data & Narrative Panel */}
           <Grid item xs={12} md={7}>
             <Stack spacing={5}>
+              {/* Narrative Content */}
               <Box>
                 <Typography variant="overline" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 5, mb: 1, display: 'block' }}>&gt; EXECUTIVE_SUMMARY</Typography>
                 <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '1.8rem' }}>
@@ -86,6 +101,7 @@ const About = memo(({ profile }) => {
                 </Typography>
               </Box>
 
+              {/* Grid of Achievement Stats */}
               <Grid container spacing={3}>
                 {[
                   { label: 'EXPERTISE_LEVEL', value: 'FULL_STACK_DEVELOPER', color: '#33ccff' },
@@ -102,6 +118,7 @@ const About = memo(({ profile }) => {
                     }}>
                       <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1.5, display: 'block', mb: 1, fontSize: '0.6rem', fontFamily: 'Syncopate' }}>{stat.label}</Typography>
                       <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '0.85rem' }}>{stat.value}</Typography>
+                      {/* Animated Progress bar per stat */}
                       <Box sx={{ mt: 1.5, height: 2, width: '100%', bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 10, overflow: 'hidden' }}>
                         <motion.div 
                           initial={{ width: 0 }}
@@ -115,6 +132,7 @@ const About = memo(({ profile }) => {
                 ))}
               </Grid>
 
+              {/* Soft Skills Chips Distribution */}
               {profile?.softSkills && (
                 <Box>
                   <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 3, mb: 2, display: 'block' }}>&gt; CORE_COMPETENCIES</Typography>

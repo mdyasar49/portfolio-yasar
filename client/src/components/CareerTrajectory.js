@@ -1,13 +1,25 @@
+/**
+ * [React.js & Material UI - Career Timeline]
+ * Technologies: React.js (Memo), Material UI (Cards, Stack), Framer Motion (Spring Animations), Lucide Icons
+ * Purpose: This component renders the 'Career Trajectory' section, visualizing professional 
+ * experience with embedded technical metrics and responsibility feeds.
+ */
 import React, { memo } from 'react';
 import { Box, Typography, Card, CardContent, Stack, Button } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Linkedin } from 'lucide-react';
 
+/**
+ * CareerTrajectory Component
+ * Maps career history into a high-fidelity vertical timeline.
+ * @param {Array} experience - Collection of experience objects from the backend profile.
+ */
 const CareerTrajectory = memo(({ experience }) => {
   if (!experience || !Array.isArray(experience)) return null;
 
   return (
     <Box id="experience" sx={{ py: 15 }}>
+      {/* ─── SECTION HEADER ─── */}
       <Typography variant="h2" gutterBottom sx={{ 
         mb: { xs: 5, md: 10 }, 
         textAlign: 'center', 
@@ -28,6 +40,7 @@ const CareerTrajectory = memo(({ experience }) => {
             transition={{ duration: 0.8, delay: index * 0.2, type: 'spring', bounce: 0.4 }}
             viewport={{ once: true, margin: '-50px' }}
           >
+            {/* [Experience Card] - Featuring glassmorphic design and thematic accent */}
             <Card className="glass-panel" sx={{ 
               borderLeft: '5px solid #ff3366', 
               borderRadius: '24px',
@@ -50,6 +63,7 @@ const CareerTrajectory = memo(({ experience }) => {
                     </Typography>
                     
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                      {/* Company Name with live link support */}
                       {exp.companyUrl ? (
                         <Typography 
                           variant="h6" 
@@ -66,6 +80,7 @@ const CareerTrajectory = memo(({ experience }) => {
                         </Typography>
                       )}
 
+                      {/* Official Post/LinkedIn Validation Button */}
                       {exp.companyLinkedIn && (
                         <Button 
                           component="a" 
@@ -100,6 +115,7 @@ const CareerTrajectory = memo(({ experience }) => {
                       )}
                     </Box>
                   </Box>
+                  {/* Service Duration Badge */}
                   <Box sx={{ mt: { xs: 2, md: 0 }, background: 'rgba(255,255,255,0.05)', px: 2, py: 1, borderRadius: 2, display: 'inline-flex', alignItems: 'center', height: 'fit-content' }}>
                     <Typography variant="body2" sx={{ color: '#ccc', fontWeight: 600, letterSpacing: 1 }}>
                       {exp.period}
@@ -107,7 +123,7 @@ const CareerTrajectory = memo(({ experience }) => {
                   </Box>
                 </Box>
                 
-                {/* Engineering Metrics HUD */}
+                {/* [ENGINEERING METRICS HUD] - Visual KPI indicators for the role */}
                 {exp.metrics && (
                   <Stack direction="row" spacing={4} sx={{ mb: 4, flexWrap: 'wrap', gap: 3 }}>
                     {exp.metrics.map((m, i) => (
@@ -129,7 +145,7 @@ const CareerTrajectory = memo(({ experience }) => {
                   </Stack>
                 )}
 
-                {/* Role Specific Stack */}
+                {/* Technical Stack used specifically in this role */}
                 {exp.technologies && (
                   <Box sx={{ mb: 4 }}>
                     <Typography variant="caption" sx={{ color: '#ff9933', fontWeight: 900, mb: 1.5, display: 'block', letterSpacing: 2, fontSize: '0.65rem', fontFamily: 'Syncopate' }}>TECHNOLOGY_STACK</Typography>
@@ -143,6 +159,7 @@ const CareerTrajectory = memo(({ experience }) => {
                   </Box>
                 )}
 
+                {/* Responsibility Feed: Detailed task descriptions */}
                 <Box sx={{ mt: 3 }}>
                   <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, mb: 2, display: 'block', letterSpacing: 2, fontSize: '0.65rem', fontFamily: 'Syncopate' }}>KEY_RESPONSIBILITIES</Typography>
                   <Stack spacing={2.5}>

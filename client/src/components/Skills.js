@@ -1,13 +1,25 @@
+/**
+ * [React.js & Material UI - Competency Architecture]
+ * Technologies: React.js (Memo), Material UI (Grid, Paper, Stack, Tooltip), Lucide Icons, Framer Motion
+ * Purpose: This component visualizes the 'Technical Arsenal' - a categorized breakdown of expertise.
+ */
 import React, { memo } from 'react';
 import { Box, Typography, Grid, Paper, Stack, Tooltip } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Database, Layout, Terminal, Sparkles, Cpu, Activity } from 'lucide-react';
 import TechOrbit from './TechOrbit';
 
+/**
+ * SkillCategory Component
+ * Specialized sub-component to render an interactive panel for a specific skill vertical.
+ */
 const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
   <motion.div
+    // initial state for 'entry' animation
     initial={{ opacity: 0, scale: 0.9 }}
+    // target state when scrolled into viewport
     whileInView={{ opacity: 1, scale: 1 }}
+    // smooth cubic easing transition
     transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
     viewport={{ once: true }}
     style={{ height: '100%' }}
@@ -24,6 +36,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
         border: '1px solid rgba(255, 255, 255, 0.03)',
         transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
         overflow: 'hidden',
+        // Interactive Hover State Transitions
         '&:hover': {
           transform: 'translateY(-12px) scale(1.02)',
           borderColor: color,
@@ -33,7 +46,10 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
         }
       }}
     >
-      {/* Circuit Background Pattern */}
+      {/* 
+        [Aesthetic Layer] 
+        Circuit Background Pattern - uses a tiny radial gradient to simulate electronic grid dots.
+      */}
       <Box className="circuit-bg" sx={{ 
         position: 'absolute', inset: 0, opacity: 0.02, 
         backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', 
@@ -41,6 +57,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
       }} />
 
       <Stack spacing={3} sx={{ position: 'relative', zIndex: 1 }}>
+        {/* Header Section: Icon & Category Label */}
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: `${color}15`, color: color, display: 'flex' }}>
             <Icon size={32} />
@@ -48,6 +65,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
           <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>RESOURCES</Typography>
         </Box>
 
+        {/* Dynamic Expertise Bar - width grows on container hover */}
         <Box>
           <Typography variant="h3" sx={{ 
             fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 1, color: 'white', mb: 1 
@@ -57,6 +75,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
           <Box className="expertise-bar" sx={{ height: 2, width: '30%', bgcolor: color, transition: '0.6s width cubic-bezier(0.23, 1, 0.32, 1)', boxShadow: `0 0 10px ${color}` }} />
         </Box>
 
+        {/* Skill Tag Distribution: Iterates through skill arrays */}
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           {skills.map((skill, idx) => (
             <Tooltip key={skill} title="Expert Level Consistently Maintained" arrow placement="top">
@@ -79,7 +98,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
         </Box>
       </Stack>
 
-      {/* Pulsing Corner Indicator */}
+      {/* Decorative Neon Pulse - Visual 'Active' heartbeat indicator */}
       <Box sx={{ 
         position: 'absolute', top: 15, right: 15, width: 6, height: 6, 
         borderRadius: '50%', bgcolor: color, animation: 'pulse-neon 2s infinite' 
@@ -88,9 +107,14 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
   </motion.div>
 ));
 
+/**
+ * Skills Component
+ * Parent orchestrator for technical skill visualizations and data mapping.
+ */
 const Skills = memo(({ skills }) => {
   if (!skills) return null;
 
+  // Domain categorization map for the various technical sectors
   const categories = [
     { title: 'FRONTEND DEVELOPMENT', skills: skills.frontend || [], icon: Layout, color: '#33ccff' },
     { title: 'BACKEND ENGINEERING', skills: skills.backend || [], icon: Database, color: '#ff3366' },
@@ -102,6 +126,7 @@ const Skills = memo(({ skills }) => {
 
   return (
     <Box id="skills" sx={{ py: 15, position: 'relative' }}>
+      {/* Global CSS for the custom pulse animation */}
       <style>
         {`
           @keyframes pulse-neon {
@@ -111,6 +136,7 @@ const Skills = memo(({ skills }) => {
         `}
       </style>
 
+      {/* Primary Section Branding */}
       <Box sx={{ mb: 10, position: 'relative' }}>
         <Typography 
           variant="h2" 
@@ -125,8 +151,10 @@ const Skills = memo(({ skills }) => {
         <Box sx={{ width: 100, height: 4, background: 'linear-gradient(90deg, #ff3366, #ff9933)', mx: 'auto', borderRadius: 2, mt: 3 }} />
       </Box>
 
+      {/* Floating Orbital Decoration Component */}
       <TechOrbit />
 
+      {/* Categorized Resource Grid */}
       <Grid container spacing={3}>
         {categories.map((cat, i) => (
           <Grid item xs={12} sm={6} md={4} lg={2.4} key={cat.title}>
