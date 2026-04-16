@@ -1,10 +1,23 @@
 /**
- * [Material UI Design System]
+ * [Material UI Design System - UHD/16K Enhancement]
  * This file defines all colors, typography, and styling tokens for your app.
+ * Scaled and optimized for Ultra-High-Definition (16K) viewing experiences.
  */
 import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
+  // ── [Ultra-High-Resolution Breakpoints] ──
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,   // Standard Desktop
+      '2xl': 2560, // 2K/4K Monitors
+      '3xl': 3840, // 8K/16K Extreme Displays
+    },
+  },
   palette: {
     mode: 'dark',
     primary: {
@@ -26,34 +39,60 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '"Outfit", "Inter", sans-serif',
+    // FLUID TYPOGRAPHY: Scaling fonts proportionally for massive resolutions
     h1: {
       fontFamily: '"Syncopate", sans-serif',
       fontWeight: 900,
       letterSpacing: '-2px',
+      fontSize: 'clamp(3rem, 8vw, 12rem)', 
     },
     h2: {
       fontFamily: '"Syncopate", sans-serif',
       fontWeight: 900,
       letterSpacing: '-1px',
+      fontSize: 'clamp(2rem, 5vw, 6rem)',
     },
     h3: {
       fontFamily: '"Syncopate", sans-serif',
       fontWeight: 800,
+      fontSize: 'clamp(1.5rem, 3vw, 4rem)',
     },
     h4: {
       fontFamily: '"Syncopate", sans-serif',
       fontWeight: 800,
+      fontSize: 'clamp(1.2rem, 2.5vw, 3rem)',
+    },
+    body1: {
+      fontSize: 'clamp(1rem, 1.2vw, 1.5rem)',
+      lineHeight: 1.8,
     },
     button: {
       fontFamily: '"Syncopate", sans-serif',
       fontWeight: 900,
       letterSpacing: '1px',
+      fontSize: 'clamp(0.7rem, 0.9vw, 1rem)',
     },
   },
   shape: {
     borderRadius: 16,
   },
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          // Allowing containers to expand for extreme widths while maintaining center alignment
+          '@media (min-width: 1921px)': {
+            maxWidth: '1800px !important',
+          },
+          '@media (min-width: 2561px)': {
+            maxWidth: '2400px !important',
+          },
+          '@media (min-width: 3841px)': {
+            maxWidth: '3200px !important',
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

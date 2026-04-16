@@ -102,6 +102,7 @@ const Documentation = ({ profile }) => {
     { name: 'Core Architecture', path: 'explanation', type: 'doc', icon: <Layers size={16} /> },
     { name: 'Tech Stack', path: 'dev-stack', type: 'doc', icon: <Zap size={16} /> },
     { name: 'Network Status', path: 'api-status', type: 'doc', icon: <Activity size={16} /> },
+    { name: 'Frontend Roadmap', path: 'roadmap', type: 'doc', icon: <Layout size={16} /> },
     { name: 'Home / About', path: '/', type: 'page', icon: <Globe size={16} /> },
     { name: 'Professional Resume', path: '/resume', type: 'page', icon: <Layout size={16} /> },
     { name: 'Project Gallery', path: '/projects', type: 'page', icon: <Cpu size={16} /> },
@@ -233,6 +234,7 @@ const Documentation = ({ profile }) => {
     { id: 'explanation', label: 'CORE ARCHITECTURE', icon: <Layers size={16} /> },
     { id: 'dev-stack', label: 'DEVELOPMENT STACK', icon: <Zap size={16} /> },
     { id: 'api-status', label: 'NETWORK STATUS', icon: <Activity size={16} /> },
+    { id: 'roadmap', label: 'FRONTEND ROADMAP', icon: <Layout size={16} /> },
     { id: 'structure', label: 'FILESYSTEM', icon: <Hash size={16} /> },
   ];
 
@@ -301,6 +303,83 @@ const Documentation = ({ profile }) => {
       <Box sx={{ p: 4, bgcolor: 'rgba(0,0,0,0.3)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
         <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, mb: 3, display: 'block' }}>PROJECT_TREE_EXPLORER v2.0</Typography>
         {renderTree(tree)}
+      </Box>
+    );
+  };
+
+  const RoadmapExplorer = () => {
+    const roadmapData = [
+      { 
+        id: 'basics', label: 'BASICS', color: '#00ffcc', 
+        children: [
+          { label: 'HTML', items: ['Semantic HTML', 'Forms and Inputs', 'Accessibility (ARIA)'] },
+          { label: 'CSS', items: ['Box Model', 'Flexbox', 'Grid', 'Responsive Design', 'CSS Variables', 'Animations'] },
+          { label: 'JAVASCRIPT', items: ['DOM Manipulation', 'ES6+ Features', 'Async/Await', 'Fetch API'] }
+        ]
+      },
+      {
+        id: 'ecosystem', label: 'ECOSYSTEM', color: '#33ccff',
+        children: [
+          { label: 'VERSION CONTROL', items: ['Git Basics', 'Branching/Merging', 'GitHub/GitLab'] },
+          { label: 'PACKAGE MANAGERS', items: ['npm', 'yarn'] },
+          { label: 'BUILD TOOLS', items: ['Webpack', 'ESLint', 'Prettier'] }
+        ]
+      },
+      {
+        id: 'frameworks', label: 'ARCHITECTURE', color: '#ff3366',
+        children: [
+          { label: 'REACT', items: ['JSX', 'Hooks', 'Context API', 'Redux', 'React Router'] },
+          { label: 'STATE MGMT', items: ['Redux Toolkit', 'Context', 'Recoil'] },
+          { label: 'TESTING', items: ['Jest', 'Cypress', 'Integration Testing'] }
+        ]
+      },
+      {
+        id: 'advanced', label: 'ADVANCED', color: '#ff9933',
+        children: [
+          { label: 'PERFORMANCE', items: ['Lazy Loading', 'Code Splitting', 'Web Vitals'] },
+          { label: 'PWA', items: ['Service Workers', 'Manifest', 'Offline Support'] },
+          { label: 'DEPLOYMENT', items: ['CI/CD Pipelines', 'Vercel/Netlify', 'Docker Basics'] }
+        ]
+      }
+    ];
+
+    return (
+      <Box sx={{ p: { xs: 2, md: 4 } }}>
+        <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, mb: 4, display: 'block', letterSpacing: 4 }}>FRONTEND_ENGINEER_ROADMAP_v1.0</Typography>
+        <Grid container spacing={3}>
+          {roadmapData.map((section, idx) => (
+            <Grid item xs={12} md={6} key={idx}>
+              <Box sx={{ 
+                p: 3, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)',
+                height: '100%', borderLeft: `4px solid ${section.color}`
+              }}>
+                <Typography variant="h6" sx={{ color: section.color, fontWeight: 900, mb: 3, fontFamily: 'Syncopate', fontSize: '0.9rem' }}>{section.label}</Typography>
+                <Stack spacing={3}>
+                  {section.children.map((child, cidx) => (
+                    <Box key={cidx}>
+                      <Typography variant="caption" sx={{ color: 'white', fontWeight: 800, mb: 1, display: 'block', opacity: 0.8 }}>{child.label}</Typography>
+                      <Stack direction="row" flexWrap="wrap" gap={1}>
+                        {child.items.map((item, iidx) => (
+                          <Box key={iidx} sx={{ 
+                            px: 1.5, py: 0.5, borderRadius: 1.5, border: '1px solid rgba(255,255,255,0.05)',
+                            bgcolor: 'rgba(255,255,255,0.02)', color: '#94a3b8', fontSize: '0.7rem', fontWeight: 600
+                          }}>
+                            {item}
+                          </Box>
+                        ))}
+                      </Stack>
+                    </Box>
+                  ))}
+                </Stack>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+        <Box sx={{ mt: 5, p: 3, bgcolor: 'rgba(0, 255, 204, 0.03)', border: '1px dashed rgba(0, 255, 204, 0.2)', borderRadius: 3 }}>
+          <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Zap size={14} /> CONTINUOUS_LEARNING_PROTOCOL: System state updated with roadmap directives.
+          </Typography>
+        </Box>
       </Box>
     );
   };
@@ -720,6 +799,11 @@ const Documentation = ({ profile }) => {
                            ))}
                         </Grid>
                      </Box>
+                  ) : activeSection === 'roadmap' ? (
+                      <Box sx={{ maxWidth: '1000px', mx: 'auto' }}>
+                         <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, mb: 4 }}>Skill Progression Roadmap</Typography>
+                         <RoadmapExplorer />
+                      </Box>
                   ) : (
                     <Box sx={{ maxWidth: '600px', mx: 'auto', textAlign: 'center', py: 10 }}>
                        <ShieldCheck size={80} color="#00ffcc" style={{ opacity: 0.3, marginBottom: 20 }} />
