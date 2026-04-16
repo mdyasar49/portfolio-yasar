@@ -106,7 +106,7 @@ const About = memo(({ profile }) => {
                 {[
                   { label: 'EXPERTISE_LEVEL', value: 'FULL_STACK_DEVELOPER', color: '#33ccff' },
                   { label: 'WORK_EXPERIENCE', value: 'AROUND_3_YEARS', color: '#ff3366' },
-                  { label: 'PROJECTS_LAUNCHED', value: '15+_TOTAL', color: '#00ffcc' }
+                  { label: 'PROJECT_LAUNCHED', value: `${profile.projects?.length || 0}+_TOTAL`, color: '#00ffcc' }
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>
                     <Box sx={{ 
