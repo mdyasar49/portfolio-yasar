@@ -25,10 +25,12 @@ const useProfile = () => {
         try {
             for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try {
-                    const data = await fetchSystemInterfaceData();
-                    if (data) {
-                        setProfile(data);
-                        setMaintenanceMode(data.maintenanceMode || false);
+                    const response = await fetchSystemInterfaceData();
+                    if (response) {
+                        // Standardized unwrapping logic for the MERN payload structure
+                        const actualData = response.payload || response;
+                        setProfile(actualData);
+                        setMaintenanceMode(actualData.maintenanceMode || false);
                         return;
                     }
                 } catch (err) {

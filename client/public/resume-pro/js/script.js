@@ -1,12 +1,21 @@
 /**
  * [Resume Pro Engine - v2.1 Ultimate]
- * Enhanced with Share Protocol and System Dispatch Logic.
+ * Technologies: Vanilla Javascript, Fetch API, html2pdf.js
+ * Purpose: This script orchestrates the dynamic rendering of the professional resume 
+ * by fetching data from the MERN backend, injecting it into structured templates, 
+ * and providing high-fidelity PDF export capabilities.
  */
 
+// --- [GATEWAY_CONFIGURATION] ---
 const query = new URLSearchParams(window.location.search);
 const configuredApi = query.get('api');
 const isDispatchAuto = query.get('system_dispatch') === 'true';
 
+/**
+ * buildApiCandidates
+ * @desc Resolves the most reliable API endpoint based on the current environment 
+ * and explicit configuration overlays.
+ */
 const buildApiCandidates = () => {
     const candidates = [];
     if (configuredApi) candidates.push(configuredApi);
@@ -35,7 +44,7 @@ const CONFIG = {
     }
 };
 
-// --- Utilities ---
+// --- [DOM_ORCHESTRATION_UTILITIES] ---
 let UI = {};
 
 const initUI = () => {
@@ -59,13 +68,25 @@ const setProgress = (percent, message) => {
     if (UI.message) UI.message.innerText = message || 'PROCESSING...';
 };
 
+/**
+ * [DATA_SANITIZATION_LAYER]
+ * Removes technical tags like "(Professional)" or "(Basics)" from the UI display 
+ * to maintain a cleaner aesthetic on the physical document.
+ */
+const sanitizeSkill = (s) => s.replace(/\s*\(.*?\)\s*/g, '').trim();
+
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 const safeArr = (v) => Array.isArray(v) ? v : [];
 const safeStr = (v, f = '') => typeof v === 'string' ? v : f;
 const safeObj = (v) => (v && typeof v === 'object') ? v : {};
 
-// --- Core Logic ---
+// --- [CORE_HANDSHAKE_LOGIC] ---
 
+/**
+ * fetchProfile
+ * @desc Attempts to retrieve the profile data from available API candidates with 
+ * built-in retry logic and terminal feedback.
+ */
 async function fetchProfile(maxAttempts = 3) {
     setProgress(10, 'SYNCING WITH DATA CORE...');
     let lastError = null;
@@ -90,6 +111,10 @@ async function fetchProfile(maxAttempts = 3) {
     throw lastError || new Error('All endpoints unreachable');
 }
 
+/**
+ * loadTemplates / loadComponents
+ * @desc Dynamically mounts the HTML blueprint and interactive UI modules.
+ */
 async function loadTemplates() {
     setProgress(50, 'FETCHING MODULES...');
     const keys = Object.keys(CONFIG.templates);
@@ -125,7 +150,7 @@ function setupEventListeners() {
     UI.themeToggle?.addEventListener('click', () => document.body.classList.toggle('dark-mode-interactive'));
 }
 
-// --- Renderers ---
+// --- [DYNAMIC_RENDER_ENGINE] ---
 
 function inject(id, html) {
     const el = document.getElementById(id);
@@ -157,12 +182,12 @@ const RenderEngine = {
         inject('skills-module', tpl);
         const s = safeObj(p.technicalSkills);
         const html = [
-            { l: 'Frontend', v: safeArr(s.frontend).join(', ') },
-            { l: 'Backend', v: safeArr(s.backend).join(', ') },
-            { l: 'Database', v: safeArr(s.database).join(', ') },
-            { l: 'Tools', v: safeArr(s.tools).join(', ') },
-            { l: 'AI Tech', v: safeArr(s.aiTools).join(', ') },
-            { l: 'Expertise', v: safeArr(s.other).join(', ') }
+            { l: 'Frontend', v: safeArr(s.frontend).map(sanitizeSkill).join(', ') },
+            { l: 'Backend', v: safeArr(s.backend).map(sanitizeSkill).join(', ') },
+            { l: 'Database', v: safeArr(s.database).map(sanitizeSkill).join(', ') },
+            { l: 'Tools', v: safeArr(s.tools).map(sanitizeSkill).join(', ') },
+            { l: 'AI Tech', v: safeArr(s.aiTools).map(sanitizeSkill).join(', ') },
+            { l: 'Expertise', v: safeArr(s.other).map(sanitizeSkill).join(', ') }
         ].map(i => i.v ? `<div class="skill-item"><b>${i.l}:</b> ${i.v}</div>` : '').join('');
         inject('skills-list', html);
     },
@@ -209,18 +234,22 @@ const RenderEngine = {
     }
 };
 
-// --- Initialization ---
+// --- [LIFECYCLE_ORCHESTRATION] ---
 
 async function init() {
     try {
         await loadComponents();
-        const profile = await fetchProfile();
+        
+        // --- [DATA_EXTRACTION_PROTOCOL] ---
+        // The backend wraps the profile in a 'payload' object. 
+        // We unwrap it here to ensure the rendering modules receive the raw persona data.
+        const profileResponse = await fetchProfile();
+        const profile = profileResponse.payload || profileResponse;
 
         // --- Apply Resume Content Overrides (Legacy details restoration) ---
         if (profile.resumeOverride) {
             if (profile.resumeOverride.summary) profile.summary = profile.resumeOverride.summary;
             if (profile.resumeOverride.experience) {
-                // Map existing meta-data (location, etc) onto old descriptions
                 profile.experience = profile.experience.map(exp => {
                     const override = profile.resumeOverride.experience.find(o => o.company === exp.company);
                     return override ? { ...exp, description: override.description } : exp;
@@ -236,6 +265,8 @@ async function init() {
 
         const templates = await loadTemplates();
         setProgress(95, 'FINALIZING RENDER...');
+        
+        // Sequence the rendering of each individual document module
         RenderEngine.header(templates.header, profile);
         RenderEngine.summary(templates.summary, profile);
         RenderEngine.skills(templates.skills, profile);
@@ -243,12 +274,16 @@ async function init() {
         RenderEngine.projects(templates.projects, profile);
         RenderEngine.education(templates.education, profile);
         RenderEngine.footer(templates.footer, profile);
+        
         setProgress(100, 'SYSTEM READY.');
         await sleep(500);
+        
+        // Hide loader and activate document view
         UI.overlay.classList.add('hidden');
         UI.main.classList.remove('hidden');
         UI.actions.classList.remove('hidden');
 
+        // Handle auto-dispatch link scenario
         if (isDispatchAuto) {
             UI.dispatchOverlay.classList.remove('hidden');
             setTimeout(() => { 
@@ -262,7 +297,8 @@ async function init() {
     }
 }
 
-// --- Global Actions ---
+// --- [GLOBAL_PDF_ORCHESTRATION] ---
+
 function getPDFEngine() {
     const engine = window.html2pdf;
     if (!engine) {
@@ -272,6 +308,11 @@ function getPDFEngine() {
     return engine;
 }
 
+/**
+ * downloadAsPDF
+ * @desc Transforms the active DOM into a high-resolution PDF document 
+ * using a virtual canvas snapshot.
+ */
 async function downloadAsPDF() {
     document.body.classList.add('pdf-capture');
     await sleep(100);
