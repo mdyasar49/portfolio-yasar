@@ -318,8 +318,15 @@ async function downloadAsPDF() {
     await sleep(100);
     const opt = {
         margin: 0, filename: 'A_MOHAMED_YASAR_RESUME.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false, letterRendering: true },
+        image: { type: 'jpeg', quality: 1.0 }, // Maximum Quality
+        html2canvas: { 
+            scale: 4, // 16K Clarity Level
+            useCORS: true, 
+            logging: false, 
+            letterRendering: true,
+            windowWidth: 2480, // A4 @ 300DPI equivalent
+            windowHeight: 3508
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
@@ -335,8 +342,15 @@ async function getPDFBlob() {
     document.body.classList.add('pdf-capture');
     await sleep(100);
     const opt = {
-        margin: 0, image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
+        margin: 0, 
+        image: { type: 'jpeg', quality: 1.0 },
+        html2canvas: { 
+            scale: 4, // 16K Quality Calibration
+            useCORS: true, 
+            logging: false,
+            windowWidth: 2480, 
+            windowHeight: 3508
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
