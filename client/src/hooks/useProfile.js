@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getProfile } from '../services/api';
+import { fetchSystemInterfaceData } from '../services/api';
 
 /**
  * Custom Hook: useProfile
@@ -25,7 +25,7 @@ const useProfile = () => {
         try {
             for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
                 try {
-                    const data = await getProfile();
+                    const data = await fetchSystemInterfaceData();
                     if (data) {
                         setProfile(data);
                         setMaintenanceMode(data.maintenanceMode || false);

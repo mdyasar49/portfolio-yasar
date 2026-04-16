@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, TextField, Button, Stack, Container, Grid, CircularProgress, Alert, Snackbar, useMediaQuery, useTheme } from '@mui/material';
 import { Send, Mail, Terminal, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { submitContact } from '../services/api';
+import { dispatchCommunication } from '../services/api';
 
 const Contact = () => {
     const theme = useTheme();
@@ -20,7 +20,7 @@ const Contact = () => {
         e.preventDefault();
         setLoading(true);
         
-        const result = await submitContact(formData);
+        const result = await dispatchCommunication(formData);
         
         setLoading(false);
         if (result.success) {

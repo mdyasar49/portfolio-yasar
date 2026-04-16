@@ -1,10 +1,10 @@
 import React from 'react';
 import { Box, Typography, Button, Stack, Container, Grid, Paper } from '@mui/material';
-import { Download, ExternalLink } from 'lucide-react';
+import { Download, ExternalLink, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import API_BASE_URL from '../config';
 
-const ResumeModule = () => {
+const ProfessionalDossier = () => {
   const resumeApi = API_BASE_URL ? `${API_BASE_URL}/profile` : '';
   const iframeSrc = resumeApi
     ? `/resume-pro/index.html?api=${encodeURIComponent(resumeApi)}`
@@ -136,6 +136,31 @@ const ResumeModule = () => {
                     </Button>
                     <Button 
                       fullWidth
+                      onClick={() => {
+                        const resumeUrl = `${window.location.origin}/resume?system_dispatch=true`;
+                        const subject = encodeURIComponent("A. Mohamed Yasar | Authenticated Engineering Portfolio & Asset Dispatch");
+                        const body = encodeURIComponent(
+                          `[ AUTHENTICATED_ACCESS_REQUEST ]\n\n` +
+                          `A secure connection has been established to grant you access to the live professional architecture and engineering profile of A. Mohamed Yasar.\n\n` +
+                          `[ SECURE_PORTAL_LOGON ]\n${resumeUrl}\n\n` +
+                          `VERIFICATION_PROTOCOL: Upon entering the gateway via the secure link above, the system will automatically extract and deliver the validated PDF Resume asset directly to your device.\n\n` +
+                          `DISPATCH_ID: ${Math.random().toString(36).substring(7).toUpperCase()}\n` +
+                          `Core Infrastructure v4.2.0 | Built with MERN`
+                        );
+                        window.open(`https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=${subject}&body=${body}`, '_blank');
+                      }}
+                      startIcon={<Share2 size={18} />}
+                      sx={{ 
+                        border: '1px solid rgba(51, 204, 255, 0.3)',
+                        bgcolor: 'rgba(51, 204, 255, 0.05)',
+                        color: '#33ccff', py: 1.8, borderRadius: 2.5, fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.75rem',
+                        '&:hover': { bgcolor: 'rgba(51, 204, 255, 0.15)', borderColor: '#33ccff' }
+                      }}
+                    >
+                      SHARE_RESUME_DISPATCH
+                    </Button>
+                    <Button 
+                      fullWidth
                       href="/resume" 
                       target="_blank"
                       startIcon={<ExternalLink size={18} />}
@@ -143,7 +168,7 @@ const ResumeModule = () => {
                         border: '1px solid rgba(255,255,255,0.05)',
                         bgcolor: 'rgba(255,255,255,0.01)',
                         color: 'white', py: 1.8, borderRadius: 2.5, fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.75rem',
-                        '&:hover': { bgcolor: 'rgba(51, 204, 255, 0.05)', borderColor: '#33ccff' }
+                        '&:hover': { bgcolor: 'rgba(255,255,255,0.05)', borderColor: '#33ccff' }
                       }}
                     >
                       VIEW_INTERACTIVE_RESUME
@@ -167,4 +192,4 @@ const ResumeModule = () => {
   );
 };
 
-export default ResumeModule;
+export default ProfessionalDossier;

@@ -12,7 +12,7 @@ import useProfile from './hooks/useProfile';
 import Header from './components/Header';
 import Portfolio from './pages/Portfolio';
 import NetworkErrorScreen from './components/NetworkErrorScreen';
-import GlobalHUD from './components/GlobalHUD';
+import SystemInterfaceHUD from './components/SystemInterfaceHUD';
 import ProtectedRoute from './components/ProtectedRoute';
 import MaintenancePage from './pages/MaintenancePage';
 
@@ -21,7 +21,7 @@ const Resume = lazy(() => import('./pages/Resume'));
 const Documentation = lazy(() => import('./pages/Documentation'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const ManagementHub = lazy(() => import('./pages/ManagementHub'));
+const AdministrativeTerminal = lazy(() => import('./pages/AdministrativeTerminal'));
 
 // ─── Animations ───────────────────────────────────────────
 const spin = keyframes`
@@ -208,7 +208,7 @@ const PublicApp = () => {
   return (
     <>
       <Header />
-      <GlobalHUD />
+      <SystemInterfaceHUD />
       <Box sx={{ pt: 10 }}>
         <Suspense fallback={
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', py: 20 }}>
@@ -231,7 +231,7 @@ const PublicApp = () => {
             <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
             <Route path="/resume"       element={<Resume profile={profile} />} />
             <Route path="/architecture" element={<Documentation profile={profile} />} />
-            <Route path="/terminal"     element={<ManagementHub publicView={true} />} />
+            <Route path="/terminal"     element={<AdministrativeTerminal publicView={true} />} />
             <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
 
           </Routes>
@@ -278,7 +278,7 @@ const AppRoutes = () => {
             path="/admin/management"
             element={
               <ProtectedRoute>
-                <ManagementHub />
+                <AdministrativeTerminal />
               </ProtectedRoute>
             }
           />

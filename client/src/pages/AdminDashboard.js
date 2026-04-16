@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import SEO from '../components/SEO';
-import api from '../services/api';
+import { probeSystemIntegrity, modifyMaintenanceLock } from '../services/api';
 
 
 const AdminDashboard = () => {
@@ -42,9 +42,9 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchHealth = async () => {
             try {
-                const res = await api.get('/health');
-                if (res.data.success) {
-                    const { uptimeSeconds, memoryUsage, db, maintenance } = res.data.data;
+                const res = await probeSystemIntegrity();
+                if (res.success) {
+                    const { uptimeSeconds, memoryUsage, db, maintenance } = res.data;
                     setHealth({
                         latency: `${db.latency}ms`,
                         db: db.status,
@@ -70,10 +70,10 @@ const AdminDashboard = () => {
     const handleToggleMaintenance = async () => {
         setUpdatingMaintenance(true);
         try {
-            const res = await api.put('/health/maintenance', { enabled: !health.maintenance });
-            if (res.data.success) {
+            const res = await modifyMaintenanceLock({ enabled: !health.maintenance });
+            if (res.success) {
                 setHealth(prev => ({ ...prev, maintenance: !prev.maintenance }));
-                setToast({ open: true, message: res.data.message });
+                setToast({ open: true, message: res.message });
             }
         } catch (e) {
             setToast({ open: true, message: 'FAILED_TO_TOGGLE_LOCK.' });
@@ -118,126 +118,147 @@ const AdminDashboard = () => {
 
 
     return (
-        <Box sx={{ minHeight: '100vh', bgcolor: '#02040a', pt: 12, pb: 10 }}>
-            <SEO title="Control Center | Operations" description="Manage system resources and data layers." />
+        <Box sx={{ 
+            minHeight: '100vh', 
+            bgcolor: '#04070a', 
+            pt: 12, pb: 10,
+            backgroundImage: `radial-gradient(circle at 10% 20%, rgba(51, 204, 255, 0.03) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(255, 51, 102, 0.03) 0%, transparent 40%)`,
+            position: 'relative',
+            '&::after': {
+                content: '""',
+                position: 'fixed',
+                inset: 0,
+                backgroundImage: 'url("https://www.transparenttextures.com/patterns/carbon-fibre.png")',
+                opacity: 0.02,
+                pointerEvents: 'none'
+            }
+        }}>
+            <SEO title="Grand Dashboard | System Command" description="Enterprise-grade administrative oversight." />
             
             <Container maxWidth="xl">
-                {/* Dashboard Header */}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 8 }}>
+                {/* Header: Command Center HUD */}
+                <Box sx={{ 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', md: 'row' },
+                    justifyContent: 'space-between', 
+                    alignItems: { xs: 'flex-start', md: 'center' }, 
+                    mb: 10,
+                    gap: 4
+                }}>
                     <Box>
-                        <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
-                            <Box sx={{ p: 1, bgcolor: 'rgba(51, 204, 255, 0.1)', borderRadius: 2, color: '#33ccff' }}>
-                                <LayoutDashboard size={24} />
+                        <Stack direction="row" spacing={3} alignItems="center" sx={{ mb: 2 }}>
+                            <Box sx={{ 
+                                width: 56, height: 56, 
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                background: 'linear-gradient(135deg, rgba(51, 204, 255, 0.2), transparent)',
+                                border: '1px solid rgba(51, 204, 255, 0.3)',
+                                borderRadius: '16px',
+                                color: '#33ccff',
+                                boxShadow: '0 0 20px rgba(51, 204, 255, 0.1)'
+                            }}>
+                                <LayoutDashboard size={28} />
                             </Box>
-                            <Typography variant="h4" sx={{ fontWeight: 900, fontFamily: 'Syncopate', color: 'white', letterSpacing: -1 }}>
-                                ADMIN_DASHBOARD
-                            </Typography>
+                            <Box>
+                                <Typography variant="h3" sx={{ 
+                                    fontWeight: 900, 
+                                    fontFamily: 'Syncopate', 
+                                    color: 'white', 
+                                    letterSpacing: -2,
+                                    textShadow: '0 0 30px rgba(255,255,255,0.1)'
+                                }}>
+                                    SYSTEM_CORE
+                                </Typography>
+                                <Typography variant="overline" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 5 }}>
+                                    ADMINISTRATIVE_COMMAND_CENTER
+                                </Typography>
+                            </Box>
                         </Stack>
-                        <Typography variant="caption" sx={{ color: '#444', fontFamily: 'monospace', letterSpacing: 2 }}>
-                            AUTHORIZED_ADMIN: <span style={{ color: '#00ffcc' }}>{admin?.username?.toUpperCase()}</span> [ROLE: {admin?.role?.toUpperCase()}]
-                        </Typography>
+                        <Box sx={{ 
+                            display: 'flex', alignItems: 'center', gap: 2, 
+                            pl: 1, color: '#444', fontFamily: 'monospace', fontSize: '0.75rem' 
+                        }}>
+                            <Box sx={{ width: 8, height: 8, bgcolor: '#00ffcc', borderRadius: '50%', boxShadow: '0 0 8px #00ffcc' }} />
+                            UPTIME_STABLE // IDENTITY_VERIFIED: <span style={{ color: '#00ffcc' }}>{admin?.username?.toUpperCase()}</span>
+                        </Box>
                     </Box>
 
                     <Button 
                         startIcon={<LogOut size={18} />} 
                         onClick={handleLogout}
                         sx={{ 
-                            color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem',
-                            border: '1px solid rgba(255, 51, 102, 0.2)', px: 3, borderRadius: 2,
-                            '&:hover': { bgcolor: 'rgba(255, 51, 102, 0.05)', borderColor: '#ff3366' }
+                            color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.75rem',
+                            border: '1px solid rgba(255, 51, 102, 0.3)', 
+                            px: 4, py: 1.5,
+                            borderRadius: '12px',
+                            backdropFilter: 'blur(10px)',
+                            transition: '0.4s',
+                            '&:hover': { 
+                                bgcolor: 'rgba(255, 51, 102, 0.1)', 
+                                borderColor: '#ff3366',
+                                transform: 'translateY(-2px)',
+                                boxShadow: '0 0 20px rgba(255, 51, 102, 0.2)'
+                            }
                         }}
                     >
-                        LOGOUT_SESSION
+                        TERMINATE_SESSION
                     </Button>
-                </Stack>
+                </Box>
 
-                {/* Module Grid */}
+                {/* Main Command Console */}
                 <Grid container spacing={4}>
-                    {modules.map((m, i) => (
-                        <Grid item xs={12} sm={6} lg={3} key={i}>
-                            <Paper
-                                onClick={() => openModule(m.name)}
-                                role="button"
-                                tabIndex={0}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        event.preventDefault();
-                                        openModule(m.name);
-                                    }
-                                }}
-                                sx={{ 
-                                p: 4, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)',
-                                borderRadius: 4, transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)', cursor: 'pointer',
-                                '&:hover': { 
-                                    transform: 'translateY(-8px)', 
-                                    borderColor: m.color,
-                                    boxShadow: `0 20px 40px rgba(0,0,0,0.4), 0 0 20px ${m.color}11`
-                                },
-                                '&:focus-visible': {
-                                    outline: `2px solid ${m.color}`,
-                                    outlineOffset: 2
-                                }
-                            }}>
-                                <Box sx={{ mb: 3, color: m.color }}>{m.icon}</Box>
-                                <Typography sx={{ fontWeight: 900, color: 'white', mb: 1, fontFamily: 'Syncopate', fontSize: '0.85rem' }}>{m.name}</Typography>
-                                <Typography variant="caption" sx={{ color: '#555', lineHeight: 1.6, display: 'block', mb: 3 }}>{m.desc}</Typography>
-                                <Button
-                                    variant="text"
-                                    size="small"
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        openModule(m.name);
-                                    }}
-                                    endIcon={<ExternalLink size={12} />}
-                                    sx={{
-                                        color: m.color,
-                                        fontWeight: 900,
-                                        fontSize: '0.6rem',
-                                        letterSpacing: 1,
-                                        p: 0,
-                                        minWidth: 'auto',
-                                        '&:hover': { backgroundColor: 'transparent', opacity: 0.85 }
-                                    }}
-                                >
-                                    OPEN_MODULE
-                                </Button>
-                            </Paper>
-                        </Grid>
-                    ))}
-                </Grid>
-
-                {/* Visual Analytics & Resource Monitor */}
-                <Grid container spacing={4} sx={{ mt: 4 }}>
+                    {/* Diagnostic Monitor - Large Left Panel */}
                     <Grid item xs={12} lg={8}>
-                        <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 4, height: '100%' }}>
-                            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
+                        <Paper sx={{ 
+                            p: 6, 
+                            bgcolor: 'rgba(10, 15, 25, 0.6)', 
+                            backdropFilter: 'blur(20px)',
+                            border: '1px solid rgba(255,255,255,0.05)',
+                            borderRadius: '40px',
+                            height: '100%',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0, left: 0, right: 0, height: '1px',
+                                background: 'linear-gradient(90deg, transparent, rgba(51, 204, 255, 0.2), transparent)'
+                            }
+                        }}>
+                            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 6 }}>
                                 <Box>
-                                    <Typography sx={{ fontWeight: 900, color: 'white', fontFamily: 'Syncopate', fontSize: '0.85rem' }}>VISITOR_TRENDS</Typography>
-                                    <Typography variant="caption" sx={{ color: '#444' }}>DAILY_PLATFORM_ENGAGEMENT_MAP</Typography>
+                                    <Typography sx={{ fontWeight: 900, color: 'white', fontFamily: 'Syncopate', fontSize: '1rem', mb: 1 }}>TRAFFIC_STREAM</Typography>
+                                    <Typography variant="caption" sx={{ color: '#555', fontFamily: 'monospace', letterSpacing: 2 }}>GLOBAL_REQUEST_TELEMETRY</Typography>
                                 </Box>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                    <Box sx={{ p: 1, bgcolor: 'rgba(0, 255, 204, 0.1)', borderRadius: 1.5, color: '#00ffcc' }}>
-                                        <Activity size={16} />
-                                    </Box>
-                                    <Typography sx={{ color: '#00ffcc', fontWeight: 900, fontFamily: 'monospace' }}>ACTIVE: {activeSessions}</Typography>
+                                <Box sx={{ 
+                                    px: 3, py: 1, 
+                                    bgcolor: 'rgba(0, 255, 204, 0.05)', 
+                                    border: '1px solid rgba(0, 255, 204, 0.1)',
+                                    borderRadius: '50px', 
+                                    color: '#00ffcc',
+                                    display: 'flex', alignItems: 'center', gap: 2
+                                }}>
+                                    <Activity size={18} />
+                                    <Typography sx={{ fontWeight: 900, fontFamily: 'monospace' }}>{activeSessions} NODES_ACTIVE</Typography>
                                 </Box>
                             </Stack>
 
-                            <Box sx={{ height: 250, width: '100%', mt: 2 }}>
+                            <Box sx={{ height: 350, width: '100%', mt: 4 }}>
                                 {history && history.length > 0 ? (
                                     <ResponsiveContainer width="100%" height="100%">
                                         <AreaChart data={history}>
                                             <defs>
                                                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#33ccff" stopOpacity={0.3}/>
+                                                    <stop offset="5%" stopColor="#33ccff" stopOpacity={0.4}/>
                                                     <stop offset="95%" stopColor="#33ccff" stopOpacity={0}/>
                                                 </linearGradient>
                                             </defs>
-                                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                                            <CartesianGrid strokeDasharray="5 5" vertical={false} stroke="rgba(255,255,255,0.03)" />
                                             <XAxis 
                                                 dataKey="date" 
                                                 stroke="#444" 
-                                                fontSize={10} 
+                                                fontSize={11} 
                                                 fontWeight={900} 
                                                 axisLine={false}
                                                 tickLine={false}
@@ -245,103 +266,198 @@ const AdminDashboard = () => {
                                             />
                                             <YAxis hide />
                                             <Tooltip 
-                                                contentStyle={{ bgcolor: '#000000', border: '1px solid rgba(51, 204, 255, 0.2)', borderRadius: 8, fontSize: '0.7rem', fontFamily: 'Syncopate' }}
+                                                contentStyle={{ 
+                                                    backgroundColor: 'rgba(0,0,0,0.8)', 
+                                                    border: '1px solid rgba(51, 204, 255, 0.3)', 
+                                                    borderRadius: '12px', 
+                                                    fontSize: '0.8rem', 
+                                                    fontFamily: 'Syncopate',
+                                                    backdropFilter: 'blur(10px)'
+                                                }}
                                                 itemStyle={{ color: '#33ccff', fontWeight: 900 }}
                                             />
                                             <Area 
                                                 type="monotone" 
                                                 dataKey="count" 
                                                 stroke="#33ccff" 
-                                                strokeWidth={3}
+                                                strokeWidth={4}
                                                 fillOpacity={1} 
                                                 fill="url(#colorCount)" 
-                                                animationDuration={2000}
+                                                animationDuration={3000}
                                             />
                                         </AreaChart>
                                     </ResponsiveContainer>
                                 ) : (
                                     <Box sx={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Typography sx={{ color: '#222', fontFamily: 'Syncopate', fontSize: '0.7rem' }}>INITIALIZING_ANALYTICS_STREAM...</Typography>
+                                        <Typography sx={{ color: '#111', fontFamily: 'Syncopate', fontSize: '0.8rem', letterSpacing: 4 }}>SYNCHRONIZING_ANALYTICS_ARRAY...</Typography>
                                     </Box>
                                 )}
                             </Box>
                         </Paper>
                     </Grid>
 
+                    {/* Right Panel: Vital Signs */}
                     <Grid item xs={12} lg={4}>
-                        <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 4, height: '100%' }}>
-                            <Typography sx={{ fontWeight: 900, color: 'white', fontFamily: 'Syncopate', fontSize: '0.85rem', mb: 4 }}>RESOURCE_MONITOR</Typography>
-                            <Stack spacing={4}>
+                        <Paper sx={{ 
+                            p: 6, 
+                            bgcolor: 'rgba(4, 7, 10, 0.4)', 
+                            border: '1px solid rgba(255,255,255,0.05)', 
+                            borderRadius: '40px', 
+                            height: '100%',
+                            backdropFilter: 'blur(15px)'
+                        }}>
+                            <Typography sx={{ fontWeight: 900, color: 'white', fontFamily: 'Syncopate', fontSize: '1rem', mb: 6 }}>CORE_VITAL_SIGNS</Typography>
+                            <Stack spacing={5}>
                                 {[
-                                    { l: 'API_LATENCY', v: health.latency, c: '#00ffcc', p: 40 },
-                                    { l: 'DB_CONNECTION', v: health.db, c: '#33ccff', p: 100 },
-                                    { l: 'SERVER_UPTIME', v: health.uptime, c: '#ff3366', p: 80 },
-                                    { l: 'MEMORY_USAGE', v: `${health.memory}%`, c: '#ff9933', p: health.memory }
+                                    { l: 'LATENCY', v: health.latency, c: '#00ffcc', p: 40 },
+                                    { l: 'DATABASE', v: health.db, c: '#33ccff', p: 100 },
+                                    { l: 'UPTIME', v: health.uptime, c: '#ff3366', p: 80 },
+                                    { l: 'MEMORY', v: `${health.memory}%`, c: '#ff9933', p: health.memory }
                                 ].map((stat, i) => (
                                     <Box key={i}>
-                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                                            <Typography variant="caption" sx={{ color: '#444', fontWeight: 900 }}>{stat.l}</Typography>
-                                            <Typography variant="caption" sx={{ color: stat.c, fontWeight: 900, fontFamily: 'monospace' }}>{stat.v}</Typography>
+                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                                            <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 2 }}>{stat.l}</Typography>
+                                            <Typography variant="caption" sx={{ color: stat.c, fontWeight: 900, fontFamily: 'monospace', fontSize: '0.8rem' }}>{stat.v}</Typography>
                                         </Box>
-                                        <Box sx={{ height: 2, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 1, overflow: 'hidden' }}>
+                                        <Box sx={{ height: 4, bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 2, overflow: 'hidden' }}>
                                             <motion.div 
                                                 initial={{ width: 0 }}
                                                 animate={{ width: `${stat.p}%` }}
-                                                transition={{ duration: 1, ease: 'easeOut' }}
-                                                style={{ height: '100%', backgroundColor: stat.c, boxShadow: `0 0 10px ${stat.c}` }}
+                                                transition={{ duration: 1.5, ease: 'circOut' }}
+                                                style={{ height: '100%', backgroundColor: stat.c, boxShadow: `0 0 15px ${stat.c}88` }}
                                             />
                                         </Box>
                                     </Box>
                                 ))}
                             </Stack>
 
-                            <Box sx={{ mt: 5, pt: 4, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                            <Box sx={{ mt: 8, pt: 6, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
                                 <Button 
                                     fullWidth 
                                     variant="outlined" 
                                     onClick={handleToggleMaintenance}
                                     disabled={updatingMaintenance}
                                     sx={{ 
-                                        py: 1.5, 
-                                        borderColor: health.maintenance ? '#ff3366' : 'rgba(51, 204, 255, 0.3)',
+                                        py: 2.5, 
+                                        borderColor: health.maintenance ? '#ff3366' : 'rgba(51, 204, 255, 0.4)',
                                         color: health.maintenance ? '#ff3366' : '#33ccff',
-                                        fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.7rem',
-                                        '&:hover': { borderColor: health.maintenance ? '#ff3366' : '#33ccff', bgcolor: 'rgba(255,255,255,0.02)' }
+                                        background: health.maintenance ? 'rgba(255, 51, 102, 0.05)' : 'transparent',
+                                        fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.75rem',
+                                        borderRadius: '16px',
+                                        '&:hover': { 
+                                            borderColor: health.maintenance ? '#ff3366' : '#33ccff', 
+                                            bgcolor: health.maintenance ? 'rgba(255, 51, 102, 0.1)' : 'rgba(255,255,255,0.03)',
+                                            transform: 'scale(1.02)'
+                                        }
                                     }}
                                 >
-                                    {updatingMaintenance ? 'PROCESSING...' : (health.maintenance ? 'SYSTEM_LOCKED: RESTORE?' : 'ENGAGE_MAINTENANCE_LOCK')}
+                                    {updatingMaintenance ? 'PROCESSING...' : (health.maintenance ? 'TERMINATE_LOCK' : 'INDEPENDENT_LOCKOUT')}
                                 </Button>
-                                <Typography variant="caption" sx={{ display: 'block', mt: 1.5, color: '#444', textAlign: 'center', fontSize: '0.6rem' }}>
-                                    {health.maintenance ? 'PUBLIC_ACCESS_RESTRICTED' : 'PUBLIC_ACCESS_ENABLED'}
+                                <Typography variant="caption" sx={{ display: 'block', mt: 3, color: '#444', textAlign: 'center', fontSize: '0.65rem', fontFamily: 'monospace' }}>
+                                    {health.maintenance ? '[ SECURITY_ENFORCED: GUEST_REDIRECT_ACTIVE ]' : '[ SYSTEM_IDLE: PUBLIC_ACCESS_ALLOW ]'}
                                 </Typography>
                             </Box>
                         </Paper>
                     </Grid>
                 </Grid>
 
-                {/* Real-time System Logs Placeholder */}
-                <Box sx={{ mt: 8, p: 4, bgcolor: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.02)', borderRadius: 4 }}>
-                     <Typography sx={{ color: '#1e293b', fontWeight: 900, fontFamily: 'monospace', fontSize: '0.7rem', mb: 2 }}>[ SYSTEM_LOGS ]</Typography>
-                     <Typography sx={{ color: '#444', fontFamily: 'monospace', fontSize: '0.7rem' }}>&gt; Initializing Dashboard Interface v1.0.0...</Typography>
-                     <Typography sx={{ color: '#444', fontFamily: 'monospace', fontSize: '0.7rem' }}>&gt; Encryption sequence validated.</Typography>
-                     <Typography sx={{ color: '#00ffcc', fontFamily: 'monospace', fontSize: '0.7rem' }}>&gt; Admin session established at {new Date().toLocaleTimeString()}</Typography>
+                {/* Tactical Operations: Quick Access Modules */}
+                <Box sx={{ mt: 10 }}>
+                    <Typography sx={{ fontWeight: 900, color: '#222', fontFamily: 'Syncopate', fontSize: '0.8rem', mb: 6, letterSpacing: 10 }}>TACTICAL_OPERATIONS</Typography>
+                    <Grid container spacing={4}>
+                        {modules.map((m, i) => (
+                            <Grid item xs={12} sm={6} lg={3} key={i}>
+                                <Paper
+                                    onClick={() => openModule(m.name)}
+                                    sx={{ 
+                                        p: 5, 
+                                        bgcolor: 'rgba(255,255,255,0.01)', 
+                                        border: '1px solid rgba(255,255,255,0.03)',
+                                        borderRadius: '24px', 
+                                        transition: '0.4s cubic-bezier(0.2, 1, 0.2, 1)', 
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        '&:hover': { 
+                                            transform: 'translateY(-12px)', 
+                                            borderColor: m.color,
+                                            boxShadow: `0 30px 60px rgba(0,0,0,0.6), 0 0 30px ${m.color}11`,
+                                            background: 'rgba(255,255,255,0.02)'
+                                        }
+                                    }}>
+                                    <Box sx={{ 
+                                        mb: 4, color: m.color, 
+                                        p: 2, bgcolor: `${m.color}11`, 
+                                        width: 'max-content', borderRadius: '12px' 
+                                    }}>{m.icon}</Box>
+                                    <Typography sx={{ fontWeight: 900, color: 'white', mb: 2, fontFamily: 'Syncopate', fontSize: '0.9rem' }}>{m.name}</Typography>
+                                    <Typography variant="caption" sx={{ color: '#555', lineHeight: 1.8, display: 'block', mb: 4, height: 50 }}>{m.desc}</Typography>
+                                    
+                                    <Stack direction="row" alignItems="center" spacing={1} sx={{ color: m.color }}>
+                                        <Typography sx={{ fontWeight: 900, fontSize: '0.7rem' }}>ACCESS_MODULE</Typography>
+                                        <ExternalLink size={14} />
+                                    </Stack>
+
+                                    {/* Abstract Grid Pattern Overlay */}
+                                    <Box sx={{ 
+                                        position: 'absolute', bottom: -10, right: -10, 
+                                        opacity: 0.05, transform: 'rotate(-45deg)',
+                                        color: m.color
+                                    }}>
+                                        {m.icon}
+                                    </Box>
+                                </Paper>
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+
+                {/* Session Event Feed */}
+                <Box sx={{ 
+                    mt: 10, p: 6, 
+                    bgcolor: 'rgba(0,0,0,0.8)', 
+                    border: '1px solid rgba(255,255,255,0.02)', 
+                    borderRadius: '30px',
+                    fontFamily: 'monospace'
+                }}>
+                     <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 4 }}>
+                        <Box sx={{ width: 10, height: 10, bgcolor: '#ff3366', borderRadius: '50%', animation: 'pulse 1.5s infinite' }} />
+                        <Typography sx={{ color: '#333', fontWeight: 900, fontSize: '0.8rem', letterSpacing: 4 }}>REAL_TIME_TERMINAL_FEED</Typography>
+                     </Stack>
+                     <Stack spacing={1}>
+                        <Typography sx={{ color: '#222', fontSize: '0.75rem' }}>&gt; Initializing Neural Interface Interface v2.0.4 [BUILD_ELITE]</Typography>
+                        <Typography sx={{ color: '#222', fontSize: '0.75rem' }}>&gt; Decrypting SSL_LAYER_RSA_4096... [PASS]</Typography>
+                        <Typography sx={{ color: '#00ffcc', fontSize: '0.75rem' }}>&gt; Master Controller established at {new Date().toLocaleTimeString()} [LOCAL_IP: 192.168.1.1]</Typography>
+                        <Typography sx={{ color: '#444', fontSize: '0.75rem' }}>&gt; Monitoring active telemetries for {activeSessions} remote nodes.</Typography>
+                     </Stack>
                 </Box>
             </Container>
 
             <Snackbar
                 open={toast.open}
-                autoHideDuration={2500}
+                autoHideDuration={4000}
                 onClose={() => setToast({ open: false, message: '' })}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
                 <Alert
                     onClose={() => setToast({ open: false, message: '' })}
-                    severity="info"
-                    sx={{ width: '100%' }}
+                    severity="success"
+                    variant="filled"
+                    sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}
                 >
                     {toast.message}
                 </Alert>
             </Snackbar>
+
+            <style>
+                {`
+                    @keyframes pulse { 
+                        0% { opacity: 0.3; transform: scale(0.9); } 
+                        50% { opacity: 1; transform: scale(1.1); } 
+                        100% { opacity: 0.3; transform: scale(0.9); } 
+                    }
+                `}
+            </style>
         </Box>
     );
 };

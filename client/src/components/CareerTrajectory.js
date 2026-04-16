@@ -3,7 +3,7 @@ import { Box, Typography, Card, CardContent, Stack, Button } from '@mui/material
 import { motion } from 'framer-motion';
 import { Linkedin } from 'lucide-react';
 
-const Experience = memo(({ experience }) => {
+const CareerTrajectory = memo(({ experience }) => {
   if (!experience || !Array.isArray(experience)) return null;
 
   return (
@@ -165,4 +165,4 @@ const Experience = memo(({ experience }) => {
   );
 });
 
-export default Experience;
+export default CareerTrajectory;

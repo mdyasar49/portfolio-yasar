@@ -12,11 +12,16 @@ import {
 
 
 import { useNavigate, useLocation } from 'react-router-dom';
-import api from '../services/api';
+import { 
+  fetchPendingModifications, authorizeArchitecturalChange, dismissArchitecturalChange, 
+  fetchTransmissionLogs, purgeTransmissionRecord, probeSystemIntegrity, 
+  synchronizeArchitecture, modifyMaintenanceLock, rotateSecurityCredentials,
+  fetchSystemAnalytics, dispatchArchitecturalProposal
+} from '../services/api';
 import useProfile from '../hooks/useProfile';
 
 
-const ManagementHub = ({ publicView = false }) => {
+const AdministrativeTerminal = ({ publicView = false }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { profile: initialProfile, loading: initialLoading } = useProfile();
@@ -35,7 +40,7 @@ const ManagementHub = ({ publicView = false }) => {
         if (approveId) {
             const executeApprove = async () => {
                 try {
-                    await api.put(`/proposals/approve/${approveId}`);
+                    await authorizeArchitecturalChange(approveId);
                     setSuccess('ARCHITECTURAL_BLUEPRINT_SYNCHRONIZED_SUCCESSFULLY');
                     // Remove param from URL without reload
                     navigate('/admin/management?tab=5', { replace: true });
@@ -45,7 +50,7 @@ const ManagementHub = ({ publicView = false }) => {
         } else if (rejectId) {
             const executeReject = async () => {
                 try {
-                    await api.put(`/proposals/reject/${rejectId}`);
+                    await dismissArchitecturalChange(rejectId);
                     setSuccess('ARCHITECTURAL_PROPOSAL_REJECTED');
                     navigate('/admin/management?tab=5', { replace: true });
                 } catch (e) { setError('REJECTION_FAILURE: LINK_EXPIRED_OR_INVALID'); }
@@ -91,8 +96,8 @@ const ManagementHub = ({ publicView = false }) => {
         setLoading(true);
         setError('');
         try {
-            const res = await api.put('/profile', profile);
-            if (res.data.success) {
+            const res = await synchronizeArchitecture(profile);
+            if (res.success) {
                 setSuccess('Portfolio architecture updated successfully!');
             }
         } catch (err) {
@@ -108,8 +113,8 @@ const ManagementHub = ({ publicView = false }) => {
     const handleProposalSubmit = async () => {
         setProposalSending(true);
         try {
-            const res = await api.post('/proposals/submit', { suggestedData: profile });
-            if (res.data.success) {
+            const res = await dispatchArchitecturalProposal(profile);
+            if (res.success) {
                 setSuccess('ARCHITECTURAL_PROPOSAL_DISPATCHED. Awaiting administrative approval via secure link.');
                 setEditMode(false);
             }
@@ -492,20 +497,20 @@ const ManagementHub = ({ publicView = false }) => {
 
 
     const MessagesTab = () => {
-        const [items, setItems] = useState([]);
+        const [telemetryEntries, setTelemetryEntries] = useState([]);
         const [msgLoading, setMsgLoading] = useState(false);
 
         useEffect(() => {
-            const fetchData = async () => {
+            const initializeTelemetrySync = async () => {
                 setMsgLoading(true);
                 try {
-                    const [contactsRes, proposalsRes] = await Promise.all([
-                        api.get('/contact'),
-                        api.get('/proposals')
+                    const [inboundInquiryPayload, architecturalProposalPayload] = await Promise.all([
+                        fetchTransmissionLogs(),
+                        fetchPendingModifications()
                     ]);
                     
-                    const contacts = (contactsRes.data.data || []).map(c => ({ ...c, type: 'INQUIRY' }));
-                    const proposals = (proposalsRes.data.data || []).map(p => ({ 
+                    const inquiries = (inboundInquiryPayload.data || []).map(c => ({ ...c, type: 'INQUIRY' }));
+                    const proposals = (architecturalProposalPayload.data || []).map(p => ({ 
                         ...p, 
                         type: 'PROPOSAL', 
                         name: 'SYSTEM_USER',
@@ -514,11 +519,11 @@ const ManagementHub = ({ publicView = false }) => {
                         message: `A refinement proposal has been logged for the system core. Status: ${p.status.toUpperCase()}`
                     }));
 
-                    const merged = [...contacts, ...proposals].sort((a, b) => 
+                    const synchronizedTransmissionArray = [...inquiries, ...proposals].sort((a, b) => 
                         new Date(b.createdAt) - new Date(a.createdAt)
                     );
 
-                    setItems(merged);
+                    setTelemetryEntries(synchronizedTransmissionArray);
                 } catch (e) {
                     console.error('TELEMETRY_FETCH_FAIL');
                 } finally {
@@ -526,7 +531,7 @@ const ManagementHub = ({ publicView = false }) => {
                 }
             };
 
-            fetchData();
+            initializeTelemetrySync();
         }, []);
 
         if (msgLoading) return <CircularProgress sx={{ display: 'block', m: 'auto', color: '#ff3366' }} />;
@@ -540,11 +545,11 @@ const ManagementHub = ({ publicView = false }) => {
                         onClick={async () => {
                             if (window.confirm('CRITICAL_ACTION: PERMANENTLY_PURGE_ALL_TELEMETRY?')) {
                                 try {
-                                    // Primary purge logic for contacts
-                                    const contacts = items.filter(i => i.type === 'INQUIRY');
-                                    const deletePromises = contacts.map(m => api.delete(`/contact/${m._id || m.createdAt}`));
-                                    await Promise.all(deletePromises);
-                                    setItems([]);
+                                    // Primary purge logic for inquiry assets
+                                    const inquiriesToPurge = telemetryEntries.filter(i => i.type === 'INQUIRY');
+                                    const transmissionPurgeQueue = inquiriesToPurge.map(entry => purgeTransmissionRecord(entry._id || entry.createdAt));
+                                    await Promise.all(transmissionPurgeQueue);
+                                    setTelemetryEntries([]);
                                     setSuccess('Telemetry Array Cleared.');
                                 } catch (e) {
                                     setError('Failed to execute bulk purge.');
@@ -562,18 +567,18 @@ const ManagementHub = ({ publicView = false }) => {
                     <Button
                         variant="outlined"
                         size="small"
-                        disabled={items.length === 0}
+                        disabled={telemetryEntries.length === 0}
                         onClick={() => {
-                            const headers = ['Date', 'Type', 'Name', 'Email', 'Subject', 'Message'];
-                            const rows = items.map(m => [
-                                new Date(m.createdAt).toLocaleString(),
-                                m.type,
-                                `"${m.name.replace(/"/g, '""')}"`,
-                                m.email,
-                                `"${m.subject.replace(/"/g, '""')}"`,
-                                `"${m.message.replace(/"/g, '""')}"`
+                            const telemetryHeaders = ['Date', 'Type', 'Name', 'Email', 'Subject', 'Message'];
+                            const transmissionRoll = telemetryEntries.map(entry => [
+                                new Date(entry.createdAt).toLocaleString(),
+                                entry.type,
+                                `"${entry.name.replace(/"/g, '""')}"`,
+                                entry.email,
+                                `"${entry.subject.replace(/"/g, '""')}"`,
+                                `"${entry.message.replace(/"/g, '""')}"`
                             ]);
-                            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+                            const csvContent = [telemetryHeaders.join(','), ...transmissionRoll.map(row => row.join(','))].join('\n');
                             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                             const link = document.createElement('a');
                             link.href = URL.createObjectURL(blob);
@@ -591,52 +596,52 @@ const ManagementHub = ({ publicView = false }) => {
                         DOWNLOAD_LOGS (.CSV)
                     </Button>
                 </Box>
-                {items.length === 0 ? (
+                {telemetryEntries.length === 0 ? (
                     <Paper sx={{ p: 4, textAlign: 'center', bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
                         <Typography sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900 }}>EMPTY_TELEMETRY_LOG</Typography>
                     </Paper>
-                ) : items.map((m, idx) => (
-                    <Card key={idx} sx={{ 
+                ) : telemetryEntries.map((transmissionManifest, entryIndex) => (
+                    <Card key={entryIndex} sx={{ 
                         bgcolor: 'rgba(255,255,255,0.02)', 
                         border: '1px solid rgba(255,255,255,0.05)',
-                        borderLeft: m.type === 'PROPOSAL' ? '4px solid #ff3366' : '1px solid rgba(255,255,255,0.05)'
+                        borderLeft: transmissionManifest.type === 'PROPOSAL' ? '4px solid #ff3366' : '1px solid rgba(255,255,255,0.05)'
                     }}>
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
                                 <Stack direction="row" spacing={2} alignItems="center">
                                     <Typography sx={{ 
-                                        color: m.type === 'PROPOSAL' ? '#ff3366' : '#33ccff', 
+                                        color: transmissionManifest.type === 'PROPOSAL' ? '#ff3366' : '#33ccff', 
                                         fontWeight: 900, fontFamily: 'monospace', fontSize: '0.7rem' 
                                     }}>
-                                        [{m.type}]
+                                        [{transmissionManifest.type}]
                                     </Typography>
                                 <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace' }}>
-                                    {m.type === 'INQUIRY' ? (
+                                    {transmissionManifest.type === 'INQUIRY' ? (
                                         <>
-                                            FROM: {m.name} &lt;
+                                            FROM: {transmissionManifest.name} &lt;
                                             <Box 
                                                 component="a" 
-                                                href={`mailto:${m.email}`} 
+                                                href={`mailto:${transmissionManifest.email}`} 
                                                 sx={{ 
                                                     color: '#00ffcc', 
                                                     textDecoration: 'none',
                                                     '&:hover': { textDecoration: 'underline' }
                                                 }}
                                             >
-                                                {m.email}
+                                                {transmissionManifest.email}
                                             </Box>
                                             &gt;
                                         </>
-                                    ) : `BLUEPRINT_ACTION: ${m.status.toUpperCase()}`}
+                                    ) : `BLUEPRINT_ACTION: ${transmissionManifest.status.toUpperCase()}`}
                                 </Typography>
                                 </Stack>
                                 <Stack direction="row" spacing={2} alignItems="center">
-                                    <Typography sx={{ color: '#444', fontSize: '0.7rem' }}>{new Date(m.createdAt).toLocaleString()}</Typography>
-                                    {m.type === 'INQUIRY' && (
+                                    <Typography sx={{ color: '#444', fontSize: '0.7rem' }}>{new Date(transmissionManifest.createdAt).toLocaleString()}</Typography>
+                                    {transmissionManifest.type === 'INQUIRY' && (
                                         <IconButton size="small" color="error" onClick={async () => {
                                             try {
-                                                await api.delete(`/contact/${m._id || m.createdAt}`);
-                                                setItems(items.filter(item => item._id !== m._id));
+                                                await purgeTransmissionRecord(transmissionManifest._id || transmissionManifest.createdAt);
+                                                setTelemetryEntries(telemetryEntries.filter(entry => entry._id !== transmissionManifest._id));
                                             } catch (e) {
                                                 setError('Failed to purge transmission.');
                                             }
@@ -648,22 +653,22 @@ const ManagementHub = ({ publicView = false }) => {
                             </Box>
                             
                             <Typography sx={{ color: '#888', mb: 1.5, fontSize: '0.8rem', fontFamily: 'monospace' }}>
-                                TARGET_DOMAIN: {m.email}
+                                TARGET_DOMAIN: {transmissionManifest.email}
                             </Typography>
 
-                            <Typography sx={{ color: 'white', fontWeight: 900, mb: 1, fontSize: '1rem' }}>{m.subject}</Typography>
-                            <Typography sx={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.6 }}>{m.message}</Typography>
+                            <Typography sx={{ color: 'white', fontWeight: 900, mb: 1, fontSize: '1rem' }}>{transmissionManifest.subject}</Typography>
+                            <Typography sx={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.6 }}>{transmissionManifest.message}</Typography>
 
-                            {m.type === 'PROPOSAL' && m.status === 'pending' && (
+                            {transmissionManifest.type === 'PROPOSAL' && transmissionManifest.status === 'pending' && (
                                 <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
                                     <Button 
                                         size="small" variant="contained" 
                                         onClick={async () => {
                                             try {
-                                                await api.put(`/proposals/approve/${m._id}`);
+                                                await authorizeArchitecturalChange(transmissionManifest._id);
                                                 setSuccess('System architecturally synchronized.');
                                                 // Refresh logic here or just update local status
-                                                setItems(items.map(i => i._id === m._id ? {...i, status: 'approved', message: 'A refinement proposal has been logged for the system core. Status: APPROVED'} : i));
+                                                setTelemetryEntries(telemetryEntries.map(entry => entry._id === transmissionManifest._id ? {...entry, status: 'approved', message: 'A refinement proposal has been logged for the system core. Status: APPROVED'} : entry));
                                             } catch (e) { setError('Sync failure.'); }
                                         }}
                                         sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, fontSize: '0.6rem' }}
@@ -674,9 +679,9 @@ const ManagementHub = ({ publicView = false }) => {
                                         size="small" variant="outlined" 
                                         onClick={async () => {
                                             try {
-                                                await api.put(`/proposals/reject/${m._id}`);
+                                                await dismissArchitecturalChange(transmissionManifest._id);
                                                 setSuccess('Proposal rejected.');
-                                                setItems(items.map(i => i._id === m._id ? {...i, status: 'rejected', message: 'A refinement proposal has been logged for the system core. Status: REJECTED'} : i));
+                                                setTelemetryEntries(telemetryEntries.map(entry => entry._id === transmissionManifest._id ? {...entry, status: 'rejected', message: 'A refinement proposal has been logged for the system core. Status: REJECTED'} : entry));
                                             } catch (e) { setError('Rejection failure.'); }
                                         }}
                                         sx={{ color: '#ff3366', borderColor: '#ff3366', fontWeight: 900, fontSize: '0.6rem' }}
@@ -701,15 +706,15 @@ const ManagementHub = ({ publicView = false }) => {
     
             const fetchHealth = async () => {
                 try {
-                    const res = await api.get('/health');
-                    setHealth(res.data);
+                    const res = await probeSystemIntegrity();
+                    setHealth(res);
                 } catch (e) {}
             };
 
             const fetchStats = async () => {
                 try {
-                    const res = await api.get('/visitors');
-                    setStats(res.data);
+                    const res = await fetchSystemAnalytics();
+                    setStats(res);
                 } catch (e) {}
             };
     
@@ -729,11 +734,11 @@ const ManagementHub = ({ publicView = false }) => {
                 if (pwData.new !== pwData.confirm) return setError('Passwords do not match.');
                 setUpdating(true);
                 try {
-                    const res = await api.put('/auth/change-password', {
+                    const res = await rotateSecurityCredentials({
                         currentPassword: pwData.current,
                         newPassword: pwData.new
                     });
-                    if (res.data.success) {
+                    if (res.success) {
                         setSuccess('Security Credentials Updated Successfully.');
                         setPwData({ current: '', new: '', confirm: '' });
                     }
@@ -747,10 +752,10 @@ const ManagementHub = ({ publicView = false }) => {
             const toggleMaintenance = async () => {
                 setUpdating(true);
                 try {
-                    const res = await api.put('/health/maintenance', { enabled: !health?.maintenance });
-                    if (res.data.success) {
+                    const res = await modifyMaintenanceLock({ enabled: !health?.maintenance });
+                    if (res.success) {
                         fetchHealth();
-                        setSuccess(res.data.message);
+                        setSuccess(res.message);
                     }
                 } catch (err) {
                     setError('Failed to toggle system lock.');
@@ -1131,4 +1136,4 @@ const ManagementHub = ({ publicView = false }) => {
     );
 };
 
-export default ManagementHub;
+export default AdministrativeTerminal;

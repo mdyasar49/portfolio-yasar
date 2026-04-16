@@ -140,6 +140,30 @@ body::after {
   outline-offset: 3px;
 }
 
+/* Custom Cursor - High End Engineering Feel */
+* {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="%2333ccff" opacity="0.8"/><circle cx="10" cy="10" r="8" fill="none" stroke="%2333ccff" stroke-width="1" opacity="0.3"/></svg>') 10 10, auto;
+}
+
+a, button, .clickable {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="%23ff3366" opacity="0.9"/><circle cx="12" cy="12" r="10" fill="none" stroke="%23ff3366" stroke-width="1" opacity="0.4"/></svg>') 12 12, pointer !important;
+}
+
+/* Noise Texture Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+
 img, video, canvas {
   max-width: 100%;
   height: auto;
@@ -181,3 +205,41 @@ img, video, canvas {
   body::before { display: none !important; }
   .no-print { display: none !important; }
 }
+
+/* Premium Scrollbar - Engineering Blue & Crimson Accents */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #02040a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #33ccff 0%, #ff3366 100%);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff3366;
+  box-shadow: 0 0 10px rgba(255, 51, 102, 0.5);
+}
+
+/* Global Selection Styling */
+::selection {
+  background: rgba(51, 204, 255, 0.2);
+  color: #33ccff;
+  text-shadow: 0 0 5px rgba(51, 204, 255, 0.5);
+}
+
+/* Global Fluid Focus */
+:focus {
+  outline: none !important;
+}
+
+/* Custom Selection for text */
+::-moz-selection {
+  background: rgba(51, 204, 255, 0.2);
+  color: #33ccff;
+}

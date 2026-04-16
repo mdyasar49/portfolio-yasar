@@ -33,7 +33,7 @@ This isn't just a portfolio; it's a **Production-Grade Simulation**. Most beginn
 
 ```mermaid
 graph TD
-    User((User)) -->|HTTPS| React[React Frontend :3000]
+    User((User)) -->|HTTPS| React[React Frontend :2003]
     subgraph "Logic Layer"
         React -->|Secure API Call| Express[Express Backend :5001]
         Express -->|Nodemailer| AdminEmail((Admin Email))

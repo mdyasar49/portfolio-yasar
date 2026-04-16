@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getVisitors } from '../services/api';
+import { fetchSystemAnalytics } from '../services/api';
 
 /**
  * Custom Hook: useLiveAnalytics
@@ -16,7 +16,7 @@ const useLiveAnalytics = () => {
 
         const refreshVisitors = async () => {
             const requestStartedAt = Date.now();
-            const data = await getVisitors(false); 
+            const data = await fetchSystemAnalytics(false); 
 
             if (
                 mounted &&

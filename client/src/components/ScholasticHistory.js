@@ -3,7 +3,7 @@ import { Box, Typography, Stack, Paper } from '@mui/material';
 import { GraduationCap } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const Education = memo(({ education }) => {
+const AcademicTimeline = memo(({ education }) => {
   if (!education || !Array.isArray(education)) return null;
 
   return (
@@ -79,4 +79,4 @@ const Education = memo(({ education }) => {
   );
 });
 
-export default Education;
+export default AcademicTimeline;

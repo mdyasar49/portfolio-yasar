@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
 
 
-const GlobalHUD = () => {
+const SystemInterfaceHUD = () => {
   const [uptime, setUptime] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const { activeSessions } = useLiveAnalytics();
@@ -103,4 +103,4 @@ const GlobalHUD = () => {
   );
 };
 
-export default memo(GlobalHUD);
+export default memo(SystemInterfaceHUD);

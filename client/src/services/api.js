@@ -1,146 +1,106 @@
 /**
- * [Axios Service: REST API Interaction]
- * This service uses Axios to communicate between the React.js frontend 
- * and the Express.js backend API.
+ * 🛰️ Advanced API Orchestration Layer
+ * Managed via central axiosInstance for standardized telemetry.
  */
-import axios from 'axios';
-import API_BASE_URL from '../config';
+import axiosInstance from './axiosInstance';
 
-const api = axios.create({
-  baseURL: API_BASE_URL,
-});
+/**
+ * [PUBLIC_ENDPOINTS]
+ */
 
-// Global Request Orchestration - Attaching Credentials
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
-    if (token && token !== 'null') {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-});
-
-// Global Response Interceptor
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        // Handle session expiration
-        if (error.response?.status === 401) {
-            // Optional: Redirect to login or clear token
-            // localStorage.removeItem('token');
-        }
-        return Promise.reject(error);
-    }
-);
-
-export const getProfile = async () => {
-    const response = await api.get('/profile');
-    return response.data;
+// Retrieve core system data and interface definitions
+export const fetchSystemInterfaceData = async () => {
+    return await axiosInstance.get('/profile');
 };
 
-export const getVisitors = async (increment = false) => {
+// Retrieve and optionally increment visitor telemetries
+export const fetchSystemAnalytics = async (increment = false) => {
     try {
-        const response = await api.get(`/visitors${increment ? '?inc=true' : ''}`);
-        return response.data;
-    } catch {
-        return { success: false, count: 0 };
+        return await axiosInstance.get(`/visitors${increment ? '?inc=true' : ''}`);
+    } catch (error) {
+        return { success: false, count: 0, history: [] };
     }
 };
 
-export const getHealth = async () => {
+// Probe system health and resource utilization
+export const probeSystemIntegrity = async () => {
     try {
-        const response = await api.get('/health');
-        return response.data;
-    } catch {
-        return { success: false, status: 'Offline' };
+        return await axiosInstance.get('/health');
+    } catch (error) {
+        return { success: false, status: 'OFFLINE_MODE' };
     }
 };
 
-export const submitContact = async (formData) => {
+// Dispatch a new communication payload to the administrative core
+export const dispatchCommunication = async (payload) => {
     try {
-        const response = await api.post('/contact', formData);
-        return response.data;
+        return await axiosInstance.post('/contact', payload);
     } catch (error) {
         return { 
             success: false, 
-            error: error.response?.data?.error || 'System core failure during transmission.' 
+            error: error.response?.data?.error || 'CRITICAL_TRANSMISSION_FAILURE' 
         };
     }
 };
 
-// [AUTHENTICATED_ENDPOINTS]
+// Execute administrative authentication protocol
+export const executeAdministrativeAuth = async (credentials) => {
+    return await axiosInstance.post('/auth/login', credentials);
+};
 
-/**
- * Identify current admin session
- */
-export const getMe = async () => {
-    const response = await api.get('/auth/me');
-    return response.data;
+// Dispatch a new architectural proposal for administrative vetting
+export const dispatchArchitecturalProposal = async (suggestedData) => {
+    return await axiosInstance.post('/proposals/submit', { suggestedData });
 };
 
 /**
- * Update portfolio architecture
+ * [AUTHENTICATED_ADMIN_ENDPOINTS]
  */
-export const updateProfile = async (profileData) => {
-    const response = await api.put('/profile', profileData);
-    return response.data;
+
+// Validate the current administrative session credentials
+export const validateAdminSession = async () => {
+    return await axiosInstance.get('/auth/me');
 };
 
-/**
- * Retrieve all contact transmissions
- */
-export const getContacts = async () => {
-    const response = await api.get('/contact');
-    return response.data;
+// Synchronize and persist updated system architecture data
+export const synchronizeArchitecture = async (architecturePayload) => {
+    return await axiosInstance.put('/profile', architecturePayload);
 };
 
-/**
- * Purge a specific transmission
- */
-export const deleteContact = async (id) => {
-    const response = await api.delete(`/contact/${id}`);
-    return response.data;
+// Fetch decrypted transmission logs from the communication hub
+export const fetchTransmissionLogs = async () => {
+    return await axiosInstance.get('/contact');
 };
 
-/**
- * Approve architectural proposal
- */
-export const approveProposal = async (id) => {
-    const response = await api.put(`/proposals/approve/${id}`);
-    return response.data;
+// Purge a specific record from the transmission persistent store
+export const purgeTransmissionRecord = async (recordId) => {
+    return await axiosInstance.delete(`/contact/${recordId}`);
 };
 
-/**
- * Reject architectural proposal
- */
-export const rejectProposal = async (id) => {
-    const response = await api.put(`/proposals/reject/${id}`);
-    return response.data;
+// Authorize and merge a pending architectural modification
+export const authorizeArchitecturalChange = async (proposalId) => {
+    return await axiosInstance.put(`/proposals/approve/${proposalId}`);
 };
 
-/**
- * Update security credentials
- */
-export const changePassword = async (passData) => {
-    const response = await api.put('/auth/change-password', passData);
-    return response.data;
+// Dismiss and archive a pending architectural modification
+export const dismissArchitecturalChange = async (proposalId) => {
+    return await axiosInstance.put(`/proposals/reject/${proposalId}`);
 };
 
-/**
- * Toggle system maintenance lock
- */
-export const toggleMaintenance = async (enabled) => {
-    const response = await api.put('/health/maintenance', { enabled });
-    return response.data;
+// Fetch any pending architectural modification proposals
+export const fetchPendingModifications = async () => {
+    return await axiosInstance.get('/proposals');
 };
 
-/**
- * Retrieve all architectural proposals
- */
-export const getProposals = async () => {
-    const response = await api.get('/proposals');
-    return response.data;
+// Rotate administrative security credentials
+export const rotateSecurityCredentials = async (credentialPayload) => {
+    return await axiosInstance.put('/auth/change-password', credentialPayload);
 };
 
-export default api;
+// Modify the global system maintenance lockdown status
+export const modifyMaintenanceLock = async (statusPayload) => {
+    // statusPayload: { enabled: boolean }
+    return await axiosInstance.put('/health/maintenance', statusPayload);
+};
+
+export default axiosInstance;

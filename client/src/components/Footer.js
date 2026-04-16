@@ -2,7 +2,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Container, IconButton, Stack, Divider, Tooltip } from '@mui/material';
 import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu, ShieldCheck, Terminal, Hash } from 'lucide-react';
 import { Link as RouterLink } from 'react-router-dom';
-import { getVisitors } from '../services/api';
+import { fetchSystemAnalytics } from '../services/api';
 
 const Footer = ({ socials, name }) => {
   const [visitorCount, setVisitorCount] = useState(0);
@@ -11,7 +11,7 @@ const Footer = ({ socials, name }) => {
   useEffect(() => {
     const fetchVisitorsData = async () => {
         const hasIncremented = sessionStorage.getItem('v_inc');
-        const data = await getVisitors(!hasIncremented); 
+        const data = await fetchSystemAnalytics(!hasIncremented); 
         
         if (data?.success) {
             setVisitorCount(data.count);

@@ -4,7 +4,7 @@
  * Developer: A. Mohamed Yasar
  */
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, Typography, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
+import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
 import { Menu as MenuIcon, X } from 'lucide-react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 

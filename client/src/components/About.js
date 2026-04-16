@@ -26,13 +26,25 @@ const About = memo(({ profile }) => {
               </Typography>
               
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} sx={{ mb: 4 }}>
-                <Box sx={{ flex: 1, p: 3, borderRadius: 3, border: '1px solid rgba(51, 204, 255, 0.2)', background: 'linear-gradient(to bottom, rgba(51, 204, 255, 0.05), transparent)' }}>
+                <Box sx={{ 
+                    flex: 1, p: 3, borderRadius: '20px', 
+                    border: '1px solid rgba(51, 204, 255, 0.2)', 
+                    background: 'linear-gradient(135deg, rgba(51, 204, 255, 0.05), transparent)',
+                    position: 'relative', overflow: 'hidden'
+                }}>
+                  <Typography variant="caption" sx={{ color: '#33ccff88', fontWeight: 900, letterSpacing: 2, display: 'block', mb: 1 }}>[OPERATIONAL_HISTORY]</Typography>
                   <Typography variant="h3" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'monospace' }}>2.5+</Typography>
-                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 1 }}>YEARS OF EXPERIENCE</Typography>
+                  <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>ANNUAL_CYCLES</Typography>
                 </Box>
-                <Box sx={{ flex: 1, p: 3, borderRadius: 3, border: '1px solid rgba(255, 51, 102, 0.2)', background: 'linear-gradient(to bottom, rgba(255, 51, 102, 0.05), transparent)' }}>
+                <Box sx={{ 
+                    flex: 1, p: 3, borderRadius: '20px', 
+                    border: '1px solid rgba(255, 51, 102, 0.2)', 
+                    background: 'linear-gradient(135deg, rgba(255, 51, 102, 0.05), transparent)',
+                    position: 'relative', overflow: 'hidden'
+                }}>
+                  <Typography variant="caption" sx={{ color: '#ff336688', fontWeight: 900, letterSpacing: 2, display: 'block', mb: 1 }}>[DELIVERED_ASSETS]</Typography>
                   <Typography variant="h3" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'monospace' }}>15+</Typography>
-                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, letterSpacing: 1 }}>PROJECTS COMPLETED</Typography>
+                  <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>PRODUCTION_DEPLOYS</Typography>
                 </Box>
               </Stack>
 
@@ -51,11 +63,52 @@ const About = memo(({ profile }) => {
           </Grid>
 
           <Grid item xs={12} md={5}>
-            <Box sx={{ position: 'relative', p: 2 }}>
-              <Box className="hero-glow" sx={{ position: 'absolute', inset: 0, filter: 'blur(100px)', opacity: 0.1, background: 'linear-gradient(45deg, #ff3366, #33ccff)' }} />
-              <Paper sx={{ p: 4, borderRadius: 8, bgcolor: 'rgba(1, 4, 9, 0.8)', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
-                <Box sx={{ height: 350, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed rgba(255,255,255,0.05)', borderRadius: 6 }}>
-                   <Typography variant="h1" sx={{ color: '#111', fontWeight: 900, fontSize: { xs: '6rem', md: '10rem' }, opacity: 0.5 }}>MY</Typography>
+            <Box sx={{ position: 'relative', p: { xs: 2, md: 4 } }}>
+              {/* Complex HUD Overlay */}
+              <Box sx={{ 
+                  position: 'absolute', inset: 0, 
+                  border: '1px solid rgba(51, 204, 255, 0.08)', 
+                  borderRadius: '50%',
+                  animation: 'spin 60s linear infinite',
+                  pointerEvents: 'none',
+                  display: { xs: 'none', md: 'block' }
+              }} />
+              <Box sx={{ 
+                  position: 'absolute', inset: 20, 
+                  border: '2px dashed rgba(255, 51, 102, 0.05)', 
+                  borderRadius: '50%',
+                  animation: 'spin-reverse 40s linear infinite',
+                  pointerEvents: 'none',
+                  display: { xs: 'none', md: 'block' }
+              }} />
+              
+              <Paper sx={{ 
+                  p: 2, borderRadius: 10, bgcolor: 'rgba(1, 4, 9, 0.5)', 
+                  backdropFilter: 'blur(30px)',
+                  border: '1px solid rgba(255,255,255,0.05)', 
+                  position: 'relative',
+                  overflow: 'hidden',
+                  aspectRatio: '1/1',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 50px 100px rgba(0,0,0,0.5)'
+              }}>
+                <Box sx={{ textAlign: 'center' }}>
+                   <Typography variant="h1" sx={{ 
+                       color: '#111', fontWeight: 900, 
+                       fontSize: { xs: '6rem', md: '12rem' }, 
+                       opacity: 0.8,
+                       textShadow: '0 0 40px rgba(51, 204, 255, 0.1)'
+                   }}>
+                       MY
+                   </Typography>
+                </Box>
+                
+                {/* Real-time Data Labels */}
+                <Box sx={{ position: 'absolute', bottom: 30, left: 30 }}>
+                    <Typography sx={{ color: '#33ccff', fontWeight: 900, fontSize: '0.55rem', fontFamily: 'monospace', opacity: 0.6 }}>BIOMETRIC_ID: AUTHORIZED</Typography>
+                    <Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.55rem', fontFamily: 'monospace', opacity: 0.6 }}>ENCRYPTION: ACTIVE</Typography>
                 </Box>
               </Paper>
             </Box>

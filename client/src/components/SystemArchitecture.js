@@ -8,7 +8,7 @@ const spin = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-const ArchitectureModule = () => {
+const SystemArchitecture = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -143,4 +143,4 @@ const ArchitectureModule = () => {
   );
 };
 
-export default ArchitectureModule;
+export default SystemArchitecture;
