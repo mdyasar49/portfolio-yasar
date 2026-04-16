@@ -189,7 +189,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
             <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                 <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SOCIAL_DISPATCH_HANDLES</Typography>
                 <Grid container spacing={3}>
-                    {Object.keys(profile.socials).map((key) => (
+                    {Object.keys(profile.socials || {}).map((key) => (
                         <Grid item xs={12} md={6} key={key}>
                             <TextField 
                                 fullWidth label={key.toUpperCase()} 
@@ -227,7 +227,15 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 </Box>
             )}
 
-            {profile.projects.map((project, idx) => (
+            {publicView && (
+                <Box sx={{ mb: 6, p: 3, border: '1px solid rgba(51, 204, 255, 0.2)', bgcolor: 'rgba(51, 204, 255, 0.05)', borderRadius: 2 }}>
+                   <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'Syncopate' }}>
+                      [ SYSTEM_ADVISORY ]: You are viewing the live deployment architecture. Refining projects here will submit a "Refinement Proposal" to the system administrator.
+                   </Typography>
+                </Box>
+            )}
+
+            {(profile.projects || []).map((project, idx) => (
                 <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
                     <CardContent sx={{ p: 4 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
@@ -379,7 +387,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     }} sx={{ bgcolor: '#ff3366', color: '#fff', fontWeight: 900 }}>ADD_EXPERIENCE_NODE</Button>
                 </Box>
             )}
-            {profile.experience.map((exp, idx) => (
+            {(profile.experience || []).map((exp, idx) => (
                 <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
@@ -426,7 +434,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     }} sx={{ bgcolor: '#ff9933', color: '#fff', fontWeight: 900 }}>ADD_ACADEMIC_NODE</Button>
                 </Box>
             )}
-            {profile.education.map((edu, idx) => (
+            {(profile.education || []).map((edu, idx) => (
                 <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <CardContent>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
@@ -475,7 +483,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
 
     const SkillsTab = ({ publicView }) => (
         <Stack spacing={4}>
-            {Object.keys(profile.technicalSkills).map((category) => (
+            {Object.keys(profile.technicalSkills || {}).map((category) => (
                 <Paper key={category} sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem' }}>{category.toUpperCase()}_STACK</Typography>
                     <TextField 

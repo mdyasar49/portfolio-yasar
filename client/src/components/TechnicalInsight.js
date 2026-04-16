@@ -51,7 +51,7 @@ const TechnicalInsight = () => {
                   </Box>
                 </Stack>
                 <Box sx={{ flexGrow: 1, width: '100%', minHeight: 300 }}>
-                  <ResponsiveContainer>
+                  <ResponsiveContainer width="100%" height="100%" debounce={1}>
                     <AreaChart data={performanceData}>
                       <defs>
                         <linearGradient id="colorOpt" x1="0" y1="0" x2="0" y2="1">
@@ -85,8 +85,8 @@ const TechnicalInsight = () => {
                 <Typography variant="h6" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Zap color="#ff3366" size={24} /> TECH_STACK_MASTERY
                 </Typography>
-                <Box sx={{ flexGrow: 1, width: '100%' }}>
-                  <ResponsiveContainer>
+                <Box sx={{ flexGrow: 1, width: '100%', minHeight: 250 }}>
+                  <ResponsiveContainer width="100%" height="100%" debounce={1}>
                     <BarChart data={skillDistribution} layout="vertical">
                       <XAxis type="number" hide />
                       <YAxis dataKey="name" type="category" stroke="white" fontSize={11} width={80} tickLine={false} axisLine={false} />
