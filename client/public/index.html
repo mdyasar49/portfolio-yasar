@@ -26,6 +26,7 @@
     <meta name="google-site-verification" content="jrC6TwQSUXIGP4c6FG4LrIMFJOteSERg6oR4COuaPTM" />
 
     <!-- PWA & Favicon Branding -->
+    <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/logo.png" />
     <link rel="manifest" href="/manifest.json" />
@@ -46,9 +47,18 @@
     <meta property="twitter:image" content="https://mern-portfolio-yasar-1.onrender.com/og-image.png" />
 
     <!-- Structured Data Integration -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Mohamed Yasar",
+        "alternateName": ["Mohamed Yasar Portfolio", "Yasar Portfolio"],
+        "url": "https://mern-portfolio-yasar-1.onrender.com/"
+      }
+    </script>
     <script type="application/ld+json" id="schema-data"></script>
     <script>
-      // Load Schema Data
+      // Load Person Schema Data Background
       fetch('/data/schema.json')
         .then(r => r.json())
         .then(data => document.getElementById('schema-data').textContent = JSON.stringify(data));
