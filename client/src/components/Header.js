@@ -6,11 +6,12 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
 import { Menu as MenuIcon, X } from 'lucide-react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 50,
@@ -36,8 +37,8 @@ const Header = () => {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // If we are on another page, navigate to home and then hash handles it
-      // or we can just let RouterLink do its thing, but for smooth we need home
+      // If we are on another page, navigate to home with the hash
+      navigate(`/#${sectionId}`);
     }
     setMobileOpen(false);
   };

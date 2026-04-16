@@ -1044,7 +1044,12 @@ const AdministrativeTerminal = ({ publicView = false }) => {
 
                 <Tabs 
                     value={activeTab} 
-                    onChange={(e, v) => setActiveTab(v)}
+                    onChange={(e, v) => {
+                        setActiveTab(v);
+                        const searchParams = new URLSearchParams(location.search);
+                        searchParams.set('tab', v);
+                        navigate({ search: searchParams.toString() }, { replace: true });
+                    }}
                     centered
                     sx={{
                         mb: 8,

@@ -89,7 +89,7 @@ const About = memo(({ profile }) => {
               <Grid container spacing={3}>
                 {[
                   { label: 'EXPERTISE_LEVEL', value: 'FULL_STACK_DEVELOPER', color: '#33ccff' },
-                  { label: 'WORK_EXPERIENCE', value: '2.5_YEARS', color: '#ff3366' },
+                  { label: 'WORK_EXPERIENCE', value: 'AROUND_3_YEARS', color: '#ff3366' },
                   { label: 'PROJECTS_LAUNCHED', value: '15+_TOTAL', color: '#00ffcc' }
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>

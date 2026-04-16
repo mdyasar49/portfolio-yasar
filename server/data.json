@@ -1,49 +1,49 @@
 {
   "name": "A. MOHAMED YASAR",
-  "title": "Full Stack Engineer | React.js Architect | MERN Specialist | REST API Expert",
+  "title": "Senior Full Stack Engineer | React.js Architect | MERN Specialist | REST API Expert",
   "email": "mohamedyasar081786@gmail.com",
   "phone": "+91-9025943184",
   "location": "Chennai, Tamil Nadu",
-  "summary": "Innovative Full Stack Engineer with 2.5+ years of production-grade experience in architecting responsive, high-fidelity web ecosystems using React.js and the MERN stack. Expert at bridging the gap between sophisticated UI/UX requirements and robust backend logic. Proven track record in orchestrating complex REST API integrations, optimizing SQL database performance, and conducting deep-system debugging to maintain 99.9% uptime. Actively expanding technical horizons into Enterprise Java, Spring Boot, and Python-based automation to build the next generation of scalable, secure architecture.",
+  "summary": "Innovative Full Stack Engineer with around 3 years of expertise in architecting high-fidelity, production-grade web ecosystems using React.js and the MERN stack. Expert at bridging the gap between sophisticated UI/UX requirements and robust backend logic. Proven track record in orchestrating complex REST API integrations, optimizing SQL database performance, and conducting deep-system debugging to maintain 99.9% uptime. Actively expanding technical horizons into Enterprise Java, Spring Boot, and Python-based automation to build the next generation of scalable, secure architecture.",
   "technicalSkills": {
     "frontend": [
-      "React.js (Hooks, Context API, Redux Toolkit)",
-      "Modern JavaScript (ES6+ / Async-Await)",
-      "Material UI (Custom Theming & Design Systems)",
-      "HTML5 / CSS3 / Responsive Layout Architecture",
-      "Interactive Animations (Framer Motion / GSAP)",
-      "Client-Side State Management & Performance Optimization"
+      "React.js (Professional)",
+      "Redux (State Management)",
+      "JavaScript (ES6+ / Async-Await)",
+      "Material UI (Design Systems)",
+      "HTML5 / CSS3 (Responsive Architecture)",
+      "Interactive Animations (Framer Motion / GSAP)"
     ],
     "backend": [
-      "Node.js Runtime & Express.js Framework",
-      "RESTful API Design & Implementation",
+      "Node.js Runtime & Express.js (MERN)",
       "Java (Core) & Spring Boot Microservices",
-      "Python-based Web Scraping & Scripting",
-      "Server-Side Authentication (JWT / OAuth)",
+      "Python (Basics & Automation)",
+      "RESTful API Design & Implementation",
+      "Server-Side Security (JWT / OAuth)",
       "Middleware Orchestration & Global Error Handling"
     ],
     "database": [
-      "NoSQL Architectures (MongoDB / Atlas)",
-      "Relational Database Management (MySQL / SQL Server)",
-      "Complex Query Design & Performance Indexing",
-      "Data Normalization & Seamless Migration Strategy",
+      "MySQL & SQL Server (Relational)",
+      "MongoDB (NoSQL / Basics)",
+      "Advanced Query Optimization & Indexing",
+      "Data Normalization & Migration Strategy",
       "Real-time Data Syncing & WebSocket Persistence"
     ],
     "tools": [
-      "Git Architecture & Version Control (GitHub / GitLab)",
-      "Advanced Postman Scripting for API Testing",
-      "VS Code Professional Ecosystem (Extensions & Debugging)",
+      "Git & GitHub (Version Control)",
+      "Postman (API Testing & Scripting)",
+      "VS Code Professional Ecosystem",
       "CI/CD Pipeline Deployment (Render / Vercel)",
-      "Command Line Interface (PowerShell / Shell Scripting)"
+      "Command Line Interface (PowerShell / Bash)"
     ],
     "aiTools": [
       "AI-Assisted Development (Cursor / GitHub Copilot)",
       "Advanced Prompt Engineering (ChatGPT / Claude / Gemini)",
-      "OpenAI API Integration & Smart Automation Workflows",
+      "OpenAI Codex & Smart Automation Workflows",
       "AI-Driven Code Analysis & Unit Test Generation"
     ],
     "other": [
-      "Root Cause Analysis (RCA) & Bug Investigation",
+      "Bug Investigation & Root Cause Analysis (RCA)",
       "Technical Documentation (Swagger / Markdown)",
       "Agile/Scrum Methodology & Team Collaboration",
       "System Architecture Mapping & Design Thinking"
@@ -55,16 +55,23 @@
       "company": "Bytes and Binaries Software Solutions",
       "companyUrl": "https://www.bytesandbinaries.com/",
       "companyLinkedIn": "https://www.linkedin.com/company/bytes-and-binaries/",
-      "period": "July 2023 – Present",
+      "period": "July 2023 – March 2026",
       "location": "Pudukkottai, Tamil Nadu",
+      "metrics": [
+        { "label": "UI_CONSISTENCY", "value": 98 },
+        { "label": "API_INTEGRATION", "value": 95 },
+        { "label": "BUG_REDUCTION", "value": 40 },
+        { "label": "SQL_OPTIMIZATION", "value": 85 }
+      ],
+      "technologies": ["React.js", "Material UI", "REST APIs", "SQL", "Git", "Postman"],
       "description": [
-        "Architected and maintained modular, high-performance UI components using React.js and Material UI, significantly reducing development cycle time for new feature deployments by 40%.",
-        "Engineered seamless integration between complex frontend modules and relational backend APIs, ensuring reliable data synchronization, handling race conditions, and maintaining high-fidelity user experiences.",
-        "Optimized legacy SQL queries and database schemas, implementing indexing strategies that resulted in a 60% marked improvement in data retrieval speeds and overall system responsiveness.",
-        "Led cross-functional 'Bug Strike Teams' to investigate and eliminate critical UI/API/Database bottlenecks, achieving a 30% reduction in post-deployment ticket volume through rigorous root-cause analysis.",
-        "Collaborated with QA and Core Development teams to orchestrate smooth application releases, including rigorous pre-production validation, regression testing scripts, and automated testing workflows for critical paths.",
-        "Authored comprehensive technical documentation for internal systems, including API contracts, sequence diagrams, and architecture maps, to facilitate faster developer onboarding and system transparency.",
-        "Implemented real-time data visualization dashboards for monitoring business KPIs, utilizing charting libraries and efficient data polling strategies."
+        "Architected and maintained modular, high-performance UI components using React.js and Material UI, significantly improving UI consistency across enterprise modules.",
+        "Engineered seamless integration between complex frontend modules and relational backend APIs, ensuring reliable data synchronization and high-fidelity user experiences.",
+        "Wrote and optimized complex SQL queries for data validation, detailed issue analysis, and system-wide performance troubleshooting.",
+        "Led cross-functional investigations to resolve critical UI, API, and database-related bottlenecks, achieving a marked reduction in post-deployment ticket volume.",
+        "Collaborated with developers and QA teams to orchestrate smooth application releases, including rigorous pre-production validation and post-deployment stability checks.",
+        "Authored and maintained comprehensive technical documentation for internal features, API contracts, and critical issue resolutions to facilitate team transparency.",
+        "Gained deep understanding of the request-response lifecycle and data flow by working closely with backend API layers and analyzing network logs."
       ]
     }
   ],
@@ -74,28 +81,31 @@
       "type": "Production Environment (Bytes and Binaries)",
       "technologies": [
         "React.js",
-        "Redux Toolkit",
+        "Redux",
         "Material UI",
         "REST APIs",
-        "MySQL",
-        "Axios"
+        "MySQL"
       ],
       "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
       "link": "https://jobplanner.com.au/",
       "github": "#",
       "description": [
-        "Orchestrated the development of core UI modules for a high-traffic Job Management System, focusing on real-time task tracking, resource allocation, and automated scheduling logic.",
-        "Implemented advanced state management using Redux Toolkit to handle complex multi-step forms, persistent user sessions, and dynamic data filtering across thousands of records.",
-        "Collaborated on full-stack debugging initiatives to resolve critical production issues spanning the frontend layers, RESTful API middleware, and complex SQL backend stored procedures.",
-        "Spearheaded UI/UX modernizations and accessibility audits that improved operational efficiency by 15% and increased user satisfaction scores for enterprise clients across Australia.",
-        "Engineered a scalable notification system for real-time alerts on job status changes, integrating with backend event triggers."
+        "Full Stack Contributor to a high-traffic Job Management System, focusing on modular UI development and efficient data rendering.",
+        "Integrated backend APIs with robust validation logic, ensuring reliable data flow across thousands of records.",
+        "Investigated and resolved complex cross-layer issues spanning the UI, API middleware, and SQL stored procedures.",
+        "Contributed UI/UX modernizations and workflow improvements that significantly enhanced operational efficiency for enterprise clients.",
+        "Supported pre-production testing and validation cycles to ensure stable and reliable application releases."
       ],
-      "highlights": [],
-      "stats": {}
+      "highlights": ["Modular Components", "API Integration", "SQL Optimization"],
+      "stats": {
+        "Role": "Full Stack",
+        "Impact": "Workflow Efficiency",
+        "Status": "Production"
+      }
     },
     {
       "name": "Cyber-Premium MERN Ecosystem",
-      "type": "Engineering Showcase",
+      "type": "Full-Stack Showcase",
       "technologies": [
         "MongoDB",
         "Express.js",
@@ -104,18 +114,21 @@
         "Socket.io",
         "Framer Motion"
       ],
-      "image": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800",
+      "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
       "link": "https://mern-portfolio-yasar-1.onrender.com",
       "github": "https://github.com/mdyasar49/mern-portfolio-yasar",
       "description": [
-        "Architected a state-of-the-art personal engineering dashboard featuring real-time visitor tracking via WebSockets and persistent MongoDB storage with optimized indexing.",
-        "Implemented a secure Administrative Protocol for live data updates and system monitoring, featuring JWT-based authentication, protected API endpoints, and comprehensive action logging.",
-        "Developed a dedicated 'Architecture Documentation' portal with multi-language support (English/Tamil), dynamic machine translation integration, and Markdown-to-HTML rendering.",
-        "Automated deployment workflows using Render's CI/CD infrastructure, ensuring seamless builds from GitHub repository pushes with environment variable safety checks.",
-        "Designed a custom glassmorphic UI system using Material UI and Framer Motion for high-fidelity 3D parallax effects and smooth route transitions."
+        "Architected a state-of-the-art personal engineering dashboard featuring real-time visitor tracking and persistent MongoDB storage.",
+        "Implemented secure RESTful APIs with Express.js and integrated with MongoDB for reliable data persistence.",
+        "Designed a custom glassmorphic UI system using Material UI and Framer Motion for high-fidelity interactive effects.",
+        "Automated deployment workflows using Render's CI/CD infrastructure, ensuring seamless builds from GitHub pushes."
       ],
-      "highlights": [],
-      "stats": {}
+      "highlights": ["Real-time Analytics", "MERN Stack", "Render Deployment"],
+      "stats": {
+        "Visitors": "1000+",
+        "Auth": "JWT-Secure",
+        "Downtime": "0%"
+      }
     }
   ],
   "education": [
@@ -132,16 +145,22 @@
       "year": "2020 - 2023"
     }
   ],
+  "certifications": [
+    "C Programming",
+    "Programming Techniques",
+    "Web Designing",
+    "PC Hardware & Troubleshooting"
+  ],
   "softSkills": [
-    "Critical Problem Solving",
-    "Technical Leadership",
-    "Systems Thinking",
-    "Effective Cross-Team Communication",
-    "Rapid Technology Adaptability"
+    "Problem Solving",
+    "Analytical Thinking",
+    "Communication",
+    "Team Collaboration",
+    "Adaptability"
   ],
   "additionalInfo": {
     "availability": "Ready for Immediate Deployment (Notice Period Served)",
-    "workPreference": "Hybrid | On-Site | Rotational Shift Competent",
+    "workPreference": "Willing to work from office | Rotational shifts",
     "languages": [
       "English (Professional)",
       "Tamil (Native)"
@@ -154,7 +173,5 @@
     "instagram": "https://www.instagram.com/mdyasar_49/",
     "facebook": "https://www.facebook.com/share/1DHDLRaGBB/"
   },
-  "readme": "# dYs? MERN Full-Stack Engineering Showcase\n### Engineered by [A. Mohamed Yasar](https://github.com/mdyasar49)\n\n![Architecture](https://img.shields.io/badge/Architecture-Decoupled%20Fullstack-blueviolet?style=for-the-badge)\n![Security](https://img.shields.io/badge/Security-CORS%20Whitelist-success?style=for-the-badge)\n![UI](https://img.shields.io/badge/UI-Glassmorphism-FF69B4?style=for-the-badge)\n![Database](https://img.shields.io/badge/Database-Hybrid%20Storage-orange?style=for-the-badge)\n\n---\n\n## dY'Z The Engineering Objective\nThis isn't just a portfolio; it's a **Production-Grade Simulation**. Most beginners build static sites; I engineered a decoupled system where the Frontend (React) and Backend (Node/Express) function as independent entities, communicating over a secure REST API. \n\n> **Goal:** To demonstrate architectural excellence, clean code practices, and a \"User-First\" design philosophy.\n\n---\n\n## dY>,? Key Architectural Highlights\n\n| Feature | Engineering Solution | Impact |\n|:--- |:--- |:--- |\n| **Data Resilience** | **Zero-Downtime Hybrid Layer**. Automatically switches between MongoDB Atlas (Primary) and `data.json` (Fallback). | Portfolio remains 100% functional even if MongoDB connectivity drops. |\n| **Performance** | **Optimized Asset Loading** & Framer Motion orchestration. | Ultra-smooth 60fps animations and near-instant initial paint. |\n| **Security** | **Strict CORS Policy** & Environment Protection. | Backend only accepts requests from whitelisted domains, protecting API integrity. |\n| **UX Innovation** | **Client-Side PDF Engine**. Bespoke resume generation using `html2pdf.js`. | Real-time PDF generation without server overhead. |\n| **Elite Sharing** | **Smart Auto-Dispatch Protocol**. Browser-bound Gmail sharing with a `?system_dispatch` auto-download trigger. | Circumvents browser security blocks to provide seamless \"virtual\" file attachments via email. |\n| **Multilingual** | **Dynamic Localization Engine**. Real-time Google Translate API integration with a custom Thanglish phonetic layer. | Documentation is accessible in English, Tamil, and Thanglish with 100% layout preservation. |\n| **Bespoke UX** | **Interactive Documentation**. Integrated 'Copy to Clipboard' for code blocks and hover-triggered UI elements. | Significantly improves developer experience and accessibility. |\n\n---\n\n## dY?-,? System Architecture Overview\n\n```mermaid\ngraph TD\n    User((User)) -->|HTTPS| React[React Frontend :2003]\n    subgraph \"Logic Layer\"\n        React -->|Secure API Call| Express[Express Backend :5001]\n    end\n    subgraph \"Data Persistence\"\n        Express -->|Primary| Mongo[(MongoDB Atlas)]\n        Express -.->|Fallback| JSON[(Local Data Store)]\n    end\n    Express -->|Track| Stats[(Visitor Counter)]\n```\n\n---\n\n## dY? Repository DNA\n```text\nmern-portfolio-yasar/\n\"o\"?\"? dYO? client/               # React Interface (Standardized UI Components)\n\",   \"o\"?\"? src/services/        # API Consumer Layer (Axios)\n\",   \"o\"?\"? src/theme/           # Bespoke Design Tokens (MUI)\n\",   \"\"\"?\"? .env                 # Publicly Safe Global Config\n\"\"\"?\"? sT,? server/               # Node.js Core (Business Logic)\n    \"o\"?\"? controllers/         # Request Orchestration\n    \"o\"?\"? middleware/          # Security & Logger Layers\n    \"\"\"?\"? data.json            # High-Availability Fallback\n```\n\n---\n\n## dYs? Rapid Deployment Guide\n\n### 1. Engine Room (Backend)\n```bash\ncd server\nnpm install\n# Create .env: PORT=5001, MONGO_URI, CLIENT_URL, NODE_ENV\nnpm run dev\n```\n\n### 2. Control Deck (Frontend)\n```bash\ncd client\nnpm install\n# Create .env: REACT_APP_API_BASE_URL=http://localhost:5001\nnpm start\n```\n\n---\n\n## dY\" Core API Endpoints\n\n| Method | Endpoint | Purpose | Intelligence |\n|:--- |:--- |:--- |:--- |\n| `GET` | `/api/profile` | Core Data | Supports DB/JSON failover. |\n| `GET` | `/api/visitors`| Traffic Analytics | Real-time counter persistence. |\n| `GET` | `/api/health`  | System Integrity | Monitors DB connection state. |\n\n---\n\n## dYs? Performance & Optimization\n*   **Tree Shaking:** Minimized bundle size by selectively importing MUI icons and components.\n*   **Lazy Loading:** Implemented code splitting for the Resume engine to reduce initial bundle overhead.\n*   **Memoization:** Used `React.memo` and `useMemo` in high-render components (like the Background Canvas) to maintain buttery-smooth performance.\n*   **Dynamic Translation:** Implemented a custom `translateService` that handles Markdown structural preservation during machine translation.\n*   **Copy Engine:** Integrated an asynchronous clipboard API with a visual feedback system (Framer Motion checkmark) for all technical code blocks.\n*   **Auto-Dispatch Protocol:** Engineered a \"Smart Link\" system for email sharing. By tagging links with `?system_dispatch=true`, the portfolio intelligently detects the intent and automatically initiates the PDF asset download for the recipient, mimicking a physical attachment.\n\n---\n\n## dY\"r Roadmap to v3.0\n- [ ] **Comprehensive Admin Dashboard:** Real-time data management UI with JWT authentication.\n- [ ] **Dark/Light Mode Orchestration:** Advanced theme switching with persistent user preference.\n- [ ] **Interactive Analytics:** Visualizing visitor trends using Recharts.\n- [ ] **Contact Microservice:** Direct inquiry forwarding to email/Telegram.\n\n---\n\n## dY ? Let's Connect\nI am always looking for challenges that push the boundaries of what is possible on the web.\n\n*   **GitHub:** [@mdyasar49](https://github.com/mdyasar49)\n*   **LinkedIn:** [A. Mohamed Yasar](https://linkedin.com/in/mdyasar49)\n\n---\n\n*\"Clean code is not just written; it's engineered.\"*",
-  "projectExplanation": "# dY?-,? Deep Dive: MERN Full-Stack System Architecture\n### By A. Mohamed Yasar ?\" MERN Stack Engineer\n\n> This document is a technical blueprint of the Portfolio system. It explains the \"Why\" and \"How\" behind every architectural decision, from the decoupled infrastructure to the hybrid data persistence strategy.\n\n---\n\n## 1. The \"Decoupled\" Philosophy\nUnlike monolithic applications, this system is split into two independent domains: **The Client (UI)** and **The Server (API)**.\n\n### Why this matters:\n*   **Separation of Concerns:** My UI code never touches the database. It only speaks \"JSON.\"\n*   **Independent Scalability:** I can upgrade my server to a powerful machine without touching my frontend hosting.\n*   **Professional Workflow:** This mimics the environment of large-scale tech companies where Frontend and Backend teams work independently.\n\n---\n\n## 2. Request-Response Lifecycle\nWhen a user visits the site, a complex chain of events is triggered to ensure data integrity and performance.\n\n```text\n[ CLIENT SIDE ]                              [ SERVER SIDE ]\nReact Component (Mount)                      Express Handler\n       \",                                            \",\n       \"o\"?- axios.get('/api/profile') \"?\"?\"?\"?\"?\"?\"?\"?       \",\n       \",                                    -       \",\n       \",                            [ MIDDLEWARE LAYER ]\n       \",                            Check CORS Whitelist\n       \",                            Log Request Activity\n       \",                                    \",\n       \",                            [ CONTROLLER LAYER ]\n       \",                            Try MongoDB Fetch\n       \",                            IF FAIL: Read Local JSON\n       \",                                    -\n       \"\"-,\"? JSON Data Response -,\"?\"?\"?\"?\"?\"?\"?\"?\"?\"?\"?\"?\"?\"~\n```\n\n---\n\n## 3. High Availability: The \"Hybrid\" Data Layer\nA major engineering challenge in the MERN stack is handling Database latency or downtime (especially on free-tier clusters like MongoDB Atlas).\n\n**The Solution:** I implemented a **Conditional Fetching Algorithm**.\n```javascript\n// Logic in PortfolioController.js\nif (connection.isOnline) {\n    return fetchFromAtlas(); // Production Data\n} else {\n    return pipeLocalData();  // Zero-Downtime Fallback\n}\n```\n*   **Result:** The user never sees a \"Connection Error.\" The portfolio is **Always-On**.\n\n---\n\n## 4. Security & Environment Integrity\nI treated security as a first-class citizen using three layers:\n\n1.  **Origin Isolation (CORS):** The backend is hardwired to reject *any* request that doesn't come from my specific frontend URL.\n2.  **Secret Management:** Sensitive strings (DB keys, API URLs) are never committed to GitHub. They live in `.env` files, protected by `.gitignore`.\n3.  **Client-Side Scoping:** Environment variables on the frontend start with `REACT_APP_` to prevent accidental exposure of system-level secrets.\n\n---\n\n## 5. UI/UX Orchestration: Glassmorphism & Motion\nThe \"Impress\" factor comes from the bridge between code and design. \n\n*   **Bespoke Themes:** Using Material UI (MUI), I created a customized design system with glassmorphic cards and neon accents.\n*   **Motion Graphs:** Every page transition and scroll effect is managed by **Framer Motion**, ensuring the site feels \"alive\" and interactive.\n*   **Dynamic Resume Generator:** Instead of serving a static PDF, the site *builds* a resume from live data using `html2pdf.js`, ensuring the CV is always up-to-date with the portfolio contents.\n\n---\n\n## 6. Dynamic Localization & Transliteration\nTo make the engineering documentation accessible to a wider audience, I engineered a **real-time translation engine**.\n\n*   **Google Translate API Integration:** The system fetches technical documentation in English and translates it on-the-fly when a user switches languages.\n*   **Markdown Preservation:** I implemented a regex-based parser that identifies Markdown headers, lists, and quotes, ensuring the **technical layout remains 100% identical** across all languages.\n*   **Thanglish Phonetic Engine:** Since Thanglish (Tamil words in English script) isn't natively supported by standard APIs, I built a custom transliteration layer that converts Tamil unicode characters into authentic English phonetic equivalents.\n*   **Interactive UX (Copy Engine):** I integrated a premium 'Copy to Clipboard' system for all code blocks. It utilizes the asynchronous Clipboard API and provides real-time visual feedback via a Framer Motion-animated checkmark icon upon success.\n*   **Performance:** All translations are cached locally to ensure a near-instant experience when switching between language modes.\n|\n---\n\n## 7. The Asset Dispatcher: Secure Sharing & Auto-Download\nA significant technical hurdle in modern browsers is the inability to physically attach files to a web-based email compose window (like Gmail) via a simple URL link. \n\n**The Engineering Workaround:** I implemented a custom **Auto-Dispatch Protocol**.\n*   **The Dispatcher:** When a user shares their resume via the \"Elite Dispatch\" button, the system generates a URL with a specialized query parameter: `?system_dispatch=true`.\n*   **The Listener:** The Portfolio application is programmed to monitor its initialization parameters. If the `system_dispatch` flag is detected, a high-priority `useEffect` hook triggers a \"DECODING ASSET\" overlay.\n*   **The Execution:** After a 500ms \"engine warm-up,\" the site automatically invokes the Resume Engine's PDF generation function and initiates a direct download for the recipient. \n*   **Impact:** This provides the seamless UX of an email attachment without compromising browser security standards.\n\n---\n\n## 8. How to Extend This Project\nThis system is designed to be extensible. To add a new section:\n1.  **Define Schema:** Add a new model in `server/models/`.\n2.  **Expose Endpoint:** Map a new route in `server/routes/`.\n3.  **Consume API:** Create a new service function in `client/src/services/`.\n4.  **Render UI:** Build a specialized React component to display the data.\n\n---\n\n## 9. Engineer's Summary\nBuilding this project taught me that **Performance** and **Reliability** are just as important as the **User Interface**. By managing my own API and handling database failovers, I have created a portfolio that doesn't just look good?\"it is built to last.\n\n**Developed with Passion. Engineered with Precision.**\n**?\" A. Mohamed Yasar**",
   "maintenanceMode": false
 }

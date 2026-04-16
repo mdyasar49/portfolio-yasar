@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Box, Typography, Grid, Paper, Stack, Tooltip } from '@mui/material';
 import { motion } from 'framer-motion';
 import { Database, Layout, Terminal, Sparkles, Cpu, Activity } from 'lucide-react';
+import TechOrbit from './TechOrbit';
 
 const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
   <motion.div
@@ -123,6 +124,8 @@ const Skills = memo(({ skills }) => {
         <Typography variant="overline" sx={{ display: 'block', textAlign: 'center', color: '#444', fontWeight: 900, letterSpacing: 6 }}>CORE COMPETENCIES</Typography>
         <Box sx={{ width: 100, height: 4, background: 'linear-gradient(90deg, #ff3366, #ff9933)', mx: 'auto', borderRadius: 2, mt: 3 }} />
       </Box>
+
+      <TechOrbit />
 
       <Grid container spacing={3}>
         {categories.map((cat, i) => (
