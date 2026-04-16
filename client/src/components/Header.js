@@ -4,7 +4,7 @@
  * Developer: A. Mohamed Yasar
  */
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
+import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, Typography, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
 import { Menu as MenuIcon, X } from 'lucide-react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 
@@ -165,24 +165,21 @@ const Header = () => {
               sx={{ 
                 textDecoration: 'none',
                 display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
+                alignItems: 'center',
                 transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': { transform: 'scale(1.05)' }
               }}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Box 
-                  component="img"
-                  src="/logo.png"
-                  alt="Mohamed Yasar"
-                  sx={{ 
-                    height: { xs: 35, sm: 40, md: 45 },
-                    width: 'auto',
-                    filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.3))'
-                  }}
-                />
-              </Box>
+              <Box 
+                component="img"
+                src="/logo.png"
+                alt="Mohamed Yasar"
+                sx={{ 
+                  height: { xs: 35, sm: 40, md: 45 },
+                  width: 'auto',
+                  filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.3))'
+                }}
+              />
             </Box>
             
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', whiteSpace: 'nowrap' }}>

@@ -1,58 +1,29 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="mainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00F2FE" />
-      <stop offset="100%" stop-color="#4FACFE" />
+    <linearGradient id="mGrad" x1="512" y1="300" x2="512" y2="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF7A00" />
+      <stop offset="100%" stop-color="#FF0000" />
     </linearGradient>
-    <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="50%" stop-color="#CBD5E1" />
-      <stop offset="100%" stop-color="#94A3B8" />
+    <linearGradient id="yGrad" x1="512" y1="300" x2="512" y2="700" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FF0000" />
+      <stop offset="100%" stop-color="#E2127A" />
     </linearGradient>
-    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="12" result="blur" />
+    <filter id="dotGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="20" result="blur" />
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
-    <filter id="innerShadow">
-      <feComponentTransfer in="SourceAlpha">
-        <feFuncA type="table" tableValues="1 0" />
-      </feComponentTransfer>
-      <feGaussianBlur stdDeviation="10" />
-      <feOffset dx="5" dy="5" result="offsetblur" />
-      <feFlood flood-color="black" flood-opacity="0.6" result="color" />
-      <feComposite in2="offsetblur" operator="in" />
-      <feComposite in2="SourceAlpha" operator="in" />
-      <feMerge>
-        <feMergeNode />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
   </defs>
-
-  <!-- Outer Hexagon Frame -->
-  <path d="M256 40 L450 148 V364 L256 472 L62 364 V148 L256 40Z" fill="#030712" stroke="url(#silverGrad)" stroke-width="4" />
   
-  <!-- Glowing Hexagon inner -->
-  <path d="M256 60 L430 158 V354 L256 452 L82 354 V158 L256 60Z" fill="none" stroke="url(#mainGrad)" stroke-width="2" opacity="0.3" filter="url(#neonGlow)" />
+  <rect width="1024" height="1024" fill="#000000" />
 
-  <!-- Circuit Lines -->
-  <path d="M256 40 V100 M62 148 H120 M450 148 H392 M62 364 H120 M450 364 H392 M256 472 V412" stroke="url(#mainGrad)" stroke-width="2" stroke-linecap="round" opacity="0.6" />
-
-  <!-- The "MY" Abstract Mark -->
-  <g filter="url(#neonGlow)">
-    <!-- Letter M -->
-    <path d="M160 340 V180 L256 280 L352 180 V340" stroke="url(#mainGrad)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round" />
-    <!-- Letter Y (integrated into the center of M) -->
-    <path d="M256 280 V400" stroke="white" stroke-width="12" stroke-linecap="round" opacity="0.8" />
+  <g transform="translate(150, 350)">
+    <!-- Bold M -->
+    <path d="M0 300 V0 L120 150 L240 0 V300" stroke="url(#mGrad)" stroke-width="85" stroke-linecap="butt" stroke-linejoin="miter" />
+    
+    <!-- Bold Y -->
+    <path d="M300 0 L400 130 L500 0 M400 130 V300" stroke="url(#yGrad)" stroke-width="85" stroke-linecap="butt" stroke-linejoin="miter" />
+    
+    <!-- Glowing Cyan Dot -->
+    <circle cx="610" cy="270" r="45" fill="#00F2FE" filter="url(#dotGlow)" />
   </g>
-
-  <!-- Tech Accents -->
-  <circle cx="256" cy="280" r="8" fill="white" />
-  <circle cx="160" cy="180" r="10" fill="#00F2FE" />
-  <circle cx="352" cy="180" r="10" fill="#00F2FE" />
-  <circle cx="160" cy="340" r="10" fill="#4FACFE" />
-  <circle cx="352" cy="340" r="10" fill="#4FACFE" />
-
-  <!-- Glassmorphism Reflection -->
-  <path d="M80 180 Q256 120 430 180" stroke="white" stroke-width="2" opacity="0.1" />
 </svg>

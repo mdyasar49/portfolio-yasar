@@ -4,7 +4,7 @@
  * of the application and high-quality Material UI components for the design.
  */
 import React, { useEffect, lazy, Suspense } from 'react';
-import { ThemeProvider, CssBaseline, Box, keyframes, Typography } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box, keyframes, Typography, Stack } from '@mui/material';
 
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import theme from './theme/index';
@@ -227,6 +227,20 @@ const AppRoutes = () => {
 
 // ─── App ──────────────────────────────────────────────────
 const App = () => {
+  useEffect(() => {
+    // Remove the initial splash loader from index.html once React mounts
+    const loader = document.getElementById('initial-loader');
+    if (loader) {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.remove();
+        document.body.style.overflow = 'auto'; // Re-enable scrolling
+      }, 800); // Match transition duration in branding.css
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
