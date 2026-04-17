@@ -33,7 +33,8 @@ const isAllowedOrigin = (origin, allowedOrigins) => {
   }
 
   // Optional safety fallback for Render preview/static domains.
-  if (normalizedOrigin.endsWith('.onrender.com')) {
+  // Permissive fallback for Render's dynamic subdomain architecture (-1, -2, etc.)
+  if (normalizedOrigin.includes('.onrender.com')) {
     return true;
   }
 
