@@ -12,14 +12,16 @@ const DynamicBackground = () => {
     let animationFrameId;
 
     let particles = [];
-    const particleCount = 60;
-    const connectionDistance = 150;
+    const isMobile = window.innerWidth < 900;
+    const particleCount = isMobile ? 15 : 55; // Significantly reduce overhead on mobile
+    const connectionDistance = isMobile ? 80 : 140;
     let mouse = { x: null, y: null };
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
+
 
     class Particle {
       constructor() {

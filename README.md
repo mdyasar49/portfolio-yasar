@@ -1,9 +1,9 @@
 # 🚀 MERN Full-Stack Engineering Showcase
-### Engineered by [A. Mohamed Yasar](https://github.com/mdyasar49)
+### Engineered by [Mohamed Yasar](https://github.com/mdyasar49)
 
 ![Architecture](https://img.shields.io/badge/Architecture-Decoupled%20Fullstack-blueviolet?style=for-the-badge)
 ![Security](https://img.shields.io/badge/Security-CORS%20Whitelist-success?style=for-the-badge)
-![UI](https://img.shields.io/badge/UI-Glassmorphism-FF69B4?style=for-the-badge)
+![UI](https://img.shields.io/badge/UI-Premium%20SaaS%20Aesthetic-8A2BE2?style=for-the-badge)
 ![Database](https://img.shields.io/badge/Database-Hybrid%20Storage-orange?style=for-the-badge)
 
 ---
@@ -21,11 +21,11 @@ This isn't just a portfolio; it's a **Production-Grade Simulation**. Most beginn
 |:--- |:--- |:--- |
 | **Data Resilience** | **Zero-Downtime Hybrid Layer**. Automatically switches between MongoDB Atlas (Primary) and `data.json` (Fallback). | Portfolio remains 100% functional even if MongoDB connectivity drops. |
 | **Admin Control** | **Comprehensive Management Hub**. Real-time profile editing, system health monitoring, and proposal management via JWT authentication. | High-fidelity control over the entire ecosystem with secure, persistent updates. |
-| **Interactive Analytics** | **Visual System Intelligence**. 7-day traffic density charts, device distribution, and geographic origin tracking. | Professional, data-driven insights into portfolio performance and audience engagement. |
-| **Proposal Workflow** | **Architectural Refinement Protocol**. Guests can submit draft improvements which are dispatched to the admin via secure email alerts for approval. | Enables collaborative engineering while maintaining 100% administrative sovereignty. |
-| **UX Innovation** | **Client-Side PDF Engine**. Bespoke resume generation using `html2pdf.js`. | Real-time PDF generation without server overhead. |
-| **Elite Sharing** | **Smart Auto-Dispatch Protocol**. Browser-bound Gmail sharing with a `?system_dispatch` auto-download trigger. | Circumvents browser security blocks to provide seamless "virtual" file attachments via email. |
-| **Multilingual** | **Dynamic Localization Engine**. Real-time Google Translate API integration with a custom Thanglish phonetic layer. | Documentation is accessible in English, Tamil, and Thanglish with 100% layout preservation. |
+| **System Interface** | **Real-Time Log Streaming & HUD**. Clean, responsive layout prioritizing typography and live system telemetry. | Professional, data-driven insights into portfolio performance and operations. |
+| **Interactive Resume** | **Dynamic Action Hub**. Integrated download, print, share, and modal system functionality. | High-fidelity control over resume viewing, generation, and distribution. |
+| **Visual Analytics** | **Technical Insight Component**. 7-day traffic density charts, device distribution, and geographic tracking. | Empowers the admin with actionable data on audience engagement. |
+| **Proposal Workflow** | **Architectural Refinement Protocol**. Guests can submit draft improvements dispatched to the admin via secure email alerts. | Enables collaborative engineering while maintaining 100% administrative sovereignty. |
+| **Multilingual** | **Dynamic Localization Engine**. Real-time Google Translate API integration with a custom Thanglish phonetic layer. | Documentation is accessible across multiple dialects with 100% layout preservation. |
 
 ---
 
@@ -51,9 +51,10 @@ graph TD
 ```text
 mern-portfolio-yasar/
 ├── 🌐 client/               # React Interface (Standardized UI Components)
+│   ├── src/components/      # System HUD, Logs, Technical Insights, Resume Actions
 │   ├── src/hooks/           # Custom Logic (Telemetry, Analytics)
 │   ├── src/services/        # API Consumer Layer (Axios)
-│   ├── src/theme/           # Bespoke Design Tokens (MUI)
+│   ├── src/theme/           # SaaS Minimalist Design Tokens (MUI)
 │   └── .env                 # Publicly Safe Global Config
 └── ⚙️ server/               # Node.js Core (Business Logic)
     ├── controllers/         # Request Orchestration & Proposal Logic
@@ -97,7 +98,7 @@ npm start
 
 ## 🚀 Performance & Optimization
 *   **Tree Shaking:** Minimized bundle size by selectively importing MUI icons and components.
-*   **Lazy Loading:** Implemented code splitting for the Resume engine to reduce initial bundle overhead.
+*   **Lazy Loading:** Implemented code splitting for the Resume engine and System HUD components to reduce initial bundle overhead.
 *   **Memoization:** Used `React.memo` and `useMemo` in high-render components to maintain buttery-smooth performance.
 *   **Dynamic Translation:** Implemented a custom `translateService` that handles Markdown structural preservation during machine translation.
 *   **Copy Engine:** Integrated an asynchronous clipboard API with a visual feedback system (Framer Motion checkmark) for all technical code blocks.
@@ -116,7 +117,7 @@ npm start
 I am always looking for challenges that push the boundaries of what is possible on the web.
 
 *   **GitHub:** [@mdyasar49](https://github.com/mdyasar49)
-*   **LinkedIn:** [A. Mohamed Yasar](https://linkedin.com/in/mdyasar49)
+*   **LinkedIn:** [Mohamed Yasar](https://linkedin.com/in/mdyasar49)
 
 ---
 

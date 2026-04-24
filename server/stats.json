@@ -1,4 +1,9 @@
 {
-  "visitors": 0,
-  "history": []
+  "visitors": 2,
+  "history": [
+    {
+      "date": "2026-04-24",
+      "count": 2
+    }
+  ]
 }

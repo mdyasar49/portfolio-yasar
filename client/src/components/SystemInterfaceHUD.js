@@ -4,6 +4,7 @@ import { Cpu, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
+import { useCodeLive } from '../context/CodeLiveContext';
 
 
 const SystemInterfaceHUD = () => {
@@ -11,24 +12,52 @@ const SystemInterfaceHUD = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const { activeSessions } = useLiveAnalytics();
+  const { isCodeLive } = useCodeLive();
+
 
   useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.scrollY;
-      setScrollProgress((currentScroll / totalScroll) * 100);
+    let isThrottled = false;
+    const handleScroll = (e) => {
+      if (isThrottled) return;
+      isThrottled = true;
+
+      requestAnimationFrame(() => {
+        const target = e.target;
+        let totalScroll, currentScroll;
+
+        if (target === document || target === window) {
+          totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+          currentScroll = window.scrollY;
+        } else {
+          totalScroll = target.scrollHeight - target.clientHeight;
+          currentScroll = target.scrollTop;
+        }
+
+        if (totalScroll > 0) {
+          setScrollProgress((currentScroll / totalScroll) * 100);
+        }
+        isThrottled = false;
+      });
     };
 
+
+    // Attach listener to the specific UI container if it exists
+    const container = document.getElementById('main-scroll-container');
+    if (container) container.addEventListener('scroll', handleScroll);
+    
+    // Fallback for global window scroll
     window.addEventListener('scroll', handleScroll);
+    
     const timer = setInterval(() => setUptime(u => u + 1), 1000);
     const showTimer = setTimeout(() => setIsVisible(true), 1500);
     
     return () => {
+      if (container) container.removeEventListener('scroll', handleScroll);
       window.removeEventListener('scroll', handleScroll);
       clearInterval(timer);
       clearTimeout(showTimer);
     };
-  }, []);
+  }, [isCodeLive]);
 
   const formatUptime = (s) => {
     const min = Math.floor(s / 60);

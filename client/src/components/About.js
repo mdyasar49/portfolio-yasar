@@ -1,22 +1,30 @@
 /**
- * [React.js & Material UI - Identity Architecture]
- * Technologies: React.js (Memo), Material UI (Grid, Box, Stack), Framer Motion (Scroll Animations)
- * Purpose: This component displays the 'About Me' section, focusing on professional summary and key stats.
+ * Language: JavaScript (React.js)
+ * Purpose of this file:
+ * This component renders the 'About Me' section of the portfolio.
+ * It provides a narrative summary of the user's professional background, 
+ * along with key statistics (Experience, Expertise Level, Projects Launched)
+ * and a cloud of soft skills.
  */
+
 import React, { memo } from 'react';
+// Material UI components for grid system, spacing, and typography
 import { Box, Typography, Grid, Stack } from '@mui/material';
+// Framer Motion for scroll-triggered entrance animations and rotating background shapes
 import { motion } from 'framer-motion';
 
 /**
- * About Component
- * @param {Object} profile - Data object containing 'summary', 'softSkills', and other professional details.
+ * [About Component]
+ * @param {Object} profile - Data object containing the user's summary and soft skills from the database.
+ * 'memo' is used to skip re-renders if the profile data hasn't changed.
  */
 const About = memo(({ profile }) => {
-  // Safety check: Don't render if profile data is missing
+  // If the profile data is not loaded yet, don't show anything
   if (!profile) return null;
 
   return (
     <Box id="about" sx={{ py: 20, position: 'relative' }}>
+      {/* Container for the entire section with a fade-in animation */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -25,10 +33,10 @@ const About = memo(({ profile }) => {
       >
         <Grid container spacing={8} alignItems="center">
           
-          {/* [Left Column] - Creative Identity Panel */}
+          {/* [Left Column] - Decorative "BIO" Panel */}
           <Grid item xs={12} md={5}>
             <Box sx={{ position: 'relative' }}>
-              {/* Background abstract animation - Outer Ring */}
+              {/* Rotating outer organic shape (Border only) */}
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
@@ -40,7 +48,7 @@ const About = memo(({ profile }) => {
                   pointerEvents: 'none'
                 }}
               />
-              {/* Background abstract animation - Inner Ring */}
+              {/* Rotating inner organic shape in opposite direction (Dashed border) */}
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
@@ -53,6 +61,7 @@ const About = memo(({ profile }) => {
                 }}
               />
               
+              {/* Glassmorphic card for the "BIO" text */}
               <Box sx={{ 
                 position: 'relative', 
                 aspectRatio: '1/1',
@@ -67,6 +76,7 @@ const About = memo(({ profile }) => {
                 overflow: 'hidden',
                 boxShadow: '0 40px 80px rgba(0,0,0,0.5)'
               }}>
+                {/* Large background "BIO" text with very low opacity */}
                 <Typography variant="h1" sx={{ 
                   fontSize: '12rem', fontWeight: 900, color: 'white', 
                   opacity: 0.03, position: 'absolute', fontFamily: 'Syncopate' 
@@ -74,41 +84,44 @@ const About = memo(({ profile }) => {
                   BIO
                 </Typography>
                 
+                {/* Visible "SUMMARY" text with a red accent line */}
                 <Stack spacing={1} alignItems="center" sx={{ zIndex: 1 }}>
                    <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2 }}>SUMMARY</Typography>
                    <Box sx={{ height: 2, width: 60, bgcolor: '#ff3366', boxShadow: '0 0 10px #ff3366' }} />
                    <Typography variant="overline" sx={{ color: '#6366f1', letterSpacing: 2, mt: 2, fontWeight: 700 }}>PROFESSIONAL PROFILE</Typography>
                 </Stack>
 
-                {/* Aesthetic Corner Accents */}
+                {/* Cyberpunk-style corner accents */}
                 <Box sx={{ position: 'absolute', top: 20, left: 20, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' }} />
                 <Box sx={{ position: 'absolute', bottom: 20, right: 20, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' }} />
               </Box>
             </Box>
           </Grid>
 
-          {/* [Right Column] - Data & Narrative Panel */}
+          {/* [Right Column] - Narrative Description & Achievement Counters */}
           <Grid item xs={12} md={7}>
             <Stack spacing={5}>
-              {/* Narrative Content */}
+              {/* Profile Bio Text */}
               <Box>
                 <Typography variant="overline" sx={{ color: '#6366f1', fontWeight: 700, letterSpacing: 3, mb: 1, display: 'block' }}>Executive Summary</Typography>
                 <Typography variant="h4" sx={{ color: 'white', fontWeight: 800, fontFamily: 'Outfit', mb: 3, fontSize: '2rem' }}>
                   Engineering <span style={{ color: '#ec4899' }}>Modern</span> Solutions
                 </Typography>
+                {/* Displays the summary text fetched from the backend */}
                 <Typography variant="body1" sx={{ color: '#94a3b8', fontSize: '1.1rem', lineHeight: 2, textAlign: 'justify' }}>
                   {profile.summary}
                 </Typography>
               </Box>
 
-              {/* Grid of Achievement Stats */}
+              {/* Grid of professional stats (Expertise, Work Exp, Projects) */}
               <Grid container spacing={3}>
                 {[
                   { label: 'Expertise Level', value: 'Full Stack Developer', color: '#6366f1' },
-                  { label: 'Work Experience', value: '3+ Years', color: '#ec4899' },
+                  { label: 'Work Experience', value: '2.5+ Years', color: '#ec4899' },
                   { label: 'Projects Launched', value: `${profile.projects?.length || 0}+ Total`, color: '#10b981' }
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>
+                    {/* Individual stat card */}
                     <Box sx={{ 
                       p: 2.5, borderRadius: '16px', 
                       bgcolor: 'rgba(255, 255, 255, 0.02)', 
@@ -118,7 +131,7 @@ const About = memo(({ profile }) => {
                     }}>
                       <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, letterSpacing: 1, display: 'block', mb: 1, fontSize: '0.7rem', fontFamily: 'Outfit', textTransform: 'uppercase' }}>{stat.label}</Typography>
                       <Typography sx={{ color: 'white', fontWeight: 800, fontFamily: 'Outfit', fontSize: '1.1rem' }}>{stat.value}</Typography>
-                      {/* Animated Progress bar per stat */}
+                      {/* Decorative progress bar that fills when scrolled into view */}
                       <Box sx={{ mt: 1.5, height: 2, width: '100%', bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 10, overflow: 'hidden' }}>
                         <motion.div 
                           initial={{ width: 0 }}
@@ -132,7 +145,7 @@ const About = memo(({ profile }) => {
                 ))}
               </Grid>
 
-              {/* Soft Skills Chips Distribution */}
+              {/* Soft Skills Chips - Displayed as small glowing tags */}
               {profile?.softSkills && (
                 <Box>
                   <Typography variant="overline" sx={{ color: '#64748b', fontWeight: 700, letterSpacing: 2, mb: 2, display: 'block' }}>Core Competencies</Typography>

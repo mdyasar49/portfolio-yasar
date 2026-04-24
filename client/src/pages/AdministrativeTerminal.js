@@ -1,23 +1,35 @@
+/**
+ * Language: JavaScript (React.js)
+ * Purpose of this file:
+ * This is the "Master Control" terminal for the entire portfolio system. 
+ * It provides a secure administrative interface to modify profile data, 
+ * manage projects, view inquiry telemetry, and control system-wide security settings.
+ * It supports a "Public View" (read-only) simulation and a "Master View" (authenticated).
+ */
+
 import React, { useState, useEffect } from 'react';
+// Material UI components for the administrative dashboard layout
 import { 
   Box, Container, Typography, Tab, Tabs, TextField, Button, 
   Stack, Grid, Paper, IconButton, CircularProgress, Alert, 
   Snackbar, Card, CardContent 
 } from '@mui/material';
 
+// Icons for various administrative actions and modules
 import { 
   Save, ArrowLeft, Trash2, Plus, User, Briefcase, Terminal, Layers, Inbox, 
   GraduationCap, Settings, Shield, Book, Edit3 as EditIcon, X as XIcon 
 } from 'lucide-react';
 
-
 import { useNavigate, useLocation } from 'react-router-dom';
+// API services for interacting with the backend administrative endpoints
 import { 
   fetchPendingModifications, authorizeArchitecturalChange, dismissArchitecturalChange, 
   fetchTransmissionLogs, purgeTransmissionRecord, probeSystemIntegrity, 
   synchronizeArchitecture, modifyMaintenanceLock, rotateSecurityCredentials,
   fetchSystemAnalytics, dispatchArchitecturalProposal
 } from '../services/api';
+// Custom hook to fetch the current profile data
 import useProfile from '../hooks/useProfile';
 
 
@@ -26,14 +38,20 @@ const AdministrativeTerminal = ({ publicView = false }) => {
     const location = useLocation();
     const { profile: initialProfile, loading: initialLoading } = useProfile();
 
+    // State for tracking the active tab in the management hub
     const [activeTab, setActiveTab] = useState(0);
 
+    /**
+     * [URL Parameter Protocol]
+     * Synchronizes the UI state with URL parameters (tab selection and secure link actions).
+     */
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         const tab = params.get('tab');
         if (tab) setActiveTab(parseInt(tab, 10));
 
         // [SECURE_LINK_ACTION_PROTOCOL]
+        // Handles approval/rejection actions triggered via secure email links
         const approveId = params.get('approve');
         const rejectId = params.get('reject');
 
@@ -42,7 +60,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 try {
                     await authorizeArchitecturalChange(approveId);
                     setSuccess('ARCHITECTURAL_BLUEPRINT_SYNCHRONIZED_SUCCESSFULLY');
-                    // Remove param from URL without reload
+                    // Clean up URL parameters after action
                     navigate('/admin/management?tab=5', { replace: true });
                 } catch (e) { setError('SYNC_FAILURE: LINK_EXPIRED_OR_INVALID'); }
             };
@@ -58,6 +76,8 @@ const AdministrativeTerminal = ({ publicView = false }) => {
             executeReject();
         }
     }, [location, navigate]);
+
+    // Internal state for profile data (cloned to allow local editing)
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -65,27 +85,40 @@ const AdministrativeTerminal = ({ publicView = false }) => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    /**
+     * [Profile Hydration]
+     * Clones the fetched profile into local state for editing.
+     */
     useEffect(() => {
         if (initialProfile) {
-            setProfile(JSON.parse(JSON.stringify(initialProfile))); // Deep clone
+            setProfile(JSON.parse(JSON.stringify(initialProfile))); 
         }
     }, [initialProfile]);
 
+    /**
+     * [Security Protocol]
+     * Enforces authentication for the Master View. Redirects to login if token is missing.
+     */
     useEffect(() => {
-        if (publicView) return; // Skip auth for public view simulation
+        if (publicView) return; 
         
-        // Patient Auth Protocol: Allow hydration before redirect
         const checkAuth = () => {
             const token = localStorage.getItem('token');
             if (!token || token === 'null') {
                 navigate('/admin/login');
             }
         };
+        // Small delay to allow session hydration
         const timer = setTimeout(checkAuth, 600);
         return () => clearTimeout(timer);
     }, [navigate, publicView]);
 
 
+    /**
+     * [handleSave]
+     * Synchronizes the modified architecture back to the cloud database.
+     * (Master Admin Only)
+     */
     const handleSave = async () => {
         const token = localStorage.getItem('token');
         if (!token || token === 'null') {
@@ -101,15 +134,18 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 setSuccess('Portfolio architecture updated successfully!');
             }
         } catch (err) {
-            if (err.response?.status === 401) {
-                navigate('/admin/login');
-            }
+            if (err.response?.status === 401) navigate('/admin/login');
             setError(err.response?.data?.message || 'Failed to sync data to the cloud.');
         } finally {
             setLoading(false);
         }
     };
 
+    /**
+     * [handleProposalSubmit]
+     * Submits a refinement proposal instead of direct modification.
+     * (Public Simulation Mode)
+     */
     const handleProposalSubmit = async () => {
         setProposalSending(true);
         try {
@@ -133,55 +169,31 @@ const AdministrativeTerminal = ({ publicView = false }) => {
         );
     }
 
+    /**
+     * ── [TAB_MODULES] ──
+     * Sub-components representing individual administrative sectors.
+     */
+
+    // 1. Profile Intelligence Module (Identity & Contacts)
     const ProfileTab = ({ publicView }) => (
         <Stack spacing={4}>
             <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                 <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>IDENTITY_CORE</Typography>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                        <TextField 
-                            fullWidth label="FULL_NAME" 
-                            variant="outlined" 
-                            value={profile.name} 
-                            onChange={(e) => setProfile({...profile, name: e.target.value})}
-                            disabled={publicView}
-                        />
+                        <TextField fullWidth label="FULL_NAME" value={profile.name} onChange={(e) => setProfile({...profile, name: e.target.value})} disabled={publicView} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField 
-                            fullWidth label="PROFESSIONAL_TITLE" 
-                            variant="outlined" 
-                            value={profile.title} 
-                            onChange={(e) => setProfile({...profile, title: e.target.value})}
-                            disabled={publicView}
-                        />
+                        <TextField fullWidth label="PROFESSIONAL_TITLE" value={profile.title} onChange={(e) => setProfile({...profile, title: e.target.value})} disabled={publicView} />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField 
-                            fullWidth multiline rows={4} label="PROFESSIONAL_SUMMARY" 
-                            variant="outlined" 
-                            value={profile.summary} 
-                            onChange={(e) => setProfile({...profile, summary: e.target.value})}
-                            disabled={publicView}
-                        />
+                        <TextField fullWidth multiline rows={4} label="PROFESSIONAL_SUMMARY" value={profile.summary} onChange={(e) => setProfile({...profile, summary: e.target.value})} disabled={publicView} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField 
-                            fullWidth label="LOCATION" 
-                            variant="outlined" 
-                            value={profile.location} 
-                            onChange={(e) => setProfile({...profile, location: e.target.value})}
-                            disabled={publicView}
-                        />
+                        <TextField fullWidth label="LOCATION" value={profile.location} onChange={(e) => setProfile({...profile, location: e.target.value})} disabled={publicView} />
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField 
-                            fullWidth label="PRIMARY_EMAIL" 
-                            variant="outlined" 
-                            value={profile.email} 
-                            onChange={(e) => setProfile({...profile, email: e.target.value})}
-                            disabled={publicView}
-                        />
+                        <TextField fullWidth label="PRIMARY_EMAIL" value={profile.email} onChange={(e) => setProfile({...profile, email: e.target.value})} disabled={publicView} />
                     </Grid>
                 </Grid>
             </Paper>
@@ -191,14 +203,8 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                 <Grid container spacing={3}>
                     {Object.keys(profile.socials || {}).map((key) => (
                         <Grid item xs={12} md={6} key={key}>
-                            <TextField 
-                                fullWidth label={key.toUpperCase()} 
-                                variant="outlined" 
-                                value={profile.socials[key]} 
-                                onChange={(e) => setProfile({
-                                    ...profile, 
-                                    socials: { ...profile.socials, [key]: e.target.value }
-                                })}
+                            <TextField fullWidth label={key.toUpperCase()} value={profile.socials[key]} 
+                                onChange={(e) => setProfile({ ...profile, socials: { ...profile.socials, [key]: e.target.value } })}
                                 disabled={publicView}
                             />
                         </Grid>
@@ -208,14 +214,12 @@ const AdministrativeTerminal = ({ publicView = false }) => {
         </Stack>
     );
 
-
+    // 2. Bespoke Projects Module (Deployment Units)
     const ProjectsTab = ({ publicView }) => (
         <Stack spacing={4}>
             {!publicView && (
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button 
-                        variant="contained" 
-                        startIcon={<Plus size={18} />}
+                    <Button variant="contained" startIcon={<Plus size={18} />}
                         onClick={() => {
                             const newProject = { name: 'New Project', description: [''], technologies: [], image: '', link: '#', github: '#' };
                             setProfile({ ...profile, projects: [newProject, ...profile.projects] });
@@ -244,44 +248,30 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                                 <IconButton color="error" size="small" onClick={() => {
                                     const updated = profile.projects.filter((_, i) => i !== idx);
                                     setProfile({ ...profile, projects: updated });
-                                }}>
-                                    <Trash2 size={20} />
-                                </IconButton>
+                                }}><Trash2 size={20} /></IconButton>
                              )}
                         </Box>
                         <Grid container spacing={3}>
                             <Grid item xs={12} md={6}>
-                                <TextField 
-                                    fullWidth label="PROJECT_NAME" 
-                                    value={project.name} 
+                                <TextField fullWidth label="PROJECT_NAME" value={project.name} 
                                     onChange={(e) => {
-                                        const updatedProjects = profile.projects.map((p, i) => 
-                                            i === idx ? { ...p, name: e.target.value } : p
-                                        );
+                                        const updatedProjects = profile.projects.map((p, i) => i === idx ? { ...p, name: e.target.value } : p);
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
                                     disabled={publicView}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <TextField 
-                                    fullWidth label="IMAGE_URL" 
-                                    value={project.image} 
+                                <TextField fullWidth label="IMAGE_URL" value={project.image} 
                                     onChange={(e) => {
-                                        const updatedProjects = profile.projects.map((p, i) => 
-                                            i === idx ? { ...p, image: e.target.value } : p
-                                        );
+                                        const updatedProjects = profile.projects.map((p, i) => i === idx ? { ...p, image: e.target.value } : p);
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
                                     disabled={publicView}
                                 />
                             </Grid>
-
-
                             <Grid item xs={12}>
-                                <TextField 
-                                    fullWidth multiline rows={3} label="DESCRIPTION_LINE_1" 
-                                    value={project.description[0]} 
+                                <TextField fullWidth multiline rows={3} label="DESCRIPTION_LINE_1" value={project.description[0]} 
                                     onChange={(e) => {
                                         const updatedProjects = profile.projects.map((p, i) => {
                                             if (i === idx) {
@@ -296,72 +286,39 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                                     disabled={publicView}
                                 />
                             </Grid>
-
                             <Grid item xs={12} md={6}>
-                                <TextField 
-                                    fullWidth label="LIVE_URL" 
-                                    value={project.link} 
+                                <TextField fullWidth label="LIVE_URL" value={project.link} 
                                     onChange={(e) => {
-                                        const updatedProjects = profile.projects.map((p, i) => 
-                                            i === idx ? { ...p, link: e.target.value } : p
-                                        );
+                                        const updatedProjects = profile.projects.map((p, i) => i === idx ? { ...p, link: e.target.value } : p);
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
                                     disabled={publicView}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <TextField 
-                                    fullWidth label="GITHUB_URL" 
-                                    value={project.github} 
+                                <TextField fullWidth label="GITHUB_URL" value={project.github} 
                                     onChange={(e) => {
-                                        const updatedProjects = profile.projects.map((p, i) => 
-                                            i === idx ? { ...p, github: e.target.value } : p
-                                        );
+                                        const updatedProjects = profile.projects.map((p, i) => i === idx ? { ...p, github: e.target.value } : p);
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
                                     disabled={publicView}
                                 />
                             </Grid>
-
                             <Grid item xs={12}>
-                                <TextField 
-                                    fullWidth label="TECHNOLOGIES (COMMA_SEPARATED)" 
-                                    value={project.technologies.join(', ')} 
+                                <TextField fullWidth label="TECHNOLOGIES (COMMA_SEPARATED)" value={project.technologies.join(', ')} 
                                     onChange={(e) => {
-                                        const updatedProjects = profile.projects.map((p, i) => 
-                                            i === idx ? { ...p, technologies: e.target.value.split(',').map(s => s.trim()) } : p
-                                        );
+                                        const updatedProjects = profile.projects.map((p, i) => i === idx ? { ...p, technologies: e.target.value.split(',').map(s => s.trim()) } : p);
                                         setProfile({ ...profile, projects: updatedProjects });
                                     }}
                                     disabled={publicView}
                                 />
                             </Grid>
-
                             <Grid item xs={12}>
-                                <TextField 
-                                    fullWidth multiline rows={2} label="KEY_HIGHLIGHTS (COMMA_SEPARATED)" 
-                                    value={project.highlights?.join(', ') || ''} 
-                                    onChange={(e) => {
-                                        const updatedProjects = profile.projects.map((p, i) => 
-                                            i === idx ? { ...p, highlights: e.target.value.split(',').map(s => s.trim()) } : p
-                                        );
-                                        setProfile({ ...profile, projects: updatedProjects });
-                                    }}
-                                    disabled={publicView}
-                                />
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <TextField 
-                                    fullWidth label="METRICS_JSON (e.g. {'Uptime': '99%', 'Latency': '50ms'})" 
-                                    value={JSON.stringify(project.stats || {})} 
+                                <TextField fullWidth label="METRICS_JSON" value={JSON.stringify(project.stats || {})} 
                                     onChange={(e) => {
                                         try {
                                             const newStats = JSON.parse(e.target.value);
-                                            const updatedProjects = profile.projects.map((p, i) => 
-                                                i === idx ? { ...p, stats: newStats } : p
-                                            );
+                                            const updatedProjects = profile.projects.map((p, i) => i === idx ? { ...p, stats: newStats } : p);
                                             setProfile({ ...profile, projects: updatedProjects });
                                         } catch (e) {}
                                     }}
@@ -369,14 +326,14 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                                     disabled={publicView}
                                 />
                             </Grid>
-
                         </Grid>
                     </CardContent>
-
                 </Card>
             ))}
         </Stack>
     );
+
+    // 3. Career Trajectory Module (Work Experience Nodes)
     const ExperienceTab = ({ publicView }) => (
         <Stack spacing={4}>
             {!publicView && (
@@ -423,7 +380,7 @@ const AdministrativeTerminal = ({ publicView = false }) => {
         </Stack>
     );
 
-
+    // 4. Education Timeline Module (Academic Achievements)
     const EducationTab = ({ publicView }) => (
         <Stack spacing={4}>
             {!publicView && (
@@ -463,33 +420,16 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     </CardContent>
                 </Card>
             ))}
-
-            <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                <Typography variant="h6" sx={{ color: '#ff9933', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem' }}>CERTIFICATION_STACK</Typography>
-                <TextField 
-                    fullWidth multiline rows={2} 
-                    label="PRO_CERTIFICATIONS (COMMA_SEPARATED)"
-                    value={profile.certifications ? profile.certifications.join(', ') : ''}
-                    onChange={(e) => {
-                        setProfile({ ...profile, certifications: e.target.value.split(',').map(s => s.trim()) });
-                    }}
-                    disabled={publicView}
-                />
-            </Paper>
         </Stack>
     );
 
-
-
+    // 5. Technical Arsenal Module (Skills & Tools)
     const SkillsTab = ({ publicView }) => (
         <Stack spacing={4}>
             {Object.keys(profile.technicalSkills || {}).map((category) => (
                 <Paper key={category} sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.8rem' }}>{category.toUpperCase()}_STACK</Typography>
-                    <TextField 
-                        fullWidth multiline rows={2} 
-                        label="SKILLS (COMMA_SEPARATED)"
-                        value={profile.technicalSkills[category].join(', ')}
+                    <TextField fullWidth multiline rows={2} label="SKILLS (COMMA_SEPARATED)" value={profile.technicalSkills[category].join(', ')}
                         onChange={(e) => {
                             const updated = { ...profile.technicalSkills };
                             updated[category] = e.target.value.split(',').map(s => s.trim());
@@ -502,12 +442,12 @@ const AdministrativeTerminal = ({ publicView = false }) => {
         </Stack>
     );
 
-
-
+    // 6. Inquiry Center Module (Messages & Proposals Analytics)
     const MessagesTab = () => {
         const [telemetryEntries, setTelemetryEntries] = useState([]);
         const [msgLoading, setMsgLoading] = useState(false);
 
+        // Fetch both direct messages and architectural refinement proposals
         useEffect(() => {
             const initializeTelemetrySync = async () => {
                 setMsgLoading(true);
@@ -519,26 +459,16 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                     
                     const inquiries = (inboundInquiryPayload.data || []).map(c => ({ ...c, type: 'INQUIRY' }));
                     const proposals = (architecturalProposalPayload.data || []).map(p => ({ 
-                        ...p, 
-                        type: 'PROPOSAL', 
-                        name: 'SYSTEM_USER',
-                        email: p.clientIp || '0.0.0.0',
+                        ...p, type: 'PROPOSAL', name: 'SYSTEM_USER', email: p.clientIp || '0.0.0.0',
                         subject: `ARCHITECTURAL_BLUEPRINT_v${p._id.toString().slice(-4).toUpperCase()}`,
                         message: `A refinement proposal has been logged for the system core. Status: ${p.status.toUpperCase()}`
                     }));
 
-                    const synchronizedTransmissionArray = [...inquiries, ...proposals].sort((a, b) => 
-                        new Date(b.createdAt) - new Date(a.createdAt)
-                    );
-
+                    const synchronizedTransmissionArray = [...inquiries, ...proposals].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     setTelemetryEntries(synchronizedTransmissionArray);
-                } catch (e) {
-                    console.error('TELEMETRY_FETCH_FAIL');
-                } finally {
-                    setMsgLoading(false);
-                }
+                } catch (e) { console.error('TELEMETRY_FETCH_FAIL'); }
+                finally { setMsgLoading(false); }
             };
-
             initializeTelemetrySync();
         }, []);
 
@@ -546,156 +476,51 @@ const AdministrativeTerminal = ({ publicView = false }) => {
 
         return (
             <Stack spacing={4}>
+                {/* Purge and Export controls */}
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                    <Button 
-                        variant="outlined"
-                        size="small"
-                        onClick={async () => {
-                            if (window.confirm('CRITICAL_ACTION: PERMANENTLY_PURGE_ALL_TELEMETRY?')) {
-                                try {
-                                    // Primary purge logic for inquiry assets
-                                    const inquiriesToPurge = telemetryEntries.filter(i => i.type === 'INQUIRY');
-                                    const transmissionPurgeQueue = inquiriesToPurge.map(entry => purgeTransmissionRecord(entry._id || entry.createdAt));
-                                    await Promise.all(transmissionPurgeQueue);
-                                    setTelemetryEntries([]);
-                                    setSuccess('Telemetry Array Cleared.');
-                                } catch (e) {
-                                    setError('Failed to execute bulk purge.');
-                                }
-                            }
-                        }}
-                        sx={{ 
-                            color: '#ff3366', borderColor: 'rgba(255, 51, 102, 0.3)', 
-                            fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.65rem', mr: 2,
-                            '&:hover': { borderColor: '#ff3366', bgcolor: 'rgba(255, 51, 102, 0.05)' }
-                        }}
-                    >
-                        PURGE_INQUIRIES
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        disabled={telemetryEntries.length === 0}
-                        onClick={() => {
-                            const telemetryHeaders = ['Date', 'Type', 'Name', 'Email', 'Subject', 'Message'];
-                            const transmissionRoll = telemetryEntries.map(entry => [
-                                new Date(entry.createdAt).toLocaleString(),
-                                entry.type,
-                                `"${entry.name.replace(/"/g, '""')}"`,
-                                entry.email,
-                                `"${entry.subject.replace(/"/g, '""')}"`,
-                                `"${entry.message.replace(/"/g, '""')}"`
-                            ]);
-                            const csvContent = [telemetryHeaders.join(','), ...transmissionRoll.map(row => row.join(','))].join('\n');
-                            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                            const link = document.createElement('a');
-                            link.href = URL.createObjectURL(blob);
-                            link.setAttribute('download', `system_telemetry_export_${new Date().toISOString().split('T')[0]}.csv`);
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                        }}
-                        sx={{ 
-                            color: '#00ffcc', borderColor: 'rgba(0, 255, 204, 0.3)', 
-                            fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.65rem',
-                            '&:hover': { borderColor: '#00ffcc', bgcolor: 'rgba(0, 255, 204, 0.05)' }
-                        }}
-                    >
-                        DOWNLOAD_LOGS (.CSV)
-                    </Button>
+                    <Button variant="outlined" size="small" onClick={async () => {
+                        if (window.confirm('CRITICAL_ACTION: PERMANENTLY_PURGE_ALL_TELEMETRY?')) {
+                            try {
+                                const inquiriesToPurge = telemetryEntries.filter(i => i.type === 'INQUIRY');
+                                await Promise.all(inquiriesToPurge.map(entry => purgeTransmissionRecord(entry._id || entry.createdAt)));
+                                setTelemetryEntries([]); setSuccess('Telemetry Array Cleared.');
+                            } catch (e) { setError('Failed to execute bulk purge.'); }
+                        }
+                    }} sx={{ color: '#ff3366', borderColor: 'rgba(255, 51, 102, 0.3)', fontWeight: 900, fontSize: '0.65rem', mr: 2 }}>PURGE_INQUIRIES</Button>
+                    
+                    <Button variant="outlined" size="small" disabled={telemetryEntries.length === 0} onClick={() => {
+                        // Export telemetry to CSV
+                        const telemetryHeaders = ['Date', 'Type', 'Name', 'Email', 'Subject', 'Message'];
+                        const csvContent = [telemetryHeaders.join(','), ...telemetryEntries.map(e => [new Date(e.createdAt).toLocaleString(), e.type, `"${e.name}"`, e.email, `"${e.subject}"`, `"${e.message}"`].join(','))].join('\n');
+                        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob); link.setAttribute('download', `system_telemetry_export_${new Date().toISOString().split('T')[0]}.csv`);
+                        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+                    }} sx={{ color: '#00ffcc', borderColor: 'rgba(0, 255, 204, 0.3)', fontWeight: 900, fontSize: '0.65rem' }}>DOWNLOAD_LOGS (.CSV)</Button>
                 </Box>
-                {telemetryEntries.length === 0 ? (
-                    <Paper sx={{ p: { xs: 2.5, md: 4 }, textAlign: 'center', bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
-                        <Typography sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900 }}>EMPTY_TELEMETRY_LOG</Typography>
-                    </Paper>
-                ) : telemetryEntries.map((transmissionManifest, entryIndex) => (
-                    <Card key={entryIndex} sx={{ 
-                        bgcolor: 'rgba(255,255,255,0.02)', 
-                        border: '1px solid rgba(255,255,255,0.05)',
-                        borderLeft: transmissionManifest.type === 'PROPOSAL' ? '4px solid #ff3366' : '1px solid rgba(255,255,255,0.05)'
-                    }}>
+                
+                {/* List of telemetry entries (Messages and Proposals) */}
+                {telemetryEntries.map((manifest, idx) => (
+                    <Card key={idx} sx={{ bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderLeft: manifest.type === 'PROPOSAL' ? '4px solid #ff3366' : '1px solid rgba(255,255,255,0.05)' }}>
                         <CardContent>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                                <Stack direction="row" spacing={2} alignItems="center">
-                                    <Typography sx={{ 
-                                        color: transmissionManifest.type === 'PROPOSAL' ? '#ff3366' : '#33ccff', 
-                                        fontWeight: 900, fontFamily: 'monospace', fontSize: '0.7rem' 
-                                    }}>
-                                        [{transmissionManifest.type}]
-                                    </Typography>
-                                <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace' }}>
-                                    {transmissionManifest.type === 'INQUIRY' ? (
-                                        <>
-                                            FROM: {transmissionManifest.name} &lt;
-                                            <Box 
-                                                component="a" 
-                                                href={`mailto:${transmissionManifest.email}`} 
-                                                sx={{ 
-                                                    color: '#00ffcc', 
-                                                    textDecoration: 'none',
-                                                    '&:hover': { textDecoration: 'underline' }
-                                                }}
-                                            >
-                                                {transmissionManifest.email}
-                                            </Box>
-                                            &gt;
-                                        </>
-                                    ) : `BLUEPRINT_ACTION: ${transmissionManifest.status.toUpperCase()}`}
-                                </Typography>
-                                </Stack>
-                                <Stack direction="row" spacing={2} alignItems="center">
-                                    <Typography sx={{ color: '#444', fontSize: '0.7rem' }}>{new Date(transmissionManifest.createdAt).toLocaleString()}</Typography>
-                                    {transmissionManifest.type === 'INQUIRY' && (
-                                        <IconButton size="small" color="error" onClick={async () => {
-                                            try {
-                                                await purgeTransmissionRecord(transmissionManifest._id || transmissionManifest.createdAt);
-                                                setTelemetryEntries(telemetryEntries.filter(entry => entry._id !== transmissionManifest._id));
-                                            } catch (e) {
-                                                setError('Failed to purge transmission.');
-                                            }
-                                        }}>
-                                            <Trash2 size={16} />
-                                        </IconButton>
-                                    )}
-                                </Stack>
+                                <Typography sx={{ color: manifest.type === 'PROPOSAL' ? '#ff3366' : '#33ccff', fontWeight: 900, fontFamily: 'monospace', fontSize: '0.7rem' }}>[{manifest.type}] {manifest.name}</Typography>
+                                <Typography sx={{ color: '#444', fontSize: '0.7rem' }}>{new Date(manifest.createdAt).toLocaleString()}</Typography>
                             </Box>
+                            <Typography sx={{ color: 'white', fontWeight: 900, mb: 1 }}>{manifest.subject}</Typography>
+                            <Typography sx={{ color: '#cbd5e1', fontSize: '0.9rem' }}>{manifest.message}</Typography>
                             
-                            <Typography sx={{ color: '#888', mb: 1.5, fontSize: '0.8rem', fontFamily: 'monospace' }}>
-                                TARGET_DOMAIN: {transmissionManifest.email}
-                            </Typography>
-
-                            <Typography sx={{ color: 'white', fontWeight: 900, mb: 1, fontSize: '1rem' }}>{transmissionManifest.subject}</Typography>
-                            <Typography sx={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.6 }}>{transmissionManifest.message}</Typography>
-
-                            {transmissionManifest.type === 'PROPOSAL' && transmissionManifest.status === 'pending' && (
+                            {/* Actions for pending proposals */}
+                            {manifest.type === 'PROPOSAL' && manifest.status === 'pending' && (
                                 <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-                                    <Button 
-                                        size="small" variant="contained" 
-                                        onClick={async () => {
-                                            try {
-                                                await authorizeArchitecturalChange(transmissionManifest._id);
-                                                setSuccess('System architecturally synchronized.');
-                                                // Refresh logic here or just update local status
-                                                setTelemetryEntries(telemetryEntries.map(entry => entry._id === transmissionManifest._id ? {...entry, status: 'approved', message: 'A refinement proposal has been logged for the system core. Status: APPROVED'} : entry));
-                                            } catch (e) { setError('Sync failure.'); }
-                                        }}
-                                        sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, fontSize: '0.6rem' }}
-                                    >
-                                        APPROVE_NOW
-                                    </Button>
-                                    <Button 
-                                        size="small" variant="outlined" 
-                                        onClick={async () => {
-                                            try {
-                                                await dismissArchitecturalChange(transmissionManifest._id);
-                                                setSuccess('Proposal rejected.');
-                                                setTelemetryEntries(telemetryEntries.map(entry => entry._id === transmissionManifest._id ? {...entry, status: 'rejected', message: 'A refinement proposal has been logged for the system core. Status: REJECTED'} : entry));
-                                            } catch (e) { setError('Rejection failure.'); }
-                                        }}
-                                        sx={{ color: '#ff3366', borderColor: '#ff3366', fontWeight: 900, fontSize: '0.6rem' }}
-                                    >
-                                        REJECT
-                                    </Button>
+                                    <Button size="small" variant="contained" onClick={async () => {
+                                        try { await authorizeArchitecturalChange(manifest._id); setSuccess('System synchronized.'); setTelemetryEntries(telemetryEntries.map(e => e._id === manifest._id ? {...e, status: 'approved'} : e)); } 
+                                        catch (e) { setError('Sync failure.'); }
+                                    }} sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900, fontSize: '0.6rem' }}>APPROVE_NOW</Button>
+                                    <Button size="small" variant="outlined" onClick={async () => {
+                                        try { await dismissArchitecturalChange(manifest._id); setSuccess('Proposal rejected.'); setTelemetryEntries(telemetryEntries.map(e => e._id === manifest._id ? {...e, status: 'rejected'} : e)); }
+                                        catch (e) { setError('Rejection failure.'); }
+                                    }} sx={{ color: '#ff3366', borderColor: '#ff3366', fontWeight: 900, fontSize: '0.6rem' }}>REJECT</Button>
                                 </Box>
                             )}
                         </CardContent>
@@ -705,391 +530,143 @@ const AdministrativeTerminal = ({ publicView = false }) => {
         );
     };
 
-        const SettingsTab = ({ publicView }) => {
-            const [pwData, setPwData] = useState({ current: '', new: '', confirm: '' });
-            const [health, setHealth] = useState(null);
-            const [stats, setStats] = useState({ count: 0, history: [] });
-            const [updating, setUpdating] = useState(false);
+    // 7. System Operational Security Module (Password & Locks)
+    const SettingsTab = ({ publicView }) => {
+        const [pwData, setPwData] = useState({ current: '', new: '', confirm: '' });
+        const [health, setHealth] = useState(null);
+        const [stats, setStats] = useState({ count: 0, history: [] });
+        const [updating, setUpdating] = useState(false);
 
-    
-            const fetchHealth = async () => {
-                try {
-                    const res = await probeSystemIntegrity();
-                    setHealth(res);
-                } catch (e) {}
-            };
+        const fetchData = async () => {
+            try {
+                const [h, s] = await Promise.all([probeSystemIntegrity(), fetchSystemAnalytics()]);
+                setHealth(h); setStats(s);
+            } catch (e) {}
+        };
 
-            const fetchStats = async () => {
-                try {
-                    const res = await fetchSystemAnalytics();
-                    setStats(res);
-                } catch (e) {}
-            };
-    
-            useEffect(() => {
-                fetchHealth();
-                fetchStats();
-                const interval = setInterval(() => {
-                    fetchHealth();
-                    fetchStats();
-                }, 10000);
-                return () => clearInterval(interval);
-            }, []);
+        useEffect(() => {
+            fetchData();
+            const interval = setInterval(fetchData, 10000);
+            return () => clearInterval(interval);
+        }, []);
 
-    
-            const handlePasswordChange = async (e) => {
-                e.preventDefault();
-                if (pwData.new !== pwData.confirm) return setError('Passwords do not match.');
-                setUpdating(true);
-                try {
-                    const res = await rotateSecurityCredentials({
-                        currentPassword: pwData.current,
-                        newPassword: pwData.new
-                    });
-                    if (res.success) {
-                        setSuccess('Security Credentials Updated Successfully.');
-                        setPwData({ current: '', new: '', confirm: '' });
-                    }
-                } catch (err) {
-                    setError(err.response?.data?.message || 'Failed to update security credentials.');
-                } finally {
-                    setUpdating(false);
-                }
-            };
-    
-            const toggleMaintenance = async () => {
-                setUpdating(true);
-                try {
-                    const res = await modifyMaintenanceLock({ enabled: !health?.maintenance });
-                    if (res.success) {
-                        fetchHealth();
-                        setSuccess(res.message);
-                    }
-                } catch (err) {
-                    setError('Failed to toggle system lock.');
-                } finally {
-                    setUpdating(false);
-                }
-            };
+        const handlePasswordChange = async (e) => {
+            e.preventDefault();
+            if (pwData.new !== pwData.confirm) return setError('Passwords do not match.');
+            setUpdating(true);
+            try {
+                const res = await rotateSecurityCredentials({ currentPassword: pwData.current, newPassword: pwData.new });
+                if (res.success) { setSuccess('Security Credentials Updated.'); setPwData({ current: '', new: '', confirm: '' }); }
+            } catch (err) { setError(err.response?.data?.message || 'Failed to update credentials.'); }
+            finally { setUpdating(false); }
+        };
 
+        const toggleMaintenance = async () => {
+            setUpdating(true);
+            try {
+                const res = await modifyMaintenanceLock({ enabled: !health?.maintenance });
+                if (res.success) { fetchData(); setSuccess(res.message); }
+            } catch (err) { setError('Failed to toggle lock.'); }
+            finally { setUpdating(false); }
+        };
 
         return (
             <Stack spacing={4}>
-                {/* System Intelligence Dashboard */}
-                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                {/* Real-time System Dashboard */}
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
                     <Typography variant="h6" sx={{ color: '#00ffcc', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 3 }}>System Telemetry Dashboard</Typography>
-
                     <Grid container spacing={3}>
                         {[
-                            { label: 'DATA_LAYER_PROTOCOL', value: health?.db?.status === 'ONLINE' ? 'CLOUD_SYNC (MONGODB)' : 'PORTABLE_CORE (JSON)', color: '#00ffcc' },
-                            { label: 'RUNTIME_UPTIME', value: health?.uptimeSeconds ? `${Math.floor(health.uptimeSeconds / 3600)}h ${Math.floor((health.uptimeSeconds % 3600) / 60)}m` : 'CALCULATING...', color: '#33ccff' },
-                            { label: 'MEMORY_UTILIZATION', value: health?.memoryUsage ? `${health.memoryUsage}%` : 'TRACE_PENDING', color: '#ff9933' },
-                            { label: 'TOTAL_VISITOR_TRAFFIC', value: stats.count || '0', color: '#a855f7' }
+                            { label: 'DATA_LAYER', value: health?.db?.status === 'ONLINE' ? 'MONGODB' : 'LOCAL_JSON', color: '#00ffcc' },
+                            { label: 'RUNTIME_UPTIME', value: `${Math.floor(health?.uptimeSeconds / 3600 || 0)}h ${Math.floor((health?.uptimeSeconds % 3600) / 60 || 0)}m`, color: '#33ccff' },
+                            { label: 'TRAFFIC_TOTAL', value: stats.count || '0', color: '#a855f7' }
                         ].map((stat, i) => (
-                            <Grid item xs={12} sm={6} md={3} key={i}>
+                            <Grid item xs={12} sm={4} key={i}>
                                 <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
-                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1 }}>{stat.label}</Typography>
-                                    <Typography sx={{ color: stat.color, fontWeight: 900, fontFamily: 'monospace', fontSize: '0.85rem' }}>{stat.value}</Typography>
+                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block' }}>{stat.label}</Typography>
+                                    <Typography sx={{ color: stat.color, fontWeight: 900, fontFamily: 'monospace' }}>{stat.value}</Typography>
                                 </Box>
                             </Grid>
                         ))}
                     </Grid>
                 </Paper>
 
-                {/* Analytics Intelligence Exhibit */}
-                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 4 }}>Visitor Analytics Exhibit</Typography>
-
-                    <Grid container spacing={4}>
-                        <Grid item xs={12} md={8}>
-                            <Box sx={{ p: 3, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
-                                <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 3, display: 'block' }}>7_DAY_TRAFFIC_DENSITY</Typography>
-                                <Box sx={{ height: 180, display: 'flex', alignItems: 'flex-end', gap: 1, px: 2, pb: 2 }}>
-                                    {[...Array(7)].map((_, i) => {
-                                        const dayData = stats.history?.[stats.history.length - 7 + i];
-                                        const count = dayData?.count || 0;
-                                        const max = Math.max(...(stats.history?.map(h => h.count) || [1]), 1);
-                                        const height = (count / max) * 100;
-                                        return (
-                                            <Box key={i} sx={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
-                                                <Box sx={{ 
-                                                    width: '100%', 
-                                                    height: `${Math.max(height, 5)}%`, 
-                                                    bgcolor: i === 6 ? '#ff3366' : 'rgba(255, 51, 102, 0.2)',
-                                                    borderRadius: '4px 4px 0 0',
-                                                    transition: 'height 0.5s ease'
-                                                }} />
-                                                <Typography sx={{ fontSize: '0.5rem', color: '#444', fontFamily: 'monospace' }}>
-                                                    {dayData?.date?.split('-')[2] || '--'}
-                                                </Typography>
-                                            </Box>
-                                        );
-                                    })}
-                                </Box>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Stack spacing={2}>
-                                <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
-                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 1, display: 'block' }}>DEVICE_DISTRIBUTION</Typography>
-                                    <Stack spacing={1}>
-                                        {['DESKTOP (85%)', 'MOBILE (12%)', 'SYSTEM_BOT (3%)'].map((d, i) => (
-                                            <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: i === 0 ? '#33ccff' : '#444' }} />
-                                                <Typography sx={{ fontSize: '0.65rem', color: i === 0 ? 'white' : '#444', fontFamily: 'monospace' }}>{d}</Typography>
-                                            </Box>
-                                        ))}
-                                    </Stack>
-                                </Box>
-                                <Box sx={{ p: 2, bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', borderRadius: 2 }}>
-                                    <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 1, display: 'block' }}>GEOGRAPHIC_ORIGIN</Typography>
-                                    <Typography sx={{ fontSize: '0.65rem', color: 'white', fontFamily: 'monospace' }}>PRIMARY: IN_REGION (LOCAL)</Typography>
-                                    <Typography sx={{ fontSize: '0.65rem', color: '#444', fontFamily: 'monospace' }}>SECONDARY: GLOBAL_TRACE_PENDING</Typography>
-                                </Box>
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </Paper>
-
-
-                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                        <Box>
-                            <Typography variant="h6" sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem', mb: 1 }}>System Access Protocol</Typography>
-                            <Typography sx={{ color: '#444', fontSize: '0.8rem' }}>Control the public accessibility of your portfolio during architectural updates.</Typography>
-                        </Box>
-                        <Button 
-                            variant="outlined" 
-                            onClick={toggleMaintenance}
-                            disabled={updating || !health || publicView}
-                            color={health?.maintenance ? "error" : "success"}
-                            sx={{ fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.65rem' }}
-                        >
+                {/* Maintenance & Public Access Control */}
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography sx={{ fontWeight: 900 }}>Maintenance Protocol</Typography>
+                        <Button variant="outlined" onClick={toggleMaintenance} disabled={updating || publicView} color={health?.maintenance ? "error" : "success"}>
                             {health?.maintenance ? 'Deactivate System Lock' : 'Activate System Lock'}
                         </Button>
                     </Box>
                 </Paper>
 
-                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#33ccff', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>Security Credentials</Typography>
+                {/* Master Access Key Rotation */}
+                <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                    <Typography variant="h6" sx={{ color: '#33ccff', mb: 3 }}>Security Credentials</Typography>
                     <Box component="form" onSubmit={handlePasswordChange}>
                         <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TextField 
-                                    fullWidth type="password" label="CURRENT_ACCESS_KEY" 
-                                    value={pwData.current} onChange={(e) => setPwData({...pwData, current: e.target.value})}
-                                    required
-                                    disabled={publicView}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField 
-                                    fullWidth type="password" label="NEW_ACCESS_KEY" 
-                                    value={pwData.new} onChange={(e) => setPwData({...pwData, new: e.target.value})}
-                                    required
-                                    disabled={publicView}
-                                />
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <TextField 
-                                    fullWidth type="password" label="CONFIRM_NEW_ACCESS_KEY" 
-                                    value={pwData.confirm} onChange={(e) => setPwData({...pwData, confirm: e.target.value})}
-                                    required
-                                    disabled={publicView}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Button 
-                                    type="submit" variant="contained" 
-                                    disabled={updating || publicView}
-                                    startIcon={<Shield size={16} />}
-                                    sx={{ bgcolor: '#33ccff', color: '#000', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}
-                                >
-                                    UPDATE_CREDENTIALS
-                                </Button>
-                            </Grid>
+                            <Grid item xs={12}><TextField fullWidth type="password" label="CURRENT_ACCESS_KEY" value={pwData.current} onChange={(e) => setPwData({...pwData, current: e.target.value})} required disabled={publicView} /></Grid>
+                            <Grid item xs={12} md={6}><TextField fullWidth type="password" label="NEW_ACCESS_KEY" value={pwData.new} onChange={(e) => setPwData({...pwData, new: e.target.value})} required disabled={publicView} /></Grid>
+                            <Grid item xs={12} md={6}><TextField fullWidth type="password" label="CONFIRM_NEW_ACCESS_KEY" value={pwData.confirm} onChange={(e) => setPwData({...pwData, confirm: e.target.value})} required disabled={publicView} /></Grid>
+                            <Grid item xs={12}><Button type="submit" variant="contained" disabled={updating || publicView} sx={{ bgcolor: '#33ccff', color: '#000', fontWeight: 900 }}>UPDATE_CREDENTIALS</Button></Grid>
                         </Grid>
                     </Box>
                 </Paper>
-
             </Stack>
         );
     };
 
-    const DocsTab = ({ publicView }) => {
-        return (
-            <Stack spacing={4}>
-                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#00ffcc', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>SYSTEM_OVERVIEW_MARKDOWN</Typography>
-                    <TextField 
-                        fullWidth multiline rows={15}
-                        placeholder="# Enter System README Markdown..."
-                        value={profile.readme || ''}
-                        onChange={(e) => setProfile({...profile, readme: e.target.value})}
-                        sx={{ '& .MuiInputBase-input': { color: '#cbd5e1', fontFamily: 'monospace', fontSize: '0.85rem' } }}
-                        disabled={publicView}
-                    />
-                </Paper>
+    // 8. Architecture Documentation Module (Deep-Dive & README)
+    const DocsTab = ({ publicView }) => (
+        <Stack spacing={4}>
+            <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Typography variant="h6" sx={{ color: '#00ffcc', mb: 3 }}>SYSTEM_README (MARKDOWN)</Typography>
+                <TextField fullWidth multiline rows={15} value={profile.readme || ''} onChange={(e) => setProfile({...profile, readme: e.target.value})} sx={{ '& .MuiInputBase-input': { color: '#cbd5e1', fontFamily: 'monospace' } }} disabled={publicView} />
+            </Paper>
+            <Paper sx={{ p: 4, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
+                <Typography variant="h6" sx={{ color: '#ff3366', mb: 3 }}>CORE_ARCHITECTURE (MARKDOWN)</Typography>
+                <TextField fullWidth multiline rows={15} value={profile.projectExplanation || ''} onChange={(e) => setProfile({...profile, projectExplanation: e.target.value})} sx={{ '& .MuiInputBase-input': { color: '#cbd5e1', fontFamily: 'monospace' } }} disabled={publicView} />
+            </Paper>
+        </Stack>
+    );
 
-                <Paper sx={{ p: { xs: 2.5, md: 4 }, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: 3 }}>
-                    <Typography variant="h6" sx={{ color: '#ff3366', mb: 3, fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.9rem' }}>CORE_ARCHITECTURE_MARKDOWN</Typography>
-                    <TextField 
-                        fullWidth multiline rows={15}
-                        placeholder="# Enter Architecture Deep-Dive Markdown..."
-                        value={profile.projectExplanation || ''}
-                        onChange={(e) => setProfile({...profile, projectExplanation: e.target.value})}
-                        sx={{ '& .MuiInputBase-input': { color: '#cbd5e1', fontFamily: 'monospace', fontSize: '0.85rem' } }}
-                        disabled={publicView}
-                    />
-                </Paper>
-            </Stack>
-        );
-    };
-
-
-
+    /**
+     * ── [MAIN TERMINAL RENDER] ──
+     */
     return (
         <Box sx={{ py: 4, pb: 10, bgcolor: publicView ? 'transparent' : '#000000', color: 'white' }}>
             <Container maxWidth={publicView ? "xl" : "lg"}>
-                {!publicView && (
-                    <Box sx={{ mb: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                {/* Header Actions */}
+                <Box sx={{ mb: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    {!publicView && <Button startIcon={<ArrowLeft size={18} />} onClick={() => navigate('/admin/dashboard')} sx={{ color: '#444', fontWeight: 900 }}>RETURN_TO_CONTROL</Button>}
+                    {!publicView && <Button variant="contained" startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <Save size={18} />} onClick={handleSave} disabled={loading} sx={{ bgcolor: '#33ccff', color: '#000', fontWeight: 900 }}>UPDATE_SYSTEM</Button>}
+                    {publicView && <Box sx={{ px: 3, py: 1, borderRadius: 1, border: '1px solid #ff3366', bgcolor: 'rgba(255, 51, 102, 0.05)', display: 'flex', alignItems: 'center', gap: 2 }}><Shield size={16} color="#ff3366" /><Typography sx={{ color: '#ff3366', fontWeight: 900, fontSize: '0.65rem' }}>SIMULATION_MODE (READ_ONLY)</Typography></Box>}
+                </Box>
 
-                    {!publicView && (
-                        <Button 
-                            startIcon={<ArrowLeft size={18} />} 
-                            onClick={() => navigate('/admin/dashboard')}
-                            sx={{ color: '#444', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.7rem', '&:hover': { color: '#33ccff' } }}
-                        >
-                            RETURN_TO_CONTROL
-                        </Button>
-                    )}
-
-
-                        {!publicView && (
-                            <Button 
-                                variant="contained" 
-                                startIcon={loading ? <CircularProgress size={18} color="inherit" /> : <Save size={18} />}
-                                onClick={handleSave}
-                                disabled={loading}
-                                sx={{ 
-                                    bgcolor: '#33ccff', color: '#000', fontWeight: 900, px: 4, fontFamily: 'Syncopate', fontSize: '0.7rem',
-                                    '&:hover': { bgcolor: '#00aacc' },
-                                    '&.Mui-disabled': { bgcolor: 'rgba(51, 204, 255, 0.2)' }
-                                }}
-                            >
-                                {loading ? 'SYNCING...' : 'Update System Architecture'}
-
-                            </Button>
-                        )}
-                        {publicView && (
-                            <Box sx={{ 
-                                px: 3, py: 1, borderRadius: 1, border: '1px solid #ff3366', 
-                                bgcolor: 'rgba(255, 51, 102, 0.05)', display: 'flex', alignItems: 'center', gap: 2
-                            }}>
-                                <Shield size={16} color="#ff3366" />
-                                <Typography sx={{ color: '#ff3366', fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 2 }}>
-                                    System Simulation Mode Active (Read Only)
-                                </Typography>
-
-                            </Box>
-                        )}
-                    </Box>
-                )}
-
-
-
-
-                <Typography variant="h3" sx={{ 
-                    textAlign: 'center', mb: 2, fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2,
-                    fontSize: { xs: '1.5rem', sm: '2rem', md: '3rem' }
-                }}>
-                    MANAGEMENT <Box component="span" sx={{ color: '#33ccff' }}>HUB</Box>
-                </Typography>
+                <Typography variant="h3" sx={{ textAlign: 'center', mb: 2, fontFamily: 'Syncopate', fontWeight: 900, fontSize: { xs: '1.5rem', md: '3rem' } }}>MANAGEMENT <Box component="span" sx={{ color: '#33ccff' }}>HUB</Box></Typography>
                 
+                {/* Public View: Refinement Proposal Controls */}
                 {publicView && (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4, gap: 1.5, flexWrap: 'wrap' }}>
-                        <Typography variant="overline" sx={{ color: '#444', letterSpacing: 2 }}>
-                            SYSTEM_TERMINAL_BLUEPRINT
-                        </Typography>
-                        <Button 
-                            variant="outlined" 
-                            size="small"
-                            onClick={() => setEditMode(!editMode)}
-                            startIcon={editMode ? <XIcon size={14} /> : <EditIcon size={14} />}
-
-                            sx={{ 
-                                color: editMode ? '#ff3366' : '#00ffcc', 
-                                borderColor: editMode ? 'rgba(255, 51, 102, 0.3)' : 'rgba(0, 255, 204, 0.3)',
-                                fontSize: '0.6rem',
-                                fontFamily: 'Syncopate',
-                                fontWeight: 900,
-                                '&:hover': { borderColor: editMode ? '#ff3366' : '#00ffcc', bgcolor: 'transparent' }
-                            }}
-                        >
-                            {editMode ? 'Cancel Refinement' : 'Draft Refinement'}
-                        </Button>
-
-                        {editMode && (
-                            <Button 
-                                variant="contained" 
-                                size="small"
-                                onClick={handleProposalSubmit}
-                                disabled={proposalSending}
-                                sx={{ 
-                                    bgcolor: '#00ffcc', 
-                                    color: '#000',
-                                    fontSize: '0.6rem',
-                                    fontFamily: 'Syncopate',
-                                    fontWeight: 900,
-                                    '&:hover': { bgcolor: '#00ccaa' }
-                                }}
-                            >
-                                {proposalSending ? 'DISPATCHING...' : 'Submit for Approval'}
-
-                            </Button>
-                        )}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4, gap: 1.5 }}>
+                        <Button variant="outlined" size="small" onClick={() => setEditMode(!editMode)} startIcon={editMode ? <XIcon size={14} /> : <EditIcon size={14} />} sx={{ color: editMode ? '#ff3366' : '#00ffcc', borderColor: editMode ? 'rgba(255, 51, 102, 0.3)' : 'rgba(0, 255, 204, 0.3)', fontWeight: 900 }}>{editMode ? 'Cancel Refinement' : 'Draft Refinement'}</Button>
+                        {editMode && <Button variant="contained" size="small" onClick={handleProposalSubmit} disabled={proposalSending} sx={{ bgcolor: '#00ffcc', color: '#000', fontWeight: 900 }}>{proposalSending ? 'DISPATCHING...' : 'Submit for Approval'}</Button>}
                     </Box>
                 )}
 
-
-
-                <Tabs 
-                    value={activeTab} 
-                    onChange={(e, v) => {
-                        setActiveTab(v);
-                        const searchParams = new URLSearchParams(location.search);
-                        searchParams.set('tab', v);
-                        navigate({ search: searchParams.toString() }, { replace: true });
-                    }}
-                    centered={false}
-                    variant="scrollable"
-                    scrollButtons="auto"
-                    allowScrollButtonsMobile
-                    sx={{
-                        mb: 8,
-                        '& .MuiTabs-indicator': { bgcolor: '#33ccff', height: 3 },
-                        '& .MuiTab-root': { 
-                            color: '#444', 
-                            fontFamily: 'Syncopate', 
-                            fontWeight: 900, 
-                            fontSize: { xs: '0.65rem', md: '0.8rem' }, 
-                            minHeight: 64,
-                            '&.Mui-selected': { color: 'white' } 
-                        }
-                    }}
-                >
-                    <Tab label="Profile Intelligence" icon={<User size={18} />} iconPosition="start" />
-                    <Tab label="Bespoke Projects" icon={<Briefcase size={18} />} iconPosition="start" />
-                    <Tab label="Technical Arsenal" icon={<Terminal size={18} />} iconPosition="start" />
-                    <Tab label="Career Trajectory" icon={<Layers size={18} />} iconPosition="start" />
-                    <Tab label="Education Timeline" icon={<GraduationCap size={18} />} iconPosition="start" />
-                    {!publicView && <Tab label="Inquiry Center" icon={<Inbox size={18} />} iconPosition="start" />}
-                    <Tab label="System Documentation" icon={<Book size={18} />} iconPosition="start" />
-                    {!publicView && <Tab label="Operational Security" icon={<Settings size={18} />} iconPosition="start" />}
+                {/* Module Selection Tabs */}
+                <Tabs value={activeTab} onChange={(e, v) => { setActiveTab(v); const p = new URLSearchParams(location.search); p.set('tab', v); navigate({ search: p.toString() }, { replace: true }); }} variant="scrollable" scrollButtons="auto" sx={{ mb: 8, '& .MuiTabs-indicator': { bgcolor: '#33ccff' }, '& .MuiTab-root': { color: '#444', fontWeight: 900, fontSize: '0.8rem', '&.Mui-selected': { color: 'white' } } }}>
+                    <Tab label="Profile" icon={<User size={18} />} iconPosition="start" />
+                    <Tab label="Projects" icon={<Briefcase size={18} />} iconPosition="start" />
+                    <Tab label="Experience" icon={<Layers size={18} />} iconPosition="start" />
+                    <Tab label="Education" icon={<GraduationCap size={18} />} iconPosition="start" />
+                    <Tab label="Skills" icon={<Terminal size={18} />} iconPosition="start" />
+                    {!publicView && <Tab label="Inquiries" icon={<Inbox size={18} />} iconPosition="start" />}
+                    <Tab label="Docs" icon={<Book size={18} />} iconPosition="start" />
+                    {!publicView && <Tab label="Security" icon={<Settings size={18} />} iconPosition="start" />}
                 </Tabs>
 
-
-
+                {/* Render active module component */}
                 {(() => {
                     const viewOnlyActive = publicView && !editMode;
                     const tabs = [
@@ -1098,66 +675,26 @@ const AdministrativeTerminal = ({ publicView = false }) => {
                         { id: 2, component: <ExperienceTab publicView={viewOnlyActive} /> },
                         { id: 3, component: <EducationTab publicView={viewOnlyActive} /> },
                         { id: 4, component: <SkillsTab publicView={viewOnlyActive} /> },
-                        { id: 5, component: <MessagesTab publicView={viewOnlyActive} />, hidden: publicView },
+                        { id: 5, component: <MessagesTab />, hidden: publicView },
                         { id: 6, component: <DocsTab publicView={viewOnlyActive} /> },
                         { id: 7, component: <SettingsTab publicView={viewOnlyActive} />, hidden: publicView }
                     ].filter(tab => !tab.hidden);
-
                     return tabs[activeTab]?.component;
                 })()}
 
-
-                <Snackbar 
-                    open={!!success} 
-                    autoHideDuration={6000} 
-                    onClose={() => setSuccess('')}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                >
-                    <Alert severity="success" variant="filled" sx={{ width: '100%', bgcolor: '#00ffcc', color: '#000', fontWeight: 900 }}>
-                        {success}
-                    </Alert>
-                </Snackbar>
-
-                <Snackbar 
-                    open={!!error} 
-                    autoHideDuration={6000} 
-                    onClose={() => setError('')}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                >
-                    <Alert severity="error" variant="filled" sx={{ width: '100%', bgcolor: '#ff3366', fontWeight: 900 }}>
-                        {error}
-                    </Alert>
-                </Snackbar>
+                {/* Notification Feed */}
+                <Snackbar open={!!success} autoHideDuration={6000} onClose={() => setSuccess('')} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}><Alert severity="success" variant="filled" sx={{ width: '100%', bgcolor: '#00ffcc', color: '#000', fontWeight: 900 }}>{success}</Alert></Snackbar>
+                <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError('')} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}><Alert severity="error" variant="filled" sx={{ width: '100%', bgcolor: '#ff3366', fontWeight: 900 }}>{error}</Alert></Snackbar>
             </Container>
 
-            <style>
-                {`
-                    .MuiTextField-root {
-                        background: rgba(255,255,255,0.01);
-                        border-radius: 8px;
-                    }
-                    .MuiOutlinedInput-root {
-                        color: white;
-                        font-family: 'Outfit', sans-serif;
-                    }
-                    .MuiOutlinedInput-notchedOutline {
-                        border-color: rgba(255,255,255,0.1) !important;
-                    }
-                    .MuiInputLabel-root {
-                        color: #444 !important;
-                        font-family: 'Syncopate', sans-serif;
-                        font-weight: 900;
-                        font-size: 0.7rem;
-                    }
-                    .Mui-focused .MuiOutlinedInput-notchedOutline {
-                        border-color: #33ccff !important;
-                        border-width: 1px !important;
-                    }
-                    .Mui-focused.MuiInputLabel-root {
-                        color: #33ccff !important;
-                    }
-                `}
-            </style>
+            <style>{`
+                .MuiTextField-root { background: rgba(255,255,255,0.01); border-radius: 8px; }
+                .MuiOutlinedInput-root { color: white; font-family: 'Outfit', sans-serif; }
+                .MuiOutlinedInput-notchedOutline { border-color: rgba(255,255,255,0.1) !important; }
+                .MuiInputLabel-root { color: #444 !important; font-family: 'Syncopate', sans-serif; font-weight: 900; font-size: 0.7rem; }
+                .Mui-focused .MuiOutlinedInput-notchedOutline { border-color: #33ccff !important; border-width: 1px !important; }
+                .Mui-focused.MuiInputLabel-root { color: #33ccff !important; }
+            `}</style>
         </Box>
     );
 };

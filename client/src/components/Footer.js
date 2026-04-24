@@ -1,13 +1,30 @@
+/**
+ * Language: JavaScript (React.js)
+ * Purpose of this file:
+ * This component renders the Footer section, featuring social links, system analytics (visitor tracking), 
+ * and technical status indicators. It uses a high-end "Dark Cyber" aesthetic with neon accents.
+ */
+
 import React, { useState, useEffect, memo } from 'react';
+// Material UI components for layout, icons buttons, and analytical displays
 import { Box, Typography, Container, IconButton, Stack, Divider, Tooltip } from '@mui/material';
+// Lucide icons for social media and technical indicators
 import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu, ShieldCheck, Terminal, Hash } from 'lucide-react';
 import { Link as RouterLink } from 'react-router-dom';
+// Service layer API to fetch global visitor statistics
 import { fetchSystemAnalytics } from '../services/api';
 
 const Footer = ({ socials, name }) => {
+  // State to store and display the total unique visitor count
   const [visitorCount, setVisitorCount] = useState(0);
+  // Generate a temporary session ID for visual "status" display
   const [sessionId] = useState(() => Math.random().toString(16).substring(2, 10).toUpperCase());
 
+  /**
+   * [Analytics Lifecycle]
+   * On mount, fetch visitor data from the backend.
+   * If it's a first-time visit in this session, trigger an increment.
+   */
   useEffect(() => {
     const fetchVisitorsData = async () => {
         const hasIncremented = sessionStorage.getItem('v_inc');
@@ -21,8 +38,10 @@ const Footer = ({ socials, name }) => {
     fetchVisitorsData();
   }, []);
 
+  // Safety check: if socials data is not loaded, don't show the footer
   if (!socials) return null;
 
+  // Configuration for social media buttons
   const socialLinks = [
     { icon: <Linkedin size={20} />, link: socials.linkedin, color: '#0077b5' },
     { icon: <Github size={20} />, link: socials.github, color: '#f0f6fc' },
@@ -38,13 +57,10 @@ const Footer = ({ socials, name }) => {
       sx={{ 
         bgcolor: '#000000',
         borderTop: '1px solid rgba(51, 204, 255, 0.1)', 
-        pt: 12,
-        pb: 12,
-        position: 'relative',
-        overflow: 'hidden'
+        pt: 12, pb: 12, position: 'relative', overflow: 'hidden'
       }}
     >
-      {/* Background Watermark */}
+      {/* [BACKGROUND WATERMARK] - Giant name text with extremely low opacity */}
       <Box sx={{
         position: 'absolute', bottom: -80, right: -20, opacity: 0.02,
         userSelect: 'none', pointerEvents: 'none'
@@ -55,25 +71,27 @@ const Footer = ({ socials, name }) => {
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           
-          {/* Logo & Status */}
+          {/* ── LOGO & STATUS HUD ── */}
           <Stack spacing={1} alignItems="center" sx={{ mb: 4 }}>
+          <Box 
+            component={RouterLink} to="/"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            sx={{ textDecoration: 'none', display: 'flex', transition: '0.3s', '&:hover': { transform: 'scale(1.05)' } }}
+          >
             <Box 
-              component="img"
-              src="/logo.png"
-              alt="Logo"
-              sx={{ 
-                height: 50, 
-                width: 'auto',
-                filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))'
-              }}
+              component="img" src="/logo.png" alt="Logo"
+              sx={{ height: 50, width: 'auto', filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))' }}
             />
+          </Box>
+
+            {/* Technical metadata labels */}
             <Stack direction="row" spacing={2} sx={{ opacity: 0.5 }}>
               <Typography variant="caption" sx={{ fontFamily: 'monospace', color: '#00ffcc' }}>[LICENSE_ID: {sessionId}]</Typography>
               <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>[STATUS: VERIFIED]</Typography>
             </Stack>
           </Stack>
 
-          {/* Tagline */}
+          {/* Professional Tagline */}
           <Typography 
             variant="body2" 
             sx={{ 
@@ -85,12 +103,10 @@ const Footer = ({ socials, name }) => {
             "Engineering high-performance interactive architectures that push the boundaries of modern full-stack development."
           </Typography>
 
-          {/* Social Mainframe */}
+          {/* ── SOCIAL MAINFRAME ── */}
           <Box sx={{ 
-            p: 1, px: 4, borderRadius: 10, 
-            background: 'rgba(255,255,255,0.01)',
-            border: '1px solid rgba(255,255,255,0.03)',
-            mb: 8, display: 'flex', gap: 2
+            p: 1, px: 4, borderRadius: 10, background: 'rgba(255,255,255,0.01)',
+            border: '1px solid rgba(255,255,255,0.03)', mb: 8, display: 'flex', gap: 2
           }}>
             {socialLinks.map((item, index) => (
               <Tooltip key={index} title={item.link ? "OPEN_LINK" : "N/A"}>
@@ -113,8 +129,9 @@ const Footer = ({ socials, name }) => {
             ))}
           </Box>
 
-          {/* Analytics HUD */}
+          {/* ── ANALYTICS HUD (Real-time visitor count & security indicator) ── */}
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} sx={{ mb: 8, width: '100%', justifyContent: 'center' }}>
+             {/* Traffic Analytics */}
              <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
                 <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>TRAFFIC_METRICS</Typography>
                 <Stack direction="row" spacing={2} alignItems="center">
@@ -130,6 +147,7 @@ const Footer = ({ socials, name }) => {
              
              <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' }, borderColor: 'rgba(255,255,255,0.05)' }} />
 
+             {/* Security Analytics */}
              <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
                 <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>CORE_ENCRYPTION</Typography>
                 <Stack direction="row" spacing={2} alignItems="center">
@@ -144,31 +162,30 @@ const Footer = ({ socials, name }) => {
              </Box>
           </Stack>
 
-          {/* Technical Terminal Footer */}
+          {/* ── TECHNICAL TERMINAL BAR (Copyright & Versioning) ── */}
           <Box sx={{ 
-            width: '100%', pt: 4, 
-            borderTop: '1px solid rgba(255,255,255,0.03)',
+            width: '100%', pt: 4, borderTop: '1px solid rgba(255,255,255,0.03)',
             display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, 
             justifyContent: 'space-between', alignItems: 'center', gap: 2
           }}>
             <Stack direction="row" spacing={1} alignItems="center">
                <Hash size={12} color="#334155" />
                <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: 0.5 }}>
-                  &copy; {new Date().getFullYear()} ARCH_TERMINUS // NO_UNAUTHORIZED_ACCESS
+                  &copy; {new Date().getFullYear()} A. Mohamed Yasar • MIT Licensed
                </Typography>
             </Stack>
 
+            {/* Version control and location metadata */}
             <Stack direction="row" spacing={3}>
                <Stack direction="row" spacing={1} alignItems="center">
                   <Cpu size={12} color="#33ccff" />
                   <Typography sx={{ color: '#33ccff', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>ENG_MERN_V4</Typography>
                </Stack>
                <Typography sx={{ color: '#64748b', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>MADE_IN_TAMIL_NADU</Typography>
+               {/* Hidden Admin Entrypoint */}
                <Tooltip title="SYSTEM_ACCESS">
                   <IconButton 
-                    component={RouterLink} 
-                    to="/admin/login"
-                    size="small"
+                    component={RouterLink} to="/admin/login" size="small"
                     sx={{ color: '#334155', '&:hover': { color: '#ff3366', bgcolor: 'rgba(255, 51, 102, 0.05)' } }}
                   >
                     <Terminal size={10} />

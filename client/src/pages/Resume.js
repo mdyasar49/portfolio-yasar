@@ -1,53 +1,60 @@
 /**
- * [React.js Component - Elite Resume Portal]
- * Technologies: React.js, Framer Motion, Material UI, Lucide Icons
- * Purpose: This component acts as a high-tier interactive gateway for viewing and 
+ * Language: JavaScript (React.js)
+ * Purpose: 
+ * This component acts as a high-tier interactive gateway for viewing and 
  * downloading the professional engineering resume. It utilizes a 3D parallax 
  * engine for visual depth and orchestrates secure asset delivery via iFrame.
  */
+
 import React, { useState, useEffect } from 'react';
+// Material UI components for the UI shell and interactive elements
 import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, Divider, Modal, Fade } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+// Framer Motion for high-fidelity 3D interactions and entrance animations
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+// Icons for technical and action cues
 import { Download, FileText, ShieldCheck, Cpu, Database, Info, Send } from 'lucide-react';
 import SEO from '../components/SEO';
-
 import API_BASE_URL from '../config';
 
 const Resume = () => {
-  // --- [SYSTEM_STATE_INITIALIZATION] ---
+  // ── [SYSTEM_STATE_INITIALIZATION] ──
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+  // Optimization: Disable heavy 3D calculations on mobile or if the user prefers reduced motion
   const disableHeavyMotion = isMobile || prefersReducedMotion;
   
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDispatching, setIsDispatching] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
-  // Resolve the API endpoint for the resume engine
+  // Resolve the API endpoint for the resume engine (renders the HTML resume version)
   const resumeApi = API_BASE_URL ? `${API_BASE_URL}/profile` : '';
   const iframeSrc = resumeApi
     ? `/resume-pro/index.html?api=${encodeURIComponent(resumeApi)}`
     : '/resume-pro/index.html';
 
-  // --- [3D_PARALLAX_ENGINE_CALCULATIONS] ---
+  // ── [3D_PARALLAX_ENGINE_CALCULATIONS] ──
   // These values track mouse movement to create a high-fidelity depth effect on the resume document.
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  // Smoothing the mouse movement with spring physics
   const mouseXSpring = useSpring(x, { stiffness: 100, damping: 30 });
   const mouseYSpring = useSpring(y, { stiffness: 100, damping: 30 });
+  // Map raw mouse coordinates to 3D rotation degrees
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
 
   /**
-   * handleMouseMove
-   * @desc Calculates the cursor position relative to the container to drive the 3D rotation.
+   * [handleMouseMove]
+   * Calculates the cursor position relative to the container to drive the 3D rotation.
    */
   const handleMouseMove = (e) => {
     if (disableHeavyMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
+    // Normalize coordinates to -0.5 to 0.5 range
     const xPct = (e.clientX - rect.left) / rect.width - 0.5;
     const yPct = (e.clientY - rect.top) / rect.height - 0.5;
     x.set(xPct);
@@ -55,10 +62,10 @@ const Resume = () => {
   };
 
   /**
-   * Lifecycle Manifest [Mounting]
+   * [Lifecycle Manifest]
    */
   useEffect(() => {
-    // 1. Trigger initial entrance animation
+    // 1. Trigger initial entrance animation delay
     const timer = setTimeout(() => setIsLoaded(true), 800);
 
     // 2. High-Premium Auto-Dispatch Feature (Download Only Mode)
@@ -76,12 +83,13 @@ const Resume = () => {
   }, []);
 
   /**
-   * handleDownload
-   * @desc Triggers the asset extraction protocol. Communicates with the internal iframe 
+   * [handleDownload]
+   * Triggers the asset extraction protocol. Communicates with the internal iframe 
    * to generate a high-resolution PDF.
    */
   const handleDownload = () => {
     const frame = document.getElementById('resume-frame');
+    // If the iframe has the PDF generation script loaded, use it
     if (frame && frame.contentWindow.downloadAsPDF) {
       frame.contentWindow.downloadAsPDF();
     } else {
@@ -92,8 +100,9 @@ const Resume = () => {
 
 
   /**
-   * executeEmailDispatch
-   * @desc Orchestrates the construction of an authenticated dispatch link sent via email.
+   * [executeEmailDispatch]
+   * Orchestrates the construction of an authenticated dispatch link sent via email.
+   * This generates a pre-formatted Gmail compose link for the recruiter.
    */
   const executeEmailDispatch = () => {
     setIsSelectorOpen(false);
@@ -112,8 +121,8 @@ const Resume = () => {
   };
 
   /**
-   * executeAssetExtraction
-   * @desc High-tier extraction protocol utilizing the experimental Web Share API 
+   * [executeAssetExtraction]
+   * High-tier extraction protocol utilizing the experimental Web Share API 
    * for native mobile delivery or direct blob download for desktop.
    */
   const executeAssetExtraction = async () => {
@@ -159,22 +168,15 @@ const Resume = () => {
     <Box 
       onMouseMove={handleMouseMove}
       sx={{ 
-        minHeight: '100vh', 
-        bgcolor: '#02040a',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        perspective: '2000px',
-        pt: { xs: 14, md: 5 },
-        pb: 10,
-        px: { xs: 2, md: 0 }
+        minHeight: '100vh', bgcolor: '#02040a', position: 'relative', overflow: 'hidden',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+        perspective: '2000px', pt: { xs: 14, md: 5 }, pb: 10, px: { xs: 2, md: 0 }
       }}
     >
       <SEO title="Elite Resume | A. Mohamed Yasar" description="Access the high-tier professional resume and architecture profile of A. Mohamed Yasar." />
       
-      {/* --- [ASSET_DISPATCH_OVERLAY] --- */}
+      {/* ── [ASSET_DISPATCH_OVERLAY] ── */}
+      {/* Visual feedback shown during the PDF generation and download process */}
       <AnimatePresence>
         {isDispatching && (
           <motion.div
@@ -206,7 +208,8 @@ const Resume = () => {
         )}
       </AnimatePresence>
 
-      {/* --- [PROTOCOL_SELECTOR_MODAL] --- */}
+      {/* ── [PROTOCOL_SELECTOR_MODAL] ── */}
+      {/* Choice between direct download and email sharing */}
       <Modal
         open={isSelectorOpen}
         onClose={() => setIsSelectorOpen(false)}
@@ -216,8 +219,7 @@ const Resume = () => {
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
             width: { xs: '95%', sm: 350 }, 
-            bgcolor: 'rgba(13, 17, 23, 0.95)', 
-            backdropFilter: 'blur(20px)',
+            bgcolor: 'rgba(13, 17, 23, 0.95)', backdropFilter: 'blur(20px)',
             border: '1px solid rgba(51, 204, 255, 0.3)',
             borderRadius: 3, p: { xs: 2.5, sm: 3.5 }, outline: 'none'
           }}>
@@ -264,11 +266,11 @@ const Resume = () => {
         </Fade>
       </Modal>
 
-      {/* Background Decoratives */}
+      {/* Decorative background elements (Circuit-style) */}
       <Box sx={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'radial-gradient(#33ccff 1px, transparent 1px)', backgroundSize: '40px 40px', pointerEvents: 'none' }} />
       <Box sx={{ position: 'absolute', top: '10%', left: '5%', opacity: 0.2 }}><Cpu size={120} color="#33ccff" /></Box>
 
-      {/* Identity Label Overlay */}
+      {/* Security Status Overlay (Top-Left) */}
       <AnimatePresence>
         {isLoaded && (
           <motion.div
@@ -286,17 +288,23 @@ const Resume = () => {
         )}
       </AnimatePresence>
 
-      {/* --- [CENTRAL_ASSET_GRID] --- */}
+      {/* ── [CENTRAL_ASSET_GRID] ── */}
       <Container maxWidth="lg" sx={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
         <motion.div
-           style={{ rotateX: disableHeavyMotion ? '0deg' : rotateX, rotateY: disableHeavyMotion ? '0deg' : rotateY, zIndex: 10, transformStyle: "preserve-3d", position: 'relative' }}
+           style={{ 
+             // Applying the calculated 3D rotation
+             rotateX: disableHeavyMotion ? '0deg' : rotateX, 
+             rotateY: disableHeavyMotion ? '0deg' : rotateY, 
+             zIndex: 10, transformStyle: "preserve-3d", position: 'relative' 
+           }}
            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }}
         >
-          {/* Document Framing UI */}
+          {/* Document Corner Framing UI */}
           <Box sx={{ position: 'absolute', top: -30, left: -30, width: 80, height: 80, borderTop: '4px solid #33ccff', borderLeft: '4px solid #33ccff', borderRadius: '20px 0 0 0', opacity: 0.6 }} />
           <Box sx={{ position: 'absolute', bottom: -30, right: -30, width: 80, height: 80, borderBottom: '4px solid #ff3366', borderRight: '4px solid #ff3366', borderRadius: '0 0 20px 20px', opacity: 0.6 }} />
 
-          {/* IFrame Container (The Document Itself) */}
+          {/* ── [IFRAME CONTAINER] ── */}
+          {/* Renders the HTML version of the resume which is used for the interactive view and PDF generation */}
           <Box className="holographic-border animate-cyber-reveal" sx={{ 
             width: { xs: '95vw', sm: '85vw', md: '210mm' }, 
             height: { xs: '135vw', sm: '120vh', md: '297mm' }, 
@@ -309,7 +317,7 @@ const Resume = () => {
             />
           </Box>
           
-          {/* Action Dock */}
+          {/* Main Action Button */}
           <Box sx={{ mt: 4, textAlign: 'center' }}>
              <Button 
                 variant="contained" size="large" onClick={() => setIsSelectorOpen(true)}
@@ -326,6 +334,7 @@ const Resume = () => {
         </motion.div>
       </Container>
 
+      {/* Global CSS for animations and scrollbars */}
       <style>{`
           @keyframes spin { to { transform: rotate(360deg); } }
           iframe::-webkit-scrollbar { width: 6px; }

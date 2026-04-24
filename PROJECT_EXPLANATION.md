@@ -1,5 +1,5 @@
 # 🏗️ Deep Dive: MERN Full-Stack System Architecture
-### By A. Mohamed Yasar — MERN Stack Engineer
+### By Mohamed Yasar — MERN Stack Engineer
 
 > This document is a technical blueprint of the Portfolio system. It explains the "Why" and "How" behind every architectural decision, from the decoupled infrastructure to the hybrid data persistence strategy.
 
@@ -57,7 +57,7 @@ if (connection.isOnline) {
 ## 4. The Proposal Protocol: Collaborative Engineering
 To demonstrate real-world administrative workflows, I engineered a **Guest Contribution Pipeline**.
 
-*   **Public Simulation:** Visitors can "Edit" the portfolio in a simulated terminal environment.
+*   **Public Simulation:** Visitors can engage with the portfolio's responsive System Interface HUD to suggest improvements.
 *   **Secure Dispatch:** Instead of directly modifying the database, refinements are staged as **Proposals**.
 *   **Live Alerts (Nodemailer):** Every submission triggers a high-fidelity email alert to the administrator via a custom `EmailService`.
 *   **Administrative Sovereignty:** Proposals are marked as `pending` and require authenticated approval via a secure deep-link to be merged into the live system.
@@ -67,18 +67,20 @@ To demonstrate real-world administrative workflows, I engineered a **Guest Contr
 ## 5. System Intelligence: Advanced Analytics
 The portfolio doesn't just display data; it monitors its own performance and audience.
 
-*   **7-Day Traffic Density:** A custom SVG visualization engine that renders visitor history with zero overhead.
-*   **Platform Insights:** Automated telemetry for Device Distribution and Geographic Origin (Simulated/Placeholder for high-fidelity UI).
+*   **TechnicalInsight Component:** A custom SVG visualization engine that renders 7-Day Traffic Density and visitor history with zero overhead.
+*   **Live Log Streaming:** Real-time system log streaming directly on the frontend dashboard to track activities as they happen.
+*   **Platform Insights:** Automated telemetry for Device Distribution and Geographic Origin.
 *   **Real-time Health Monitoring:** Continuous polling for Database latency, Memory utilization, and System Uptime.
 
 ---
 
-## 6. UI/UX Orchestration: Glassmorphism & Motion
-The "Impress" factor comes from the bridge between code and design. 
+## 6. UI/UX Orchestration: Premium SaaS Aesthetic & Motion
+The "Impress" factor comes from the bridge between code and design, shifting towards a modern, minimalist "SaaS" aesthetic.
 
-*   **Bespoke Themes:** Using Material UI (MUI), I created a customized design system with glassmorphic cards and neon accents.
-*   **Motion Graphs:** Every page transition and scroll effect is managed by **Framer Motion**, ensuring the site feels "alive" and interactive.
-*   **Dynamic Resume Generator:** Instead of serving a static PDF, the site *builds* a resume from live data using `html2pdf.js`, ensuring the CV is always up-to-date.
+*   **Bespoke Themes:** Using Material UI (MUI), I created a customized design system featuring a sophisticated Indigo/Pink color palette and refined glass-morphic elements, moving away from harsh neon accents.
+*   **System Interface HUD:** A clean, responsive layout that prioritizes standardized typography and visual hierarchy to enhance readability and professional presentation.
+*   **Motion & Interaction:** Every page transition and scroll effect is smoothly managed by **Framer Motion**, ensuring the site feels "alive" without being overwhelming.
+*   **Dynamic Resume Hub:** An interactive resume module featuring integrated modal systems and action menus (download, print, share), leveraging `html2pdf.js` for real-time PDF generation without server overhead.
 
 ---
 
@@ -86,7 +88,7 @@ The "Impress" factor comes from the bridge between code and design.
 To make the engineering documentation accessible to a wider audience, I engineered a **real-time translation engine**.
 
 *   **Google Translate API Integration:** The system fetches technical documentation in English and translates it on-the-fly.
-*   **Markdown Preservation:** I implemented a regex-based parser that identifies Markdown structural tokens, ensuring technical layouts remain identical across all languages.
+*   **Markdown Preservation:** I implemented a regex-based parser that identifies Markdown structural tokens, ensuring technical layouts remain identical across all layouts.
 *   **Thanglish Phonetic Engine:** A custom transliteration layer that converts Tamil unicode characters into authentic English phonetic equivalents.
 
 ---
@@ -113,4 +115,4 @@ This system is designed to be extensible. To add a new section:
 Building this project taught me that **Performance** and **Reliability** are just as important as the **User Interface**. By managing my own API and handling database failovers, I have created a portfolio that doesn't just look good—it is built to last.
 
 **Developed with Passion. Engineered with Precision.**
-**— A. Mohamed Yasar**
+**— Mohamed Yasar**
