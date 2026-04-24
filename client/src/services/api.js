@@ -23,7 +23,12 @@ export const fetchSystemInterfaceData = async () => {
 export const fetchFragment = async (type) => {
     try {
         const response = await axiosInstance.get(`/fragments/${type}`);
-        return response.payload || response;
+        // If the backend uses the standard { success, payload } wrapper
+        if (response && response.payload !== undefined) {
+            return response.payload;
+        }
+        // Fallback for direct array/object responses
+        return response;
     } catch (error) {
         console.error(`FRAGMENT_FETCH_ERROR [${type}]:`, error.message);
         return null;

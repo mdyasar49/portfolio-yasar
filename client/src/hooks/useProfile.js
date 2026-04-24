@@ -56,9 +56,13 @@ const useProfile = () => {
             for (const frag of secondary) {
                 fetchFragment(frag).then(data => {
                     if (data) {
-                        // Special case: experience and projects are arrays in their files
-                        if (frag === 'experience') updateProfile({ experience: data });
-                        else if (frag === 'projects') updateProfile({ projects: data });
+                        // Special case: experience and projects are strictly arrays in their source files
+                        if (frag === 'experience') {
+                            updateProfile({ experience: Array.isArray(data) ? data : (data.payload || []) });
+                        }
+                        else if (frag === 'projects') {
+                            updateProfile({ projects: Array.isArray(data) ? data : (data.payload || []) });
+                        }
                         else updateProfile(data);
                     }
                 });
