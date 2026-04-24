@@ -7,8 +7,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Stack, Fade } from '@mui/material';
-import { Activity, Cpu, Shield, Globe } from 'lucide-react';
+import { Box, Typography, Stack } from '@mui/material';
+import { Activity, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const StatusHUD = () => {

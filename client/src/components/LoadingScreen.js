@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Stack } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const LoadingScreen = ({ onComplete }) => {
     const [progress, setProgress] = useState(0);

@@ -8,13 +8,13 @@
 
 import React, { useState, useEffect } from 'react';
 // Material UI components for the UI shell and interactive elements
-import { Box, Button, IconButton, Tooltip, Stack, Typography, Chip, Container, Divider, Modal, Fade } from '@mui/material';
+import { Box, Button, Stack, Typography, Container, Divider, Modal, Fade } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 // Framer Motion for high-fidelity 3D interactions and entrance animations
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 // Icons for technical and action cues
-import { Download, FileText, ShieldCheck, Cpu, Database, Info, Send } from 'lucide-react';
+import { Download, ShieldCheck, Cpu, Send } from 'lucide-react';
 import SEO from '../components/SEO';
 import API_BASE_URL from '../config';
 

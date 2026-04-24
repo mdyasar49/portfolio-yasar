@@ -14,7 +14,7 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 
 // Material UI components for styling and layout
-import { ThemeProvider, CssBaseline, Box, keyframes, Typography, Stack } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box, Typography } from '@mui/material';
 // React Router components for multi-page navigation
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 // Framer Motion for smooth page transition animations
@@ -56,11 +56,6 @@ import DocumentationHUD from './components/DocumentationHUD';
 const Resume = lazy(() => import('./pages/Resume'));
 
 // ─── Animations (CSS-in-JS) ───────────────────────────────────────────
-// Define a spinning animation for the loading screen logo
-const spin = keyframes`
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
 
 /**
  * [ScrollToTop]

@@ -13,12 +13,23 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./config/swagger');
 const responseWrapper = require('./middleware/responseWrapper');
 const path = require('path');
+const responseTime = require('response-time'); // For performance telemetry
 const portfolioRoutes = require('./routes/portfolioRoutes');
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorMiddleware');
 const { createCorsOptions } = require('./config/cors');
 
 const app = express();
+
+/**
+ * [LAYER 0] Performance Telemetry
+ * Measures the internal processing time for every request to ensure optimal latency.
+ */
+app.use(responseTime((req, res, time) => {
+    if (req.path.startsWith('/api')) {
+        console.log(`⏱️  [Latency] ${req.method} ${req.path} -> ${time.toFixed(3)}ms`);
+    }
+}));
 
 /**
  * [LAYER 0] Performance Optimization

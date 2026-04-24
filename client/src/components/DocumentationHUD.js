@@ -9,7 +9,7 @@
 import React, { useState } from 'react';
 import { Box, Typography, Stack, IconButton, Paper, Divider, Grid } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, X, Server, Database, Globe, Cpu, Layers, ShieldCheck } from 'lucide-react';
+import { Book, X, Server, Database, Globe, ShieldCheck } from 'lucide-react';
 
 const DocumentationHUD = ({ profile }) => {
     const [isOpen, setIsOpen] = useState(false);

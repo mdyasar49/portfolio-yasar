@@ -8,7 +8,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { Box } from '@mui/material';
-import { motion, useSpring, useMotionValue } from 'framer-motion';
 
 const CustomCursor = () => {
     const cursorRef = useRef(null);

@@ -3,17 +3,17 @@ import { Box, Typography, Stack, Container, Paper } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, Activity, Server, Database, Globe } from 'lucide-react';
 
+// Map icon strings from backend to Lucide components
+const ICON_MAP = {
+  Globe: <Globe size={14} />,
+  Database: <Database size={14} />,
+  Server: <Server size={14} />,
+  Activity: <Activity size={14} />
+};
+
 const SystemLogStream = ({ profile }) => {
   const [logs, setLogs] = useState([]);
   const scrollRef = useRef(null);
-
-  // Map icon strings from backend to Lucide components
-  const iconMap = {
-    Globe: <Globe size={14} />,
-    Database: <Database size={14} />,
-    Server: <Server size={14} />,
-    Activity: <Activity size={14} />
-  };
 
   useEffect(() => {
     const templates = profile?.telemetryConfig?.logTemplates || [];
@@ -32,7 +32,7 @@ const SystemLogStream = ({ profile }) => {
         time: new Date().toLocaleTimeString(),
         type: randomLog.type,
         message: message,
-        icon: iconMap[randomLog.icon] || <Activity size={14} />,
+        icon: ICON_MAP[randomLog.icon] || <Activity size={14} />,
         color: randomLog.color
       };
       setLogs(prev => [...prev.slice(-9), newLog]);
