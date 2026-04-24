@@ -13,24 +13,11 @@ import { Zap, Activity, Cpu, Database } from 'lucide-react';
  * TechnicalInsight Component
  * Renders two primary data visualizations: Performance Optimization and Tech Stack Mastery.
  */
-const TechnicalInsight = () => {
-  // Static data used for performance trend visualization
-  const performanceData = [
-    { name: 'JAN', optimization: 45, latency: 120 },
-    { name: 'FEB', optimization: 58, latency: 110 },
-    { name: 'MAR', optimization: 72, latency: 95 },
-    { name: 'APR', optimization: 85, latency: 80 },
-    { name: 'MAY', optimization: 94, latency: 65 },
-  ];
-
-  // Static data for skill competency levels mapping
-  const skillDistribution = [
-    { name: 'React', value: 95, color: '#61dafb' },
-    { name: 'Node.js', value: 88, color: '#68a063' },
-    { name: 'Express', value: 92, color: '#ffffff' },
-    { name: 'MongoDB', value: 85, color: '#47a248' },
-    { name: 'SQL', value: 90, color: '#00758f' },
-  ];
+const TechnicalInsight = ({ profile }) => {
+  // Use data from backend or fallback to empty arrays to prevent crashes
+  const performanceData = profile?.performanceData || [];
+  const skillDistribution = profile?.skillDistribution || [];
+  const systemStats = profile?.systemStats || [];
 
   return (
     <Box id="insights" sx={{ py: { xs: 10, md: 20 }, position: 'relative', bgcolor: 'rgba(2, 4, 10, 0.5)' }}>
@@ -130,13 +117,8 @@ const TechnicalInsight = () => {
             </motion.div>
           </Grid>
 
-          {/* Static Stats Cards: Supplementary Evidence */}
-          {[
-            { label: 'API_STABILITY', value: '99.9%', icon: <Database color="#33ccff" />, color: '#33ccff' },
-            { label: 'CODE_COVERAGE', value: '92%', icon: <ShieldCheck color="#00ffcc" />, color: '#00ffcc' },
-            { label: 'COMPUTE_EFFICIENCY', value: '100%', icon: <Cpu color="#ff9933" />, color: '#ff9933' },
-            { label: 'DEPLOYMENT_FREQUENCY', value: 'DAILY', icon: <Zap color="#ff3366" />, color: '#ff3366' },
-          ].map((stat, i) => (
+          {/* Dynamic Stats Cards: Supplementary Evidence */}
+          {systemStats.map((stat, i) => (
             <Grid item xs={6} md={3} key={i}>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -145,7 +127,12 @@ const TechnicalInsight = () => {
                 viewport={{ once: true }}
               >
                 <Paper className="glass-panel" sx={{ p: 3, textAlign: 'center', borderBottom: `4px solid ${stat.color}` }}>
-                  <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>{stat.icon}</Box>
+                  <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                     {stat.label === 'API_STABILITY' && <Database color={stat.color} />}
+                     {stat.label === 'CODE_COVERAGE' && <ShieldCheck color={stat.color} />}
+                     {stat.label === 'COMPUTE_EFFICIENCY' && <Cpu color={stat.color} />}
+                     {stat.label === 'DEPLOYMENT_FREQUENCY' && <Zap color={stat.color} />}
+                  </Box>
                   <Typography variant="h4" sx={{ fontWeight: 900, mb: 0.5 }}>{stat.value}</Typography>
                   <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', fontWeight: 900, letterSpacing: 2 }}>{stat.label}</Typography>
                 </Paper>

@@ -1,0 +1,22 @@
+{
+  "performanceData": [
+    { "name": "JAN", "optimization": 45, "latency": 120 },
+    { "name": "FEB", "optimization": 58, "latency": 110 },
+    { "name": "MAR", "optimization": 72, "latency": 95 },
+    { "name": "APR", "optimization": 85, "latency": 80 },
+    { "name": "MAY", "optimization": 94, "latency": 65 }
+  ],
+  "skillDistribution": [
+    { "name": "React", "value": 95, "color": "#61dafb" },
+    { "name": "Node.js", "value": 88, "color": "#68a063" },
+    { "name": "Express", "value": 92, "color": "#ffffff" },
+    { "name": "MongoDB", "value": 85, "color": "#47a248" },
+    { "name": "SQL", "value": 90, "color": "#00758f" }
+  ],
+  "systemStats": [
+    { "label": "API_STABILITY", "value": "99.9%", "color": "#33ccff" },
+    { "label": "CODE_COVERAGE", "value": "92%", "color": "#00ffcc" },
+    { "label": "COMPUTE_EFFICIENCY", "value": "100%", "color": "#ff9933" },
+    { "label": "DEPLOYMENT_FREQUENCY", "value": "DAILY", "color": "#ff3366" }
+  ]
+}

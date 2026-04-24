@@ -145,7 +145,8 @@ const getLocalData = () => {
             'socials.json',
             'additional.json',
             'documentation.json',
-            'navigation.json'
+            'navigation.json',
+            'analytics.json'
         ];
 
         let aggregatedData = {};
