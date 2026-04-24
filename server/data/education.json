@@ -1,0 +1,22 @@
+{
+  "education": [
+    {
+      "degree": "Master of Computer Applications (MCA)",
+      "institution": "M.I.E.T Arts and Science College, Tiruchirappalli",
+      "institutionUrl": "https://www.mietarts.org/",
+      "year": "2023 - 2025"
+    },
+    {
+      "degree": "Bachelor of Computer Applications (BCA)",
+      "institution": "Jamal Mohamed College, Tiruchirappalli",
+      "institutionUrl": "https://jmc.edu/",
+      "year": "2020 - 2023"
+    }
+  ],
+  "certifications": [
+    "C Programming",
+    "Programming Techniques",
+    "Web Designing",
+    "PC Hardware & Troubleshooting"
+  ]
+}

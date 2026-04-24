@@ -4,14 +4,17 @@ import { Download, ExternalLink, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import API_BASE_URL from '../config';
 
-const ProfessionalDossier = () => {
+const ProfessionalDossier = ({ profile }) => {
+  const config = profile?.resumeConfig || {};
+  const sharing = config.sharingTemplate || {};
+
   const resumeApi = API_BASE_URL ? `${API_BASE_URL}/profile` : '';
   const iframeSrc = resumeApi
     ? `/resume-pro/index.html?api=${encodeURIComponent(resumeApi)}`
     : '/resume-pro/index.html';
 
   const handleDownload = () => {
-    window.open('/resume-pro/A_MOHAMED_YASAR_RESUME.pdf', '_blank');
+    window.open(`/resume-pro/${config.filename || 'resume.pdf'}`, '_blank');
   };
 
   return (
@@ -46,7 +49,6 @@ const ProfessionalDossier = () => {
               viewport={{ once: true }}
             >
               <Box sx={{ position: 'relative' }}>
-                 {/* Holographic Frame for the Live Resume */}
                  <Box sx={{ 
                    p: 0.5, 
                    bgcolor: 'rgba(51, 204, 255, 0.1)', 
@@ -57,7 +59,6 @@ const ProfessionalDossier = () => {
                    position: 'relative',
                    height: { xs: '500px', md: '700px' }
                  }}>
-                   {/* Vertical Scanner Line */}
                    <Box sx={{
                      position: 'absolute', top: 0, left: 0, right: 0, height: 2,
                      background: 'linear-gradient(90deg, transparent, #33ccff, transparent)',
@@ -67,7 +68,7 @@ const ProfessionalDossier = () => {
                    }} />
 
                    <iframe 
-                     src={iframeSrc}
+                      src={iframeSrc}
                       title="Direct Resume View"
                       width="100%"
                       height="100%"
@@ -75,7 +76,6 @@ const ProfessionalDossier = () => {
                    />
                  </Box>
 
-                 {/* Tech Brackets */}
                  <Box sx={{ position: 'absolute', top: -15, left: -15, width: 40, height: 40, borderTop: '2px solid #ff3366', borderLeft: '2px solid #ff3366' }} />
                  <Box sx={{ position: 'absolute', bottom: -15, right: -15, width: 40, height: 40, borderBottom: '2px solid #33ccff', borderRight: '2px solid #33ccff' }} />
               </Box>
@@ -108,7 +108,7 @@ const ProfessionalDossier = () => {
                   <Grid container spacing={2}>
                     {[
                       { l: 'TYPE', v: 'FULL_STACK' },
-                      { l: 'MOD', v: 'v4.2.0' },
+                      { l: 'MOD', v: config.version || 'v1.0.0' },
                       { l: 'STATUS', v: 'ACTIVE' },
                       { l: 'ACCESS', v: 'OPEN' }
                     ].map((s, i) => (
@@ -138,15 +138,14 @@ const ProfessionalDossier = () => {
                       fullWidth
                       onClick={() => {
                         const resumeUrl = `${window.location.origin}/resume?system_dispatch=true`;
-                        const subject = encodeURIComponent("A. Mohamed Yasar | Authenticated Engineering Portfolio & Asset Dispatch");
-                        const body = encodeURIComponent(
-                          `[ AUTHENTICATED_ACCESS_REQUEST ]\n\n` +
-                          `A secure connection has been established to grant you access to the live professional architecture and engineering profile of A. Mohamed Yasar.\n\n` +
-                          `[ SECURE_PORTAL_LOGON ]\n${resumeUrl}\n\n` +
-                          `VERIFICATION_PROTOCOL: Upon entering the gateway via the secure link above, the system will automatically extract and deliver the validated PDF Resume asset directly to your device.\n\n` +
-                          `DISPATCH_ID: ${Math.random().toString(36).substring(7).toUpperCase()}\n` +
-                          `Core Infrastructure v4.2.0 | Built with MERN`
-                        );
+                        const subject = encodeURIComponent(sharing.subject?.replace('{{NAME}}', profile.name) || "Resume Access");
+                        const bodyText = sharing.body
+                            ?.replace(/{{NAME}}/g, profile.name)
+                            ?.replace('{{URL}}', resumeUrl)
+                            ?.replace('{{VERSION}}', config.version)
+                            ?.replace('{{ID}}', Math.random().toString(36).substring(7).toUpperCase());
+
+                        const body = encodeURIComponent(bodyText || "");
                         window.open(`https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=${subject}&body=${body}`, '_blank');
                       }}
                       startIcon={<Share2 size={18} />}

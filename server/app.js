@@ -41,7 +41,20 @@ app.options('*', cors(corsOptions)); // Handle pre-flight requests globally
  */
 app.use(helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
-    contentSecurityPolicy: false, // Disabled to allow direct Google Font/Image loading during hydration
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://plus.unsplash.com", "https://i.ibb.co"],
+            fontSrc: ["'self'", "https://fonts.gstatic.com"],
+            connectSrc: ["'self'", "https://mern-portfolio-yasar-backend.onrender.com", "http://localhost:5001"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: [],
+        },
+    },
+    xFrameOptions: { action: "deny" }, // Prevents Clickjacking
+    hidePoweredBy: true, // Hides "X-Powered-By: Express" header
 }));
 
 /**
@@ -59,15 +72,22 @@ app.use(responseWrapper); // Standardizes the JSON output format
 app.use('/api', limiter); // Applies general rate limiting to all API endpoints
 
 /**
- * [LAYER 4] Direct Access Shield
- * Prevents direct browser access to the API endpoints to hide backend implementation details.
+ * [LAYER 4] Direct Access Shield & Request Validation
+ * Prevents direct browser access to the API and ensures strict JSON payloads.
  */
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     const referer = req.headers.referer;
     const accept = req.headers.accept || '';
+    const contentType = req.headers['content-type'] || '';
 
     const isApiRequest = req.path.startsWith('/api');
+    
+    // Strict JSON check for POST requests
+    if (req.method === 'POST' && isApiRequest && !contentType.includes('application/json')) {
+        return res.status(415).json({ success: false, message: 'Unsupported Media Type: application/json required.' });
+    }
+
     const isApiDiagnostic = isApiRequest && accept.includes('application/json');
     
     // Logic: If user tries to visit /api/profile directly in a URL bar, show a custom 403 page
@@ -77,7 +97,7 @@ app.use((req, res, next) => {
         return res.status(403).send(`
             <div style="background:#010409; color:#ff3366; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; padding:20px;">
                 <h1 style="font-size:3rem; margin-bottom:10px;">🚫 ACCESS_DENIED</h1>
-                <p style="color:#64748b; font-size:1.2rem;">Direct API access via browser is restricted to maintain MERN core integrity.</p>
+                <p style="color:#64748b; font-size:1.2rem;">Direct API access via browser is restricted to maintain system integrity.</p>
                 <a href="${returnUrl}" style="color:#33ccff; text-decoration:none; border:1px solid #33ccff; padding:12px 30px; border-radius:8px; margin-top:30px; font-weight:bold;">RETURN_TO_PORTFOLIO</a>
             </div>
         `);
@@ -92,15 +112,8 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Routing Orchestration
-const authRoutes = require('./routes/authRoutes');
-
-// API Documentation (Swagger)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
 // Main API Routes
 app.use('/api', portfolioRoutes);
-app.use('/api/auth', authRoutes);
 
 // JSON 404 Handler for undefined API paths
 app.use('/api', (req, res) => {

@@ -138,14 +138,14 @@ const Portfolio = memo(({ profile, loading }) => {
         {profile?.projects && <Projects projects={profile.projects} />}
         {profile?.education && <ScholasticHistory education={profile.education} />}
 
-        <ProfessionalDossier />
-        <SystemLogStream />
+        {profile && <ProfessionalDossier profile={profile} />}
+        {profile && <SystemLogStream profile={profile} />}
 
-        <Contact />
+        {profile && <Contact profile={profile} />}
       </Container>
 
       {/* Global Footer */}
-      <Footer socials={profile.socials} name={profile.name} />
+      <Footer profile={profile} />
     </Box>
   );
 });

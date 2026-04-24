@@ -31,8 +31,6 @@ import Portfolio from './pages/Portfolio';
 import NetworkErrorScreen from './components/NetworkErrorScreen';
 // "Head-Up Display" UI elements for a futuristic look
 import SystemInterfaceHUD from './components/SystemInterfaceHUD';
-// Wrapper for routes that require admin authentication
-import ProtectedRoute from './components/ProtectedRoute';
 // Page shown when the site is under maintenance
 import MaintenancePage from './pages/MaintenancePage';
 // Background with dynamic particles/effects
@@ -44,6 +42,8 @@ import StatusHUD from './components/StatusHUD';
 import CustomCursor from './components/CustomCursor';
 import RecruiterHUD from './components/RecruiterHUD';
 import LoadingScreen from './components/LoadingScreen';
+import DocumentationHUD from './components/DocumentationHUD';
+
 
 
 
@@ -54,9 +54,6 @@ import LoadingScreen from './components/LoadingScreen';
 // These pages are only downloaded when the user actually navigates to them,
 // which makes the initial website loading much faster.
 const Resume = lazy(() => import('./pages/Resume'));
-const AdminLogin = lazy(() => import('./pages/AdminLogin'));
-const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
-const AdministrativeTerminal = lazy(() => import('./pages/AdministrativeTerminal'));
 
 // ─── Animations (CSS-in-JS) ───────────────────────────────────────────
 // Define a spinning animation for the loading screen logo
@@ -165,7 +162,7 @@ const PublicApp = () => {
   return (
     <>
       {/* Top navigation header - Always visible for module switching */}
-      <Header />
+      <Header profile={profile} />
 
       {/* Animated background particles */}
       <DynamicBackground />
@@ -222,6 +219,12 @@ const PublicApp = () => {
           <CodeLiveOverlay />
         </Box>
       </Box>
+
+      {/* Global Interface HUDs - Now receiving live data from backend */}
+      <StatusHUD />
+      <CustomCursor />
+      <RecruiterHUD profile={profile} />
+      <DocumentationHUD profile={profile} />
     </>
   );
 };
@@ -229,54 +232,13 @@ const PublicApp = () => {
 
 /**
  * [AppRoutes]
- * Function purpose: Switches between the Admin Dashboard UI and the Public Portfolio UI
- * based on whether the current URL starts with /admin.
+ * Function purpose: Simply renders the Public Portfolio UI.
+ * Admin routes have been removed as per USER request.
  */
 const AppRoutes = () => {
-  const { pathname } = useLocation();
-  const { isCodeLive } = useCodeLive();
-  const isAdminRoute = pathname.startsWith('/admin');
-
-  const renderRoutes = () => (
-    <Suspense fallback={<Box sx={{ py: 20, textAlign: 'center' }}><Typography>SECURE_AUTH_LOADING...</Typography></Box>}>
-      <Routes>
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/admin/management" element={<ProtectedRoute><AdministrativeTerminal /></ProtectedRoute>} />
-      </Routes>
-    </Suspense>
-  );
-
-  if (isAdminRoute) {
-    return (
-      <Box sx={{ 
-        display: 'flex', height: '100vh', pt: 10, overflow: 'hidden',
-        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-      }}>
-        {/* Hide admin UI if Code Live is ON */}
-        {!isCodeLive && (
-          <Box sx={{ 
-            flexGrow: 1, height: '100%', overflowY: 'auto',
-            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-            width: '100%'
-          }}>
-            {renderRoutes()}
-          </Box>
-        )}
-        <Box sx={{ 
-          width: isCodeLive ? '100%' : 0, height: '100%',
-          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          position: 'relative',
-          top: 0, right: 0, zIndex: 2000
-        }}>
-          <CodeLiveOverlay />
-        </Box>
-      </Box>
-    );
-  }
-
   return <PublicApp />;
 };
+
 
 
 /**
@@ -363,17 +325,11 @@ const App = () => {
           </Box>
 
           {/* Floating Technical Status HUD */}
-          <StatusHUD />
-          {/* Futuristic Mouse Tracking Cursor */}
-          <CustomCursor />
-          {/* Dedicated Recruiter Quick-View Dashboard */}
-          <RecruiterHUD />
+          {/* StatusHUD, CustomCursor, RecruiterHUD, and DocumentationHUD 
+              are now handled inside PublicApp to receive live data */}
+          
           {/* Render the actual page routes */}
           <AppRoutes />
-
-
-
-
           </CodeLiveProvider>
         </Router>
       </Box>

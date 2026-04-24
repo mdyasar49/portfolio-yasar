@@ -1,0 +1,40 @@
+{
+  "name": "A. MOHAMED YASAR",
+  "title": "Senior Full Stack Engineer | React.js Architect | MERN Specialist | REST API Expert",
+  "email": "mohamedyasar081786@gmail.com",
+  "phone": "+91-9025943184",
+  "location": "Chennai, Tamil Nadu",
+  "expertiseLevel": "Full Stack Developer",
+  "summary": "Innovative Full Stack Engineer with {{EXPERIENCE}} of expertise in architecting high-fidelity, production-grade web ecosystems using React.js and the MERN stack. Expert at bridging the gap between sophisticated UI/UX requirements and robust backend logic. Proven track record in orchestrating complex REST API integrations, optimizing SQL database performance, and conducting deep-system debugging to maintain 99.9% uptime. Actively expanding technical horizons into Enterprise Java, Spring Boot, and Python-based automation to build the next generation of scalable, secure architecture.",
+  "careerStartDate": "2023-07-01",
+  "recruiterPitch": "I specialize in building scalable MERN stack applications with a focus on high-performance architecture and clean code. Ready to deliver production-grade solutions for complex enterprise challenges.",
+  "recruiterBullets": [
+    "Full Stack Expert (MERN)",
+    "{{EXPERIENCE}} Industry Exp",
+    "Immediate Availability",
+    "Chennai / Remote Ready"
+  ],
+  "availabilityStatus": "Available to join immediately",
+  "systemVersion": "[ ARCHITECT_V4.2 ]",
+  "heroTagline": "Engaging the Future of Scale",
+  "heroMetrics": [
+    { "label": "EXPERIENCE", "val": "{{EXPERIENCE}}", "color": "#33ccff" },
+    { "label": "STACK", "val": "MERN / AWS / SQL", "color": "#ff3366" },
+    { "label": "LOCATION", "val": "Chennai, TN", "color": "#00ffcc" },
+    { "label": "STATUS", "val": "Ready to Join", "color": "#ec4899" }
+  ],
+  "resumeConfig": {
+    "version": "v4.2.0",
+    "filename": "A_MOHAMED_YASAR_RESUME.pdf",
+    "sharingTemplate": {
+      "subject": "{{NAME}} | Authenticated Engineering Portfolio & Asset Dispatch",
+      "body": "[ AUTHENTICATED_ACCESS_REQUEST ]\n\nA secure connection has been established to grant you access to the live professional architecture and engineering profile of {{NAME}}.\n\n[ SECURE_PORTAL_LOGON ]\n{{URL}}\n\nVERIFICATION_PROTOCOL: Upon entering the gateway via the secure link above, the system will automatically extract and deliver the validated PDF Resume asset directly to your device.\n\nDISPATCH_ID: {{ID}}\nCore Infrastructure {{VERSION}} | Built with MERN"
+    }
+  },
+  "footerConfig": {
+    "watermark": "YASAR",
+    "tagline": "Engineering high-performance interactive architectures that push the boundaries of modern full-stack development.",
+    "origin": "MADE_IN_TAMIL_NADU",
+    "engineVersion": "ENG_MERN_V4"
+  }
+}

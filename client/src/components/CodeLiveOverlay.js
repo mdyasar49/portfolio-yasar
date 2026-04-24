@@ -13,13 +13,13 @@ import {
   CircularProgress, Fade, Tooltip 
 } from '@mui/material';
 // Icons for technical aesthetics and actions
-import { X, Code2, Cpu, Terminal, Copy, Check, Hash, FileCode, Monitor } from 'lucide-react';
+import { X, Cpu, Terminal, Copy, Check, Hash, FileCode, Monitor } from 'lucide-react';
 // Custom hook to access global Code Live state
 import { useCodeLive } from '../context/CodeLiveContext';
 // Axios instance for backend communication
 import axios from '../services/axiosInstance';
 // Framer Motion for interactive animations
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 /**
  * [SyntaxHighlighter Protocol]

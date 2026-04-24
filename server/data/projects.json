@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Job Planner Enterprise",
+    "type": "Production Environment (Bytes and Binaries)",
+    "technologies": [
+      "React.js",
+      "Redux",
+      "Material UI",
+      "REST APIs",
+      "MySQL"
+    ],
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
+    "link": "https://jobplanner.com.au/",
+    "github": "#",
+    "description": [
+      "Full Stack Contributor to a high-traffic Job Management System, focusing on modular UI development and efficient data rendering.",
+      "Integrated backend APIs with robust validation logic, ensuring reliable data flow across thousands of records.",
+      "Investigated and resolved complex cross-layer issues spanning the UI, API middleware, and SQL stored procedures.",
+      "Contributed UI/UX modernizations and workflow improvements that significantly enhanced operational efficiency for enterprise clients.",
+      "Supported pre-production testing and validation cycles to ensure stable and reliable application releases."
+    ],
+    "highlights": ["Modular Components", "API Integration", "SQL Optimization"],
+    "stats": {
+      "Role": "Full Stack",
+      "Impact": "Workflow Efficiency",
+      "Status": "Production"
+    }
+  },
+  {
+    "name": "Cyber-Premium MERN Ecosystem",
+    "type": "Full-Stack Architecture Showcase",
+    "technologies": [
+      "Atomic JSON Modules",
+      "Dynamic Duration Engine",
+      "React.js",
+      "Node.js (Hardened)",
+      "Socket.io Telemetry",
+      "Framer Motion"
+    ],
+    "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800",
+    "link": "https://mern-portfolio-yasar-1.onrender.com",
+    "github": "https://github.com/mdyasar49/mern-portfolio-yasar",
+    "description": [
+      "Architected a zero-hardcoding, data-agnostic portfolio framework powered by an atomic JSON backend with MongoDB failover.",
+      "Engineered a real-time duration engine that dynamically computes professional tenure across all UI components.",
+      "Hardened the production environment with a multi-layer security shield, including CSP, Rate Limiting, and Direct Access protection.",
+      "Designed a high-fidelity 'Cyber-SaaS' UI system using Material UI and Framer Motion for high-impact visual engagement."
+    ],
+    "highlights": ["Atomic Architecture", "Dynamic Logic", "Production Hardened"],
+    "stats": {
+      "Data": "100% Dynamic",
+      "Security": "Hardened",
+      "Downtime": "0%"
+    }
+  }
+]

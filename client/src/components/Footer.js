@@ -14,7 +14,11 @@ import { Link as RouterLink } from 'react-router-dom';
 // Service layer API to fetch global visitor statistics
 import { fetchSystemAnalytics } from '../services/api';
 
-const Footer = ({ socials, name }) => {
+const Footer = ({ profile }) => {
+  const socials = profile?.socials;
+  const name = profile?.name;
+  const config = profile?.footerConfig || {};
+
   // State to store and display the total unique visitor count
   const [visitorCount, setVisitorCount] = useState(0);
   // Generate a temporary session ID for visual "status" display
@@ -46,7 +50,7 @@ const Footer = ({ socials, name }) => {
     { icon: <Linkedin size={20} />, link: socials.linkedin, color: '#0077b5' },
     { icon: <Github size={20} />, link: socials.github, color: '#f0f6fc' },
     { icon: <Twitter size={20} />, link: socials.twitter, color: '#1da1f2' },
-    { icon: <Mail size={20} />, link: `mailto:${socials.email || 'mohamedyasar081786@gmail.com'}`, color: '#ff3366' },
+    { icon: <Mail size={20} />, link: `mailto:${profile.email}`, color: '#ff3366' },
     { icon: <Instagram size={20} />, link: socials.instagram, color: '#e4405f' },
     { icon: <Facebook size={20} />, link: socials.facebook, color: '#1877f2' }
   ];
@@ -65,7 +69,9 @@ const Footer = ({ socials, name }) => {
         position: 'absolute', bottom: -80, right: -20, opacity: 0.02,
         userSelect: 'none', pointerEvents: 'none'
       }}>
-        <Typography sx={{ fontSize: '15rem', fontWeight: 900, fontFamily: 'Syncopate', color: 'white' }}>YASAR</Typography>
+        <Typography sx={{ fontSize: '15rem', fontWeight: 900, fontFamily: 'Syncopate', color: 'white' }}>
+          {config.watermark || "YASAR"}
+        </Typography>
       </Box>
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
@@ -100,7 +106,7 @@ const Footer = ({ socials, name }) => {
               lineHeight: 1.8, fontSize: '0.9rem'
             }}
           >
-            "Engineering high-performance interactive architectures that push the boundaries of modern full-stack development."
+            "{config.tagline}"
           </Typography>
 
           {/* ── SOCIAL MAINFRAME ── */}
@@ -195,7 +201,7 @@ const Footer = ({ socials, name }) => {
             <Stack direction="row" spacing={1} alignItems="center">
                <Hash size={12} color="#334155" />
                <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 700, fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: 0.5 }}>
-                  &copy; {new Date().getFullYear()} A. Mohamed Yasar • MIT Licensed
+                  &copy; {new Date().getFullYear()} {name} • MIT Licensed
                </Typography>
             </Stack>
 
@@ -203,18 +209,13 @@ const Footer = ({ socials, name }) => {
             <Stack direction="row" spacing={3}>
                <Stack direction="row" spacing={1} alignItems="center">
                   <Cpu size={12} color="#33ccff" />
-                  <Typography sx={{ color: '#33ccff', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>ENG_MERN_V4</Typography>
+                  <Typography sx={{ color: '#33ccff', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>
+                    {config.engineVersion}
+                  </Typography>
                </Stack>
-               <Typography sx={{ color: '#64748b', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>MADE_IN_TAMIL_NADU</Typography>
-               {/* Hidden Admin Entrypoint */}
-               <Tooltip title="SYSTEM_ACCESS">
-                  <IconButton 
-                    component={RouterLink} to="/admin/login" size="small"
-                    sx={{ color: '#334155', '&:hover': { color: '#ff3366', bgcolor: 'rgba(255, 51, 102, 0.05)' } }}
-                  >
-                    <Terminal size={10} />
-                  </IconButton>
-               </Tooltip>
+               <Typography sx={{ color: '#64748b', fontWeight: 900, fontSize: '0.65rem', letterSpacing: 1 }}>
+                  {config.origin}
+               </Typography>
             </Stack>
           </Box>
         </Box>

@@ -1,0 +1,9 @@
+{
+  "menuItems": [
+    { "name": "About", "path": "/#about", "type": "anchor" },
+    { "name": "Skills", "path": "/#skills", "type": "anchor" },
+    { "name": "Projects", "path": "/#projects", "type": "anchor" },
+    { "name": "Resume", "path": "/#resume", "type": "anchor" },
+    { "name": "Contact", "path": "/#contact", "type": "anchor" }
+  ]
+}

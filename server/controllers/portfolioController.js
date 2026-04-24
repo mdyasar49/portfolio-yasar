@@ -128,21 +128,85 @@ const normalizeProfile = (source) => {
 
 /**
  * [getLocalData]
- * Function purpose: Reads profile data synchronously from data.json if MongoDB is offline.
+ * Function purpose: Aggregates portfolio data from multiple atomized JSON files 
+ * in the /data directory. This provides better organization and maintainability.
  */
-// Define function to fetch local backup data
 const getLocalData = () => {
-    // Start try block for safe file reading
     try {
-        // Read data.json from the file system
-        const data = fs.readFileSync(path.join(__dirname, '../data.json'), 'utf-8');
-        // Parse the JSON string into an object and return it
-        return JSON.parse(data);
-    // Catch file read errors
+        const dataDir = path.join(__dirname, '../data');
+        
+        // Define the atomic data fragments to be aggregated
+        const fragments = [
+            'basic_info.json',
+            'skills.json',
+            'experience.json',
+            'projects.json',
+            'education.json',
+            'socials.json',
+            'additional.json',
+            'documentation.json',
+            'navigation.json'
+        ];
+
+        let aggregatedData = {};
+
+        fragments.forEach(file => {
+            const filePath = path.join(dataDir, file);
+            if (fs.existsSync(filePath)) {
+                const content = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+                
+                // Smart Merge Logic:
+                // If the content is an array (like experience or projects), map it to the correct key
+                if (Array.isArray(content)) {
+                    if (file === 'experience.json') aggregatedData.experience = content;
+                    if (file === 'projects.json') aggregatedData.projects = content;
+                } else {
+                    // Otherwise, merge the object properties into the main payload
+                    aggregatedData = { ...aggregatedData, ...content };
+                }
+            }
+        });
+
+        // --- Post-Aggregation Processing (Dynamic Calculations) ---
+        
+        if (aggregatedData.careerStartDate) {
+            const start = new Date(aggregatedData.careerStartDate);
+            const now = new Date();
+            
+            let years = now.getFullYear() - start.getFullYear();
+            let months = now.getMonth() - start.getMonth();
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const expString = `${years} Year${years !== 1 ? 's' : ''} ${months} Month${months !== 1 ? 's' : ''}`;
+            
+            // Deep Recursive String Replacement for {{EXPERIENCE}}
+            const replacePlaceholders = (obj) => {
+                if (typeof obj === 'string') {
+                    return obj.replace(/{{EXPERIENCE}}/g, expString);
+                }
+                if (Array.isArray(obj)) {
+                    return obj.map(replacePlaceholders);
+                }
+                if (obj !== null && typeof obj === 'object') {
+                    const newObj = {};
+                    for (const key in obj) {
+                        newObj[key] = replacePlaceholders(obj[key]);
+                    }
+                    return newObj;
+                }
+                return obj;
+            };
+
+            aggregatedData = replacePlaceholders(aggregatedData);
+        }
+
+        return aggregatedData;
     } catch (err) {
-        // Log the error to console
-        console.error("Local Data Fetch Error:", err.message);
-        // Return null if reading fails
+        console.error("Atomic Data Aggregation Error:", err.message);
         return null;
     }
 };
@@ -316,129 +380,6 @@ exports.getVisitors = asyncHandler(async (req, res, next) => {
     }
 });
 
-/**
- * [updateProfile]
- * @desc    Updates the profile data. Synchronizes both local JSON and MongoDB.
- * @route   PUT /api/profile
- */
-// Export updateProfile controller function
-exports.updateProfile = asyncHandler(async (req, res, next) => {
-    // Extract the new data payload from the request body
-    const newData = req.body;
-
-    // Payload validation: Ensure new data exists and is a non-empty object
-    if (!newData || typeof newData !== 'object' || Object.keys(newData).length === 0) {
-        // Return 400 Bad Request if invalid
-        return res.status(400).json({ success: false, message: 'Invalid payload.' });
-    }
-
-    // Step 1: Persist to Local File System as a backup
-    try {
-        // Write the incoming data object cleanly to data.json
-        fs.writeFileSync(path.join(__dirname, '../data.json'), JSON.stringify(newData, null, 2));
-    // Catch local file write errors
-    } catch (err) {
-        return res.status(500).json({ success: false, message: 'Failed to sync local disk storage.' });
-    }
-
-    // Step 2: Persist to MongoDB Cloud
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        try {
-            // Find the profile and completely update it (upsert: true creates it if missing)
-            await Profile.findOneAndUpdate({}, newData, { upsert: true, new: true });
-        // Catch MongoDB errors
-        } catch (error) {
-            console.error("Cloud Storage Sync Fail:", error.message);
-        }
-    }
-
-    // Step 3: Invalidate the in-memory cache to ensure the next request gets fresh data
-    cachedProfile = null;
-    lastCacheUpdate = 0;
-
-    // Respond with 200 OK success message
-    res.status(200).json({ success: true, message: 'Portfolio updated.' });
-});
-
-
-/**
- * [getSystemHealth]
- * @desc    Retrieves live system metrics like uptime and memory usage.
- * @route   GET /api/health
- */
-// Export getSystemHealth controller function
-exports.getSystemHealth = asyncHandler(async (req, res, next) => {
-    // Calculate server uptime from process
-    const uptime = process.uptime();
-    // Fetch live memory usage stats of the Node process
-    const memory = process.memoryUsage();
-    // Calculate the percentage of heap memory used
-    const memUsage = Math.round((memory.heapUsed / memory.heapTotal) * 100);
-    
-    // DB Latency Check
-    // Record start time to measure DB ping time
-    const dbStart = Date.now();
-    // Default DB status to OFFLINE
-    let dbStatus = 'OFFLINE';
-    // Default latency to 0ms
-    let dbLatency = 0;
-
-    // Check if MongoDB is connected
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        try {
-            // Issue an admin ping command directly to the MongoDB cluster
-            await mongoose.connection.db.admin().ping();
-            // Calculate latency difference
-            dbLatency = Date.now() - dbStart;
-            // Mark DB as ONLINE
-            dbStatus = 'ONLINE';
-        // If ping fails, mark as ERROR
-        } catch (e) {
-            dbStatus = 'ERROR';
-        }
-    }
-
-    // Respond with 200 OK and detailed system telemetry data
-    res.status(200).json({
-        success: true,
-        data: {
-            uptimeSeconds: Math.floor(uptime),
-            memoryUsage: memUsage,
-            db: { status: dbStatus, latency: dbLatency },
-            timestamp: new Date()
-        }
-    });
-});
-
-/**
- * [toggleMaintenance]
- * @desc    Locks or Unlocks the site for maintenance.
- * @route   PUT /api/health/maintenance
- */
-// Export toggleMaintenance controller function
-exports.toggleMaintenance = asyncHandler(async (req, res, next) => {
-    // Extract the 'enabled' boolean from the request body
-    const { enabled } = req.body;
-
-    // Check if the database is connected
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        // Find the stats document
-        let stats = await Stats.findOne();
-        // Create one if it doesn't exist
-        if (!stats) stats = new Stats();
-        // Update the maintenanceMode boolean flag
-        stats.maintenanceMode = enabled;
-        // Save to DB
-        await stats.save();
-    } else {
-        // If DB is offline, update the local stats fallback file
-        const stats = getLocalStats();
-        stats.maintenanceMode = enabled;
-        saveLocalStats(stats);
-    }
-
-    // Respond with 200 OK success message
-    res.status(200).json({ success: true, message: 'Maintenance status toggled.' });
-});
+// (End of file)
 
 

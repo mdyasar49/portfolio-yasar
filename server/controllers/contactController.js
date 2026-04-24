@@ -64,6 +64,18 @@ const saveLocalContact = (contact) => {
 };
 
 /**
+ * Utility: Input Cleansing Protocol (XSS Protection)
+ * Function purpose: Strips all HTML tags and potentially malicious scripts from 
+ * incoming user strings to prevent cross-site scripting (XSS) attacks.
+ */
+const cleanse = (str = '') => {
+    if (typeof str !== 'string') return '';
+    return str
+        .replace(/<[^>]*>?/gm, '') // Remove HTML tags
+        .trim();
+};
+
+/**
  * [submitContactForm]
  * @desc    Submit contact form, save to DB and send email
  * @route   POST /api/contact
@@ -71,168 +83,43 @@ const saveLocalContact = (contact) => {
  */
 // Export the submitContactForm controller wrapped in the asyncHandler
 exports.submitContactForm = asyncHandler(async (req, res, next) => {
-    // Destructure the necessary fields from the incoming HTTP request body
-    const { name, email, subject, message } = req.body;
+    // Extract and CLEANSE the necessary fields from the request body
+    const name = cleanse(req.body.name);
+    const email = cleanse(req.body.email);
+    const subject = cleanse(req.body.subject || 'No Subject');
+    const message = cleanse(req.body.message);
 
-    // Validate that the required fields (name, email, message) are provided
+    // Validate that the required fields are provided
     if (!name || !email || !message) {
-        // If required fields are missing, return a 400 Bad Request error response
         return res.status(400).json({ success: false, error: 'Incomplete dispatch payload.' });
     }
 
-    // Package the validated fields into a new contactData object, applying a default subject if missing, and stamping the current time
-    const contactData = { name, email, subject: subject || 'No Subject', message, createdAt: new Date() };
+    // Package the cleansed data
+    const contactData = { name, email, subject, message, createdAt: new Date() };
 
-    // Step 1. Persist to MongoDB if the database is currently connected
+    // Step 1. Persist to MongoDB if connected
     if (mongoose.connection && mongoose.connection.readyState === 1) {
-        // Try saving to the database
         try {
-            // Create a new Contact record in the MongoDB database
             await Contact.create(contactData);
-        // Catch any database creation errors
         } catch (e) {
-            // Log the error to the console if database save fails
             console.error('DB_SAVE_FAIL:', e.message);
         }
     }
 
-    // Step 2. Persist to Local JSON using our helper function as a backup
+    // Step 2. Persist to Local JSON backup
     saveLocalContact(contactData);
 
-    // Step 3. Dispatch an Email Notification to the administrator
+    // Step 3. Dispatch Email Alert
     try {
-        // Wait for the email service to send the alert
         await sendContactAlert(contactData);
-    // Catch any errors that occur while sending the email
     } catch (error) {
-        // Log the email failure to the console
         console.error('MAIL_DISPATCH_ERROR:', error);
     }
 
-    // Respond back to the frontend with a 200 OK success status and a confirmation message
+    // Respond back to the frontend
     res.status(200).json({
         success: true,
         message: 'Your correspondence has been securely logged and dispatched.'
     });
 });
 
-/**
- * [getContacts]
- * @desc    Get all contact messages from DB and local backup
- * @route   GET /api/contact
- * @access  Private
- */
-// Export the getContacts controller wrapped in the asyncHandler
-exports.getContacts = asyncHandler(async (req, res, next) => {
-    // Initialize an array to hold contacts fetched from the database
-    let dbContacts = [];
-    // Initialize an array to hold contacts fetched from the local JSON file
-    let localContacts = [];
-
-    // Step 1. Fetch all records from MongoDB if the connection is active
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        // Find all contacts and convert them to plain JavaScript objects (.lean() is faster)
-        dbContacts = await Contact.find().lean();
-    }
-
-    // Step 2. Fetch records from the local JSON Buffer
-    if (fs.existsSync(contactsFile)) {
-        // Try reading and parsing the file
-        try {
-            // Read the contacts JSON file and parse it into the localContacts array
-            localContacts = JSON.parse(fs.readFileSync(contactsFile, 'utf-8'));
-        // Silently ignore errors if the file is unreadable
-        } catch (e) {}
-    }
-
-    // Step 3. Merge and Deduplicate the two lists (using the unique _id)
-    const allMap = new Map();
-    // Combine both arrays and loop through every single contact
-    [...dbContacts, ...localContacts].forEach(c => {
-        // Convert the ID to a string to use as a Map key
-        const id = c._id.toString();
-        // Add it to the map only if it's not already there (this prefers the DB version since it comes first)
-        if (!allMap.has(id)) {
-            allMap.set(id, c);
-        }
-    });
-
-    // Convert the Map back to an array and sort it by creation date (newest first)
-    const merged = Array.from(allMap.values()).sort((a, b) => 
-        new Date(b.createdAt) - new Date(a.createdAt)
-    );
-
-    // Respond to the client with a 200 OK status, the total count, and the merged data array
-    res.status(200).json({
-        success: true,
-        count: merged.length,
-        data: merged
-    });
-});
-
-/**
- * [deleteContact]
- * @desc    Delete a contact message from both DB and local backup
- * @route   DELETE /api/contact/:id
- * @access  Private
- */
-// Export the deleteContact controller wrapped in the asyncHandler
-exports.deleteContact = asyncHandler(async (req, res, next) => {
-    // Extract the contact 'id' parameter from the URL
-    const { id } = req.params;
-
-    // Validate that an ID was actually provided
-    if (!id) {
-        // If no ID, return a 400 Bad Request error
-        return res.status(400).json({ success: false, message: 'IDENTIFIER_REQUIRED_FOR_PURGE' });
-    }
-
-    // Step 1. Attempt to remove the record from MongoDB
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        // Try deleting from the database
-        try {
-            // Find the document by its ID and delete it
-            await Contact.findByIdAndDelete(id);
-        // Catch any database errors
-        } catch (e) {
-            // Log the error if the DB deletion fails
-            console.error('DB_DELETE_FAIL:', e.message);
-        }
-    }
-
-    // Step 2. Remove the record from the Local JSON file
-    try {
-        // Check if the local backup file exists
-        if (fs.existsSync(contactsFile)) {
-            // Read the file contents
-            const content = fs.readFileSync(contactsFile, 'utf-8');
-            // Parse it into an array
-            let contacts = JSON.parse(content || '[]');
-            
-            // Store the initial count of items to see if we actually delete something
-            const initialCount = contacts.length;
-            // Filter out the contact that matches the provided ID or timestamp (for older local records)
-            contacts = contacts.filter(c => {
-                const cid = String(c._id || '');
-                const ctime = String(c.createdAt || '');
-                // Keep the record ONLY if both the ID and Timestamp do not match the ID we want to delete
-                return cid !== id && ctime !== id;
-            });
-
-            // If the array size changed, it means we found and removed the item
-            if (contacts.length !== initialCount) {
-                // Write the newly filtered array back to the JSON file
-                fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2));
-                // Log a success message to the console
-                console.log(`🗑️ [Storage] LOCAL_TRANSMISSION_PURGED: ${id}`);
-            }
-        }
-    // Catch any errors during the local file deletion process
-    } catch (e) {
-        // Log the error to the console
-        console.error('LOCAL_DELETE_FAIL:', e.message);
-    }
-
-    // Respond with a 200 OK success message indicating the deletion was completed
-    res.status(200).json({ success: true, message: 'Message purged from system successfully.' });
-});

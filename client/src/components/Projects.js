@@ -180,7 +180,7 @@ const Projects = memo(({ projects }) => {
       {/* ── PROJECT COUNT HUD ── */}
       <Box sx={{ mb: 4, textAlign: 'center' }}>
         <Typography variant="caption" sx={{ color: '#1e293b', fontWeight: 900, fontFamily: 'monospace', letterSpacing: 2 }}>
-          STREAMING_ASSETS: {filteredProjects.length} // STACK: {filter}
+          STREAMING_ASSETS: {filteredProjects.length} {/* STACK: {filter} */}
         </Typography>
       </Box>
 

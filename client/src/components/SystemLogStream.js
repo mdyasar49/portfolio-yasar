@@ -3,31 +3,43 @@ import { Box, Typography, Stack, Container, Paper } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, Activity, Server, Database, Globe } from 'lucide-react';
 
-const SystemLogStream = () => {
+const SystemLogStream = ({ profile }) => {
   const [logs, setLogs] = useState([]);
   const scrollRef = useRef(null);
 
+  // Map icon strings from backend to Lucide components
+  const iconMap = {
+    Globe: <Globe size={14} />,
+    Database: <Database size={14} />,
+    Server: <Server size={14} />,
+    Activity: <Activity size={14} />
+  };
+
   useEffect(() => {
-    const logTemplates = [
-      { type: 'API', message: 'GET /api/profile [200 OK]', icon: <Globe size={14} />, color: '#00ffcc' },
-      { type: 'DB', message: 'Handshake with MongoDB Atlas successful', icon: <Database size={14} />, color: '#33ccff' },
-      { type: 'SYS', message: 'Engine warm-up complete: V3.0.4', icon: <Server size={14} />, color: '#ff3366' },
-      { type: 'NET', message: 'Strict CORS Policy active: Origin Validated', icon: <Activity size={14} />, color: '#ff9933' },
-      { type: 'API', message: 'Payload compression enabled (Gzip)', icon: <Globe size={14} />, color: '#00ffcc' },
-    ];
+    const templates = profile?.telemetryConfig?.logTemplates || [];
+    const version = profile?.resumeConfig?.version || 'v1.0.0';
+
+    if (templates.length === 0) return;
 
     const interval = setInterval(() => {
-      const randomLog = logTemplates[Math.floor(Math.random() * logTemplates.length)];
+      const randomLog = templates[Math.floor(Math.random() * templates.length)];
+      
+      // Dynamic Version Injection
+      const message = randomLog.message.replace('{{VERSION}}', version);
+
       const newLog = {
         id: Date.now(),
         time: new Date().toLocaleTimeString(),
-        ...randomLog
+        type: randomLog.type,
+        message: message,
+        icon: iconMap[randomLog.icon] || <Activity size={14} />,
+        color: randomLog.color
       };
       setLogs(prev => [...prev.slice(-9), newLog]);
     }, 4000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [profile]);
 
   useEffect(() => {
     if (scrollRef.current) {

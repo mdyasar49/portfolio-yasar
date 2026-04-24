@@ -1,0 +1,31 @@
+{
+  "engineeringObjective": {
+    "title": "The Engineering Objective",
+    "description": "This isn't just a portfolio; it's a Production-Grade Simulation. Engineered as a decoupled MERN system where the Frontend and Backend function as independent entities, communicating over a secure REST API with multi-layer failover protocols.",
+    "encryption": "AES_256",
+    "firewall": "ACTIVE_STRICT",
+    "telemetryConfig": {
+      "logTemplates": [
+        { "type": "API", "message": "GET /api/profile [200 OK]", "icon": "Globe", "color": "#00ffcc" },
+        { "type": "DB", "message": "Handshake with MongoDB Atlas successful", "icon": "Database", "color": "#33ccff" },
+        { "type": "SYS", "message": "Engine warm-up complete: {{VERSION}}", "icon": "Server", "color": "#ff3366" },
+        { "type": "NET", "message": "Strict CORS Policy active: Origin Validated", "icon": "Activity", "color": "#ff9933" },
+        { "type": "API", "message": "Payload compression enabled (Gzip)", "icon": "Globe", "color": "#00ffcc" }
+      ]
+    }
+  },
+  "coreSystemDNA": [
+    { "title": "DATA_RESILIENCE", "val": "Hybrid Mongo/JSON Failover", "color": "#00ffcc" },
+    { "title": "ATOMIC_ARCHITECTURE", "val": "Fragmented JSON Modules", "color": "#6366f1" },
+    { "title": "DURATION_ENGINE", "val": "Real-time Calc Logic", "color": "#ff3366" }
+  ],
+  "securityProtocols": [
+    { "title": "Hardened Production Shield", "status": "STATE: ACTIVE_STRICT", "color": "#00ffcc" },
+    { "title": "Direct Access Shield", "status": "STATUS: ENFORCED", "color": "#33ccff" }
+  ],
+  "performanceMetrics": [
+    { "label": "PERF", "val": "98%", "color": "#00ffcc" },
+    { "label": "SEO", "val": "100%", "color": "#33ccff" },
+    { "label": "ACCESSIBILITY", "val": "95%", "color": "#ff3366" }
+  ]
+}

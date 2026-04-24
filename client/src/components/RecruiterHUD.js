@@ -7,12 +7,16 @@
  */
 
 import React, { useState } from 'react';
-import { Box, Typography, Stack, IconButton, Button, Paper, Divider } from '@mui/material';
+import { Box, Typography, Stack, Button, Paper, Divider } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, X, CheckCircle2, Download, Send } from 'lucide-react';
+import { Briefcase, CheckCircle2, Download, Send } from 'lucide-react';
 
-const RecruiterHUD = () => {
+const RecruiterHUD = ({ profile }) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    // Dynamic Data Fallbacks
+    const pitch = profile?.recruiterPitch || "Ready to deliver production-grade MERN solutions.";
+    const bullets = profile?.recruiterBullets || ["Full Stack Expert", "Immediate Availability"];
 
     return (
         <>
@@ -72,26 +76,31 @@ const RecruiterHUD = () => {
                             background: 'rgba(15, 23, 42, 0.95)',
                             backdropFilter: 'blur(20px)',
                             border: '1px solid rgba(99, 102, 241, 0.3)',
-                            boxShadow: '0 30px 60px rgba(0,0,0,0.8)'
+                            boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
+                            maxHeight: '70vh',
+                            overflowY: 'auto',
+                            '&::-webkit-scrollbar': { width: '4px' },
+                            '&::-webkit-scrollbar-track': { background: 'transparent' },
+                            '&::-webkit-scrollbar-thumb': { 
+                                background: 'rgba(99, 102, 241, 0.3)', 
+                                borderRadius: '10px',
+                                '&:hover': { background: '#6366f1' }
+                            }
                         }}>
+
                             <Typography sx={{ color: '#6366f1', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem', mb: 2 }}>
                                 QUICK_SUMMARY
                             </Typography>
                             
                             <Stack spacing={2.5}>
                                 <Typography variant="body2" sx={{ color: '#cbd5e1', lineHeight: 1.6 }}>
-                                    I specialize in building scalable MERN stack applications with a focus on high-performance architecture and clean code.
+                                    {pitch}
                                 </Typography>
 
                                 <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)' }} />
 
                                 <Stack spacing={1.5}>
-                                    {[
-                                        'Full Stack Expert (MERN)',
-                                        '2.5+ Years Industry Exp',
-                                        'Immediate Availability',
-                                        'Chennai / Remote Ready'
-                                    ].map(item => (
+                                    {bullets.map(item => (
                                         <Stack key={item} direction="row" spacing={1.5} alignItems="center">
                                             <CheckCircle2 size={16} color="#00ffcc" />
                                             <Typography variant="caption" sx={{ color: 'white', fontWeight: 600 }}>{item}</Typography>

@@ -76,13 +76,14 @@ const About = memo(({ profile }) => {
                     
                     {/* Identification Data Points */}
                     <Box sx={{ position: 'absolute', top: '20%', width: '100%', textAlign: 'center', zIndex: 2 }}>
-                        <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.6rem', letterSpacing: 4 }}>ID: 0x28A4F</Typography>
+                        <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.6rem', letterSpacing: 4 }}>VERIFIED_PROFILE_STAMP</Typography>
                     </Box>
 
                     <Stack spacing={2} alignItems="center" sx={{ zIndex: 5 }}>
-                        <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2, fontSize: { xs: '2rem', md: '3.5rem' } }}>PROFILE</Typography>
+                        <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2, fontSize: { xs: '2rem', md: '3.5rem' } }}>SUMMARY</Typography>
                         <Box sx={{ height: 2, width: 80, bgcolor: '#00ffcc', boxShadow: '0 0 15px #00ffcc', borderRadius: 10 }} />
                     </Stack>
+
 
                     {/* Active Scan Line Overlay */}
                     <motion.div
@@ -118,8 +119,8 @@ const About = memo(({ profile }) => {
               {/* Grid of professional stats (Expertise, Work Exp, Projects) */}
               <Grid container spacing={3}>
                 {[
-                  { label: 'Expertise Level', value: 'Full Stack Developer', color: '#6366f1' },
-                  { label: 'Work Experience', value: '2.5+ Years', color: '#ec4899' },
+                  { label: 'Expertise Level', value: profile.expertiseLevel || 'Full Stack Developer', color: '#6366f1' },
+                  { label: 'Work Experience', value: profile.heroMetrics?.find(m => m.label === 'EXPERIENCE')?.val || '2+ Years', color: '#ec4899' },
                   { label: 'Projects Launched', value: `${profile.projects?.length || 0}+ Total`, color: '#10b981' }
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>

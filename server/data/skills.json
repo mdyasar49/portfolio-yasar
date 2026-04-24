@@ -1,0 +1,53 @@
+{
+  "technicalSkills": {
+    "frontend": [
+      "React.js (Professional)",
+      "Redux (State Management)",
+      "JavaScript (ES6+ / Async-Await)",
+      "Material UI (Design Systems)",
+      "HTML5 / CSS3 (Responsive Architecture)",
+      "Interactive Animations (Framer Motion / GSAP)"
+    ],
+    "backend": [
+      "Node.js Runtime & Express.js (MERN)",
+      "Java (Core) & Spring Boot Microservices",
+      "Python (Basics & Automation)",
+      "RESTful API Design & Implementation",
+      "Server-Side Security (JWT / OAuth)",
+      "Middleware Orchestration & Global Error Handling"
+    ],
+    "database": [
+      "MySQL & SQL Server (Relational)",
+      "MongoDB (NoSQL / Basics)",
+      "Advanced Query Optimization & Indexing",
+      "Data Normalization & Migration Strategy",
+      "Real-time Data Syncing & WebSocket Persistence"
+    ],
+    "tools": [
+      "Git & GitHub (Version Control)",
+      "Postman (API Testing & Scripting)",
+      "VS Code Professional Ecosystem",
+      "CI/CD Pipeline Deployment (Render / Vercel)",
+      "Command Line Interface (PowerShell / Bash)"
+    ],
+    "aiTools": [
+      "AI-Assisted Development (Cursor / GitHub Copilot)",
+      "Advanced Prompt Engineering (ChatGPT / Claude / Gemini)",
+      "OpenAI Codex & Smart Automation Workflows",
+      "AI-Driven Code Analysis & Unit Test Generation"
+    ],
+    "other": [
+      "Bug Investigation & Root Cause Analysis (RCA)",
+      "Technical Documentation (Swagger / Markdown)",
+      "Agile/Scrum Methodology & Team Collaboration",
+      "System Architecture Mapping & Design Thinking"
+    ]
+  },
+  "softSkills": [
+    "Problem Solving",
+    "Analytical Thinking",
+    "Communication",
+    "Team Collaboration",
+    "Adaptability"
+  ]
+}

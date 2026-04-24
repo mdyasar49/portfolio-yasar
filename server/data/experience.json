@@ -1,0 +1,26 @@
+[
+  {
+    "role": "Software Engineer / Frontend Specialist",
+    "company": "Bytes and Binaries Software Solutions",
+    "companyUrl": "https://www.bytesandbinaries.com/",
+    "companyLinkedIn": "https://www.linkedin.com/company/bytes-and-binaries/",
+    "period": "July 2023 – March 2026",
+    "location": "Pudukkottai, Tamil Nadu",
+    "metrics": [
+      { "label": "UI_CONSISTENCY", "value": 98 },
+      { "label": "API_INTEGRATION", "value": 95 },
+      { "label": "BUG_REDUCTION", "value": 40 },
+      { "label": "SQL_OPTIMIZATION", "value": 85 }
+    ],
+    "technologies": ["React.js", "Material UI", "REST APIs", "SQL", "Git", "Postman"],
+    "description": [
+      "Architected and maintained modular, high-performance UI components using React.js and Material UI, significantly improving UI consistency across enterprise modules.",
+      "Engineered seamless integration between complex frontend modules and relational backend APIs, ensuring reliable data synchronization and high-fidelity user experiences.",
+      "Wrote and optimized complex SQL queries for data validation, detailed issue analysis, and system-wide performance troubleshooting.",
+      "Led cross-functional investigations to resolve critical UI, API, and database-related bottlenecks, achieving a marked reduction in post-deployment ticket volume.",
+      "Collaborated with developers and QA teams to orchestrate smooth application releases, including rigorous pre-production validation and post-deployment stability checks.",
+      "Authored and maintained comprehensive technical documentation for internal features, API contracts, and critical issue resolutions to facilitate team transparency.",
+      "Gained deep understanding of the request-response lifecycle and data flow by working closely with backend API layers and analyzing network logs."
+    ]
+  }
+]

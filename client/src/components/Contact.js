@@ -16,7 +16,7 @@ import { motion } from 'framer-motion';
 // Import the API service function to send form data to the Node.js backend
 import { dispatchCommunication } from '../services/api';
 
-const Contact = () => {
+const Contact = ({ profile }) => {
     const theme = useTheme();
     // Detect mobile devices for adjusting notification position
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -99,7 +99,7 @@ const Contact = () => {
                 <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 1 }}>
                     <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
                     <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: 4, fontFamily: 'Syncopate', fontSize: '0.75rem', textTransform: 'uppercase' }}>
-                        COMMUNICATION_UPLINK
+                        CONTACT_INQUIRY
                     </Typography>
                     <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
                 </Box>
@@ -110,7 +110,7 @@ const Contact = () => {
                     fontSize: { xs: '2.5rem', md: '4.5rem' },
                     textShadow: '0 0 40px rgba(255,255,255,0.05)'
                 }}>
-                    ESTABLISH <span style={{ color: '#ff3366', textShadow: '0 0 20px rgba(255, 51, 102, 0.4)' }}>CONNECTION</span>
+                    GET IN <span style={{ color: '#ff3366', textShadow: '0 0 20px rgba(255, 51, 102, 0.4)' }}>TOUCH</span>
                 </Typography>
             </Stack>
 
@@ -126,7 +126,7 @@ const Contact = () => {
                         {/* Terminal Log Output */}
                         <Box sx={{ mb: 6, p: 3, bgcolor: 'rgba(0,0,0,0.4)', borderRadius: 3, borderLeft: '3px solid #00ffcc', fontFamily: 'monospace' }}>
                             <Typography sx={{ color: '#00ffcc', fontSize: '0.75rem', mb: 1 }}>&gt; SYSTEM_READY... [OK]</Typography>
-                            <Typography sx={{ color: '#00ffcc', fontSize: '0.75rem', mb: 1 }}>&gt; ENCRYPTION_LAYER_ACTIVE... [AES_256]</Typography>
+                            <Typography sx={{ color: '#00ffcc', fontSize: '0.75rem', mb: 1 }}>&gt; SECURE_PROTOCOL_ACTIVE... [AES_256]</Typography>
                             <Typography sx={{ color: '#fff', fontSize: '0.85rem', fontWeight: 600, mt: 2 }}>
                                 I am currently open to high-impact collaborations, enterprise-scale engineering roles, and innovative architectural challenges.
                             </Typography>
@@ -134,10 +134,11 @@ const Contact = () => {
 
                         <Stack spacing={4}>
                             {[
-                                { icon: <Mail size={22} />, label: 'EMAIL_ADDRESS', val: 'mohamedyasar081786@gmail.com', isLink: true, color: '#33ccff' },
-                                { icon: <MapPin size={22} />, label: 'CURRENT_LOCATION', val: 'CHENNAI, TAMIL NADU', color: '#ff3366' },
-                                { icon: <ShieldCheck size={22} />, label: 'AVAILABILITY', val: 'IMMEDIATE_JOINING', color: '#00ffcc' }
+                                { icon: <Mail size={22} />, label: 'Email Address', val: profile.email, isLink: true, color: '#33ccff' },
+                                { icon: <MapPin size={22} />, label: 'Base Location', val: profile.location, color: '#ff3366' },
+                                { icon: <ShieldCheck size={22} />, label: 'Availability Status', val: profile.additionalInfo.availability, color: '#00ffcc' }
                             ].map((item, i) => (
+
 
                                 <Stack 
                                     key={i} 

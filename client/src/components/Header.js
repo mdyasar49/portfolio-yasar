@@ -20,7 +20,7 @@ import { Code2, Zap } from 'lucide-react';
 import { useCodeLive } from '../context/CodeLiveContext';
 
 
-const Header = () => {
+const Header = ({ profile }) => {
   // State to manage the visibility of the mobile side drawer
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -28,21 +28,14 @@ const Header = () => {
   // Access global Code Live state and toggle function
   const { isCodeLive, toggleCodeLive } = useCodeLive();
 
-  
+  // Extraction Logic: Fallback to an empty list if backend data is not yet loaded
+  const menuItems = profile?.menuItems || [];
+
   // Hook to detect scroll position - used to transform the header into a floating island
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 50,
   });
-  
-  // Configuration for the main navigation links
-  const menuItems = [
-    { name: 'About', path: '/#about', type: 'anchor' },
-    { name: 'Skills', path: '/#skills', type: 'anchor' },
-    { name: 'Projects', path: '/#projects', type: 'anchor' },
-    { name: 'Resume', path: '/#resume', type: 'anchor' },
-    { name: 'Contact', path: '/#contact', type: 'anchor' },
-  ];
 
   // Toggles the mobile drawer menu
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
