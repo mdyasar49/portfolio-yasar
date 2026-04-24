@@ -109,7 +109,7 @@ const Projects = memo(({ projects }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   // Logic to extract unique technologies from all projects for the filter bar
-  const allTech = ['ALL', ...new Set(projects.flatMap(p => p.technologies.map(t => t.toUpperCase())))];
+  const allTech = ['ALL', ...new Set((projects || []).flatMap(p => (p.technologies || []).map(t => t.toUpperCase())))];
   const [filter, setFilter] = useState('ALL');
 
   // Filtered projects list based on selection
