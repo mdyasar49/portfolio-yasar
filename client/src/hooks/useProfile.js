@@ -17,57 +17,20 @@ const useProfile = () => {
         setProfile(prev => ({ ...prev, ...fragment }));
     };
 
-    const fetchProgressively = useCallback(async () => {
+    const fetchAllData = useCallback(async () => {
         setLoading(true);
         setError(null);
 
         try {
-            // 1. Critical Path: Fetch initial bundle or navigation first
-            // We still fetch the full profile as a fallback/initial seed, 
-            // but then we refresh specific parts if needed.
-            // Actually, per USER request, we fetch fragments one by one.
+            // Fetch the entire consolidated profile in a single request
+            const data = await fetchSystemInterfaceData();
             
-            const fragments = [
-                'navigation', 'basic_info', 'analytics', 'socials', 
-                'skills', 'experience', 'projects', 'education', 'documentation'
-            ];
-
-            // Start fetching fragments
-            // Some can be parallel (Promise.all) or sequential for "pop-in" effect.
-            
-            // Critical First: Navigation & Basic Info
-            const [nav, basic] = await Promise.all([
-                fetchFragment('navigation'),
-                fetchFragment('basic_info')
-            ]);
-
-            if (nav) updateProfile(nav);
-            if (basic) {
-                updateProfile(basic);
-                setMaintenanceMode(basic.maintenanceMode || false);
+            if (data) {
+                setProfile(data);
+                setMaintenanceMode(data.maintenanceMode || false);
             }
-
-            // The page is now visually ready (Header + Hero)
+            
             setLoading(false);
-
-            // Fetch the rest in the background
-            const secondary = ['analytics', 'socials', 'skills', 'experience', 'projects', 'education', 'documentation'];
-            
-            for (const frag of secondary) {
-                fetchFragment(frag).then(data => {
-                    if (data) {
-                        // Special case: experience and projects are strictly arrays in their source files
-                        if (frag === 'experience') {
-                            updateProfile({ experience: Array.isArray(data) ? data : (data.payload || []) });
-                        }
-                        else if (frag === 'projects') {
-                            updateProfile({ projects: Array.isArray(data) ? data : (data.payload || []) });
-                        }
-                        else updateProfile(data);
-                    }
-                });
-            }
-
         } catch (err) {
             setError(err);
             setErrorType('network');
@@ -76,10 +39,10 @@ const useProfile = () => {
     }, []);
 
     useEffect(() => {
-        fetchProgressively();
-    }, [fetchProgressively]);
+        fetchAllData();
+    }, [fetchAllData]);
 
-    return { profile, loading, error, errorType, maintenanceMode, retry: fetchProgressively };
+    return { profile, loading, error, errorType, maintenanceMode, retry: fetchAllData };
 };
 
 export default useProfile;

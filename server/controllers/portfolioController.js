@@ -122,7 +122,13 @@ const normalizeProfile = (source) => {
         },
         // Extract raw readme and project explanation strings
         readme: safeString(profile.readme),
-        projectExplanation: safeString(profile.projectExplanation)
+        projectExplanation: safeString(profile.projectExplanation),
+        // Safely extract navigation menu items
+        menuItems: safeArray(profile.menuItems),
+        // Safely extract analytics and performance metrics
+        performanceData: safeArray(profile.performanceData),
+        skillDistribution: safeArray(profile.skillDistribution),
+        systemStats: safeArray(profile.systemStats)
     };
 };
 
