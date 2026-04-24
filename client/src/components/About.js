@@ -77,7 +77,7 @@ const About = memo(({ profile }) => {
                 <Stack spacing={1} alignItems="center" sx={{ zIndex: 1 }}>
                    <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2 }}>SUMMARY</Typography>
                    <Box sx={{ height: 2, width: 60, bgcolor: '#ff3366', boxShadow: '0 0 10px #ff3366' }} />
-                   <Typography variant="overline" sx={{ color: '#00ffcc', letterSpacing: 4, mt: 2, fontWeight: 900 }}>PROFESSIONAL_DATA</Typography>
+                   <Typography variant="overline" sx={{ color: '#6366f1', letterSpacing: 2, mt: 2, fontWeight: 700 }}>PROFESSIONAL PROFILE</Typography>
                 </Stack>
 
                 {/* Aesthetic Corner Accents */}
@@ -92,9 +92,9 @@ const About = memo(({ profile }) => {
             <Stack spacing={5}>
               {/* Narrative Content */}
               <Box>
-                <Typography variant="overline" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 5, mb: 1, display: 'block' }}>&gt; EXECUTIVE_SUMMARY</Typography>
-                <Typography variant="h4" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 3, fontSize: '1.8rem' }}>
-                  Engineering <span style={{ color: '#ff3366' }}>Modern</span> Solutions
+                <Typography variant="overline" sx={{ color: '#6366f1', fontWeight: 700, letterSpacing: 3, mb: 1, display: 'block' }}>Executive Summary</Typography>
+                <Typography variant="h4" sx={{ color: 'white', fontWeight: 800, fontFamily: 'Outfit', mb: 3, fontSize: '2rem' }}>
+                  Engineering <span style={{ color: '#ec4899' }}>Modern</span> Solutions
                 </Typography>
                 <Typography variant="body1" sx={{ color: '#94a3b8', fontSize: '1.1rem', lineHeight: 2, textAlign: 'justify' }}>
                   {profile.summary}
@@ -104,9 +104,9 @@ const About = memo(({ profile }) => {
               {/* Grid of Achievement Stats */}
               <Grid container spacing={3}>
                 {[
-                  { label: 'EXPERTISE_LEVEL', value: 'FULL_STACK_DEVELOPER', color: '#33ccff' },
-                  { label: 'WORK_EXPERIENCE', value: 'AROUND_3_YEARS', color: '#ff3366' },
-                  { label: 'PROJECT_LAUNCHED', value: `${profile.projects?.length || 0}+_TOTAL`, color: '#00ffcc' }
+                  { label: 'Expertise Level', value: 'Full Stack Developer', color: '#6366f1' },
+                  { label: 'Work Experience', value: '3+ Years', color: '#ec4899' },
+                  { label: 'Projects Launched', value: `${profile.projects?.length || 0}+ Total`, color: '#10b981' }
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>
                     <Box sx={{ 
@@ -116,8 +116,8 @@ const About = memo(({ profile }) => {
                       transition: '0.3s ease',
                       '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)', borderColor: stat.color }
                     }}>
-                      <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1.5, display: 'block', mb: 1, fontSize: '0.6rem', fontFamily: 'Syncopate' }}>{stat.label}</Typography>
-                      <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '0.85rem' }}>{stat.value}</Typography>
+                      <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, letterSpacing: 1, display: 'block', mb: 1, fontSize: '0.7rem', fontFamily: 'Outfit', textTransform: 'uppercase' }}>{stat.label}</Typography>
+                      <Typography sx={{ color: 'white', fontWeight: 800, fontFamily: 'Outfit', fontSize: '1.1rem' }}>{stat.value}</Typography>
                       {/* Animated Progress bar per stat */}
                       <Box sx={{ mt: 1.5, height: 2, width: '100%', bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 10, overflow: 'hidden' }}>
                         <motion.div 
@@ -135,7 +135,7 @@ const About = memo(({ profile }) => {
               {/* Soft Skills Chips Distribution */}
               {profile?.softSkills && (
                 <Box>
-                  <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 3, mb: 2, display: 'block' }}>&gt; CORE_COMPETENCIES</Typography>
+                  <Typography variant="overline" sx={{ color: '#64748b', fontWeight: 700, letterSpacing: 2, mb: 2, display: 'block' }}>Core Competencies</Typography>
                   <Stack direction="row" flexWrap="wrap" gap={1.5}>
                     {profile.softSkills.map((skill) => (
                       <Box key={skill} sx={{ 
@@ -147,7 +147,7 @@ const About = memo(({ profile }) => {
                         transition: '0.3s',
                         '&:hover': { color: '#33ccff', borderColor: '#33ccff', transform: 'translateY(-2px)' }
                       }}>
-                        {skill.toUpperCase()}
+                        {skill}
                       </Box>
                     ))}
                   </Stack>

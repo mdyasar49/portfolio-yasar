@@ -62,13 +62,13 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
           <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: `${color}15`, color: color, display: 'flex' }}>
             <Icon size={32} />
           </Box>
-          <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 1 }}>RESOURCES</Typography>
+          <Typography variant="overline" sx={{ color: '#64748b', fontWeight: 600, letterSpacing: 1 }}>EXPERT LEVEL</Typography>
         </Box>
 
         {/* Dynamic Expertise Bar - width grows on container hover */}
         <Box>
           <Typography variant="h3" sx={{ 
-            fontSize: '1.2rem', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 1, color: 'white', mb: 1 
+            fontSize: '1.2rem', fontWeight: 700, fontFamily: 'Outfit', letterSpacing: 0, color: 'white', mb: 1 
           }}>
             {title}
           </Typography>
@@ -81,17 +81,17 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
             <Tooltip key={skill} title="Expert Level Consistently Maintained" arrow placement="top">
               <Box
                 sx={{
-                  px: 1.8, py: 0.6, borderRadius: '4px', bgcolor: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.05)', fontSize: '0.75rem', fontWeight: 900,
-                  color: 'rgba(0,255,204,0.6)', fontFamily: 'monospace', letterSpacing: 1,
-                  transition: '0.3s all', cursor: 'crosshair',
+                  px: 1.8, py: 0.6, borderRadius: '8px', bgcolor: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.05)', fontSize: '0.85rem', fontWeight: 500,
+                  color: '#cbd5e1', fontFamily: 'Outfit', letterSpacing: 0,
+                  transition: '0.3s all', cursor: 'pointer',
                   '&:hover': {
-                    color: 'white', borderColor: color, bgcolor: `${color}20`,
-                    boxShadow: `0 0 15px ${color}44`, transform: 'skewX(-5deg)'
+                    color: 'white', borderColor: color, bgcolor: `${color}15`,
+                    boxShadow: `0 0 15px ${color}33`, transform: 'translateY(-2px)'
                   }
                 }}
               >
-                {skill.toUpperCase()}
+                {skill}
               </Box>
             </Tooltip>
           ))}
@@ -116,12 +116,12 @@ const Skills = memo(({ skills }) => {
 
   // Domain categorization map for the various technical sectors
   const categories = [
-    { title: 'FRONTEND DEVELOPMENT', skills: skills.frontend || [], icon: Layout, color: '#33ccff' },
-    { title: 'BACKEND ENGINEERING', skills: skills.backend || [], icon: Database, color: '#ff3366' },
-    { title: 'DATABASE SYSTEMS', skills: skills.database || [], icon: Cpu, color: '#00ffcc' },
-    { title: 'DEVOPS & TOOLS', skills: skills.tools || [], icon: Terminal, color: '#ff9933' },
-    { title: 'AI & AUTOMATION', skills: skills.aiTools || [], icon: Sparkles, color: '#a855f7' },
-    { title: 'OTHER EXPERTISE', skills: skills.other || [], icon: Activity, color: '#64748b' },
+    { title: 'Frontend Development', skills: skills.frontend || [], icon: Layout, color: '#3b82f6' },
+    { title: 'Backend Engineering', skills: skills.backend || [], icon: Database, color: '#ec4899' },
+    { title: 'Database Systems', skills: skills.database || [], icon: Cpu, color: '#10b981' },
+    { title: 'DevOps & Tools', skills: skills.tools || [], icon: Terminal, color: '#f59e0b' },
+    { title: 'AI & Automation', skills: skills.aiTools || [], icon: Sparkles, color: '#8b5cf6' },
+    { title: 'Other Expertise', skills: skills.other || [], icon: Activity, color: '#64748b' },
   ];
 
   return (
@@ -141,14 +141,14 @@ const Skills = memo(({ skills }) => {
         <Typography 
           variant="h2" 
           sx={{ 
-            fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: 4, mb: 1,
+            fontFamily: 'Outfit', fontWeight: 800, letterSpacing: -1, mb: 1,
             fontSize: { xs: '1.8rem', md: '3.5rem' }, textAlign: 'center', color: 'white'
           }}
         >
-          TECHNICAL <Box component="span" sx={{ color: '#ff3366' }}>ARSENAL</Box>
+          Technical <Box component="span" sx={{ color: '#6366f1' }}>Expertise</Box>
         </Typography>
-        <Typography variant="overline" sx={{ display: 'block', textAlign: 'center', color: '#444', fontWeight: 900, letterSpacing: 6 }}>CORE COMPETENCIES</Typography>
-        <Box sx={{ width: 100, height: 4, background: 'linear-gradient(90deg, #ff3366, #ff9933)', mx: 'auto', borderRadius: 2, mt: 3 }} />
+        <Typography variant="overline" sx={{ display: 'block', textAlign: 'center', color: '#64748b', fontWeight: 600, letterSpacing: 2 }}>CORE COMPETENCIES</Typography>
+        <Box sx={{ width: 60, height: 4, background: 'linear-gradient(90deg, #6366f1, #ec4899)', mx: 'auto', borderRadius: 2, mt: 3 }} />
       </Box>
 
       {/* Floating Orbital Decoration Component */}

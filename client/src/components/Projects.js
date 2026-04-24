@@ -106,8 +106,8 @@ const Projects = memo(({ projects }) => {
       <Stack spacing={2} sx={{ mb: { xs: 8, md: 15 }, textAlign: 'center' }}>
         <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 1 }}>
            <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
-           <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 900, letterSpacing: 6, fontFamily: 'Syncopate', fontSize: '0.65rem' }}>
-             PORTFOLIO_COLLECTION_v4.5
+           <Typography variant="caption" sx={{ color: '#ec4899', fontWeight: 700, letterSpacing: 4, fontFamily: 'Outfit', fontSize: '0.85rem', textTransform: 'uppercase' }}>
+             Curated Work
            </Typography>
            <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
         </Box>
@@ -118,13 +118,13 @@ const Projects = memo(({ projects }) => {
           fontSize: { xs: '2.8rem', md: '5rem' },
           textShadow: '0 0 40px rgba(255,255,255,0.05)'
         }}>
-          FEATURED <span style={{ color: '#ff3366', textShadow: '0 0 20px rgba(255, 51, 102, 0.4)' }}>PROJECTS</span>
+          FEATURED <span style={{ color: '#6366f1', textShadow: '0 0 20px rgba(99, 102, 241, 0.4)' }}>PROJECTS</span>
         </Typography>
       </Stack>
 
       <Grid container spacing={{ xs: 6, md: 10 }}>
         {projects.map((project, index) => {
-          const accent = index % 2 === 0 ? '#33ccff' : '#ff3366';
+          const accent = index % 2 === 0 ? '#6366f1' : '#ec4899';
           return (
             <Grid item xs={12} md={6} key={index}>
               <motion.div
@@ -230,11 +230,11 @@ const Projects = memo(({ projects }) => {
                     <CardContent sx={{ p: 5, flexGrow: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 5 }}>
                       <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
                          <Typography variant="h4" sx={{ 
-                           fontWeight: 900, color: 'white', fontFamily: 'Syncopate', fontSize: '1.4rem', 
-                           letterSpacing: -0.5,
+                           fontWeight: 800, color: 'white', fontFamily: 'Outfit', fontSize: '1.8rem', 
+                           letterSpacing: 0,
                            textShadow: `0 0 15px ${accent}22`
                          }}>
-                           {project.name.toUpperCase()}
+                           {project.name}
                          </Typography>
                          <Box sx={{ p: 1, borderRadius: '50%', border: `1px solid ${accent}11`, color: accent }}>
                            <Terminal size={18} />
@@ -263,11 +263,11 @@ const Projects = memo(({ projects }) => {
                           onClick={() => handleOpen(project)}
                           endIcon={<Activity size={18} />}
                           sx={{ 
-                            py: 2, borderRadius: 2, 
-                            bgcolor: 'rgba(255,255,255,0.02)', 
+                            py: 2, borderRadius: 3, 
+                            bgcolor: 'rgba(255,255,255,0.03)', 
                             color: '#cbd5e1',
-                            fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.75rem', letterSpacing: 2,
-                            border: '1px solid rgba(255,255,255,0.05)',
+                            fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.9rem', letterSpacing: 1,
+                            border: '1px solid rgba(255,255,255,0.08)',
                             transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
                             '&:hover': { 
                               borderColor: accent, color: '#fff', 
@@ -276,7 +276,7 @@ const Projects = memo(({ projects }) => {
                             }
                           }}
                          >
-                           PROJECT_DETAILS
+                           View Details
                          </Button>
                       </Box>
                     </CardContent>

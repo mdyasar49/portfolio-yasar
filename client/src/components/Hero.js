@@ -134,7 +134,7 @@ const Hero = memo(({ profile }) => {
                 boxShadow: '0 0 20px rgba(0, 255, 204, 0.1)'
               }}>
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00ffcc', animation: 'pulse 1.5s infinite' }} />
-                <Typography sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.75rem', letterSpacing: 3, fontFamily: 'monospace' }}>
+                <Typography sx={{ color: '#00ffcc', fontWeight: 700, fontSize: '0.85rem', letterSpacing: 1, fontFamily: 'Outfit' }}>
                   Available to join immediately
                 </Typography>
               </Box>
@@ -142,35 +142,15 @@ const Hero = memo(({ profile }) => {
 
             {/* [Primary Name Identification] - The core branding of the page */}
             <Box sx={{ position: 'relative' }}>
-              <Typography 
-                variant="h1" 
-                className="hero-gradient-text" 
-                sx={{ 
-                  fontSize: { xs: '2.2rem', sm: '4rem', md: '7rem', lg: '9rem' },
-                  lineHeight: 0.9, 
+                <Typography 
+                  variant="h1" 
+                  className="hero-gradient-text" 
+                  sx={{ 
+                    fontSize: { xs: '2rem', sm: '3.5rem', md: '5.5rem', lg: '7.5rem' },
+                    lineHeight: 0.9, 
                   fontWeight: 900,
                   filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
-                  position: 'relative',
-                  '&::before, &::after': {
-                    // Content duplicates the name for the 'glitch' effect layers
-                    content: `"${profile.name || 'A. MOHAMED YASAR'}"`,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    opacity: 0.8,
-                  },
-                  '&::before': {
-                    color: '#ff3366',
-                    zIndex: -1,
-                    animation: 'glitch 3s infinite linear alternate-reverse',
-                  },
-                  '&::after': {
-                    color: '#33ccff',
-                    zIndex: -2,
-                    animation: 'glitch 2s infinite linear alternate-reverse',
-                  }
+                  position: 'relative'
                 }}
               >
                 {/* Fallback ensures name is never blank even if API has issues */}
@@ -193,9 +173,9 @@ const Hero = memo(({ profile }) => {
               transition={{ delay: 1 }}
             >
               <Typography variant="h2" sx={{ 
-                color: 'white', fontWeight: 900, fontFamily: 'Syncopate',
-                fontSize: { xs: '1rem', md: '2rem' }, letterSpacing: 5,
-                textTransform: 'uppercase', opacity: 0.8
+                color: 'white', fontWeight: 600, fontFamily: 'Outfit',
+                fontSize: { xs: '1.2rem', md: '2.5rem' }, letterSpacing: 2,
+                opacity: 0.9
               }}>
                 Engaging the <span style={{ color: '#ff3366', textShadow: '0 0 20px #ff3366' }}>Future</span> of Scale
               </Typography>
@@ -230,12 +210,13 @@ const Hero = memo(({ profile }) => {
                 startIcon={<Terminal size={20} />}
                 className="kinetic-button"
                 sx={{
-                  background: 'linear-gradient(45deg, #00d2ff, #3a7bd5)',
+                  background: 'linear-gradient(135deg, #6366f1, #ec4899)',
                   color: 'white', px: 6, py: 2.5,
-                  borderRadius: '12px', fontFamily: 'Syncopate', fontWeight: 900,
-                  fontSize: '0.85rem', letterSpacing: 2,
-                  boxShadow: '0 20px 40px rgba(0, 210, 255, 0.3)',
-                  '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 25px 50px rgba(0, 210, 255, 0.5)' }
+                  borderRadius: '16px', fontFamily: 'Outfit', fontWeight: 700,
+                  fontSize: '1rem', letterSpacing: 1,
+                  boxShadow: '0 20px 40px rgba(99, 102, 241, 0.3)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 25px 50px rgba(236, 72, 153, 0.5)' }
                 }}
               >
                 VIEW_RESUME
@@ -247,11 +228,12 @@ const Hero = memo(({ profile }) => {
                 startIcon={<ShieldCheck size={20} />}
                 sx={{ 
                   borderColor: 'rgba(255,255,255,0.1)', color: 'white',
-                  px: 5, py: 2.5, borderRadius: '12px',
-                  fontFamily: 'Syncopate', fontWeight: 900,
-                  fontSize: '0.85rem', letterSpacing: 2,
+                  px: 5, py: 2.5, borderRadius: '16px',
+                  fontFamily: 'Outfit', fontWeight: 700,
+                  fontSize: '1rem', letterSpacing: 1,
                   backdropFilter: 'blur(10px)',
-                  '&:hover': { borderColor: 'white', background: 'rgba(255,255,255,0.05)' }
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  '&:hover': { borderColor: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.08)' }
                 }}
               >
                 VIEW_PORTFOLIO

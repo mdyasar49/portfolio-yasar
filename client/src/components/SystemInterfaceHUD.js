@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { Box, Typography, Stack, Fade } from '@mui/material';
-import { Cpu, Zap, Terminal } from 'lucide-react';
+import { Cpu, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
@@ -84,8 +84,7 @@ const SystemInterfaceHUD = () => {
           <Stack direction="row" spacing={1.5} sx={{ pointerEvents: 'auto' }}>
             {[
               { icon: <Cpu size={14} />, label: 'SERVER_LOAD', value: '4.2%', color: '#ff3366' },
-              { icon: <Zap size={14} />, label: 'LIVE_SESSIONS', value: activeSessions, color: '#33ccff', active: true },
-              { icon: <Terminal size={14} />, label: 'SYSTEM_CONSOLE', color: '#00ffcc', active: true, link: '/#terminal' }
+              { icon: <Zap size={14} />, label: 'LIVE_SESSIONS', value: activeSessions, color: '#33ccff', active: true }
             ].map((item, i) => {
               const content = (
                 <Box key={i} sx={{ 

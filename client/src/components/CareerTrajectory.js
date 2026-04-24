@@ -23,12 +23,12 @@ const CareerTrajectory = memo(({ experience }) => {
       <Typography variant="h2" gutterBottom sx={{ 
         mb: { xs: 5, md: 10 }, 
         textAlign: 'center', 
-        fontFamily: 'Syncopate', 
+        fontFamily: 'Outfit', 
         fontWeight: 800, 
-        letterSpacing: { xs: 1, md: 2 },
+        letterSpacing: { xs: -1, md: -2 },
         fontSize: { xs: '2rem', md: '3.75rem' }
       }}>
-        CAREER <Box component="span" sx={{ color: '#ff3366' }}>TRAJECTORY</Box>
+        Career <Box component="span" sx={{ color: '#ec4899' }}>Experience</Box>
       </Typography>
 
       <Stack spacing={6}>
@@ -52,9 +52,9 @@ const CareerTrajectory = memo(({ experience }) => {
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', mb: 3 }}>
                   <Box>
                     <Typography variant="h3" sx={{ 
-                      fontWeight: 800, 
+                      fontWeight: 700, fontFamily: 'Outfit',
                       fontSize: { xs: '1.4rem', sm: '1.8rem' }, 
-                      background: 'linear-gradient(90deg, #fff, #aaa)', 
+                      background: 'linear-gradient(90deg, #fff, #cbd5e1)', 
                       WebkitBackgroundClip: 'text', 
                       WebkitTextFillColor: 'transparent',
                       mb: 1
@@ -70,12 +70,12 @@ const CareerTrajectory = memo(({ experience }) => {
                           component="a" 
                           href={exp.companyUrl} 
                           target="_blank" 
-                          sx={{ color: '#ff9933', textDecoration: 'none', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', '&:hover': { color: '#ff3366' } }}
+                          sx={{ color: '#6366f1', textDecoration: 'none', fontWeight: 600, letterSpacing: 0, fontFamily: 'Outfit', '&:hover': { color: '#ec4899' } }}
                         >
                           {exp.company}
                         </Typography>
                       ) : (
-                        <Typography variant="h6" sx={{ color: '#ff9933', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }}>
+                        <Typography variant="h6" sx={{ color: '#6366f1', fontWeight: 600, letterSpacing: 0, fontFamily: 'Outfit' }}>
                           {exp.company}
                         </Typography>
                       )}
@@ -128,7 +128,7 @@ const CareerTrajectory = memo(({ experience }) => {
                   <Stack direction="row" spacing={4} sx={{ mb: 4, flexWrap: 'wrap', gap: 3 }}>
                     {exp.metrics.map((m, i) => (
                       <Box key={i} sx={{ minWidth: 100 }}>
-                        <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, mb: 0.8, display: 'block', letterSpacing: 1.5, fontSize: '0.6rem' }}>{m.label}</Typography>
+                        <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600, mb: 0.8, display: 'block', letterSpacing: 1, fontSize: '0.65rem', fontFamily: 'Outfit', textTransform: 'uppercase' }}>{m.label}</Typography>
                         <Stack direction="row" spacing={1.5} alignItems="center">
                           <Box sx={{ width: 80, height: 4, bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 1, overflow: 'hidden' }}>
                             <motion.div 
@@ -148,11 +148,11 @@ const CareerTrajectory = memo(({ experience }) => {
                 {/* Technical Stack used specifically in this role */}
                 {exp.technologies && (
                   <Box sx={{ mb: 4 }}>
-                    <Typography variant="caption" sx={{ color: '#ff9933', fontWeight: 900, mb: 1.5, display: 'block', letterSpacing: 2, fontSize: '0.65rem', fontFamily: 'Syncopate' }}>TECHNOLOGY_STACK</Typography>
+                    <Typography variant="caption" sx={{ color: '#ec4899', fontWeight: 700, mb: 1.5, display: 'block', letterSpacing: 1, fontSize: '0.7rem', fontFamily: 'Outfit', textTransform: 'uppercase' }}>Technology Stack</Typography>
                     <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
                       {exp.technologies.map(tech => (
-                        <Box key={tech} sx={{ px: 1.5, py: 0.5, bgcolor: 'rgba(255, 153, 51, 0.05)', border: '1px solid rgba(255, 153, 51, 0.2)', borderRadius: 1 }}>
-                          <Typography sx={{ color: '#ff9933', fontSize: '0.65rem', fontWeight: 900, fontFamily: 'monospace' }}>{tech.toUpperCase()}</Typography>
+                        <Box key={tech} sx={{ px: 1.5, py: 0.5, bgcolor: 'rgba(236, 72, 153, 0.05)', border: '1px solid rgba(236, 72, 153, 0.2)', borderRadius: 2 }}>
+                          <Typography sx={{ color: '#ec4899', fontSize: '0.7rem', fontWeight: 600, fontFamily: 'Outfit' }}>{tech}</Typography>
                         </Box>
                       ))}
                     </Stack>
@@ -161,11 +161,11 @@ const CareerTrajectory = memo(({ experience }) => {
 
                 {/* Responsibility Feed: Detailed task descriptions */}
                 <Box sx={{ mt: 3 }}>
-                  <Typography variant="caption" sx={{ color: '#555', fontWeight: 900, mb: 2, display: 'block', letterSpacing: 2, fontSize: '0.65rem', fontFamily: 'Syncopate' }}>KEY_RESPONSIBILITIES</Typography>
+                  <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700, mb: 2, display: 'block', letterSpacing: 1, fontSize: '0.7rem', fontFamily: 'Outfit', textTransform: 'uppercase' }}>Key Responsibilities</Typography>
                   <Stack spacing={2.5}>
                     {exp.description.map((item, i) => (
                       <Box key={i} sx={{ display: 'flex', gap: 2.5 }}>
-                        <Box sx={{ color: '#ff3366', fontSize: '1.2rem', mt: -0.5, opacity: 0.5 }}>[{(i+1).toString().padStart(2, '0')}]</Box>
+                        <Box sx={{ color: '#6366f1', fontSize: '1.2rem', mt: -0.5, opacity: 0.8 }}>•</Box>
                         <Typography variant="body1" sx={{ color: '#94a3b8', lineHeight: 1.9, fontSize: '1rem', fontWeight: 500 }}>
                           {item}
                         </Typography>

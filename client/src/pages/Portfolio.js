@@ -5,16 +5,13 @@ import Hero from '../components/Hero';
 import About from '../components/About';
 import Skills from '../components/Skills';
 import TechnicalInsight from '../components/TechnicalInsight';
-import CodeShowcase from '../components/CodeShowcase';
 import CareerTrajectory from '../components/CareerTrajectory';
 import Projects from '../components/Projects';
 import ScholasticHistory from '../components/ScholasticHistory';
-import SystemArchitecture from '../components/SystemArchitecture';
 import ProfessionalDossier from '../components/ProfessionalDossier';
 import SystemLogStream from '../components/SystemLogStream';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
-import AdministrativeTerminal from './AdministrativeTerminal';
 
 const Portfolio = memo(({ profile, loading }) => {
   if (loading && !profile) return (
@@ -113,17 +110,15 @@ const Portfolio = memo(({ profile, loading }) => {
         {profile && <About profile={profile} />}
         {profile?.technicalSkills && <Skills skills={profile.technicalSkills} />}
         <TechnicalInsight />
-        <CodeShowcase />
+
         {profile?.experience && <CareerTrajectory experience={profile.experience} />}
         {profile?.projects && <Projects projects={profile.projects} />}
         {profile?.education && <ScholasticHistory education={profile.education} />}
-        <Box id="terminal" sx={{ py: 10 }}>
-           <AdministrativeTerminal publicView={true} />
-        </Box>
+
         <ProfessionalDossier />
         <SystemLogStream />
 
-        <SystemArchitecture />
+
         <Contact />
       </Container>
       <Footer socials={profile.socials} name={profile.name} />

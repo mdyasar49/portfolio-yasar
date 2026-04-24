@@ -21,7 +21,6 @@ import DynamicBackground from './components/DynamicBackground';
 // ─── Lazy Loaded Modules (Optimization) ──────────────────────────────────
 // These modules are loaded only when navigated to, reducing the initial bundle size.
 const Resume = lazy(() => import('./pages/Resume'));
-const Documentation = lazy(() => import('./pages/Documentation'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 const AdministrativeTerminal = lazy(() => import('./pages/AdministrativeTerminal'));
@@ -181,8 +180,6 @@ const PublicApp = () => {
               <Routes location={location}>
                 <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
                 <Route path="/resume"       element={<Resume profile={profile} />} />
-                <Route path="/architecture" element={<Documentation profile={profile} />} />
-                <Route path="/terminal"     element={<AdministrativeTerminal publicView={true} />} />
                 <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
               </Routes>
             </Suspense>
