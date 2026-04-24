@@ -132,7 +132,7 @@ const Portfolio = memo(({ profile, loading }) => {
         {profile && <Hero profile={profile} />}
         {profile && <About profile={profile} />}
         {profile?.technicalSkills && <Skills skills={profile.technicalSkills} />}
-        <TechnicalInsight />
+        <TechnicalInsight profile={profile} />
 
         {profile?.experience && <CareerTrajectory experience={profile.experience} />}
         {profile?.projects && <Projects projects={profile.projects} />}

@@ -254,13 +254,8 @@ const Hero = memo(({ profile }) => {
                   backdropFilter: 'blur(10px)'
                 }}
               >
-                {[
-                  { label: 'EXPERIENCE', val: '2.5+ Years', color: '#33ccff' },
-                  { label: 'STACK', val: 'MERN / AWS / SQL', color: '#ff3366' },
-                  { label: 'LOCATION', val: 'Chennai, TN', color: '#00ffcc' },
-                  { label: 'STATUS', val: 'Ready to Join', color: '#ec4899' }
-                ].map((item, i) => (
-                  <Stack key={i} alignItems={{ xs: 'center', md: 'flex-start' }} sx={{ borderRight: { md: i !== 3 ? '1px solid rgba(255,255,255,0.05)' : 'none' }, pr: { md: 4 } }}>
+                {(profile.heroMetrics || []).map((item, i) => (
+                  <Stack key={i} alignItems={{ xs: 'center', md: 'flex-start' }} sx={{ borderRight: { md: i !== (profile.heroMetrics.length - 1) ? '1px solid rgba(255,255,255,0.05)' : 'none' }, pr: { md: 4 } }}>
                     <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.65rem', mb: 0.5 }}>{item.label}</Typography>
                     <Typography sx={{ color: 'white', fontWeight: 700, fontFamily: 'Outfit', fontSize: '1rem' }}>{item.val}</Typography>
                   </Stack>

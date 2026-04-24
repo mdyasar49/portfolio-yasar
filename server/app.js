@@ -99,17 +99,18 @@ app.use((req, res, next) => {
         return res.status(415).json({ success: false, message: 'Unsupported Media Type: application/json required.' });
     }
 
-    const isApiDiagnostic = isApiRequest && accept.includes('application/json');
+    const hasReferer = req.headers.referer;
+    const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
     
-    // Logic: If user tries to visit /api/profile directly in a URL bar, show a custom 403 page
-    if (req.method === 'GET' && isApiRequest && req.path !== '/api' && !origin && !referer && !isApiDiagnostic) {
-        const returnUrl = allowedOrigins.find(o => o.includes('onrender.com')) || 'https://mern-portfolio-yasar-1.onrender.com';
-        
+    // Allow local development and cross-origin requests with proper referer
+    const isLocal = req.headers.host?.includes('localhost') || req.headers.host?.includes('127.0.0.1');
+
+    if (isApiRequest && !hasReferer && !isAjax && !isLocal) {
         return res.status(403).send(`
-            <div style="background:#010409; color:#ff3366; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:sans-serif; text-align:center; padding:20px;">
-                <h1 style="font-size:3rem; margin-bottom:10px;">🚫 ACCESS_DENIED</h1>
-                <p style="color:#64748b; font-size:1.2rem;">Direct API access via browser is restricted to maintain system integrity.</p>
-                <a href="${returnUrl}" style="color:#33ccff; text-decoration:none; border:1px solid #33ccff; padding:12px 30px; border-radius:8px; margin-top:30px; font-weight:bold;">RETURN_TO_PORTFOLIO</a>
+            <div style="background:#010409; color:#ff3366; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:monospace; text-align:center;">
+                <h1 style="font-size:5rem;">🚫 ACCESS_DENIED</h1>
+                <p style="font-size:1.2rem; opacity:0.8;">Direct API access via browser is restricted to maintain system integrity.</p>
+                <a href="/" style="color:#00ffcc; text-decoration:none; margin-top:20px; border:1px solid #00ffcc; padding:10px 20px; border-radius:5px;">RETURN_TO_PORTFOLIO</a>
             </div>
         `);
     }
