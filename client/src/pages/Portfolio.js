@@ -25,11 +25,13 @@ import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
 const Portfolio = memo(({ profile, loading }) => {
-  // ── [LOADING STATE] ──
-  // Displayed while the profile data is being fetched from the backend.
-  if (loading && !profile) return (
+  // ── [PROGRESSIVE LOADING STATE] ──
+  // Display the loader only until the core (navigation/name) is available.
+  const isCoreLoaded = profile?.name || profile?.menuItems;
+
+  if (loading && !isCoreLoaded) return (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: 'background.default', color: 'white' }}>
-       <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>LOADING_PROFILE...</Typography>
+       <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>INITIALIZING_SYSTEM_CORE...</Typography>
     </Box>
   );
 
@@ -128,20 +130,20 @@ const Portfolio = memo(({ profile, loading }) => {
 
       {/* ── MAIN CONTENT CONTAINER ── */}
       <Container maxWidth="xl" sx={{ pt: 12, pb: 10 }}>
-        {/* Sections are conditionally rendered only if profile data exists */}
-        {profile && <Hero profile={profile} />}
-        {profile && <About profile={profile} />}
-        {profile?.technicalSkills && <Skills skills={profile.technicalSkills} />}
-        <TechnicalInsight profile={profile} />
+        {/* Sections are rendered as soon as their specific data arrives */}
+        {(profile.name || profile.summary) && <Hero profile={profile} />}
+        {profile.summary && <About profile={profile} />}
+        {profile.technicalSkills && <Skills skills={profile.technicalSkills} />}
+        {profile.performanceData && <TechnicalInsight profile={profile} />}
 
-        {profile?.experience && <CareerTrajectory experience={profile.experience} />}
-        {profile?.projects && <Projects projects={profile.projects} />}
-        {profile?.education && <ScholasticHistory education={profile.education} />}
+        {profile.experience && <CareerTrajectory experience={profile.experience} />}
+        {profile.projects && <Projects projects={profile.projects} />}
+        {profile.education && <ScholasticHistory education={profile.education} />}
 
-        {profile && <ProfessionalDossier profile={profile} />}
-        {profile && <SystemLogStream profile={profile} />}
+        {profile.readme && <ProfessionalDossier profile={profile} />}
+        {profile.name && <SystemLogStream profile={profile} />}
 
-        {profile && <Contact profile={profile} />}
+        {profile.email && <Contact profile={profile} />}
       </Container>
 
       {/* Global Footer */}

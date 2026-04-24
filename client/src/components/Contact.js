@@ -133,10 +133,10 @@ const Contact = ({ profile }) => {
                         </Box>
 
                         <Stack spacing={4}>
-                            {[
+                             {[
                                 { icon: <Mail size={22} />, label: 'Email Address', val: profile.email, isLink: true, color: '#33ccff' },
                                 { icon: <MapPin size={22} />, label: 'Base Location', val: profile.location, color: '#ff3366' },
-                                { icon: <ShieldCheck size={22} />, label: 'Availability Status', val: profile.additionalInfo.availability, color: '#00ffcc' }
+                                { icon: <ShieldCheck size={22} />, label: 'Availability Status', val: profile.additionalInfo?.availability || 'Ready to Join', color: '#00ffcc' }
                             ].map((item, i) => (
 
 

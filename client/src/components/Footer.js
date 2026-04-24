@@ -42,8 +42,8 @@ const Footer = ({ profile }) => {
     fetchVisitorsData();
   }, []);
 
-  // Safety check: if socials data is not loaded, don't show the footer
-  if (!socials) return null;
+  // Safety check: if core footer data is not loaded, don't show yet
+  if (!socials || !name) return null;
 
   // Configuration for social media buttons
   const socialLinks = [

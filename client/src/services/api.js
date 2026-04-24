@@ -11,12 +11,23 @@ import axiosInstance from './axiosInstance';
  * Access: Open to all visitors.
  */
 
-/**
- * fetchSystemInterfaceData
- * @desc Retrieves the complete portfolio profile (biography, skills, projects, etc.).
- */
 export const fetchSystemInterfaceData = async () => {
     return await axiosInstance.get('/profile');
+};
+
+/**
+ * fetchFragment
+ * @desc Retrieves a specific, atomic data module (e.g., skills, projects).
+ * @param {string} type - The fragment identifier (basic_info, skills, etc.)
+ */
+export const fetchFragment = async (type) => {
+    try {
+        const response = await axiosInstance.get(`/fragments/${type}`);
+        return response.payload || response;
+    } catch (error) {
+        console.error(`FRAGMENT_FETCH_ERROR [${type}]:`, error.message);
+        return null;
+    }
 };
 
 /**

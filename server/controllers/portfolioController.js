@@ -302,85 +302,111 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
  * @desc    Get visitor statistics and optionally increment the counter.
  * @route   GET /api/visitors?inc=true
  */
-// Export getVisitors controller function
 exports.getVisitors = asyncHandler(async (req, res, next) => {
-    // Check if the query parameter 'inc' is strictly equal to 'true'
     const shouldIncrement = req.query.inc === 'true';
-    // Get the current date string in YYYY-MM-DD format for the daily history
     const today = new Date().toISOString().split('T')[0];
     
-    // Portable Logic: If DB is offline, use local JSON storage for counts
     if (!mongoose.connection || mongoose.connection.readyState !== 1) {
-        // Fetch current local stats
         const stats = getLocalStats();
-        // Ensure the history array exists
         if (!stats.history) stats.history = [];
 
-        // If we should increment the visitor count
         if (shouldIncrement) {
-            // Add 1 to total visitors
             stats.visitors += 1;
-            // Find today's specific record in the history array
             let dayRecord = stats.history.find(h => h.date === today);
-            // If it exists, add 1 to today's count
             if (dayRecord) dayRecord.count += 1;
-            // Otherwise, create a new record for today
             else stats.history.push({ date: today, count: 1 });
-            // Save the updated stats back to the local file
             saveLocalStats(stats);
         }
 
-        // Respond with a 200 OK status
         return res.status(200).json({ 
             success: true, 
             count: stats.visitors,
-            // Only send detailed history if the user is authenticated (admin)
             history: req.headers.authorization ? stats.history : undefined,
-            // Indicate that data came from the portable local fallback
             mode: 'PORTABLE'
         });
     }
 
-    // Standard Logic: Cloud Persistence via MongoDB
     try {
-        // Look up the stats document in the database
         let stats = await Stats.findOne();
-        // If it doesn't exist yet, create a fresh one
         if (!stats) {
             stats = new Stats({ visitors: 0, history: [{ date: today, count: 0 }] });
             await stats.save();
         }
 
-        // If we should increment the counter
         if (shouldIncrement) {
-            // Add 1 to total visitors
             stats.visitors += 1;
-            // Find today's record in history
             let dayRecord = stats.history.find(h => h.date === today);
-            // Increment today's count or push a new daily record
             if (dayRecord) dayRecord.count += 1;
             else stats.history.push({ date: today, count: 1 });
-            // Update the lastUpdated timestamp
             stats.lastUpdated = Date.now();
-            // Save the updated document to MongoDB
             await stats.save();
         }
 
-        // Respond with a 200 OK status, sending back the visitor count
         res.status(200).json({ 
             success: true, 
             count: stats.visitors,
-            // Only reveal daily history array to authorized admins
             history: req.headers.authorization ? stats.history : undefined 
         });
-    // Catch database errors
     } catch (error) {
         console.error("STATS_SERVICE_FAILURE:", error.message);
-        // Fail gracefully by returning 0 visitors instead of crashing
         res.status(200).json({ success: true, count: 0 });
     }
 });
 
-// (End of file)
+/**
+ * [getFragment]
+ * @desc    Retrieves a specific data fragment (e.g., skills, experience).
+ * @route   GET /api/fragments/:type
+ */
+exports.getFragment = asyncHandler(async (req, res, next) => {
+    const { type } = req.params;
+    const dataDir = path.join(__dirname, '../data');
+    const filePath = path.join(dataDir, `${type}.json`);
+
+    if (!fs.existsSync(filePath)) {
+        return res.status(404).json({ success: false, message: `Fragment '${type}' not found.` });
+    }
+
+    let data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+
+    // Global Pre-processing: Dynamic Calculations
+    const basicPath = path.join(dataDir, 'basic_info.json');
+    const basic = fs.existsSync(basicPath) ? JSON.parse(fs.readFileSync(basicPath, 'utf-8')) : {};
+    
+    // 1. Calculate Experience Duration
+    let expString = "";
+    if (basic.careerStartDate) {
+        const start = new Date(basic.careerStartDate);
+        const now = new Date();
+        let years = now.getFullYear() - start.getFullYear();
+        let months = now.getMonth() - start.getMonth();
+        if (months < 0) { years--; months += 12; }
+        expString = `${years} Year${years !== 1 ? 's' : ''} ${months} Month${months !== 1 ? 's' : ''}`;
+    }
+
+    // 2. Recursive Replacement Logic
+    const replaceValues = (obj) => {
+        if (typeof obj === 'string') {
+            return obj
+                .replace(/{{EXPERIENCE}}/g, expString)
+                .replace(/{{NAME}}/g, basic.name || '')
+                .replace(/{{VERSION}}/g, basic.systemVersion || 'v4.0');
+        }
+        if (Array.isArray(obj)) return obj.map(replaceValues);
+        if (obj !== null && typeof obj === 'object') {
+            const n = {}; 
+            for (const k in obj) n[k] = replaceValues(obj[k]); 
+            return n;
+        }
+        return obj;
+    };
+
+    const processedData = replaceValues(data);
+
+    res.status(200).json({
+        success: true,
+        payload: processedData
+    });
+});
 
 

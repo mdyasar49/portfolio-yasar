@@ -60,6 +60,9 @@ router.get('/visitors', portfolioController.getVisitors);
 // [POST /contact] - Public route with SPAM LIMITER to send a message
 router.post('/contact', contactLimiter, contactController.submitContactForm);
 
+// [GET /fragments/:type] - Public route to fetch specific data modules
+router.get('/fragments/:type', portfolioController.getFragment);
+
 // [GET /code] - Public route to fetch module source code for "Code Live" mode
 router.get('/code', codeController.getModuleCode);
 
