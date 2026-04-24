@@ -10,7 +10,8 @@ import React, { useState, memo } from 'react';
 // Material UI components for high-end cards, modals (Dialogs), tabs, and responsive layout
 import { Box, Typography, Card, CardContent, Grid, Stack, Chip, Button, CardMedia, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, useMediaQuery, useTheme, Tabs, Tab } from '@mui/material';
 // Technical icons for CTA buttons and section headers
-import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard, Cpu } from 'lucide-react';
+import { ExternalLink, Lock, Github, X, Terminal, Zap, Activity, LayoutDashboard, Cpu, Briefcase } from 'lucide-react';
+
 // Framer Motion for the 3D parallax tilt effects and smooth modal transitions
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
@@ -234,16 +235,25 @@ const Projects = memo(({ projects }) => {
                           }}
                         />
                         
+                        {/* Corner Brackets for a "Targeting" aesthetic */}
+                        <Box sx={{ position: 'absolute', top: 15, left: 15, width: 25, height: 25, borderTop: `2px solid ${accent}`, borderLeft: `2px solid ${accent}`, zIndex: 10, opacity: 0, transition: '0.5s', '.MuiCard-root:hover &': { opacity: 1, top: 25, left: 25 } }} />
+                        <Box sx={{ position: 'absolute', top: 15, right: 15, width: 25, height: 25, borderTop: `2px solid ${accent}`, borderRight: `2px solid ${accent}`, zIndex: 10, opacity: 0, transition: '0.5s', '.MuiCard-root:hover &': { opacity: 1, top: 25, right: 25 } }} />
+                        <Box sx={{ position: 'absolute', bottom: 15, left: 15, width: 25, height: 25, borderBottom: `2px solid ${accent}`, borderLeft: `2px solid ${accent}`, zIndex: 10, opacity: 0, transition: '0.5s', '.MuiCard-root:hover &': { opacity: 1, bottom: 25, left: 25 } }} />
+                        <Box sx={{ position: 'absolute', bottom: 15, right: 15, width: 25, height: 25, borderBottom: `2px solid ${accent}`, borderRight: `2px solid ${accent}`, zIndex: 10, opacity: 0, transition: '0.5s', '.MuiCard-root:hover &': { opacity: 1, bottom: 25, right: 25 } }} />
+
                         {/* Animated Scanning Beam line */}
                         <Box className="scanning-beam" sx={{
                           position: 'absolute', top: 0, left: 0, right: 0, height: '4px',
                           background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
-                          boxShadow: `0 0 20px ${accent}`,
+                          boxShadow: `0 0 30px ${accent}`,
                           zIndex: 3,
-                          opacity: 0.3,
-                          animation: 'scanVertical 4s linear infinite',
-                          pointerEvents: 'none'
+                          opacity: 0.5,
+                          animation: 'scanVertical 3s linear infinite',
+                          pointerEvents: 'none',
+                          display: 'none',
+                          '.MuiCard-root:hover &': { display: 'block' }
                         }} />
+
 
                         {/* Technical HUD Overlay (Badge system on top of image) */}
                         <Box sx={{ position: 'absolute', top: 25, left: 25, zIndex: 10 }}>
@@ -268,7 +278,20 @@ const Projects = memo(({ projects }) => {
                                  <Typography sx={{ color: '#fff', fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', opacity: 0.6 }}>PERFORMANCE_OPTIMIZED</Typography>
                               </Box>
                               
+                              {/* Recruiter Key: Strategic Value Tag */}
+                              <Box sx={{ 
+                                display: 'flex', alignItems: 'center', gap: 1,
+                                bgcolor: 'rgba(99, 102, 241, 0.15)', py: 0.8, px: 2, borderRadius: 2,
+                                border: '1px solid rgba(99, 102, 241, 0.3)', mt: 1
+                              }}>
+                                 <Briefcase size={14} color="#6366f1" />
+                                 <Typography sx={{ color: 'white', fontSize: '0.65rem', fontWeight: 900, fontFamily: 'Outfit', letterSpacing: 1 }}>
+                                     STRATEGIC_VALUE: {index % 2 === 0 ? 'SCALABILITY' : 'HIGH_PERFORMANCE'}
+                                 </Typography>
+                              </Box>
+
                               {/* Visual Project Stats HUD (if data exists) */}
+
                               {project.stats && (
                                 <Box sx={{ 
                                   display: 'flex', gap: 1.5, mt: 1,

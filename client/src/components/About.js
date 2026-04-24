@@ -33,70 +33,72 @@ const About = memo(({ profile }) => {
       >
         <Grid container spacing={8} alignItems="center">
           
-          {/* [Left Column] - Decorative "BIO" Panel */}
+          {/* [Left Column] - High-Tech "Digital Identity" HUD */}
           <Grid item xs={12} md={5}>
             <Box sx={{ position: 'relative' }}>
-              {/* Rotating outer organic shape (Border only) */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-                style={{
-                  position: 'absolute',
-                  inset: -40,
-                  border: '1px solid rgba(51, 204, 255, 0.1)',
-                  borderRadius: '38% 62% 63% 37% / 41% 44% 56% 59%',
-                  pointerEvents: 'none'
-                }}
-              />
-              {/* Rotating inner organic shape in opposite direction (Dashed border) */}
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                style={{
-                  position: 'absolute',
-                  inset: -20,
-                  border: '1px dashed rgba(255, 51, 102, 0.1)',
-                  borderRadius: '62% 38% 37% 63% / 56% 59% 41% 44%',
-                  pointerEvents: 'none'
-                }}
-              />
-              
-              {/* Glassmorphic card for the "BIO" text */}
-              <Box sx={{ 
-                position: 'relative', 
-                aspectRatio: '1/1',
-                background: 'rgba(255, 255, 255, 0.02)',
-                backdropFilter: 'blur(20px)',
-                borderRadius: '30px',
-                border: '1px solid rgba(255, 255, 255, 0.05)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                overflow: 'hidden',
-                boxShadow: '0 40px 80px rgba(0,0,0,0.5)'
-              }}>
-                {/* Large background "BIO" text with very low opacity */}
-                <Typography variant="h1" sx={{ 
-                  fontSize: '12rem', fontWeight: 900, color: 'white', 
-                  opacity: 0.03, position: 'absolute', fontFamily: 'Syncopate' 
-                }}>
-                  BIO
-                </Typography>
+                {/* 1. Outer Scanning Circle (Slow) */}
+                <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                    style={{
+                        position: 'absolute', inset: -60,
+                        border: '1px solid rgba(51, 204, 255, 0.08)',
+                        borderRadius: '50%',
+                        pointerEvents: 'none'
+                    }}
+                />
+                {/* 2. Inner Data Ring (Fast, Dashed) */}
+                <motion.div
+                    animate={{ rotate: -360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    style={{
+                        position: 'absolute', inset: -30,
+                        border: '2px dashed rgba(255, 51, 102, 0.08)',
+                        borderRadius: '50%',
+                        pointerEvents: 'none'
+                    }}
+                />
                 
-                {/* Visible "SUMMARY" text with a red accent line */}
-                <Stack spacing={1} alignItems="center" sx={{ zIndex: 1 }}>
-                   <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2 }}>SUMMARY</Typography>
-                   <Box sx={{ height: 2, width: 60, bgcolor: '#ff3366', boxShadow: '0 0 10px #ff3366' }} />
-                   <Typography variant="overline" sx={{ color: '#6366f1', letterSpacing: 2, mt: 2, fontWeight: 700 }}>PROFESSIONAL PROFILE</Typography>
-                </Stack>
+                {/* Main Profile HUD Container */}
+                <Box sx={{ 
+                    position: 'relative', 
+                    aspectRatio: '1/1',
+                    background: 'radial-gradient(circle at center, rgba(30, 41, 59, 0.6) 0%, rgba(1, 4, 9, 0.9) 100%)',
+                    backdropFilter: 'blur(30px)',
+                    borderRadius: '50%',
+                    border: '1px solid rgba(51, 204, 255, 0.15)',
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 0 100px rgba(0,0,0,0.8), inset 0 0 40px rgba(51, 204, 255, 0.05)',
+                    overflow: 'hidden'
+                }}>
+                    {/* Background Digital Grid */}
+                    <Box sx={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'radial-gradient(#33ccff 0.5px, transparent 0.5px)', backgroundSize: '15px 15px' }} />
+                    
+                    {/* Identification Data Points */}
+                    <Box sx={{ position: 'absolute', top: '20%', width: '100%', textAlign: 'center', zIndex: 2 }}>
+                        <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.6rem', letterSpacing: 4 }}>ID: 0x28A4F</Typography>
+                    </Box>
 
-                {/* Cyberpunk-style corner accents */}
-                <Box sx={{ position: 'absolute', top: 20, left: 20, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' }} />
-                <Box sx={{ position: 'absolute', bottom: 20, right: 20, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' }} />
-              </Box>
+                    <Stack spacing={2} alignItems="center" sx={{ zIndex: 5 }}>
+                        <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2, fontSize: { xs: '2rem', md: '3.5rem' } }}>PROFILE</Typography>
+                        <Box sx={{ height: 2, width: 80, bgcolor: '#00ffcc', boxShadow: '0 0 15px #00ffcc', borderRadius: 10 }} />
+                    </Stack>
+
+                    {/* Active Scan Line Overlay */}
+                    <motion.div
+                        animate={{ top: ['0%', '100%'] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                        style={{
+                            position: 'absolute', left: 0, right: 0, height: '1px',
+                            background: 'linear-gradient(90deg, transparent, #33ccff, transparent)',
+                            boxShadow: '0 0 20px #33ccff',
+                            zIndex: 10, opacity: 0.3
+                        }}
+                    />
+                </Box>
             </Box>
           </Grid>
+
 
           {/* [Right Column] - Narrative Description & Achievement Counters */}
           <Grid item xs={12} md={7}>

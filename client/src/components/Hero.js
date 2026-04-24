@@ -152,31 +152,56 @@ const Hero = memo(({ profile }) => {
               </Box>
             </motion.div>
 
-            {/* Main Name Heading */}
+            {/* Main Name Heading with Soulful Materialization */}
             <Box sx={{ position: 'relative' }}>
-                <Typography 
-                  variant="h1" 
-                  className="hero-gradient-text" // Specialized CSS class for the text gradient
-                  sx={{ 
-                    fontSize: { xs: '2rem', sm: '3.5rem', md: '5.5rem', lg: '7.5rem' },
-                    lineHeight: 0.9, 
-                    fontWeight: 900,
-                    filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.5))',
-                    position: 'relative'
-                }}
-              >
-                {/* Display name from profile, or a fallback if API is slow */}
-                {profile.name || "A. MOHAMED YASAR"}
-              </Typography>
+                <motion.div
+                    initial={{ opacity: 0, filter: 'blur(20px)', letterSpacing: '40px' }}
+                    animate={{ opacity: 1, filter: 'blur(0px)', letterSpacing: '-4px' }}
+                    transition={{ duration: 2.5, ease: "easeOut" }}
+                >
+                    <Typography 
+                      variant="h1" 
+                      sx={{ 
+                        fontSize: { xs: '2.5rem', sm: '4rem', md: '6.5rem', lg: '8.5rem' },
+                        lineHeight: 0.85, 
+                        fontWeight: 900,
+                        fontFamily: 'Outfit',
+                        textTransform: 'uppercase',
+                        color: 'white',
+                        filter: 'drop-shadow(0 0 30px rgba(51, 204, 255, 0.2))',
+                        position: 'relative',
+                        '&:hover': {
+                            animation: 'glitch 0.5s infinite linear alternate-reverse'
+                        }
+                    }}
+                  >
+                    {/* The name itself with gradient styling */}
+                    <span style={{ 
+                      background: 'linear-gradient(to bottom, #fff 0%, #64748b 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      display: 'block'
+                    }}>
+                      {profile.name?.split(' ')[0]}
+                    </span>
+                    <span style={{ color: '#ff3366', textShadow: '0 0 40px #ff336644' }}>
+                      {profile.name?.split(' ').slice(1).join(' ')}
+                    </span>
+                  </Typography>
+                </motion.div>
               
               {/* Floating technical tag next to the name */}
               <Box sx={{ 
-                position: 'absolute', top: -10, right: -40, opacity: 0.5,
-                display: { xs: 'none', md: 'block' }
+                position: 'absolute', top: 0, right: -60, opacity: 0.3,
+                display: { xs: 'none', lg: 'block' }
               }}>
-                <Typography variant="caption" sx={{ color: '#33ccff', fontFamily: 'monospace', fontSize: '0.6rem' }}>[FULL_STACK_ENGINEER]</Typography>
+                <Typography variant="overline" sx={{ color: '#33ccff', fontFamily: 'Syncopate', fontSize: '0.6rem', fontWeight: 900, letterSpacing: 4 }}>
+                  [ ARCHITECT_V4.2 ]
+                </Typography>
               </Box>
             </Box>
+
+
 
             {/* Secondary Tagline with glow effect */}
             <motion.div
@@ -212,8 +237,40 @@ const Hero = memo(({ profile }) => {
               </Typography>
             </motion.div>
 
+            {/* Professional HR-Impress Metadata Strip */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.5, duration: 0.8 }}
+            >
+              <Stack 
+                direction={{ xs: 'column', md: 'row' }} 
+                spacing={4} 
+                sx={{ 
+                  mt: 4, mb: 2, p: 3, 
+                  borderRadius: 4, 
+                  bgcolor: 'rgba(255, 255, 255, 0.02)', 
+                  border: '1px solid rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                {[
+                  { label: 'EXPERIENCE', val: '2.5+ Years', color: '#33ccff' },
+                  { label: 'STACK', val: 'MERN / AWS / SQL', color: '#ff3366' },
+                  { label: 'LOCATION', val: 'Chennai, TN', color: '#00ffcc' },
+                  { label: 'STATUS', val: 'Ready to Join', color: '#ec4899' }
+                ].map((item, i) => (
+                  <Stack key={i} alignItems={{ xs: 'center', md: 'flex-start' }} sx={{ borderRight: { md: i !== 3 ? '1px solid rgba(255,255,255,0.05)' : 'none' }, pr: { md: 4 } }}>
+                    <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.65rem', mb: 0.5 }}>{item.label}</Typography>
+                    <Typography sx={{ color: 'white', fontWeight: 700, fontFamily: 'Outfit', fontSize: '1rem' }}>{item.val}</Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </motion.div>
+
             {/* Call-to-Action Buttons */}
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mt: 2 }}>
+
               {/* Main Button: Link to the Resume page */}
               <Button 
                 variant="contained" 
@@ -256,8 +313,21 @@ const Hero = memo(({ profile }) => {
           </Stack>
         </motion.div>
       </Container>
+      <style>
+        {`
+          @keyframes pulse { 0% { opacity: 0.4; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0.4; transform: scale(0.8); } }
+          @keyframes glitch {
+            0% { transform: translate(0); text-shadow: -2px 0 #ff3366, 2px 2px #33ccff; }
+            25% { transform: translate(-2px, 2px); text-shadow: 2px 0 #ff3366, -2px -2px #33ccff; }
+            50% { transform: translate(2px, -2px); text-shadow: -2px 0 #ff3366, 2px 2px #33ccff; }
+            75% { transform: translate(-2px, -2px); text-shadow: 2px 0 #ff3366, -2px 2px #33ccff; }
+            100% { transform: translate(0); text-shadow: -2px 0 #ff3366, 2px 2px #33ccff; }
+          }
+        `}
+      </style>
     </Box>
   );
 });
+
 
 export default Hero;

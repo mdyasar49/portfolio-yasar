@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
+import { motion } from 'framer-motion';
+
 
 const DynamicBackground = () => {
   const canvasRef = useRef(null);
@@ -145,6 +147,82 @@ const DynamicBackground = () => {
           opacity: 0.6,
         }}
       />
+      {/* Organic Quantum Aurora Layer */}
+      <Box sx={{
+        position: 'absolute', inset: 0,
+        zIndex: -2,
+        opacity: 0.4,
+        filter: 'blur(100px)',
+        overflow: 'hidden',
+        pointerEvents: 'none'
+      }}>
+        <motion.div
+            animate={{ 
+                x: [0, 100, -100, 0],
+                y: [0, -100, 100, 0],
+                scale: [1, 1.2, 0.9, 1]
+            }}
+            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+                position: 'absolute', top: '-10%', left: '-10%', width: '60%', height: '60%',
+                background: 'radial-gradient(circle, #6366f1 0%, transparent 70%)',
+            }}
+        />
+        <motion.div
+            animate={{ 
+                x: [0, -150, 150, 0],
+                y: [0, 100, -100, 0],
+                scale: [1, 0.8, 1.3, 1]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+            style={{
+                position: 'absolute', bottom: '-10%', right: '-10%', width: '70%', height: '70%',
+                background: 'radial-gradient(circle, #ec4899 0%, transparent 70%)',
+            }}
+        />
+        <motion.div
+            animate={{ 
+                opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+                position: 'absolute', top: '20%', left: '30%', width: '40%', height: '40%',
+                background: 'radial-gradient(circle, #00ffcc 0%, transparent 70%)',
+            }}
+        />
+      </Box>
+
+      {/* Floating Data Stream Particles (Subtle) */}
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+            key={i}
+            initial={{ 
+                x: Math.random() * window.innerWidth, 
+                y: Math.random() * window.innerHeight,
+                opacity: 0
+            }}
+            animate={{ 
+                y: [null, Math.random() * -500],
+                opacity: [0, 0.2, 0]
+            }}
+            transition={{ 
+                duration: 20 + Math.random() * 20, 
+                repeat: Infinity, 
+                ease: "linear" 
+            }}
+            style={{
+                position: 'absolute',
+                color: '#33ccff',
+                fontFamily: 'monospace',
+                fontSize: '0.6rem',
+                pointerEvents: 'none',
+                zIndex: -1
+            }}
+        >
+            {Math.random().toString(16).toUpperCase().slice(2, 10)}
+        </motion.div>
+      ))}
+
     </Box>
   );
 };

@@ -11,7 +11,8 @@
  */
 
 
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
+
 // Material UI components for styling and layout
 import { ThemeProvider, CssBaseline, Box, keyframes, Typography, Stack } from '@mui/material';
 // React Router components for multi-page navigation
@@ -40,6 +41,11 @@ import DynamicBackground from './components/DynamicBackground';
 import { CodeLiveProvider, useCodeLive } from './context/CodeLiveContext';
 import CodeLiveOverlay from './components/CodeLiveOverlay';
 import StatusHUD from './components/StatusHUD';
+import CustomCursor from './components/CustomCursor';
+import RecruiterHUD from './components/RecruiterHUD';
+import LoadingScreen from './components/LoadingScreen';
+
+
 
 
 
@@ -121,78 +127,15 @@ const PublicApp = () => {
   // Get current location for animation tracking
   const location = useLocation();
   // Fetch profile data and status flags from the backend
-  const { profile, loading, error, errorType, maintenanceMode, retry } = useProfile();
+  const { profile, loading: profileLoading, error, errorType, maintenanceMode, retry } = useProfile();
   // Access global Code Live state
   const { isCodeLive } = useCodeLive();
 
-
-  // ── [Elite System Boot Sequence] ──
+  // ── [Elite System Boot Sequence Check] ──
   // If data is still loading, show a high-end futuristic loading screen
-  if (loading) {
-    return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline /> {/* Resets default browser styles */}
-        <Box sx={{
-          height: '100vh',
-          bgcolor: '#000',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          overflow: 'hidden',
-          // Add a subtle radial gradient glow behind the logo
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(51, 204, 255, 0.05) 0%, transparent 70%)',
-            pointerEvents: 'none'
-          }
-        }}>
-          {/* Holographic Logo with rotating border rings */}
-          <Box sx={{ position: 'relative', mb: 8 }}>
-            {/* Outer rotating solid ring */}
-            <Box sx={{
-              position: 'absolute', inset: -20,
-              border: '1px solid rgba(51, 204, 255, 0.1)',
-              borderRadius: '50%',
-              animation: `${spin} 10s linear infinite`
-            }} />
-            {/* Inner rotating dashed ring in opposite direction */}
-            <Box sx={{
-              position: 'absolute', inset: -40,
-              border: '1px dashed rgba(255, 51, 102, 0.1)',
-              borderRadius: '50%',
-              animation: `${spin} 15s linear infinite reverse`
-            }} />
-            {/* The main logo image with a glow effect */}
-            <Box component="img" src="/logo.png" alt="Logo" sx={{ height: 100, width: 'auto', filter: 'drop-shadow(0 0 30px rgba(51, 204, 255, 0.3))', zIndex: 2, position: 'relative' }} />
-          </Box>
+  // This is handled in the root App component now
 
-          {/* Progress Bar Container */}
-          <Stack spacing={2} alignItems="center" sx={{ width: '100%', maxWidth: 400 }}>
-            <Box sx={{ width: '100%', px: 4 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                   <Typography variant="overline" sx={{ color: '#00F2FE', fontWeight: 900, letterSpacing: 2 }}>RESOURCES_LOADING</Typography>
-                </Box>
-                {/* Background bar */}
-                <Box sx={{ height: 4, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 10, position: 'relative', overflow: 'hidden' }}>
-                   {/* Animated filling bar with a gradient color */}
-                   <Box sx={{ position: 'absolute', height: '100%', width: '100%', background: 'linear-gradient(90deg, #FF7A00, #FF0000, #E2127A, #00F2FE)', animation: 'loadingProgress 3s infinite' }} />
-                </Box>
-            </Box>
-          </Stack>
-          {/* Custom CSS for the progress bar animation */}
-          <style>
-            {`
-              @keyframes loadingProgress { 0% { left: -100%; } 100% { left: 100%; } }
-            `}
-          </style>
-        </Box>
-      </ThemeProvider>
-    );
-  }
+
 
   // ── Maintenance state Check ──
   // If the admin has turned on maintenance mode, show the maintenance page only
@@ -257,9 +200,9 @@ const PublicApp = () => {
               >
                 <Suspense fallback={<Box sx={{ py: 20, textAlign: 'center' }}><Typography>MODULE_LOADING...</Typography></Box>}>
                   <Routes location={location}>
-                    <Route path="/"             element={<Portfolio profile={profile} loading={loading} />} />
+                    <Route path="/"             element={<Portfolio profile={profile} loading={profileLoading} />} />
                     <Route path="/resume"       element={<Resume profile={profile} />} />
-                    <Route path="*"             element={<Portfolio profile={profile} loading={loading} />} />
+                    <Route path="*"             element={<Portfolio profile={profile} loading={profileLoading} />} />
                   </Routes>
                 </Suspense>
               </motion.div>
@@ -342,7 +285,10 @@ const AppRoutes = () => {
  * removes the initial HTML loader, and tracks global mouse movements for visual effects.
  */
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+
     // Step 1: Remove the static loader from the original index.html file
     // This makes the transition from HTML loading to React rendering feel smooth.
     const loader = document.getElementById('initial-loader');
@@ -370,29 +316,72 @@ const App = () => {
   return (
     // Wrap the entire app in the Material UI theme provider
     <ThemeProvider theme={theme}>
-      <CssBaseline /> {/* Standardizes CSS across all browsers */}
-      {/* Global visual overlay elements */}
-      <div id="spotlight" />
-      <div id="noise-overlay" />
-      
-      {/* Initialize the Router with modern v7 compatibility flags */}
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <CssBaseline />
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <LoadingScreen key="loader" onComplete={() => setLoading(false)} />
+        ) : (
+          <Box key="content" sx={{ position: 'relative' }}>
+            <div id="spotlight" />
+            <div id="noise-overlay" />
+            
+            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+
         <CodeLiveProvider>
           {/* Reset scroll on page change */}
           <ScrollToTop />
           {/* Handle hash links (like #contact) */}
           <ScrollToHash />
+          {/* Global Cinematic Frame */}
+          <Box sx={{ 
+            position: 'fixed', inset: { xs: 8, md: 20 }, 
+            border: '1px solid rgba(51, 204, 255, 0.1)', 
+            pointerEvents: 'none', zIndex: 9999,
+            '&::before': { content: '""', position: 'absolute', top: -1, left: -1, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' },
+            '&::after': { content: '""', position: 'absolute', bottom: -1, right: -1, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' },
+            display: { xs: 'none', lg: 'block' }
+          }} />
+
+          {/* Floating Section Navigation HUD (Right Side) */}
+          <Box sx={{ 
+            position: 'fixed', right: 40, top: '50%', transform: 'translateY(-50%)', 
+            zIndex: 9999, display: { xs: 'none', xl: 'flex' }, flexDirection: 'column', gap: 3 
+          }}>
+            {['hero', 'about', 'skills', 'projects', 'contact'].map((section) => (
+              <Box 
+                key={section}
+                component="a"
+                href={`#${section}`}
+                sx={{ 
+                  width: 12, height: 12, borderRadius: '50%', 
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  transition: '0.3s',
+                  '&:hover': { scale: 1.5, borderColor: '#33ccff', boxShadow: '0 0 10px #33ccff' }
+                }}
+              />
+            ))}
+          </Box>
+
           {/* Floating Technical Status HUD */}
           <StatusHUD />
+          {/* Futuristic Mouse Tracking Cursor */}
+          <CustomCursor />
+          {/* Dedicated Recruiter Quick-View Dashboard */}
+          <RecruiterHUD />
           {/* Render the actual page routes */}
           <AppRoutes />
 
-        </CodeLiveProvider>
 
-      </Router>
 
-    </ThemeProvider>
+
+          </CodeLiveProvider>
+        </Router>
+      </Box>
+    )}
+  </AnimatePresence>
+</ThemeProvider>
   );
 };
+
 
 export default App;

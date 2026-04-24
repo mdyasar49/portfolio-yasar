@@ -152,21 +152,31 @@ const Skills = memo(({ skills }) => {
         `}
       </style>
 
-      {/* Main Section Header */}
-      <Box sx={{ mb: 10, position: 'relative' }}>
+      {/* Main Section Header: Technical Audit HUD */}
+      <Box sx={{ mb: 10, textAlign: 'center' }}>
+        <Stack direction="row" justifyContent="center" alignItems="center" spacing={2} sx={{ mb: 2 }}>
+            <Box sx={{ p: 1, bgcolor: 'rgba(51, 204, 255, 0.1)', borderRadius: 2, color: '#33ccff' }}>
+                <Activity size={24} />
+            </Box>
+            <Typography variant="overline" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: 4, fontFamily: 'Syncopate' }}>
+                TECHNICAL_STACK_AUDIT
+            </Typography>
+        </Stack>
         <Typography 
           variant="h2" 
           sx={{ 
-            fontFamily: 'Outfit', fontWeight: 800, letterSpacing: -1, mb: 1,
-            fontSize: { xs: '1.8rem', md: '3.5rem' }, textAlign: 'center', color: 'white'
+            fontFamily: 'Outfit', fontWeight: 800, letterSpacing: -2, mb: 1,
+            fontSize: { xs: '2.5rem', md: '4.5rem' }, color: 'white',
+            textShadow: '0 0 30px rgba(99, 102, 241, 0.2)'
           }}
         >
-          Technical <Box component="span" sx={{ color: '#6366f1' }}>Expertise</Box>
+          CORE <span style={{ color: '#6366f1' }}>ARSENAL</span>
         </Typography>
-        <Typography variant="overline" sx={{ display: 'block', textAlign: 'center', color: '#64748b', fontWeight: 600, letterSpacing: 2 }}>CORE COMPETENCIES</Typography>
-        {/* Animated gradient underline under the header */}
-        <Box sx={{ width: 60, height: 4, background: 'linear-gradient(90deg, #6366f1, #ec4899)', mx: 'auto', borderRadius: 2, mt: 3 }} />
+        <Typography variant="body1" sx={{ color: '#64748b', maxWidth: 600, mx: 'auto', fontSize: '1.1rem', fontWeight: 500 }}>
+            Validated expertise across modern software lifecycles—from high-performance frontends to resilient distributed backends.
+        </Typography>
       </Box>
+
 
       {/* Background decoration component with floating icons */}
       <TechOrbit />

@@ -94,41 +94,51 @@ const Contact = () => {
 
     return (
         <Container maxWidth="lg" id="contact" sx={{ py: 15 }}>
+            {/* Header: Secure Protocol Identification */}
+            <Stack spacing={2} sx={{ mb: 10, textAlign: 'center' }}>
+                <Box sx={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 2, mb: 1 }}>
+                    <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
+                    <Typography variant="caption" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: 4, fontFamily: 'Syncopate', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                        COMMUNICATION_UPLINK
+                    </Typography>
+                    <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
+                </Box>
+                <Typography variant="h2" sx={{ 
+                    fontFamily: 'Syncopate', 
+                    fontWeight: 900, 
+                    letterSpacing: -2,
+                    fontSize: { xs: '2.5rem', md: '4.5rem' },
+                    textShadow: '0 0 40px rgba(255,255,255,0.05)'
+                }}>
+                    ESTABLISH <span style={{ color: '#ff3366', textShadow: '0 0 20px rgba(255, 51, 102, 0.4)' }}>CONNECTION</span>
+                </Typography>
+            </Stack>
+
             <Grid container spacing={8} alignItems="center">
                 
-                {/* Left Column: Contact Information and Text */}
+                {/* Left Column: Technical Contact Data */}
                 <Grid item xs={12} md={5}>
-                    {/* Animate in from the left */}
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                     >
-                        {/* Decorative 'Contact Me' Badge */}
-                        <Box sx={{ display: 'inline-flex', alignItems: 'center', px: 2, py: 1, borderRadius: '50px', background: 'linear-gradient(90deg, rgba(139,92,246,0.1) 0%, rgba(236,72,153,0.1) 100%)', border: '1px solid rgba(236,72,153,0.2)', mb: 3 }}>
-                            <Typography sx={{ color: '#ec4899', fontWeight: 600, fontFamily: '"Inter", sans-serif', letterSpacing: 1, fontSize: '0.75rem', textTransform: 'uppercase' }}>
-                                Contact Me
+                        {/* Terminal Log Output */}
+                        <Box sx={{ mb: 6, p: 3, bgcolor: 'rgba(0,0,0,0.4)', borderRadius: 3, borderLeft: '3px solid #00ffcc', fontFamily: 'monospace' }}>
+                            <Typography sx={{ color: '#00ffcc', fontSize: '0.75rem', mb: 1 }}>&gt; SYSTEM_READY... [OK]</Typography>
+                            <Typography sx={{ color: '#00ffcc', fontSize: '0.75rem', mb: 1 }}>&gt; ENCRYPTION_LAYER_ACTIVE... [AES_256]</Typography>
+                            <Typography sx={{ color: '#fff', fontSize: '0.85rem', fontWeight: 600, mt: 2 }}>
+                                I am currently open to high-impact collaborations, enterprise-scale engineering roles, and innovative architectural challenges.
                             </Typography>
                         </Box>
-                        
-                        {/* Main Section Heading with Gradient Text */}
-                        <Typography variant="h3" sx={{ fontWeight: 800, color: 'white', mb: 3, fontFamily: '"Inter", sans-serif', letterSpacing: -1, lineHeight: 1.2 }}>
-                            Let's build something <br/>
-                            <span style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>amazing together.</span>
-                        </Typography>
-                        
-                        {/* Supporting Paragraph */}
-                        <Typography sx={{ color: '#9ca3af', lineHeight: 1.8, mb: 6, fontSize: '1.05rem', fontFamily: '"Inter", sans-serif' }}>
-                            Have a project in mind or just want to say hi? Feel free to reach out. I'm always open to discussing new opportunities and technical challenges.
-                        </Typography>
 
-                        {/* Contact Method Cards (Email, Location, Security) */}
                         <Stack spacing={4}>
                             {[
-                                { icon: <Mail size={22} />, label: 'Email', val: 'mohamedyasar081786@gmail.com', isLink: true },
-                                { icon: <MapPin size={22} />, label: 'Location', val: 'Remote / Global' },
-                                { icon: <ShieldCheck size={22} />, label: 'Secure Communication', val: 'End-to-end encrypted protocol' }
+                                { icon: <Mail size={22} />, label: 'EMAIL_ADDRESS', val: 'mohamedyasar081786@gmail.com', isLink: true, color: '#33ccff' },
+                                { icon: <MapPin size={22} />, label: 'CURRENT_LOCATION', val: 'CHENNAI, TAMIL NADU', color: '#ff3366' },
+                                { icon: <ShieldCheck size={22} />, label: 'AVAILABILITY', val: 'IMMEDIATE_JOINING', color: '#00ffcc' }
                             ].map((item, i) => (
+
                                 <Stack 
                                     key={i} 
                                     direction="row" 
@@ -192,11 +202,11 @@ const Contact = () => {
                                     </Grid>
                                     {/* Subject Input */}
                                     <Grid item xs={12}>
-                                        <TextField fullWidth label="Subject" name="subject" value={formData.subject} onChange={handleChange} sx={inputStyles} />
+                                        <TextField fullWidth label="Inquiry Subject" name="subject" value={formData.subject} onChange={handleChange} sx={inputStyles} />
                                     </Grid>
                                     {/* Message Input (Multi-line) */}
                                     <Grid item xs={12}>
-                                        <TextField fullWidth label="Your Message" name="message" multiline rows={5} value={formData.message} onChange={handleChange} required sx={inputStyles} />
+                                        <TextField fullWidth label="Message Details" name="message" multiline rows={5} value={formData.message} onChange={handleChange} required sx={inputStyles} />
                                     </Grid>
                                 </Grid>
 
@@ -204,33 +214,34 @@ const Contact = () => {
                                 <Button 
                                     type="submit" 
                                     fullWidth 
-                                    // Disable the button while the message is being sent
                                     disabled={loading}
                                     variant="contained"
-                                    // Show a loading spinner if 'loading' state is true
                                     endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Send size={20} />}
                                     sx={{ 
-                                        py: 2, 
+                                        py: 2.5, 
                                         mt: 2, 
-                                        background: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
-                                        color: '#ffffff', 
-                                        fontWeight: 600, 
-                                        fontFamily: '"Inter", sans-serif',
-                                        fontSize: '1rem',
-                                        letterSpacing: 0.5,
-                                        borderRadius: 3,
+                                        background: 'linear-gradient(135deg, #00ffcc 0%, #33ccff 100%)',
+                                        color: '#000', 
+                                        fontWeight: 900, 
+                                        fontFamily: 'Syncopate',
+                                        fontSize: '0.8rem',
+                                        letterSpacing: 2,
+                                        borderRadius: 2,
                                         textTransform: 'none',
-                                        boxShadow: '0 10px 20px -10px rgba(236, 72, 153, 0.5)',
+                                        boxShadow: '0 0 30px rgba(0, 255, 204, 0.2)',
                                         transition: 'all 0.3s ease',
                                         '&:hover': { 
-                                            background: 'linear-gradient(135deg, #7c3aed 0%, #db2777 100%)',
+                                            background: '#00ffcc',
                                             transform: 'translateY(-2px)',
-                                            boxShadow: '0 15px 25px -10px rgba(236, 72, 153, 0.6)' 
-                                        }
+                                            boxShadow: '0 0 50px rgba(0, 255, 204, 0.4)' 
+                                        },
+                                        '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.05)', color: '#444' }
                                     }}
                                 >
-                                    {loading ? 'Sending...' : 'Send Message'}
+                                    {loading ? 'SENDING...' : 'SEND MESSAGE'}
                                 </Button>
+
+
                             </Box>
                         </Box>
                     </motion.div>

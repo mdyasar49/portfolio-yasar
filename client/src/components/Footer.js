@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect, memo } from 'react';
 // Material UI components for layout, icons buttons, and analytical displays
-import { Box, Typography, Container, IconButton, Stack, Divider, Tooltip } from '@mui/material';
+import { Box, Typography, Container, IconButton, Stack, Grid, Tooltip } from '@mui/material';
 // Lucide icons for social media and technical indicators
 import { Linkedin, Github, Twitter, Mail, Instagram, Facebook, Cpu, ShieldCheck, Terminal, Hash } from 'lucide-react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -128,39 +128,63 @@ const Footer = ({ socials, name }) => {
               </Tooltip>
             ))}
           </Box>
+              {/* ── ANALYTICS HUD (System Dashboard Style) ── */}
+          <Grid container spacing={4} sx={{ mb: 10 }}>
+             <Grid item xs={12} md={6}>
+                <Box sx={{ 
+                    p: 4, borderRadius: 4, bgcolor: 'rgba(51, 204, 255, 0.02)', 
+                    border: '1px solid rgba(51, 204, 255, 0.1)',
+                    position: 'relative', overflow: 'hidden'
+                }}>
+                    <Typography variant="caption" sx={{ color: '#33ccff', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 2, mb: 3, display: 'block' }}>
+                        TRAFFIC_ANALYTICS_V4
+                    </Typography>
+                    <Stack direction="row" spacing={3} alignItems="center">
+                        <Box sx={{ p: 2, bgcolor: 'rgba(51, 204, 255, 0.05)', borderRadius: 3 }}>
+                            <Terminal size={24} color="#33ccff" />
+                        </Box>
+                        <Box>
+                            <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '2rem' }}>
+                                {visitorCount > 0 ? visitorCount.toLocaleString() : '---'}
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>
+                                GLOBAL_UNIQUE_NODES_IDENTIFIED
+                            </Typography>
+                        </Box>
+                    </Stack>
+                    {/* Decorative HUD Bracket */}
+                    <Box sx={{ position: 'absolute', bottom: -10, right: -10, opacity: 0.1 }}><Terminal size={100} /></Box>
+                </Box>
+             </Grid>
 
-          {/* ── ANALYTICS HUD (Real-time visitor count & security indicator) ── */}
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={4} sx={{ mb: 8, width: '100%', justifyContent: 'center' }}>
-             {/* Traffic Analytics */}
-             <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
-                <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>TRAFFIC_METRICS</Typography>
-                <Stack direction="row" spacing={2} alignItems="center">
-                   <Box sx={{ width: 40, height: 40, bgcolor: 'rgba(51, 204, 255, 0.05)', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Terminal size={18} color="#33ccff" />
-                   </Box>
-                   <Box>
-                      <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1.2rem' }}>{visitorCount > 0 ? visitorCount.toLocaleString() : '...'}</Typography>
-                      <Typography variant="caption" sx={{ color: '#00ffcc', fontSize: '0.6rem' }}>UNIQUE_VISITORS_TOTAL</Typography>
-                   </Box>
-                </Stack>
-             </Box>
-             
-             <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' }, borderColor: 'rgba(255,255,255,0.05)' }} />
+             <Grid item xs={12} md={6}>
+                <Box sx={{ 
+                    p: 4, borderRadius: 4, bgcolor: 'rgba(255, 51, 102, 0.02)', 
+                    border: '1px solid rgba(255, 51, 102, 0.1)',
+                    position: 'relative', overflow: 'hidden'
+                }}>
+                    <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 2, mb: 3, display: 'block' }}>
+                        SECURITY_PROTOCOL_ACTIVE
+                    </Typography>
+                    <Stack direction="row" spacing={3} alignItems="center">
+                        <Box sx={{ p: 2, bgcolor: 'rgba(255, 51, 102, 0.05)', borderRadius: 3 }}>
+                            <ShieldCheck size={24} color="#ff3366" />
+                        </Box>
+                        <Box>
+                            <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '2rem' }}>
+                                AES-256
+                            </Typography>
+                            <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 700 }}>
+                                END_TO_END_DATA_ENCRYPTION
+                            </Typography>
+                        </Box>
+                    </Stack>
+                    {/* Decorative HUD Bracket */}
+                    <Box sx={{ position: 'absolute', bottom: -10, right: -10, opacity: 0.1 }}><ShieldCheck size={100} /></Box>
+                </Box>
+             </Grid>
+          </Grid>
 
-             {/* Security Analytics */}
-             <Box sx={{ textAlign: { xs: 'center', sm: 'left' } }}>
-                <Typography variant="caption" sx={{ color: '#444', fontWeight: 900, display: 'block', mb: 1, letterSpacing: 1 }}>CORE_ENCRYPTION</Typography>
-                <Stack direction="row" spacing={2} alignItems="center">
-                   <Box sx={{ width: 40, height: 40, bgcolor: 'rgba(255, 51, 102, 0.05)', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <ShieldCheck size={18} color="#ff3366" />
-                   </Box>
-                   <Box>
-                      <Typography sx={{ color: 'white', fontWeight: 900, fontFamily: 'monospace', fontSize: '1.2rem' }}>AES-256</Typography>
-                      <Typography variant="caption" sx={{ color: '#ff3366', fontSize: '0.6rem' }}>DATA_SECURITY_ACTIVE</Typography>
-                   </Box>
-                </Stack>
-             </Box>
-          </Stack>
 
           {/* ── TECHNICAL TERMINAL BAR (Copyright & Versioning) ── */}
           <Box sx={{ 

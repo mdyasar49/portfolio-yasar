@@ -16,19 +16,30 @@ body {
   color: #fff;
   font-family: 'Outfit', sans-serif;
   overflow-x: hidden;
-  text-rendering: geometricPrecision; /* Maximum 16K Sharpening */
+  text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
-  image-rendering: crisp-edges;
-  
-  /* [CONTENT PROTECTION] — Disable selection and copy */
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-touch-callout: none;
+  position: relative;
 }
+
+/* Global Scanline Overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.05) 0px,
+        rgba(0, 0, 0, 0.05) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.3;
+}
+
 
 
 *,
