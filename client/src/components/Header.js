@@ -86,7 +86,7 @@ const Header = ({ profile }) => {
     const isAnchor = item.type === 'anchor';
     const isTerminal = item.name === 'Terminal';
     // Check if the current button matches the active section/page
-    const isActive = location.hash === item.path.replace('/', '') || (location.pathname === item.path && !isAnchor);
+    const isActive = item.path ? (location.hash === item.path.replace('/', '') || (location.pathname === item.path && !isAnchor)) : false;
 
     // Render logic for Homepage Anchors
     if (isAnchor && location.pathname === '/') {

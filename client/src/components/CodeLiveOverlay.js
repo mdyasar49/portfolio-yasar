@@ -91,7 +91,8 @@ const CodeLiveOverlay = () => {
 
     const activeContent = useMemo(() => {
         if (!codeData) return '';
-        return tab === 0 ? codeData.frontend?.content : codeData.backend?.content;
+        const content = tab === 0 ? codeData.frontend?.content : codeData.backend?.content;
+        return content || '';
     }, [codeData, tab]);
 
     const highlightedHTML = useMemo(() => highlightCode(activeContent), [activeContent]);
@@ -168,7 +169,7 @@ const CodeLiveOverlay = () => {
                             {/* File Info Bar */}
                             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ px: 3, py: 1.5, borderBottom: '1px solid rgba(255,255,255,0.03)', bgcolor: 'rgba(255,255,255,0.01)' }}>
                                 <Typography sx={{ color: '#64748b', fontSize: '0.65rem', fontFamily: 'monospace', display: 'flex', alignItems: 'center', gap: 1 }}>
-                                    <Hash size={12} /> {tab === 0 ? codeData?.frontend?.path : codeData?.backend?.path}
+                                    <Hash size={12} /> {(tab === 0 ? codeData?.frontend?.path : codeData?.backend?.path) || 'SOURCE_UNAVAILABLE'}
                                 </Typography>
                                 <CopyAction content={activeContent} />
                             </Stack>

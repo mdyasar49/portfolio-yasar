@@ -59,7 +59,7 @@ app.use(helmet({
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
             imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://plus.unsplash.com", "https://i.ibb.co"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            connectSrc: ["'self'", "https://mern-portfolio-yasar-backend.onrender.com", "http://localhost:5001"],
+            connectSrc: ["'self'", "https://mern-portfolio-yasar.onrender.com", "https://mern-portfolio-yasar-backend.onrender.com", "http://localhost:5001"],
             objectSrc: ["'none'"],
             upgradeInsecureRequests: [],
         },

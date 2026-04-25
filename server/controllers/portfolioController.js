@@ -301,12 +301,17 @@ exports.getProfile = asyncHandler(async (req, res, next) => {
     // Phase 1: Try Local Storage (High Speed fallback)
     profile = getLocalData();
 
-    // Phase 2: If Local fails, Fallback to MongoDB (High Durability)
-    if (!profile && mongoose.connection && mongoose.connection.readyState === 1) {
+    // Phase 2: If Local fails or is empty, Fallback to MongoDB (High Durability)
+    // We check if profile is null, empty, or missing critical 'name' field
+    const isLocalDataValid = profile && Object.keys(profile).length > 0 && profile.name;
+
+    if (!isLocalDataValid && mongoose.connection && mongoose.connection.readyState === 1) {
         try {
-            // Find the single profile document and convert it to a lean JavaScript object
-            profile = await Profile.findOne().lean();
-        // Catch DB query errors
+            const dbProfile = await Profile.findOne().lean();
+            if (dbProfile) {
+                profile = dbProfile;
+                console.log("💾 [Storage] Data recovered from MongoDB fallback.");
+            }
         } catch (error) {
             console.error("MongoDB Query Error:", error.message);
         }
