@@ -8,8 +8,8 @@ export const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
 // 2. Resolve the API Base URL
 // In production, we assume the frontend and backend are on the same domain
-export const API_BASE_URL = IS_PRODUCTION 
-    ? '/api' 
+export const API_BASE_URL = IS_PRODUCTION
+    ? '/api'
     : (process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001/api');
 
 // 3. Status Log

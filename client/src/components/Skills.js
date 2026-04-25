@@ -2,7 +2,7 @@
  * Language: JavaScript (React.js)
  * Purpose of this file:
  * This component visualizes the 'Technical Arsenal' - a categorized breakdown of expertise.
- * It uses Material UI cards and Lucide icons to display Frontend, Backend, Database, 
+ * It uses Material UI cards and Lucide icons to display Frontend, Backend, Database,
  * DevOps, and AI skills with a futuristic neon-pulse aesthetic.
  */
 
@@ -29,12 +29,12 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
     viewport={{ once: true }}
     style={{ height: '100%' }}
   >
-    <Paper 
+    <Paper
       elevation={0}
-      sx={{ 
-        p: 4, 
-        height: '100%', 
-        borderRadius: 6, 
+      sx={{
+        p: 4,
+        height: '100%',
+        borderRadius: 6,
         position: 'relative',
         background: 'rgba(2, 6, 23, 0.7)',
         backdropFilter: 'blur(8px)',
@@ -53,14 +53,14 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
         }
       }}
     >
-      {/* 
+      {/*
         Background Aesthetic Layer:
         A tiny dotted circuit pattern that appears when you hover over the card.
       */}
-      <Box className="circuit-bg" sx={{ 
-        position: 'absolute', inset: 0, opacity: 0.02, 
-        backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', 
-        backgroundSize: '20px 20px', transition: '0.5s opacity' 
+      <Box className="circuit-bg" sx={{
+        position: 'absolute', inset: 0, opacity: 0.02,
+        backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)',
+        backgroundSize: '20px 20px', transition: '0.5s opacity'
       }} />
 
       <Stack spacing={3} sx={{ position: 'relative', zIndex: 1 }}>
@@ -74,8 +74,8 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
 
         {/* Category Title and animated line indicator */}
         <Box>
-          <Typography variant="h3" sx={{ 
-            fontSize: '1.2rem', fontWeight: 700, fontFamily: 'Outfit', letterSpacing: 0, color: 'white', mb: 1 
+          <Typography variant="h3" sx={{
+            fontSize: '1.2rem', fontWeight: 700, fontFamily: 'Outfit', letterSpacing: 0, color: 'white', mb: 1
           }}>
             {title}
           </Typography>
@@ -86,7 +86,7 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           {skills.map((skill, idx) => {
             // Generate a deterministic but random-looking mastery percentage
-            const mastery = 85 + (skill.length % 14); 
+            const mastery = 85 + (skill.length % 14);
             return (
               <Tooltip key={skill} title={`Mastery Level: ${mastery}% - Production Validated`} arrow placement="top">
                 <Box
@@ -114,9 +114,9 @@ const SkillCategory = memo(({ title, skills, icon: Icon, delay, color }) => (
       </Stack>
 
       {/* Pulsing neon dot in the corner to represent a "live" heartbeat */}
-      <Box sx={{ 
-        position: 'absolute', top: 15, right: 15, width: 6, height: 6, 
-        borderRadius: '50%', bgcolor: color, animation: 'pulse-neon 2s infinite' 
+      <Box sx={{
+        position: 'absolute', top: 15, right: 15, width: 6, height: 6,
+        borderRadius: '50%', bgcolor: color, animation: 'pulse-neon 2s infinite'
       }} />
     </Paper>
   </motion.div>
@@ -162,9 +162,9 @@ const Skills = memo(({ skills }) => {
                 TECHNICAL_STACK_AUDIT
             </Typography>
         </Stack>
-        <Typography 
-          variant="h2" 
-          sx={{ 
+        <Typography
+          variant="h2"
+          sx={{
             fontFamily: 'Outfit', fontWeight: 800, letterSpacing: -2, mb: 1,
             fontSize: { xs: '2.5rem', md: '4.5rem' }, color: 'white',
             textShadow: '0 0 30px rgba(99, 102, 241, 0.2)'

@@ -1,9 +1,9 @@
 /**
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This component renders the global system lock interface (Maintenance Mode). 
- * It is activated when the administrator engages architectural isolation 
- * via the management hub, preventing public access while the system core 
+ * This component renders the global system lock interface (Maintenance Mode).
+ * It is activated when the administrator engages architectural isolation
+ * via the management hub, preventing public access while the system core
  * or content layers are being updated.
  */
 
@@ -17,18 +17,18 @@ import { motion } from 'framer-motion';
 
 const MaintenancePage = () => {
   return (
-        <Box sx={{ 
-            height: '100vh', width: '100vw', bgcolor: '#04070a', 
+        <Box sx={{
+            height: '100vh', width: '100vw', bgcolor: '#04070a',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             color: 'white', overflow: 'hidden', position: 'relative'
         }}>
             {/* ── [HOLOGRAPHIC MATRIX BACKGROUND] ── */}
             <Box sx={{
-                position: 'absolute', inset: 0, 
+                position: 'absolute', inset: 0,
                 backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(51, 204, 255, 0.05) 1px, transparent 0)',
                 backgroundSize: '40px 40px', pointerEvents: 'none'
             }} />
-            
+
             <Box sx={{
                 position: 'absolute', inset: 0,
                 background: 'linear-gradient(135deg, rgba(255, 51, 102, 0.02) 0%, transparent 50%, rgba(51, 204, 255, 0.02) 100%)',
@@ -37,14 +37,14 @@ const MaintenancePage = () => {
 
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2, ease: 'easeOut' }}>
                 <Stack spacing={6} alignItems="center" sx={{ position: 'relative', zIndex: 1, textAlign: 'center', px: 3 }}>
-                    
+
                     {/* ── [PULSING CORE ICON] ── */}
                     <Box sx={{ position: 'relative' }}>
-                        <Box sx={{ 
-                            position: 'absolute', inset: -30, border: '1px solid rgba(255, 51, 102, 0.2)', 
+                        <Box sx={{
+                            position: 'absolute', inset: -30, border: '1px solid rgba(255, 51, 102, 0.2)',
                             borderRadius: '50%', animation: 'pulseRing 4s infinite ease-out'
                         }} />
-                        <Box sx={{ 
+                        <Box sx={{
                             width: 120, height: 120, display: 'flex', alignItems: 'center', justifyContent: 'center',
                             bgcolor: 'rgba(255, 51, 102, 0.05)', border: '1px solid rgba(255, 51, 102, 0.3)',
                             borderRadius: '30px', backdropFilter: 'blur(10px)', boxShadow: '0 0 50px rgba(255, 51, 102, 0.1)'
@@ -55,8 +55,8 @@ const MaintenancePage = () => {
 
                     {/* ── [SYSTEM STATUS MESSAGING] ── */}
                     <Box>
-                        <Typography variant="h2" sx={{ 
-                            fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2, mb: 1, 
+                        <Typography variant="h2" sx={{
+                            fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: -2, mb: 1,
                             fontSize: { xs: '2rem', md: '4rem' },
                             background: 'linear-gradient(to bottom, #fff, #444)',
                             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
@@ -72,7 +72,7 @@ const MaintenancePage = () => {
                         </Stack>
                     </Box>
 
-                    <Paper sx={{ 
+                    <Paper sx={{
                         p: 6, bgcolor: 'rgba(255,255,255,0.01)', backdropFilter: 'blur(20px)',
                         border: '1px solid rgba(255,255,255,0.04)', borderRadius: '40px', maxWidth: 700
                     }}>

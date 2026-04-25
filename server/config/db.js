@@ -9,7 +9,7 @@ const connectDB = async () => {
     try {
         // Strict 5s timeout to ensure fast fallback to JSON mode if DB is unreachable
         const options = {
-            serverSelectionTimeoutMS: 5000, 
+            serverSelectionTimeoutMS: 5000,
             socketTimeoutMS: 45000,
         };
 

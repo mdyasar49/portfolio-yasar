@@ -10,9 +10,11 @@ const getAllowedOrigins = () => {
   const defaults = [
     'http://localhost:2003',
     'http://127.0.0.1:2003',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:5173',
     'https://mern-portfolio-yasar-1.onrender.com'
   ];
-
 
   const fromEnv = [
     ...splitOrigins(process.env.CLIENT_URL || ''),

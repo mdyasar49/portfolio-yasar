@@ -44,7 +44,7 @@ const theme = createTheme({
       fontFamily: '"Syncopate", sans-serif',
       fontWeight: 900,
       letterSpacing: '-2px',
-      fontSize: 'clamp(3rem, 8vw, 12rem)', 
+      fontSize: 'clamp(3rem, 8vw, 12rem)',
     },
     h2: {
       fontFamily: '"Syncopate", sans-serif',

@@ -2,7 +2,7 @@
  * Language: JavaScript (React.js)
  * Purpose of this file:
  * This component renders a high-fidelity "System Initializing" loading screen.
- * It uses a combination of circular scanners, technical progress bars, 
+ * It uses a combination of circular scanners, technical progress bars,
  * and terminal log text to create an immersive start-up experience.
  */
 
@@ -44,10 +44,10 @@ const LoadingScreen = ({ onComplete }) => {
     }, [onComplete]);
 
     return (
-        <Box sx={{ 
-            position: 'fixed', inset: 0, zIndex: 20000, 
-            bgcolor: '#000', display: 'flex', flexDirection: 'column', 
-            alignItems: 'center', justifyContent: 'center' 
+        <Box sx={{
+            position: 'fixed', inset: 0, zIndex: 20000,
+            bgcolor: '#000', display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center'
         }}>
             {/* Main Scanner Circle */}
             <Box sx={{ position: 'relative', mb: 8 }}>
@@ -61,8 +61,8 @@ const LoadingScreen = ({ onComplete }) => {
                         borderRadius: '50%'
                     }}
                 />
-                <Typography sx={{ 
-                    position: 'absolute', top: '50%', left: '50%', 
+                <Typography sx={{
+                    position: 'absolute', top: '50%', left: '50%',
                     transform: 'translate(-50%, -50%)',
                     color: 'white', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '1.2rem'
                 }}>
@@ -75,9 +75,9 @@ const LoadingScreen = ({ onComplete }) => {
                 <Typography variant="caption" sx={{ color: '#00ffcc', fontFamily: 'Syncopate', letterSpacing: 4, fontSize: '0.6rem' }}>
                     {status}
                 </Typography>
-                
+
                 <Box sx={{ width: '100%', height: 2, bgcolor: 'rgba(255,255,255,0.05)', borderRadius: 10, overflow: 'hidden' }}>
-                    <motion.div 
+                    <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         style={{ height: '100%', bgcolor: '#33ccff', boxShadow: '0 0 20px #33ccff' }}

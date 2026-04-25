@@ -22,7 +22,7 @@ const TechnicalInsight = ({ profile }) => {
   return (
     <Box id="insights" sx={{ py: { xs: 10, md: 20 }, position: 'relative', bgcolor: 'rgba(2, 4, 10, 0.5)' }}>
       <Container maxWidth="xl">
-        
+
         {/* Section Header: Metric Definitions */}
         <Stack spacing={2} sx={{ mb: 12, textAlign: 'center' }}>
           <Typography variant="overline" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: 8, fontFamily: 'Syncopate' }}>
@@ -50,10 +50,10 @@ const TechnicalInsight = ({ profile }) => {
                     <Typography variant="caption" sx={{ fontWeight: 900 }}>+45.2% ACCELERATION</Typography>
                   </Box>
                 </Stack>
-                
-                {/* 
-                  Chart Container 
-                  'minWidth: 0' and 'width: 100%' are essential fix for Recharts 
+
+                {/*
+                  Chart Container
+                  'minWidth: 0' and 'width: 100%' are essential fix for Recharts
                   ResponsiveContainer initialization issues in flex/grid layouts.
                 */}
                 <Box sx={{ flexGrow: 1, width: '100%', minWidth: 0, position: 'relative' }}>
@@ -68,7 +68,7 @@ const TechnicalInsight = ({ profile }) => {
                       <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
                       <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
                       <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
-                      <Tooltip 
+                      <Tooltip
                         contentStyle={{ backgroundColor: '#02040a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                         itemStyle={{ color: '#00ffcc' }}
                       />
@@ -96,7 +96,7 @@ const TechnicalInsight = ({ profile }) => {
                     <BarChart data={skillDistribution} layout="vertical">
                       <XAxis type="number" hide />
                       <YAxis dataKey="name" type="category" stroke="white" fontSize={11} width={80} tickLine={false} axisLine={false} />
-                      <Tooltip 
+                      <Tooltip
                         cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                         contentStyle={{ backgroundColor: '#02040a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                       />

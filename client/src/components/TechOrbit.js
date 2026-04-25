@@ -26,12 +26,12 @@ const TechOrbit = () => {
   ];
 
   return (
-    <Box sx={{ 
-      position: 'relative', 
-      height: 400, 
-      width: '100%', 
-      display: 'flex', 
-      alignItems: 'center', 
+    <Box sx={{
+      position: 'relative',
+      height: 400,
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
       justifyContent: 'center',
       perspective: '1000px',
       mb: 10,
@@ -39,7 +39,7 @@ const TechOrbit = () => {
     }}>
       {/* Central Core */}
       <motion.div
-        animate={{ 
+        animate={{
           scale: [1, 1.2, 1],
           rotate: [0, 360],
           boxShadow: [
@@ -65,26 +65,26 @@ const TechOrbit = () => {
       </motion.div>
 
       {/* Orbiting Tech Rings */}
-      <Box sx={{ 
-        position: 'absolute', 
-        width: 300, 
-        height: 300, 
-        borderRadius: '50%', 
+      <Box sx={{
+        position: 'absolute',
+        width: 300,
+        height: 300,
+        borderRadius: '50%',
         border: '1px dashed rgba(51, 204, 255, 0.1)',
         animation: `${float} 6s ease-in-out infinite`
       }} />
-      <Box sx={{ 
-        position: 'absolute', 
-        width: 450, 
-        height: 450, 
-        borderRadius: '50%', 
+      <Box sx={{
+        position: 'absolute',
+        width: 450,
+        height: 450,
+        borderRadius: '50%',
         border: '1px dashed rgba(255, 51, 102, 0.05)',
         animation: `${float} 8s ease-in-out infinite reverse`
       }} />
 
       {technologies.map((tech, i) => {
         const delay = i * 0.5;
-        
+
         return (
           <Box
             key={tech.name}

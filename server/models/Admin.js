@@ -34,7 +34,7 @@ const AdminSchema = new mongoose.Schema({
         // Ensure the password is at least 6 characters long
         minlength: 6,
         // Security: Do NOT return the password field when querying the DB by default
-        select: false 
+        select: false
     },
     // The role field to define authorization level
     role: {

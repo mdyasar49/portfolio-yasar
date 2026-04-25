@@ -37,13 +37,13 @@ axiosInstance.interceptors.response.use(
     (error) => {
         const status = error.response ? error.response.status : 'OFFLINE';
         console.error(`🛰️ [Telemetry Inbound Error] [Status: ${status}]:`, error.message);
-        
+
         // Handle unauthorized or expired sessions
         if (status === 401) {
             localStorage.removeItem('system_token');
             // Optional: window.location.href = '/admin/login';
         }
-        
+
         return Promise.reject(error);
     }
 );

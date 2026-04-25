@@ -2,7 +2,7 @@
  * Language: JavaScript (React.js)
  * Purpose of this file:
  * This component renders a high-fidelity "System Documentation" HUD.
- * It provides technical details about the portfolio's architecture, 
+ * It provides technical details about the portfolio's architecture,
  * deployment, and performance metrics, designed to impress technical HRs.
  */
 
@@ -25,9 +25,9 @@ const DocumentationHUD = ({ profile }) => {
             {/* The Floating Trigger Button (Bottom Right) */}
             <Box sx={{ position: 'fixed', right: 30, bottom: 175, zIndex: 10001 }}>
                 <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                    <IconButton 
+                    <IconButton
                         onClick={() => setIsOpen(!isOpen)}
-                        sx={{ 
+                        sx={{
                             bgcolor: 'rgba(51, 204, 255, 0.1)', color: '#33ccff', p: 2,
                             border: '1px solid rgba(51, 204, 255, 0.2)',
                             backdropFilter: 'blur(10px)',
@@ -39,7 +39,7 @@ const DocumentationHUD = ({ profile }) => {
                     </IconButton>
                 </motion.div>
                 {!isOpen && (
-                    <Box sx={{ 
+                    <Box sx={{
                         position: 'absolute', right: '100%', top: '50%', transform: 'translateY(-50%)',
                         mr: 2, px: 2, py: 0.5, bgcolor: 'rgba(0,0,0,0.8)', borderRadius: 2,
                         border: '1px solid rgba(51, 204, 255, 0.1)', whiteSpace: 'nowrap'
@@ -64,8 +64,8 @@ const DocumentationHUD = ({ profile }) => {
                         }}
                     >
 
-                        <Paper sx={{ 
-                            p: 4, borderRadius: '24px', 
+                        <Paper sx={{
+                            p: 4, borderRadius: '24px',
                             background: 'linear-gradient(135deg, rgba(1, 4, 9, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%)',
                             backdropFilter: 'blur(30px)',
                             border: '1px solid rgba(51, 204, 255, 0.2)',
@@ -80,8 +80,8 @@ const DocumentationHUD = ({ profile }) => {
                             backgroundSize: '30px 30px',
                             '&::-webkit-scrollbar': { width: '4px' },
                             '&::-webkit-scrollbar-track': { background: 'transparent' },
-                            '&::-webkit-scrollbar-thumb': { 
-                                background: 'rgba(51, 204, 255, 0.3)', 
+                            '&::-webkit-scrollbar-thumb': {
+                                background: 'rgba(51, 204, 255, 0.3)',
                                 borderRadius: '10px',
                                 '&:hover': { background: '#33ccff' }
                             }
@@ -148,9 +148,9 @@ const DocumentationHUD = ({ profile }) => {
                                     <Grid container spacing={2}>
                                         {systemDNA.map((item, idx) => (
                                             <Grid item xs={12} key={idx}>
-                                                <Box sx={{ 
-                                                    p: 2, borderRadius: 2, 
-                                                    background: 'rgba(255,255,255,0.01)', 
+                                                <Box sx={{
+                                                    p: 2, borderRadius: 2,
+                                                    background: 'rgba(255,255,255,0.01)',
                                                     border: '1px solid rgba(255,255,255,0.05)',
                                                     display: 'flex', justifyContent: 'space-between', alignItems: 'center'
                                                 }}>
@@ -205,6 +205,5 @@ const DocumentationHUD = ({ profile }) => {
         </>
     );
 };
-
 
 export default DocumentationHUD;

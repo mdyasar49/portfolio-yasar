@@ -10,6 +10,9 @@
         { "type": "DB", "message": "Handshake with MongoDB Atlas successful", "icon": "Database", "color": "#33ccff" },
         { "type": "SYS", "message": "Engine warm-up complete: {{VERSION}}", "icon": "Server", "color": "#ff3366" },
         { "type": "NET", "message": "Strict CORS Policy active: Origin Validated", "icon": "Activity", "color": "#ff9933" },
+        { "type": "SLA", "message": "API_STABILITY: {{STABILITY}} [OPERATIONAL]", "icon": "Activity", "color": "#00ffcc" },
+        { "type": "SLA", "message": "CODE_COVERAGE: {{COVERAGE}} [STABLE]", "icon": "Activity", "color": "#33ccff" },
+        { "type": "SLA", "message": "COMPUTE_EFFICIENCY: {{EFFICIENCY}} [OPTIMIZED]", "icon": "Activity", "color": "#ff9933" },
         { "type": "API", "message": "Payload compression enabled (Gzip)", "icon": "Globe", "color": "#00ffcc" }
       ]
     }

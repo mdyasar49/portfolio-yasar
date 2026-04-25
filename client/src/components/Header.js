@@ -2,8 +2,8 @@
  * Language: JavaScript (React.js)
  * Purpose of this file:
  * This component renders the global navigation bar (Header).
- * It features a responsive layout with a floating glassmorphic design that 
- * shrinks and blurs on scroll. It handles internal page anchoring (smooth scroll) 
+ * It features a responsive layout with a floating glassmorphic design that
+ * shrinks and blurs on scroll. It handles internal page anchoring (smooth scroll)
  * and external routing.
  */
 
@@ -65,8 +65,15 @@ const Header = ({ profile }) => {
   const handleLogoClick = (e) => {
     // Navigate to root to clear hashes and ensure we are on the home page
     navigate('/');
-    // Also scroll to top for immediate visual feedback
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Target the specific scroll container used in App.js
+    const container = document.getElementById('main-scroll-container');
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Fallback for global window scroll
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
 
@@ -75,7 +82,7 @@ const Header = ({ profile }) => {
    * Dynamically renders either an anchor link or a router link based on item type.
    * Includes high-end visual feedback for the active route (glow lines).
    */
-  const renderNavButton = (item) => {    
+  const renderNavButton = (item) => {
     const isAnchor = item.type === 'anchor';
     const isTerminal = item.name === 'Terminal';
     // Check if the current button matches the active section/page
@@ -84,10 +91,10 @@ const Header = ({ profile }) => {
     // Render logic for Homepage Anchors
     if (isAnchor && location.pathname === '/') {
       return (
-        <Button 
-          key={item.name} 
+        <Button
+          key={item.name}
           onClick={() => scrollToSection(item.name.toLowerCase())}
-          sx={{ 
+          sx={{
             color: isActive ? (isTerminal ? '#00ffcc' : '#ff3366') : 'white',
             px: 2, mx: 0.5, fontSize: '0.7rem', fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: 1,
             transition: '0.3s ease', position: 'relative',
@@ -109,12 +116,12 @@ const Header = ({ profile }) => {
 
     // Render logic for standard Router Links (Cross-page)
     return (
-      <Button 
-        key={item.name} 
-        component={RouterLink} 
+      <Button
+        key={item.name}
+        component={RouterLink}
         to={item.path}
         onClick={() => setMobileOpen(false)}
-        sx={{ 
+        sx={{
           color: location.pathname === item.path ? (isTerminal ? '#00ffcc' : '#ff3366') : 'white',
           px: 2, mx: 0.5, fontSize: '0.7rem', fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: 1,
           position: 'relative', transition: '0.3s ease',
@@ -136,9 +143,9 @@ const Header = ({ profile }) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       {/* ── THE MAIN APPBAR ── */}
-      <AppBar 
-        position="fixed" 
-        sx={{ 
+      <AppBar
+        position="fixed"
+        sx={{
           // Transformations applied based on 'trigger' (scroll position)
           top: trigger ? 15 : 0,
           left: '50%',
@@ -159,31 +166,31 @@ const Header = ({ profile }) => {
           <Toolbar sx={{ justifyContent: 'space-between', height: trigger ? 64 : 80, width: '100%', gap: trigger ? 4 : 2 }}>
 
             {/* [BRANDING] Logo with hover lift effect */}
-            <Box 
-              component={RouterLink} 
-              to="/" 
+            <Box
+              component={RouterLink}
+              to="/"
               onClick={handleLogoClick}
-              sx={{ 
+              sx={{
                 textDecoration: 'none', display: 'flex', alignItems: 'center',
                 transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': { transform: 'scale(1.05)' }
               }}
             >
-              <Box 
+              <Box
                 component="img"
                 src="/logo.png"
                 alt="Mohamed Yasar"
-                sx={{ 
+                sx={{
                   height: { xs: 35, sm: 40, md: 45 }, width: 'auto',
                   filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.3))'
                 }}
               />
             </Box>
-            
+
             {/* [DESKTOP NAVIGATION] Hidden on small screens */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', whiteSpace: 'nowrap', gap: 2 }}>
               {menuItems.map((item) => renderNavButton(item))}
-              
+
               {/* ── [CODE_LIVE TOGGLE] ── */}
               <Box sx={{ ml: 4, pl: 4, borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center' }}>
                 <Button
@@ -215,16 +222,16 @@ const Header = ({ profile }) => {
       </AppBar>
 
       {/* ── MOBILE SIDE DRAWER ── */}
-      <Drawer 
-        anchor="right" 
-        open={mobileOpen} 
-        onClose={handleDrawerToggle} 
-        PaperProps={{ 
-          sx: { 
+      <Drawer
+        anchor="right"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        PaperProps={{
+          sx: {
             bgcolor: 'rgba(3, 7, 18, 0.95)', width: 280,
             backdropFilter: 'blur(20px) saturate(180%)',
             borderLeft: '1px solid rgba(255,255,255,0.08)'
-          } 
+          }
         }}
       >
         <Box sx={{ p: 4 }}>
@@ -238,7 +245,7 @@ const Header = ({ profile }) => {
             <ListItem sx={{ mb: 4, borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 2 }}>
                <Button
                   fullWidth onClick={() => { toggleCodeLive(); setMobileOpen(false); }}
-                  sx={{ 
+                  sx={{
                     bgcolor: isCodeLive ? 'rgba(255, 51, 102, 0.1)' : 'transparent',
                     color: isCodeLive ? '#ff3366' : 'white', borderRadius: 2, py: 1.5,
                     fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.7rem'

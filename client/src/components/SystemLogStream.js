@@ -16,14 +16,14 @@ const SystemLogStream = ({ profile }) => {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    const templates = profile?.telemetryConfig?.logTemplates || [];
+    const templates = profile?.engineeringObjective?.telemetryConfig?.logTemplates || profile?.telemetryConfig?.logTemplates || [];
     const version = profile?.resumeConfig?.version || 'v1.0.0';
 
     if (templates.length === 0) return;
 
     const interval = setInterval(() => {
       const randomLog = templates[Math.floor(Math.random() * templates.length)];
-      
+
       // Dynamic Version Injection
       const message = randomLog.message.replace('{{VERSION}}', version);
 
@@ -53,10 +53,10 @@ const SystemLogStream = ({ profile }) => {
         <Typography variant="overline" sx={{ color: '#444', fontWeight: 900, letterSpacing: 5, mb: 2, display: 'block', textAlign: 'center' }}>
           REALTIME_TELEMETRY_ENGINE
         </Typography>
-        
-        <Paper 
-          sx={{ 
-            bgcolor: '#02040a', 
+
+        <Paper
+          sx={{
+            bgcolor: '#02040a',
             border: '1px solid rgba(255, 255, 255, 0.05)',
             borderRadius: 4,
             overflow: 'hidden',
@@ -76,12 +76,12 @@ const SystemLogStream = ({ profile }) => {
           </Box>
 
           {/* Logs Container */}
-          <Box 
+          <Box
             ref={scrollRef}
-            sx={{ 
-              p: 3, 
-              height: 250, 
-              overflowY: 'auto', 
+            sx={{
+              p: 3,
+              height: 250,
+              overflowY: 'auto',
               fontFamily: 'monospace',
               '&::-webkit-scrollbar': { width: 4 },
               '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(255,255,255,0.1)', borderRadius: 10 }
@@ -113,7 +113,7 @@ const SystemLogStream = ({ profile }) => {
           </Box>
         </Paper>
       </Container>
-      
+
       <style>
         {`
           @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }

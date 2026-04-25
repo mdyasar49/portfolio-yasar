@@ -1,7 +1,7 @@
 /**
  * [React.js & Material UI - Career Timeline]
  * Technologies: React.js (Memo), Material UI (Cards, Stack), Framer Motion (Spring Animations), Lucide Icons
- * Purpose: This component renders the 'Career Trajectory' section, visualizing professional 
+ * Purpose: This component renders the 'Career Trajectory' section, visualizing professional
  * experience with embedded technical metrics and responsibility feeds.
  */
 import React, { memo } from 'react';
@@ -20,11 +20,11 @@ const CareerTrajectory = memo(({ experience }) => {
   return (
     <Box id="experience" sx={{ py: 15 }}>
       {/* ─── SECTION HEADER ─── */}
-      <Typography variant="h2" gutterBottom sx={{ 
-        mb: { xs: 5, md: 10 }, 
-        textAlign: 'center', 
-        fontFamily: 'Outfit', 
-        fontWeight: 800, 
+      <Typography variant="h2" gutterBottom sx={{
+        mb: { xs: 5, md: 10 },
+        textAlign: 'center',
+        fontFamily: 'Outfit',
+        fontWeight: 800,
         letterSpacing: { xs: -1, md: -2 },
         fontSize: { xs: '2rem', md: '3.75rem' }
       }}>
@@ -41,8 +41,8 @@ const CareerTrajectory = memo(({ experience }) => {
             viewport={{ once: true, margin: '-50px' }}
           >
             {/* [Experience Card] - Featuring glassmorphic design and thematic accent */}
-            <Card className="glass-panel" sx={{ 
-              borderLeft: '5px solid #ff3366', 
+            <Card className="glass-panel" sx={{
+              borderLeft: '5px solid #ff3366',
               borderRadius: '24px',
               position: 'relative',
               overflow: 'visible',
@@ -51,25 +51,25 @@ const CareerTrajectory = memo(({ experience }) => {
               <CardContent sx={{ p: { xs: 4, md: 6 } }}>
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', mb: 3 }}>
                   <Box>
-                    <Typography variant="h3" sx={{ 
+                    <Typography variant="h3" sx={{
                       fontWeight: 700, fontFamily: 'Outfit',
-                      fontSize: { xs: '1.4rem', sm: '1.8rem' }, 
-                      background: 'linear-gradient(90deg, #fff, #cbd5e1)', 
-                      WebkitBackgroundClip: 'text', 
+                      fontSize: { xs: '1.4rem', sm: '1.8rem' },
+                      background: 'linear-gradient(90deg, #fff, #cbd5e1)',
+                      WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
                       mb: 1
                     }}>
                       {exp.role}
                     </Typography>
-                    
+
                     <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
                       {/* Company Name with live link support */}
                       {exp.companyUrl ? (
-                        <Typography 
-                          variant="h6" 
-                          component="a" 
-                          href={exp.companyUrl} 
-                          target="_blank" 
+                        <Typography
+                          variant="h6"
+                          component="a"
+                          href={exp.companyUrl}
+                          target="_blank"
                           sx={{ color: '#6366f1', textDecoration: 'none', fontWeight: 600, letterSpacing: 0, fontFamily: 'Outfit', '&:hover': { color: '#ec4899' } }}
                         >
                           {exp.company}
@@ -82,15 +82,15 @@ const CareerTrajectory = memo(({ experience }) => {
 
                       {/* Official Post/LinkedIn Validation Button */}
                       {exp.companyLinkedIn && (
-                        <Button 
-                          component="a" 
-                          href={exp.companyLinkedIn} 
-                          target="_blank" 
+                        <Button
+                          component="a"
+                          href={exp.companyLinkedIn}
+                          target="_blank"
                           variant="outlined"
                           size="small"
                           startIcon={<Linkedin size={16} />}
-                          sx={{ 
-                            color: '#00a0dc', 
+                          sx={{
+                            color: '#00a0dc',
                             borderColor: 'rgba(0, 160, 220, 0.3)',
                             borderRadius: 6,
                             textTransform: 'none',
@@ -102,7 +102,7 @@ const CareerTrajectory = memo(({ experience }) => {
                             background: 'rgba(0, 160, 220, 0.05)',
                             backdropFilter: 'blur(10px)',
                             transition: 'all 0.3s ease',
-                            '&:hover': { 
+                            '&:hover': {
                               borderColor: '#00a0dc',
                               background: 'rgba(0, 160, 220, 0.1)',
                               transform: 'translateY(-2px)',
@@ -122,7 +122,7 @@ const CareerTrajectory = memo(({ experience }) => {
                     </Typography>
                   </Box>
                 </Box>
-                
+
                 {/* [ENGINEERING METRICS HUD] - Visual KPI indicators for the role */}
                 {exp.metrics && (
                   <Stack direction="row" spacing={4} sx={{ mb: 4, flexWrap: 'wrap', gap: 3 }}>
@@ -131,11 +131,11 @@ const CareerTrajectory = memo(({ experience }) => {
                         <Typography variant="caption" sx={{ color: '#64748b', fontWeight: 600, mb: 0.8, display: 'block', letterSpacing: 1, fontSize: '0.65rem', fontFamily: 'Outfit', textTransform: 'uppercase' }}>{m.label}</Typography>
                         <Stack direction="row" spacing={1.5} alignItems="center">
                           <Box sx={{ width: 80, height: 4, bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 1, overflow: 'hidden' }}>
-                            <motion.div 
-                              initial={{ width: 0 }} 
-                              whileInView={{ width: `${m.value}%` }} 
+                            <motion.div
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${m.value}%` }}
                               transition={{ duration: 1.5, delay: i * 0.1, ease: 'easeOut' }}
-                              style={{ height: '100%', backgroundColor: '#ff3366', boxShadow: '0 0 10px #ff336644' }} 
+                              style={{ height: '100%', backgroundColor: '#ff3366', boxShadow: '0 0 10px #ff336644' }}
                             />
                           </Box>
                           <Typography sx={{ color: '#fff', fontSize: '0.7rem', fontWeight: 900, fontFamily: 'monospace', opacity: 0.8 }}>{m.value}%</Typography>

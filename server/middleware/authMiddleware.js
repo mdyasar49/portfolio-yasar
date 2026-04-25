@@ -24,7 +24,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
         // 3. Decode & Verify Token
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'cyber_premium_secure_key_2024');
 
-
         // 4. Attach admin to request
         const isDbConnected = mongoose.connection && mongoose.connection.readyState === 1;
         const isPortableUser = decoded.id === 'portable-admin';
@@ -45,7 +44,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
                 role: decoded.role
             };
         }
-
 
         next();
     } catch (err) {

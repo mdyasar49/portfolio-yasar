@@ -1,7 +1,7 @@
 /**
  * [Node.js & Express.js - Application Core]
  * Technologies: Node.js (Runtime), Express.js (Framework), CORS (Inter-origin policy), Helmet (Security), Compression (Gzip)
- * Purpose: This is the entry point for the backend logic. It initializes the Express application, 
+ * Purpose: This is the entry point for the backend logic. It initializes the Express application,
  * configures middleware pipelines, and orchestrates the routing for API and static build delivery.
  */
 const express = require('express');
@@ -73,8 +73,8 @@ app.use(helmet({
  * Implements rate limiting to prevent brute-force attacks and logs incoming traffic.
  */
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, 
-    max: 500, 
+    windowMs: 15 * 60 * 1000,
+    max: 500,
     message: { success: false, message: 'Too many requests from this IP.' }
 });
 
@@ -93,7 +93,7 @@ app.use((req, res, next) => {
     const contentType = req.headers['content-type'] || '';
 
     const isApiRequest = req.path.startsWith('/api');
-    
+
     // Strict JSON check for POST requests
     if (req.method === 'POST' && isApiRequest && !contentType.includes('application/json')) {
         return res.status(415).json({ success: false, message: 'Unsupported Media Type: application/json required.' });
@@ -101,7 +101,7 @@ app.use((req, res, next) => {
 
     const hasReferer = req.headers.referer;
     const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
-    
+
     // Allow local development and cross-origin requests with proper referer
     const isLocal = req.headers.host?.includes('localhost') || req.headers.host?.includes('127.0.0.1');
 

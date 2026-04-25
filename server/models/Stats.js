@@ -2,7 +2,7 @@
  * Language: JavaScript (Node.js/Mongoose)
  * Purpose of this file:
  * This file defines the database schema and model for "Stats" (system statistics).
- * It tracks the total number of visitors, keeps a daily history log of visits, 
+ * It tracks the total number of visitors, keeps a daily history log of visits,
  * and stores the current global "maintenance mode" toggle state for the website.
  */
 
@@ -21,7 +21,7 @@ const statsSchema = new mongoose.Schema({
     // An array storing the daily history of visits
     history: [{
         // The specific date in YYYY-MM-DD format (mandatory)
-        date: { type: String, required: true }, 
+        date: { type: String, required: true },
         // The number of visits on that specific date (defaults to 0)
         count: { type: Number, default: 0 }
     }],

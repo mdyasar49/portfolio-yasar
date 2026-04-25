@@ -2,17 +2,16 @@
  * [A. MOHAMED YASAR | MERN PORTFOLIO]
  * Copyright (c) 2026 A. Mohamed Yasar
  * MIT License
- * 
+ *
  * Language: JavaScript (Node.js / Express)
  * Purpose of this file:
- * This is the primary entry point of the backend server. It orchestrates the 
- * environment variable loading, database connection, real-time socket 
+ * This is the primary entry point of the backend server. It orchestrates the
+ * environment variable loading, database connection, real-time socket
  * initialization, and starts the Express application listener.
  */
 
-
 // MUST be first to load environment variables (.env) into process.env
-require('dotenv').config(); 
+require('dotenv').config();
 
 const app = require('./app');
 const connectDB = require('./config/db');
@@ -22,7 +21,7 @@ const initSocket = require('./socket');
 
 /**
  * [Environment Validation]
- * Ensures that all critical variables (DB_URI, JWT_SECRET, etc.) are present 
+ * Ensures that all critical variables (DB_URI, JWT_SECRET, etc.) are present
  * before the server starts to prevent runtime crashes.
  */
 validateEnv();
@@ -33,7 +32,7 @@ const server = http.createServer(app);
 
 /**
  * [initSocket]
- * Initializes the Real-time Layer (Socket.io) to enable live telemetry streaming 
+ * Initializes the Real-time Layer (Socket.io) to enable live telemetry streaming
  * between the server and the administrative dashboard.
  */
 initSocket(server);

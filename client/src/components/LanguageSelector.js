@@ -1,16 +1,16 @@
 /**
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This component provides an interactive language switching interface for the 
- * documentation portal. It supports English, Tamil, and Thanglish (transliterated), 
- * allowing users to select their preferred technical interpretation mode 
+ * This component provides an interactive language switching interface for the
+ * documentation portal. It supports English, Tamil, and Thanglish (transliterated),
+ * allowing users to select their preferred technical interpretation mode
  * for the system architecture deep-dives.
  */
 
 import React, { useState } from 'react';
 // Material UI components for the dropdown menu and interactive buttons
-import { 
-  Box, Button, Menu, MenuItem, Typography, Stack, Tooltip, Fade 
+import {
+  Box, Button, Menu, MenuItem, Typography, Stack, Tooltip, Fade
 } from '@mui/material';
 // Icons for globalization and selection feedback
 import { Globe, Check, ChevronDown, Languages } from 'lucide-react';
@@ -119,7 +119,7 @@ const LanguageSelector = ({ currentLanguage, onLanguageChange }) => {
 
         <Stack spacing={0.5}>
           {languages.map((lang) => (
-            <MenuItem 
+            <MenuItem
               key={lang.code}
               onClick={() => handleSelect(lang.code)}
               sx={{

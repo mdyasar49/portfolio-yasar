@@ -33,7 +33,7 @@ const StatusHUD = () => {
     }, []);
 
     return (
-        <Box sx={{ 
+        <Box sx={{
             position: 'fixed', bottom: 30, right: 30, zIndex: 3000,
             display: { xs: 'none', md: 'block' },
             pointerEvents: 'none'
@@ -43,9 +43,9 @@ const StatusHUD = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1 }}
             >
-                <Box sx={{ 
-                    p: 2, borderRadius: 3, 
-                    background: 'rgba(1, 4, 9, 0.6)', 
+                <Box sx={{
+                    p: 2, borderRadius: 3,
+                    background: 'rgba(1, 4, 9, 0.6)',
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(51, 204, 255, 0.15)',
                     boxShadow: '0 10px 40px rgba(0,0,0,0.5)'

@@ -2,7 +2,7 @@
  * Language: JavaScript (React.js)
  * Purpose of this file:
  * This component renders the 'About Me' section of the portfolio.
- * It provides a narrative summary of the user's professional background, 
+ * It provides a narrative summary of the user's professional background,
  * along with key statistics (Experience, Expertise Level, Projects Launched)
  * and a cloud of soft skills.
  */
@@ -32,7 +32,7 @@ const About = memo(({ profile }) => {
         viewport={{ once: true }}
       >
         <Grid container spacing={8} alignItems="center">
-          
+
           {/* [Left Column] - High-Tech "Digital Identity" HUD */}
           <Grid item xs={12} md={5}>
             <Box sx={{ position: 'relative' }}>
@@ -58,10 +58,10 @@ const About = memo(({ profile }) => {
                         pointerEvents: 'none'
                     }}
                 />
-                
+
                 {/* Main Profile HUD Container */}
-                <Box sx={{ 
-                    position: 'relative', 
+                <Box sx={{
+                    position: 'relative',
                     aspectRatio: '1/1',
                     background: 'radial-gradient(circle at center, rgba(30, 41, 59, 0.6) 0%, rgba(1, 4, 9, 0.9) 100%)',
                     backdropFilter: 'blur(30px)',
@@ -73,7 +73,7 @@ const About = memo(({ profile }) => {
                 }}>
                     {/* Background Digital Grid */}
                     <Box sx={{ position: 'absolute', inset: 0, opacity: 0.1, backgroundImage: 'radial-gradient(#33ccff 0.5px, transparent 0.5px)', backgroundSize: '15px 15px' }} />
-                    
+
                     {/* Identification Data Points */}
                     <Box sx={{ position: 'absolute', top: '20%', width: '100%', textAlign: 'center', zIndex: 2 }}>
                         <Typography variant="caption" sx={{ color: '#ff3366', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.6rem', letterSpacing: 4 }}>VERIFIED_PROFILE_STAMP</Typography>
@@ -83,7 +83,6 @@ const About = memo(({ profile }) => {
                         <Typography variant="h3" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: -2, fontSize: { xs: '2rem', md: '3.5rem' } }}>SUMMARY</Typography>
                         <Box sx={{ height: 2, width: 80, bgcolor: '#00ffcc', boxShadow: '0 0 15px #00ffcc', borderRadius: 10 }} />
                     </Stack>
-
 
                     {/* Active Scan Line Overlay */}
                     <motion.div
@@ -99,7 +98,6 @@ const About = memo(({ profile }) => {
                 </Box>
             </Box>
           </Grid>
-
 
           {/* [Right Column] - Narrative Description & Achievement Counters */}
           <Grid item xs={12} md={7}>
@@ -125,9 +123,9 @@ const About = memo(({ profile }) => {
                 ].map((stat, i) => (
                   <Grid item xs={12} sm={4} key={i}>
                     {/* Individual stat card */}
-                    <Box sx={{ 
-                      p: 2.5, borderRadius: '16px', 
-                      bgcolor: 'rgba(255, 255, 255, 0.02)', 
+                    <Box sx={{
+                      p: 2.5, borderRadius: '16px',
+                      bgcolor: 'rgba(255, 255, 255, 0.02)',
                       border: '1px solid rgba(255, 255, 255, 0.05)',
                       transition: '0.3s ease',
                       '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.04)', borderColor: stat.color }
@@ -136,7 +134,7 @@ const About = memo(({ profile }) => {
                       <Typography sx={{ color: 'white', fontWeight: 800, fontFamily: 'Outfit', fontSize: '1.1rem' }}>{stat.value}</Typography>
                       {/* Decorative progress bar that fills when scrolled into view */}
                       <Box sx={{ mt: 1.5, height: 2, width: '100%', bgcolor: 'rgba(255,255,255,0.03)', borderRadius: 10, overflow: 'hidden' }}>
-                        <motion.div 
+                        <motion.div
                           initial={{ width: 0 }}
                           whileInView={{ width: '100%' }}
                           transition={{ duration: 1, delay: 0.5 + i * 0.2 }}
@@ -154,8 +152,8 @@ const About = memo(({ profile }) => {
                   <Typography variant="overline" sx={{ color: '#64748b', fontWeight: 700, letterSpacing: 2, mb: 2, display: 'block' }}>Core Competencies</Typography>
                   <Stack direction="row" flexWrap="wrap" gap={1.5}>
                     {profile.softSkills.map((skill) => (
-                      <Box key={skill} sx={{ 
-                        px: 2, py: 0.8, borderRadius: '8px', 
+                      <Box key={skill} sx={{
+                        px: 2, py: 0.8, borderRadius: '8px',
                         border: '1px solid rgba(255, 255, 255, 0.05)',
                         bgcolor: 'rgba(255, 255, 255, 0.01)',
                         color: 'rgba(255, 255, 255, 0.6)',

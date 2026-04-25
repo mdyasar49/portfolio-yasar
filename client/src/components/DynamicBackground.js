@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { Box } from '@mui/material';
 import { motion } from 'framer-motion';
 
-
 const DynamicBackground = () => {
   const canvasRef = useRef(null);
 
@@ -23,7 +22,6 @@ const DynamicBackground = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-
 
     class Particle {
       constructor() {
@@ -99,12 +97,12 @@ const DynamicBackground = () => {
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       particles.forEach(p => {
         p.update();
         p.draw();
       });
-      
+
       drawLines();
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -157,7 +155,7 @@ const DynamicBackground = () => {
         pointerEvents: 'none'
       }}>
         <motion.div
-            animate={{ 
+            animate={{
                 x: [0, 100, -100, 0],
                 y: [0, -100, 100, 0],
                 scale: [1, 1.2, 0.9, 1]
@@ -169,7 +167,7 @@ const DynamicBackground = () => {
             }}
         />
         <motion.div
-            animate={{ 
+            animate={{
                 x: [0, -150, 150, 0],
                 y: [0, 100, -100, 0],
                 scale: [1, 0.8, 1.3, 1]
@@ -181,7 +179,7 @@ const DynamicBackground = () => {
             }}
         />
         <motion.div
-            animate={{ 
+            animate={{
                 opacity: [0.3, 0.6, 0.3]
             }}
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
@@ -196,19 +194,19 @@ const DynamicBackground = () => {
       {[...Array(10)].map((_, i) => (
         <motion.div
             key={i}
-            initial={{ 
-                x: Math.random() * window.innerWidth, 
+            initial={{
+                x: Math.random() * window.innerWidth,
                 y: Math.random() * window.innerHeight,
                 opacity: 0
             }}
-            animate={{ 
+            animate={{
                 y: [null, Math.random() * -500],
                 opacity: [0, 0.2, 0]
             }}
-            transition={{ 
-                duration: 20 + Math.random() * 20, 
-                repeat: Infinity, 
-                ease: "linear" 
+            transition={{
+                duration: 20 + Math.random() * 20,
+                repeat: Infinity,
+                ease: "linear"
             }}
             style={{
                 position: 'absolute',

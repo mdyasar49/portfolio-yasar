@@ -25,7 +25,7 @@ const Hero = memo(({ profile }) => {
   // Reference to the main container to detect mouse movement inside it
   const containerRef = useRef(null);
   const theme = useTheme();
-  
+
   // Detect if the user is on a mobile device or has animations disabled in their OS settings
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
@@ -50,7 +50,7 @@ const Hero = memo(({ profile }) => {
    */
   const handleMouseMove = (e) => {
     // If animations are disabled, don't calculate anything
-    if (disableHeavyMotion) return; 
+    if (disableHeavyMotion) return;
     if (!containerRef.current) return;
     // Get the exact dimensions and position of the hero section on the screen
     const rect = containerRef.current.getBoundingClientRect();
@@ -72,20 +72,20 @@ const Hero = memo(({ profile }) => {
   };
 
   return (
-    <Box 
-      id="hero" 
+    <Box
+      id="hero"
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      sx={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
         overflow: 'hidden',
         // 'perspective' is needed to make the 3D tilt look deep and realistic
-        perspective: '2000px', 
+        perspective: '2000px',
         bgcolor: 'background.default'
       }}
     >
@@ -122,7 +122,7 @@ const Hero = memo(({ profile }) => {
             rotateX: disableHeavyMotion ? '0deg' : rotateX,
             rotateY: disableHeavyMotion ? '0deg' : rotateY,
             // 'preserve-3d' ensures the text inside also looks 3D
-            transformStyle: "preserve-3d" 
+            transformStyle: "preserve-3d"
           }}
           // Initial fade-in and scale-up animation when the site loads
           initial={{ opacity: 0, scale: 0.9 }}
@@ -130,14 +130,14 @@ const Hero = memo(({ profile }) => {
           transition={{ duration: 1.5, ease: "easeOut" }}
         >
           <Stack spacing={4} alignItems="center">
-            
+
             {/* Availability Badge (Top Chip) */}
             <motion.div
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5, type: 'spring' }}
             >
-              <Box sx={{ 
+              <Box sx={{
                 display: 'inline-flex', alignItems: 'center', gap: 2,
                 px: 3, py: 1.2, borderRadius: 50,
                 background: 'rgba(255, 255, 255, 0.02)',
@@ -159,11 +159,11 @@ const Hero = memo(({ profile }) => {
                     animate={{ opacity: 1, filter: 'blur(0px)', letterSpacing: '-4px' }}
                     transition={{ duration: 2.5, ease: "easeOut" }}
                 >
-                    <Typography 
-                      variant="h1" 
-                      sx={{ 
+                    <Typography
+                      variant="h1"
+                      sx={{
                         fontSize: { xs: '2.5rem', sm: '4rem', md: '6.5rem', lg: '8.5rem' },
-                        lineHeight: 0.85, 
+                        lineHeight: 0.85,
                         fontWeight: 900,
                         fontFamily: 'Outfit',
                         textTransform: 'uppercase',
@@ -176,7 +176,7 @@ const Hero = memo(({ profile }) => {
                     }}
                   >
                     {/* The name itself with gradient styling */}
-                    <span style={{ 
+                    <span style={{
                       background: 'linear-gradient(to bottom, #fff 0%, #64748b 100%)',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
@@ -189,9 +189,9 @@ const Hero = memo(({ profile }) => {
                     </span>
                   </Typography>
                 </motion.div>
-              
+
               {/* Floating technical tag next to the name */}
-              <Box sx={{ 
+              <Box sx={{
                 position: 'absolute', top: 0, right: -60, opacity: 0.3,
                 display: { xs: 'none', lg: 'block' }
               }}>
@@ -209,7 +209,7 @@ const Hero = memo(({ profile }) => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
             >
-              <Typography variant="h2" sx={{ 
+              <Typography variant="h2" sx={{
                 color: 'white', fontWeight: 600, fontFamily: 'Outfit',
                 fontSize: { xs: '1.2rem', md: '2.5rem' }, letterSpacing: 2,
                 opacity: 0.9
@@ -224,11 +224,11 @@ const Hero = memo(({ profile }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.8 }}
             >
-              <Typography variant="body1" sx={{ 
-                maxWidth: '850px', 
-                color: 'text.secondary', 
+              <Typography variant="body1" sx={{
+                maxWidth: '850px',
+                color: 'text.secondary',
                 fontSize: { xs: '1rem', md: '1.25rem' },
-                lineHeight: 1.8, 
+                lineHeight: 1.8,
                 fontWeight: 400,
                 letterSpacing: '0.01em',
                 textShadow: '0 2px 10px rgba(0,0,0,0.5)'
@@ -243,13 +243,13 @@ const Hero = memo(({ profile }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.5, duration: 0.8 }}
             >
-              <Stack 
-                direction={{ xs: 'column', md: 'row' }} 
-                spacing={4} 
-                sx={{ 
-                  mt: 4, mb: 2, p: 3, 
-                  borderRadius: 4, 
-                  bgcolor: 'rgba(255, 255, 255, 0.02)', 
+              <Stack
+                direction={{ xs: 'column', md: 'row' }}
+                spacing={4}
+                sx={{
+                  mt: 4, mb: 2, p: 3,
+                  borderRadius: 4,
+                  bgcolor: 'rgba(255, 255, 255, 0.02)',
                   border: '1px solid rgba(255, 255, 255, 0.05)',
                   backdropFilter: 'blur(10px)'
                 }}
@@ -267,11 +267,11 @@ const Hero = memo(({ profile }) => {
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mt: 2 }}>
 
               {/* Main Button: Link to the Resume page */}
-              <Button 
-                variant="contained" 
-                size="large" 
-                component={RouterLink} 
-                to="/resume" 
+              <Button
+                variant="contained"
+                size="large"
+                component={RouterLink}
+                to="/resume"
                 startIcon={<Terminal size={20} />}
                 className="kinetic-button" // Specialized hover animation class
                 sx={{
@@ -287,12 +287,12 @@ const Hero = memo(({ profile }) => {
                 VIEW_RESUME
               </Button>
               {/* Secondary Button: Anchor link to the Projects section */}
-              <Button 
-                variant="outlined" 
-                size="large" 
-                href="#projects" 
+              <Button
+                variant="outlined"
+                size="large"
+                href="#projects"
                 startIcon={<ShieldCheck size={20} />}
-                sx={{ 
+                sx={{
                   borderColor: 'rgba(255,255,255,0.1)', color: 'white',
                   px: 5, py: 2.5, borderRadius: '16px',
                   fontFamily: 'Outfit', fontWeight: 700,

@@ -1,7 +1,7 @@
 /**
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This component renders the Footer section, featuring social links, system analytics (visitor tracking), 
+ * This component renders the Footer section, featuring social links, system analytics (visitor tracking),
  * and technical status indicators. It uses a high-end "Dark Cyber" aesthetic with neon accents.
  */
 
@@ -32,8 +32,8 @@ const Footer = ({ profile }) => {
   useEffect(() => {
     const fetchVisitorsData = async () => {
         const hasIncremented = sessionStorage.getItem('v_inc');
-        const data = await fetchSystemAnalytics(!hasIncremented); 
-        
+        const data = await fetchSystemAnalytics(!hasIncremented);
+
         if (data?.success) {
             setVisitorCount(data.count);
             if (!hasIncremented) sessionStorage.setItem('v_inc', 'true');
@@ -56,11 +56,11 @@ const Footer = ({ profile }) => {
   ];
 
   return (
-    <Box 
-      component="footer" 
-      sx={{ 
+    <Box
+      component="footer"
+      sx={{
         bgcolor: '#000000',
-        borderTop: '1px solid rgba(51, 204, 255, 0.1)', 
+        borderTop: '1px solid rgba(51, 204, 255, 0.1)',
         pt: 12, pb: 12, position: 'relative', overflow: 'hidden'
       }}
     >
@@ -76,15 +76,19 @@ const Footer = ({ profile }) => {
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          
+
           {/* ── LOGO & STATUS HUD ── */}
           <Stack spacing={1} alignItems="center" sx={{ mb: 4 }}>
-          <Box 
+          <Box
             component={RouterLink} to="/"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => {
+              const container = document.getElementById('main-scroll-container');
+              if (container) container.scrollTo({ top: 0, behavior: 'smooth' });
+              else window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             sx={{ textDecoration: 'none', display: 'flex', transition: '0.3s', '&:hover': { transform: 'scale(1.05)' } }}
           >
-            <Box 
+            <Box
               component="img" src="/logo.png" alt="Logo"
               sx={{ height: 50, width: 'auto', filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.2))' }}
             />
@@ -98,10 +102,10 @@ const Footer = ({ profile }) => {
           </Stack>
 
           {/* Professional Tagline */}
-          <Typography 
-            variant="body2" 
-            sx={{ 
-              maxWidth: '600px', textAlign: 'center', mb: 6, 
+          <Typography
+            variant="body2"
+            sx={{
+              maxWidth: '600px', textAlign: 'center', mb: 6,
               color: '#334155', fontWeight: 600, fontStyle: 'italic',
               lineHeight: 1.8, fontSize: '0.9rem'
             }}
@@ -110,19 +114,19 @@ const Footer = ({ profile }) => {
           </Typography>
 
           {/* ── SOCIAL MAINFRAME ── */}
-          <Box sx={{ 
+          <Box sx={{
             p: 1, px: 4, borderRadius: 10, background: 'rgba(255,255,255,0.01)',
             border: '1px solid rgba(255,255,255,0.03)', mb: 8, display: 'flex', gap: 2
           }}>
             {socialLinks.map((item, index) => (
               <Tooltip key={index} title={item.link ? "OPEN_LINK" : "N/A"}>
-                <IconButton 
-                  href={item.link || '#'} 
-                  target={item.link?.startsWith('mailto:') ? undefined : "_blank"} 
-                  sx={{ 
-                    color: '#444', 
+                <IconButton
+                  href={item.link || '#'}
+                  target={item.link?.startsWith('mailto:') ? undefined : "_blank"}
+                  sx={{
+                    color: '#444',
                     transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                    '&:hover': { 
+                    '&:hover': {
                       color: item.color,
                       transform: 'scale(1.2) translateY(-4px)',
                       filter: `drop-shadow(0 0 10px ${item.color}88)`
@@ -137,8 +141,8 @@ const Footer = ({ profile }) => {
               {/* ── ANALYTICS HUD (System Dashboard Style) ── */}
           <Grid container spacing={4} sx={{ mb: 10 }}>
              <Grid item xs={12} md={6}>
-                <Box sx={{ 
-                    p: 4, borderRadius: 4, bgcolor: 'rgba(51, 204, 255, 0.02)', 
+                <Box sx={{
+                    p: 4, borderRadius: 4, bgcolor: 'rgba(51, 204, 255, 0.02)',
                     border: '1px solid rgba(51, 204, 255, 0.1)',
                     position: 'relative', overflow: 'hidden'
                 }}>
@@ -164,8 +168,8 @@ const Footer = ({ profile }) => {
              </Grid>
 
              <Grid item xs={12} md={6}>
-                <Box sx={{ 
-                    p: 4, borderRadius: 4, bgcolor: 'rgba(255, 51, 102, 0.02)', 
+                <Box sx={{
+                    p: 4, borderRadius: 4, bgcolor: 'rgba(255, 51, 102, 0.02)',
                     border: '1px solid rgba(255, 51, 102, 0.1)',
                     position: 'relative', overflow: 'hidden'
                 }}>
@@ -193,9 +197,9 @@ const Footer = ({ profile }) => {
 
 
           {/* ── TECHNICAL TERMINAL BAR (Copyright & Versioning) ── */}
-          <Box sx={{ 
+          <Box sx={{
             width: '100%', pt: 4, borderTop: '1px solid rgba(255,255,255,0.03)',
-            display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, 
+            display: 'flex', flexDirection: { xs: 'column', sm: 'row' },
             justifyContent: 'space-between', alignItems: 'center', gap: 2
           }}>
             <Stack direction="row" spacing={1} alignItems="center">

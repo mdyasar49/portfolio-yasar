@@ -4,7 +4,7 @@ const path = require('path');
 const getLocalData = () => {
     try {
         const dataDir = 'c:\\Users\\HP\\Documents\\Mern Stack Developer\\server\\data';
-        
+
         const fragments = [
             'basic_info.json',
             'skills.json',

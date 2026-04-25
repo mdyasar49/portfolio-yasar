@@ -40,8 +40,6 @@ body::before {
     opacity: 0.3;
 }
 
-
-
 *,
 *::before,
 *::after {
@@ -126,7 +124,7 @@ body::after {
   backdrop-filter: blur(25px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 
+  box-shadow:
     0 8px 32px 0 rgba(0, 0, 0, 0.37),
     inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
   border-radius: 24px !important;
@@ -158,8 +156,8 @@ body::after {
 .glass-panel:hover {
   transform: translateY(-8px) scale(1.02) !important;
   border-color: rgba(51, 204, 255, 0.25) !important;
-  box-shadow: 
-    0 40px 100px rgba(0, 0, 0, 0.7), 
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.7),
     0 0 30px rgba(51, 204, 255, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.1) !important;
 }
@@ -211,7 +209,6 @@ a, button, .clickable {
   );
   z-index: 9998;
 }
-
 
 img, video, canvas {
   max-width: 100%;

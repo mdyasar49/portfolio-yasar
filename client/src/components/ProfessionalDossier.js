@@ -29,9 +29,9 @@ const ProfessionalDossier = ({ profile }) => {
             </Typography>
             <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(255, 51, 102, 0.3)' }} />
           </Box>
-          <Typography variant="h2" sx={{ 
-            fontFamily: 'Outfit', 
-            fontWeight: 800, 
+          <Typography variant="h2" sx={{
+            fontFamily: 'Outfit',
+            fontWeight: 800,
             letterSpacing: -1,
             fontSize: { xs: '2.5rem', md: '4.5rem' },
             textShadow: '0 0 40px rgba(255,255,255,0.05)'
@@ -49,9 +49,9 @@ const ProfessionalDossier = ({ profile }) => {
               viewport={{ once: true }}
             >
               <Box sx={{ position: 'relative' }}>
-                 <Box sx={{ 
-                   p: 0.5, 
-                   bgcolor: 'rgba(51, 204, 255, 0.1)', 
+                 <Box sx={{
+                   p: 0.5,
+                   bgcolor: 'rgba(51, 204, 255, 0.1)',
                    borderRadius: 4,
                    border: '1px solid rgba(51, 204, 255, 0.3)',
                    boxShadow: '0 0 40px rgba(51, 204, 255, 0.1)',
@@ -67,7 +67,7 @@ const ProfessionalDossier = ({ profile }) => {
                      animation: 'scan 4s linear infinite'
                    }} />
 
-                   <iframe 
+                   <iframe
                       src={iframeSrc}
                       title="Direct Resume View"
                       width="100%"
@@ -89,9 +89,9 @@ const ProfessionalDossier = ({ profile }) => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Paper sx={{ 
-                p: { xs: 4, md: 5 }, 
-                bgcolor: 'rgba(1, 4, 9, 0.8)', 
+              <Paper sx={{
+                p: { xs: 4, md: 5 },
+                bgcolor: 'rgba(1, 4, 9, 0.8)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: 6,
                 border: '1px solid rgba(255, 255, 255, 0.05)',
@@ -120,12 +120,12 @@ const ProfessionalDossier = ({ profile }) => {
                   </Grid>
 
                   <Stack spacing={2}>
-                    <Button 
+                    <Button
                       fullWidth
-                      variant="contained" 
+                      variant="contained"
                       onClick={handleDownload}
                       startIcon={<Download size={18} />}
-                      sx={{ 
+                      sx={{
                         background: 'linear-gradient(135deg, #6366f1, #ec4899)',
                         py: 1.8, borderRadius: 4, fontWeight: 700, fontFamily: 'Outfit', fontSize: '0.95rem',
                         boxShadow: '0 10px 20px rgba(99, 102, 241, 0.2)',
@@ -134,7 +134,7 @@ const ProfessionalDossier = ({ profile }) => {
                     >
                       Download PDF Version
                     </Button>
-                    <Button 
+                    <Button
                       fullWidth
                       onClick={() => {
                         const resumeUrl = `${window.location.origin}/resume?system_dispatch=true`;
@@ -149,7 +149,7 @@ const ProfessionalDossier = ({ profile }) => {
                         window.open(`https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=${subject}&body=${body}`, '_blank');
                       }}
                       startIcon={<Share2 size={18} />}
-                      sx={{ 
+                      sx={{
                         border: '1px solid rgba(99, 102, 241, 0.3)',
                         bgcolor: 'rgba(99, 102, 241, 0.05)',
                         color: '#6366f1', py: 1.8, borderRadius: 4, fontWeight: 700, fontFamily: 'Outfit', fontSize: '0.95rem',
@@ -158,12 +158,12 @@ const ProfessionalDossier = ({ profile }) => {
                     >
                       Share Resume Access
                     </Button>
-                    <Button 
+                    <Button
                       fullWidth
-                      href="/resume" 
+                      href="/resume"
                       target="_blank"
                       startIcon={<ExternalLink size={18} />}
-                      sx={{ 
+                      sx={{
                         border: '1px solid rgba(255,255,255,0.1)',
                         bgcolor: 'rgba(255,255,255,0.02)',
                         color: 'white', py: 1.8, borderRadius: 4, fontWeight: 700, fontFamily: 'Outfit', fontSize: '0.95rem',

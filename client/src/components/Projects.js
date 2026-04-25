@@ -2,7 +2,7 @@
  * Language: JavaScript (React.js)
  * Purpose of this file:
  * This component renders the 'Featured Projects' section, which is the core showcase of the portfolio.
- * It features interactive "Tilt Cards" that follow mouse movement in 3D, 
+ * It features interactive "Tilt Cards" that follow mouse movement in 3D,
  * and a deep-dive "Technical Analysis" modal for viewing project details, stack, and highlights.
  */
 
@@ -17,7 +17,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 
 /**
  * [TiltCard Component]
- * Function purpose: Provides a reusable wrapper that applies a 3D tilt effect 
+ * Function purpose: Provides a reusable wrapper that applies a 3D tilt effect
  * to its children based on the user's mouse position.
  */
 const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
@@ -68,8 +68,8 @@ const TiltCard = memo(({ children, accentColor = '#33ccff' }) => {
       }}
     >
       {/* Decorative Outer Border Glow that appears on hover */}
-      <Box sx={{ 
-        height: '100%', 
+      <Box sx={{
+        height: '100%',
         position: 'relative',
         '&::before': {
           content: '""',
@@ -116,7 +116,7 @@ const Projects = memo(({ projects }) => {
   const [filter, setFilter] = useState('ALL');
 
   // Filtered projects list based on selection
-  const filteredProjects = filter === 'ALL' 
+  const filteredProjects = filter === 'ALL'
     ? (Array.isArray(projects) ? projects : [])
     : (Array.isArray(projects) ? projects : []).filter(p => Array.isArray(p?.technologies) && p.technologies.some(t => t.toUpperCase() === filter));
 
@@ -128,7 +128,7 @@ const Projects = memo(({ projects }) => {
     setSelectedProject(project);
     setActiveTab(0); // Always start on the Overview tab
   };
-  
+
   // Function to close the modal
   const handleClose = () => setSelectedProject(null);
 
@@ -143,9 +143,9 @@ const Projects = memo(({ projects }) => {
            </Typography>
            <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
         </Box>
-        <Typography variant="h2" sx={{ 
-          fontFamily: 'Syncopate', 
-          fontWeight: 900, 
+        <Typography variant="h2" sx={{
+          fontFamily: 'Syncopate',
+          fontWeight: 900,
           letterSpacing: -2,
           fontSize: { xs: '2.8rem', md: '5rem' },
           textShadow: '0 0 40px rgba(255,255,255,0.05)'
@@ -155,7 +155,7 @@ const Projects = memo(({ projects }) => {
       </Stack>
 
       {/* ── TECH FILTER BAR ── */}
-      <Box sx={{ 
+      <Box sx={{
         mb: 8, display: 'flex', justifyContent: 'center', gap: 1.5, flexWrap: 'wrap',
         maxWidth: 900, mx: 'auto', p: 1, borderRadius: 10,
         bgcolor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)'
@@ -206,10 +206,10 @@ const Projects = memo(({ projects }) => {
                 >
                   {/* Apply the 3D tilt effect */}
                   <TiltCard accentColor={accent}>
-                    <Card sx={{ 
-                      height: '100%', 
-                      display: 'flex', 
-                      flexDirection: 'column', 
+                    <Card sx={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
                       borderRadius: 5,
                       position: 'relative',
                       overflow: 'hidden',
@@ -231,13 +231,13 @@ const Projects = memo(({ projects }) => {
                           image={project.image}
                           alt={project.name}
                           loading="lazy"
-                          sx={{ 
+                          sx={{
                             filter: 'brightness(0.7) contrast(1.1)',
                             transition: '0.8s ease',
                             transform: 'scale(1.05)'
                           }}
                         />
-                        
+
                         {/* Corner Brackets for a "Targeting" aesthetic */}
                         <Box sx={{ position: 'absolute', top: 15, left: 15, width: 25, height: 25, borderTop: `2px solid ${accent}`, borderLeft: `2px solid ${accent}`, zIndex: 10, opacity: 0, transition: '0.5s', '.MuiCard-root:hover &': { opacity: 1, top: 25, left: 25 } }} />
                         <Box sx={{ position: 'absolute', top: 15, right: 15, width: 25, height: 25, borderTop: `2px solid ${accent}`, borderRight: `2px solid ${accent}`, zIndex: 10, opacity: 0, transition: '0.5s', '.MuiCard-root:hover &': { opacity: 1, top: 25, right: 25 } }} />
@@ -262,7 +262,7 @@ const Projects = memo(({ projects }) => {
                         <Box sx={{ position: 'absolute', top: 25, left: 25, zIndex: 10 }}>
                            <Stack spacing={1}>
                               {/* "Production Ready" Badge */}
-                              <Box sx={{ 
+                              <Box sx={{
                                 display: 'flex', alignItems: 'center', gap: 1,
                                 bgcolor: 'rgba(0,0,0,0.8)', py: 0.5, px: 1.5, borderRadius: 100,
                                 border: `1px solid ${accent}44`,
@@ -272,7 +272,7 @@ const Projects = memo(({ projects }) => {
                                  <Typography sx={{ color: accent, fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', letterSpacing: 1 }}>PRODUCTION_READY</Typography>
                               </Box>
                               {/* "Performance Optimized" Badge */}
-                              <Box sx={{ 
+                              <Box sx={{
                                 display: 'flex', alignItems: 'center', gap: 1,
                                 bgcolor: 'rgba(0,0,0,0.8)', py: 0.5, px: 1.5, borderRadius: 100,
                                 border: '1px solid rgba(255,255,255,0.1)'
@@ -280,9 +280,9 @@ const Projects = memo(({ projects }) => {
                                  <Zap size={10} color="#ff9933" />
                                  <Typography sx={{ color: '#fff', fontSize: '0.6rem', fontWeight: 900, fontFamily: 'monospace', opacity: 0.6 }}>PERFORMANCE_OPTIMIZED</Typography>
                               </Box>
-                              
+
                               {/* Recruiter Key: Strategic Value Tag */}
-                              <Box sx={{ 
+                              <Box sx={{
                                 display: 'flex', alignItems: 'center', gap: 1,
                                 bgcolor: 'rgba(99, 102, 241, 0.15)', py: 0.8, px: 2, borderRadius: 2,
                                 border: '1px solid rgba(99, 102, 241, 0.3)', mt: 1
@@ -296,7 +296,7 @@ const Projects = memo(({ projects }) => {
                               {/* Visual Project Stats HUD (if data exists) */}
 
                               {project.stats && (
-                                <Box sx={{ 
+                                <Box sx={{
                                   display: 'flex', gap: 1.5, mt: 1,
                                   bgcolor: 'rgba(0,0,0,0.6)', py: 0.5, px: 2, borderRadius: 100,
                                   border: '1px solid rgba(255,255,255,0.05)',
@@ -314,8 +314,8 @@ const Projects = memo(({ projects }) => {
                         </Box>
 
                         {/* Dark Gradient Overlay for better text readability */}
-                        <Box sx={{ 
-                          position: 'absolute', inset: 0, 
+                        <Box sx={{
+                          position: 'absolute', inset: 0,
                           background: `linear-gradient(to top, rgba(1, 4, 9, 1) 10%, ${accent}05 100%)`,
                           zIndex: 2
                         }} />
@@ -325,8 +325,8 @@ const Projects = memo(({ projects }) => {
                       <CardContent sx={{ p: 5, flexGrow: 1, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 5 }}>
                         {/* Title and technical icon */}
                         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
-                           <Typography variant="h4" sx={{ 
-                             fontWeight: 800, color: 'white', fontFamily: 'Outfit', fontSize: '1.8rem', 
+                           <Typography variant="h4" sx={{
+                             fontWeight: 800, color: 'white', fontFamily: 'Outfit', fontSize: '1.8rem',
                              letterSpacing: 0,
                              textShadow: `0 0 15px ${accent}22`
                            }}>
@@ -336,7 +336,7 @@ const Projects = memo(({ projects }) => {
                              <Terminal size={18} />
                            </Box>
                         </Stack>
-                        
+
                         {/* Short project description line */}
                         <Typography variant="body2" sx={{ mb: 5, color: '#94a3b8', lineHeight: 1.9, fontSize: '0.95rem', fontWeight: 500 }}>
                            {project.description[0]}
@@ -345,8 +345,8 @@ const Projects = memo(({ projects }) => {
                         {/* List of top 5 technologies used in the project */}
                         <Stack direction="row" spacing={2} sx={{ mb: 5, flexWrap: 'wrap', gap: 1.5 }}>
                            {project.technologies.slice(0, 5).map(tech => (
-                              <Box key={tech} sx={{ 
-                                px: 1, borderLeft: `2px solid ${accent}`, 
+                              <Box key={tech} sx={{
+                                px: 1, borderLeft: `2px solid ${accent}`,
                                 bgcolor: `${accent}05`
                               }}>
                                  <Typography variant="caption" sx={{ color: accent, fontWeight: 900, fontFamily: 'monospace', letterSpacing: 1, fontSize: '0.7rem' }}>{tech.toUpperCase()}</Typography>
@@ -356,20 +356,20 @@ const Projects = memo(({ projects }) => {
 
                         {/* Button to open the deep-dive analysis modal */}
                         <Box sx={{ mt: 'auto' }}>
-                           <Button 
+                           <Button
                             fullWidth
                             variant="contained"
                             onClick={() => handleOpen(project)}
                             endIcon={<Activity size={18} />}
-                            sx={{ 
-                              py: 2, borderRadius: 3, 
-                              bgcolor: 'rgba(255,255,255,0.03)', 
+                            sx={{
+                              py: 2, borderRadius: 3,
+                              bgcolor: 'rgba(255,255,255,0.03)',
                               color: '#cbd5e1',
                               fontFamily: 'Outfit', fontWeight: 600, fontSize: '0.9rem', letterSpacing: 1,
                               border: '1px solid rgba(255,255,255,0.08)',
                               transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                              '&:hover': { 
-                                borderColor: accent, color: '#fff', 
+                              '&:hover': {
+                                borderColor: accent, color: '#fff',
                                 bgcolor: `${accent}11`,
                                 transform: 'translateY(-2px)'
                               }
@@ -391,15 +391,15 @@ const Projects = memo(({ projects }) => {
 
       {/* ── INTELLIGENCE ANALYSIS MODAL ── */}
       {/* This dialog provides detailed information about the selected project */}
-      <Dialog 
-        open={Boolean(selectedProject)} 
-        onClose={handleClose} 
-        maxWidth="md" 
+      <Dialog
+        open={Boolean(selectedProject)}
+        onClose={handleClose}
+        maxWidth="md"
         fullWidth
         fullScreen={fullScreen}
-        PaperProps={{ 
-          sx: { 
-            bgcolor: 'background.default', 
+        PaperProps={{
+          sx: {
+            bgcolor: 'background.default',
             backgroundImage: 'none',
             border: fullScreen ? 'none' : '1px solid rgba(51, 204, 255, 0.1)',
             borderRadius: fullScreen ? 0 : 5,
@@ -410,19 +410,19 @@ const Projects = memo(({ projects }) => {
             m: { xs: 0, md: 2 },
             display: 'flex',
             flexDirection: 'column'
-          } 
+          }
         }}
       >
         <AnimatePresence mode="wait">
           {selectedProject && (
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.98 }} 
-              animate={{ opacity: 1, scale: 1 }} 
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                height: '100%', 
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
                 width: '100%',
                 overflow: 'hidden'
               }}
@@ -443,16 +443,16 @@ const Projects = memo(({ projects }) => {
 
               {/* Navigation Tabs (Overview vs Stack) */}
               <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', px: { xs: 2, md: 4 } }}>
-                <Tabs 
-                  value={activeTab} 
+                <Tabs
+                  value={activeTab}
                   onChange={(e, v) => setActiveTab(v)}
                   variant="fullWidth"
                   sx={{
                     '& .MuiTabs-indicator': { bgcolor: '#33ccff', height: 3, boxShadow: '0 0 15px #33ccff' },
-                    '& .MuiTab-root': { 
-                      color: '#444', 
-                      fontFamily: 'Syncopate', 
-                      fontWeight: 900, 
+                    '& .MuiTab-root': {
+                      color: '#444',
+                      fontFamily: 'Syncopate',
+                      fontWeight: 900,
                       fontSize: { xs: '0.6rem', md: '0.75rem' },
                       py: 2,
                       '&.Mui-selected': { color: 'white' }
@@ -469,10 +469,10 @@ const Projects = memo(({ projects }) => {
                 <AnimatePresence mode="wait">
                   {/* TAB 1: Logical breakdown and narrative lines */}
                   {activeTab === 0 ? (
-                    <motion.div 
-                      key="logs" 
-                      initial={{ opacity: 0, x: -20 }} 
-                      animate={{ opacity: 1, x: 0 }} 
+                    <motion.div
+                      key="logs"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                     >
                       <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: 'rgba(255,255,255,0.01)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
@@ -504,10 +504,10 @@ const Projects = memo(({ projects }) => {
                     </motion.div>
                   ) : (
                     /* TAB 2: Full Technology Stack and Repository Security Status */
-                    <motion.div 
-                      key="arch" 
-                      initial={{ opacity: 0, x: 20 }} 
-                      animate={{ opacity: 1, x: 0 }} 
+                    <motion.div
+                      key="arch"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                     >
                       <Stack spacing={4}>
@@ -520,7 +520,7 @@ const Projects = memo(({ projects }) => {
                             ))}
                           </Box>
                         </Box>
-                        
+
                         {/* Security and Repository Access Status */}
                         <Box sx={{ p: { xs: 3, md: 4 }, bgcolor: 'rgba(255, 51, 102, 0.02)', borderRadius: 4, border: '1px solid rgba(255, 51, 102, 0.15)' }}>
                           <Typography variant="h6" sx={{ color: '#ff3366', fontWeight: 900, mb: 2.5, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>ACCESS_CONTROL</Typography>
@@ -544,15 +544,15 @@ const Projects = memo(({ projects }) => {
               {/* Modal Footer: Live View Button and Close */}
               <DialogActions sx={{ p: { xs: 2, md: 3.5 }, pt: 2, gap: 2, flexWrap: 'wrap' }}>
                 <Button onClick={handleClose} sx={{ color: '#444', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem' }}>CLOSE</Button>
-                <Button 
-                  variant="contained" 
+                <Button
+                  variant="contained"
                   // Open live link in a new tab if it exists
-                  href={selectedProject.link === '#' ? undefined : selectedProject.link} 
+                  href={selectedProject.link === '#' ? undefined : selectedProject.link}
                   target="_blank"
                   disabled={selectedProject.link === '#'}
                   startIcon={<ExternalLink size={20} />}
-                  sx={{ 
-                    background: 'linear-gradient(45deg, #ff3366, #ff9933)', 
+                  sx={{
+                    background: 'linear-gradient(45deg, #ff3366, #ff9933)',
                     color: 'white', px: 5, py: 2, borderRadius: 3, fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.85rem',
                     boxShadow: '0 15px 35px rgba(255, 51, 102, 0.3)',
                     '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 20px 45px rgba(255, 51, 102, 0.4)' },

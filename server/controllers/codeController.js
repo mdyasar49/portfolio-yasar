@@ -1,7 +1,7 @@
 /**
  * Language: JavaScript (Node.js)
  * Purpose of this file:
- * This controller handles the "Code Live" feature, which allows visitors or 
+ * This controller handles the "Code Live" feature, which allows visitors or
  * admins to view the actual source code of the modules they are interacting with.
  * It maps module identifiers to their respective frontend and backend source files.
  */
@@ -55,7 +55,7 @@ const moduleMapping = {
 exports.getModuleCode = asyncHandler(async (req, res) => {
     // Extract module name from query parameters
     const { moduleName } = req.query;
-    
+
     // Check if the requested module is in our registry
     const mapping = moduleMapping[moduleName || 'portfolio'];
 
@@ -66,7 +66,7 @@ exports.getModuleCode = asyncHandler(async (req, res) => {
     try {
         // Resolve the root directory of the project
         const root = path.resolve(__dirname, '../../');
-        
+
         // Read file contents from the file system
         // These files are annotated with technical comments added during the audit
         const frontendContent = fs.readFileSync(path.join(root, mapping.frontend), 'utf-8');
@@ -76,13 +76,13 @@ exports.getModuleCode = asyncHandler(async (req, res) => {
         res.status(200).json({
             success: true,
             module: moduleName,
-            frontend: { 
-                path: mapping.frontend, 
-                content: frontendContent 
+            frontend: {
+                path: mapping.frontend,
+                content: frontendContent
             },
-            backend: { 
-                path: mapping.backend, 
-                content: backendContent 
+            backend: {
+                path: mapping.backend,
+                content: backendContent
             }
         });
     } catch (err) {

@@ -2,14 +2,13 @@
  * [A. MOHAMED YASAR | MERN PORTFOLIO]
  * Copyright (c) 2026 A. Mohamed Yasar
  * MIT License
- * 
+ *
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This is the Root Application Component. It acts as the "brain" of the frontend, 
+ * This is the Root Application Component. It acts as the "brain" of the frontend,
  * orchestrating the entire lifecycle: fetching global profile data, managing the theme (Material UI),
  * handling navigation (routing), and applying global visual effects like the custom cursor spotlight.
  */
-
 
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 
@@ -44,12 +43,6 @@ import RecruiterHUD from './components/RecruiterHUD';
 import LoadingScreen from './components/LoadingScreen';
 import DocumentationHUD from './components/DocumentationHUD';
 
-
-
-
-
-
-
 // ─── Lazy Loaded Modules (Optimization) ──────────────────────────────────
 // These pages are only downloaded when the user actually navigates to them,
 // which makes the initial website loading much faster.
@@ -59,7 +52,7 @@ const Resume = lazy(() => import('./pages/Resume'));
 
 /**
  * [ScrollToTop]
- * Function purpose: Resets the window scroll position to the very top 
+ * Function purpose: Resets the window scroll position to the very top
  * whenever the user changes pages (routes).
  */
 const ScrollToTop = () => {
@@ -73,13 +66,13 @@ const ScrollToTop = () => {
 
 /**
  * [ScrollToHash]
- * Function purpose: Automatically scrolls the user to a specific section 
+ * Function purpose: Automatically scrolls the user to a specific section
  * (like #contact) if the URL contains a "hash" link.
  */
 const ScrollToHash = () => {
   // Extract hash (e.g., #contact) and current path from the URL
   const { hash, pathname } = useLocation();
-  
+
   useEffect(() => {
     // If no hash is present, do nothing
     if (!hash) return;
@@ -127,8 +120,6 @@ const PublicApp = () => {
   // If data is still loading, show a high-end futuristic loading screen
   // This is handled in the root App component now
 
-
-
   // ── Maintenance state Check ──
   // If the admin has turned on maintenance mode, show the maintenance page only
   if (maintenanceMode) {
@@ -163,10 +154,10 @@ const PublicApp = () => {
       <DynamicBackground />
       {/* HUD overlay elements (borders, scanlines, etc.) */}
       <SystemInterfaceHUD />
-      
-      <Box sx={{ 
-        display: 'flex', 
-        height: '100vh', 
+
+      <Box sx={{
+        display: 'flex',
+        height: '100vh',
         pt: 10,
         overflow: 'hidden',
         transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
@@ -174,9 +165,9 @@ const PublicApp = () => {
         {/* ── [UI_STREAM_CONTAINER] ── */}
         {/* Hidden when CODE_LIVE is ON as per USER request */}
         {!isCodeLive && (
-          <Box id="main-scroll-container" sx={{ 
-            flexGrow: 1, 
-            height: '100%', 
+          <Box id="main-scroll-container" sx={{
+            flexGrow: 1,
+            height: '100%',
             overflowY: 'auto',
             transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             width: '100%'
@@ -204,8 +195,8 @@ const PublicApp = () => {
 
         {/* ── [CODE_STREAM_PANEL] ── */}
         {/* Takes full screen width when active */}
-        <Box sx={{ 
-          width: isCodeLive ? '100%' : 0, 
+        <Box sx={{
+          width: isCodeLive ? '100%' : 0,
           height: '100%',
           transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           position: 'relative',
@@ -224,7 +215,6 @@ const PublicApp = () => {
   );
 };
 
-
 /**
  * [AppRoutes]
  * Function purpose: Simply renders the Public Portfolio UI.
@@ -233,8 +223,6 @@ const PublicApp = () => {
 const AppRoutes = () => {
   return <PublicApp />;
 };
-
-
 
 /**
  * [App] (Global Entry Point)
@@ -252,7 +240,7 @@ const App = () => {
     if (loader) {
       loader.style.opacity = '0'; // Fade out
       // Completely remove it after the fade animation finishes
-      setTimeout(() => { loader.remove(); document.body.style.overflow = 'auto'; }, 800); 
+      setTimeout(() => { loader.remove(); document.body.style.overflow = 'auto'; }, 800);
     } else {
       document.body.style.overflow = 'auto'; // Ensure scrolling is enabled
     }
@@ -281,7 +269,7 @@ const App = () => {
           <Box key="content" sx={{ position: 'relative' }}>
             <div id="spotlight" />
             <div id="noise-overlay" />
-            
+
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
 
         <CodeLiveProvider>
@@ -290,9 +278,9 @@ const App = () => {
           {/* Handle hash links (like #contact) */}
           <ScrollToHash />
           {/* Global Cinematic Frame */}
-          <Box sx={{ 
-            position: 'fixed', inset: { xs: 8, md: 20 }, 
-            border: '1px solid rgba(51, 204, 255, 0.1)', 
+          <Box sx={{
+            position: 'fixed', inset: { xs: 8, md: 20 },
+            border: '1px solid rgba(51, 204, 255, 0.1)',
             pointerEvents: 'none', zIndex: 9999,
             '&::before': { content: '""', position: 'absolute', top: -1, left: -1, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' },
             '&::after': { content: '""', position: 'absolute', bottom: -1, right: -1, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' },
@@ -300,17 +288,17 @@ const App = () => {
           }} />
 
           {/* Floating Section Navigation HUD (Right Side) */}
-          <Box sx={{ 
-            position: 'fixed', right: 40, top: '50%', transform: 'translateY(-50%)', 
-            zIndex: 9999, display: { xs: 'none', xl: 'flex' }, flexDirection: 'column', gap: 3 
+          <Box sx={{
+            position: 'fixed', right: 40, top: '50%', transform: 'translateY(-50%)',
+            zIndex: 9999, display: { xs: 'none', xl: 'flex' }, flexDirection: 'column', gap: 3
           }}>
             {['hero', 'about', 'skills', 'projects', 'contact'].map((section) => (
-              <Box 
+              <Box
                 key={section}
                 component="a"
                 href={`#${section}`}
-                sx={{ 
-                  width: 12, height: 12, borderRadius: '50%', 
+                sx={{
+                  width: 12, height: 12, borderRadius: '50%',
                   border: '1px solid rgba(255,255,255,0.3)',
                   transition: '0.3s',
                   '&:hover': { scale: 1.5, borderColor: '#33ccff', boxShadow: '0 0 10px #33ccff' }
@@ -320,9 +308,9 @@ const App = () => {
           </Box>
 
           {/* Floating Technical Status HUD */}
-          {/* StatusHUD, CustomCursor, RecruiterHUD, and DocumentationHUD 
+          {/* StatusHUD, CustomCursor, RecruiterHUD, and DocumentationHUD
               are now handled inside PublicApp to receive live data */}
-          
+
           {/* Render the actual page routes */}
           <AppRoutes />
           </CodeLiveProvider>
@@ -333,6 +321,5 @@ const App = () => {
 </ThemeProvider>
   );
 };
-
 
 export default App;

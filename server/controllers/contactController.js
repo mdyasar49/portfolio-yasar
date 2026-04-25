@@ -41,7 +41,7 @@ const saveLocalContact = (contact) => {
             // Parse the JSON string back into a JavaScript array (or empty array if empty)
             contacts = JSON.parse(content || '[]');
         }
-        
+
         // Create a new entry object making sure it has a unique ID and proper date format
         const localEntry = {
             // Copy all existing properties from the incoming contact object
@@ -65,7 +65,7 @@ const saveLocalContact = (contact) => {
 
 /**
  * Utility: Input Cleansing Protocol (XSS Protection)
- * Function purpose: Strips all HTML tags and potentially malicious scripts from 
+ * Function purpose: Strips all HTML tags and potentially malicious scripts from
  * incoming user strings to prevent cross-site scripting (XSS) attacks.
  */
 const cleanse = (str = '') => {
@@ -86,6 +86,7 @@ exports.submitContactForm = asyncHandler(async (req, res, next) => {
     // Extract and CLEANSE the necessary fields from the request body
     const name = cleanse(req.body.name);
     const email = cleanse(req.body.email);
+    const profession = cleanse(req.body.profession || 'Independent Professional');
     const subject = cleanse(req.body.subject || 'No Subject');
     const message = cleanse(req.body.message);
 
@@ -95,7 +96,7 @@ exports.submitContactForm = asyncHandler(async (req, res, next) => {
     }
 
     // Package the cleansed data
-    const contactData = { name, email, subject, message, createdAt: new Date() };
+    const contactData = { name, email, profession, subject, message, createdAt: new Date() };
 
     // Step 1. Persist to MongoDB if connected
     if (mongoose.connection && mongoose.connection.readyState === 1) {
@@ -122,4 +123,3 @@ exports.submitContactForm = asyncHandler(async (req, res, next) => {
         message: 'Your correspondence has been securely logged and dispatched.'
     });
 });
-

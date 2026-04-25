@@ -30,7 +30,7 @@ const systemSlice = createSlice({
     code: `// Resilience & Error Orchestration Middleware
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
-  
+
   // Log critical failures to telemetry
   logger.error(\`[\${req.method}] \${req.url} >> \${err.message}\`);
 
@@ -64,10 +64,10 @@ const CodeShowcase = () => {
           TECHNICAL <span style={{ color: '#33ccff' }}>BLUEPRINTS</span>
         </Typography>
 
-        <Paper sx={{ 
-          bgcolor: '#0d1117', 
-          borderRadius: 4, 
-          overflow: 'hidden', 
+        <Paper sx={{
+          bgcolor: '#0d1117',
+          borderRadius: 4,
+          overflow: 'hidden',
           border: '1px solid rgba(51, 204, 255, 0.1)',
           boxShadow: '0 40px 100px rgba(0,0,0,0.5)'
         }}>
@@ -78,15 +78,15 @@ const CodeShowcase = () => {
               <Circle size={12} fill="#ffbd2e" stroke="none" />
               <Circle size={12} fill="#27c93f" stroke="none" />
             </Stack>
-            
+
             <Stack direction="row" spacing={2}>
               {codeSnippets.map((snippet, i) => (
-                <Box 
-                  key={i} 
+                <Box
+                  key={i}
                   onClick={() => setActiveTab(i)}
-                  sx={{ 
+                  sx={{
                     cursor: 'pointer',
-                    px: 3, py: 1, 
+                    px: 3, py: 1,
                     bgcolor: activeTab === i ? '#0d1117' : 'transparent',
                     borderRadius: '8px 8px 0 0',
                     border: activeTab === i ? '1px solid rgba(51, 204, 255, 0.1)' : 'none',
@@ -122,12 +122,12 @@ const CodeShowcase = () => {
                 </pre>
               </motion.div>
             </AnimatePresence>
-            
+
             {/* Watermark */}
-            <Typography sx={{ 
-              position: 'absolute', bottom: 20, right: 30, 
-              color: 'rgba(51, 204, 255, 0.05)', fontWeight: 900, 
-              fontFamily: 'Syncopate', fontSize: '3rem', pointerEvents: 'none' 
+            <Typography sx={{
+              position: 'absolute', bottom: 20, right: 30,
+              color: 'rgba(51, 204, 255, 0.05)', fontWeight: 900,
+              fontFamily: 'Syncopate', fontSize: '3rem', pointerEvents: 'none'
             }}>
               YASAR_OS
             </Typography>

@@ -32,9 +32,9 @@ const SystemArchitecture = () => {
             </Typography>
             <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(0, 255, 204, 0.3)' }} />
           </Box>
-          <Typography variant="h2" sx={{ 
-            fontFamily: 'Syncopate', 
-            fontWeight: 900, 
+          <Typography variant="h2" sx={{
+            fontFamily: 'Syncopate',
+            fontWeight: 900,
             letterSpacing: -2,
             fontSize: { xs: '2rem', sm: '3rem', md: '5rem' }
           }}>
@@ -50,9 +50,9 @@ const SystemArchitecture = () => {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <Paper sx={{ 
-                p: { xs: 3, sm: 4, md: 6 }, 
-                bgcolor: 'rgba(2, 4, 10, 0.9)', 
+              <Paper sx={{
+                p: { xs: 3, sm: 4, md: 6 },
+                bgcolor: 'rgba(2, 4, 10, 0.9)',
                 backdropFilter: 'blur(20px)',
                 borderRadius: 6,
                 border: '1px solid rgba(0, 255, 204, 0.1)',
@@ -66,8 +66,8 @@ const SystemArchitecture = () => {
                 <Grid container spacing={{ xs: 2, md: 4 }}>
                   {techStack.map((tech, i) => (
                     <Grid item xs={12} sm={6} key={i}>
-                      <Box sx={{ 
-                        p: { xs: 2, md: 3 }, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.02)', 
+                      <Box sx={{
+                        p: { xs: 2, md: 3 }, borderRadius: 3, bgcolor: 'rgba(255,255,255,0.02)',
                         border: '1px solid rgba(255,255,255,0.05)',
                         transition: '0.3s',
                         '&:hover': { borderColor: tech.color, transform: isMobile ? 'none' : 'translateX(10px)' }
@@ -87,12 +87,12 @@ const SystemArchitecture = () => {
                 </Grid>
 
                 <Stack direction="row" spacing={3} sx={{ mt: 6 }}>
-                   <Button 
+                   <Button
                     href="/architecture"
                     variant="outlined"
                     fullWidth={isMobile}
                     endIcon={<Globe size={18} />}
-                    sx={{ 
+                    sx={{
                       borderColor: '#00ffcc', color: '#00ffcc', px: 4, py: 1.5, borderRadius: 2,
                       fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem',
                       '&:hover': { bgcolor: 'rgba(0, 255, 204, 0.05)', borderColor: '#00ffcc' }

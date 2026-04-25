@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { Box, Typography, Button, Stack, Container } from '@mui/material';
 import { motion } from 'framer-motion';
-import { 
-  WifiOff, 
-  ServerCrash, 
-  SearchX, 
-  AlertOctagon, 
-  RefreshCcw, 
-  Home, 
+import {
+  WifiOff,
+  ServerCrash,
+  SearchX,
+  AlertOctagon,
+  RefreshCcw,
+  Home,
   Terminal,
   Activity,
   ShieldAlert,
@@ -90,10 +90,10 @@ const GlitchText = ({ children, color }) => (
       {children}
     </Typography>
     <motion.div
-      animate={{ 
+      animate={{
         clipPath: [
-          'inset(80% 0 0 0)', 
-          'inset(10% 0 80% 0)', 
+          'inset(80% 0 0 0)',
+          'inset(10% 0 80% 0)',
           'inset(80% 0 0 0)'
         ],
         x: [-2, 2, -2]
@@ -197,7 +197,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
           pointerEvents: 'none',
           opacity: 0.3
         }} />
-        
+
         {/* Pulsing Radial Gradient */}
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
@@ -217,15 +217,15 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
-            animate={{ 
-              y: [-20, -120], 
+            animate={{
+              y: [-20, -120],
               x: particle.xDrift,
-              opacity: [0, 1, 0] 
+              opacity: [0, 1, 0]
             }}
-            transition={{ 
-              duration: particle.duration, 
-              repeat: Infinity, 
-              delay: particle.delay 
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay
             }}
             style={{
               position: 'absolute',
@@ -243,7 +243,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       {/* Main Container */}
       <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
         <Stack spacing={6} alignItems="center" textAlign="center">
-          
+
           {/* Header Section */}
           <Box>
             <motion.div
@@ -252,10 +252,10 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
               transition={{ type: 'spring', damping: 12 }}
             >
               <Box sx={{ position: 'relative', mb: 4 }}>
-                <Box 
-                  sx={{ 
-                    width: 120, height: 120, 
-                    borderRadius: '30%', 
+                <Box
+                  sx={{
+                    width: 120, height: 120,
+                    borderRadius: '30%',
                     border: `1px solid ${config.color}44`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     bgcolor: `${config.color}05`,
@@ -266,7 +266,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                   }}
                 >
                   <ErrorIcon size={64} color={config.color} strokeWidth={1.5} />
-                  
+
                   {/* Decorative corner accents */}
                   {[0, 90, 180, 270].map((angle) => (
                     <Box key={angle} sx={{
@@ -284,12 +284,12 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
             </motion.div>
 
             <GlitchText color={config.color}>{config.title}</GlitchText>
-            
-            <Typography variant="h6" sx={{ 
-              mt: 2, 
-              color: 'rgba(255,255,255,0.7)', 
-              fontWeight: 300, 
-              maxWidth: 600, 
+
+            <Typography variant="h6" sx={{
+              mt: 2,
+              color: 'rgba(255,255,255,0.7)',
+              fontWeight: 300,
+              maxWidth: 600,
               mx: 'auto',
               letterSpacing: 1
             }}>
@@ -298,10 +298,10 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
           </Box>
 
           {/* Diagnostics Panel */}
-          <Box sx={{ 
-            width: '100%', 
+          <Box sx={{
+            width: '100%',
             maxWidth: 500,
-            p: 3, 
+            p: 3,
             bgcolor: 'rgba(10, 12, 18, 0.4)',
             backdropFilter: 'blur(20px)',
             border: '1px solid rgba(255,255,255,0.05)',
@@ -324,9 +324,9 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
 
             <Stack spacing={1} textAlign="left">
               {terminalLines.map((line, idx) => (
-                <Typography key={idx} sx={{ 
-                  fontFamily: '"JetBrains Mono", monospace', 
-                  fontSize: '0.75rem', 
+                <Typography key={idx} sx={{
+                  fontFamily: '"JetBrains Mono", monospace',
+                  fontSize: '0.75rem',
                   color: idx === terminalLines.length - 1 ? config.color : 'rgba(255,255,255,0.5)',
                   display: 'flex',
                   alignItems: 'center',
@@ -334,8 +334,8 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                 }}>
                   <span style={{ opacity: 0.3 }}>&gt;</span> {line}
                   {idx === terminalLines.length - 1 && (
-                    <motion.span 
-                      animate={{ opacity: [0, 1, 0] }} 
+                    <motion.span
+                      animate={{ opacity: [0, 1, 0] }}
                       transition={{ repeat: Infinity, duration: 0.8 }}
                       style={{ width: 6, height: 12, backgroundColor: config.color }}
                     />
@@ -345,10 +345,10 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
             </Stack>
 
             {/* Error Code Tag */}
-            <Box sx={{ 
-              mt: 3, 
-              p: '4px 12px', 
-              bgcolor: `${config.color}11`, 
+            <Box sx={{
+              mt: 3,
+              p: '4px 12px',
+              bgcolor: `${config.color}11`,
               border: `1px solid ${config.color}33`,
               borderRadius: 1,
               display: 'inline-flex',
@@ -445,10 +445,9 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       {/* Extreme border accents */}
       <Box sx={{ position: 'absolute', top: 40, left: 40, width: 100, height: 100, borderLeft: '1px solid rgba(255,255,255,0.05)', borderTop: '1px solid rgba(255,255,255,0.05)', opacity: 0.5 }} />
       <Box sx={{ position: 'absolute', bottom: 40, right: 40, width: 100, height: 100, borderRight: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', opacity: 0.5 }} />
-      
+
     </Box>
   );
 };
 
 export default memo(NetworkErrorScreen);
-

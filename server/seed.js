@@ -25,12 +25,12 @@ const seedDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to MongoDB for Seeding...");
-    
+
     const fullProfile = getSeedData();
-    
+
     await Profile.deleteMany({});
     await Profile.create(fullProfile);
-    
+
     console.log("Database Seeded Successfully! Portfolio is now live with Backend Data.");
     process.exit();
   } catch (err) {

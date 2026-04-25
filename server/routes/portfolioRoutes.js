@@ -2,7 +2,7 @@
  * Language: JavaScript (Node.js/Express)
  * Purpose of this file:
  * This is the main routing file for the portfolio application.
- * It combines routes for profile data, system health, visitor tracking, 
+ * It combines routes for profile data, system health, visitor tracking,
  * proposals, and contact forms into a single unified API router.
  */
 
@@ -25,9 +25,9 @@ const rateLimit = require('express-rate-limit');
  */
 const contactLimiter = rateLimit({
     // Set the time window to 1 Hour (in milliseconds)
-    windowMs: 60 * 60 * 1000, 
+    windowMs: 60 * 60 * 1000,
     // Limit each IP to exactly 5 requests per hour window
-    max: 5, 
+    max: 5,
     // Custom error message sent when the limit is exceeded
     message: { success: false, message: 'Spam protection active. Please try again later.' }
 });
@@ -53,6 +53,19 @@ const contactLimiter = rateLimit({
  */
 // [GET /profile] - Public route to fetch the portfolio data
 router.get('/profile', portfolioController.getProfile);
+
+// Specific Atomic Data Routes
+router.get('/profile/basicdetails', portfolioController.getBasicDetails);
+router.get('/profile/skills', portfolioController.getSkills);
+router.get('/profile/experience', portfolioController.getExperience);
+router.get('/profile/projects', portfolioController.getProjects);
+router.get('/profile/education', portfolioController.getEducation);
+router.get('/profile/socials', portfolioController.getSocials);
+router.get('/profile/additional', portfolioController.getAdditional);
+router.get('/header', portfolioController.getHeader);
+router.get('/analytics', portfolioController.getAnalytics);
+router.get('/docs', portfolioController.getDocs);
+router.get('/common/layout', portfolioController.getCommonLayout);
 
 // [GET /visitors] - Public route to fetch and increment visitor counts
 router.get('/visitors', portfolioController.getVisitors);

@@ -1,23 +1,23 @@
 /**
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This module serves as the primary technical documentation portal for the 
- * application. It dynamically renders Markdown files (README and Architecture), 
- * provides a trilingual translation system (English, Tamil, Tanglish) using 
- * the translateService, and features interactive project structure and 
+ * This module serves as the primary technical documentation portal for the
+ * application. It dynamically renders Markdown files (README and Architecture),
+ * provides a trilingual translation system (English, Tamil, Tanglish) using
+ * the translateService, and features interactive project structure and
  * engineering roadmap explorers.
  */
 
 import React, { useState, useEffect } from 'react';
 // Material UI components for the documentation layout and interactive elements
-import { 
-  Box, Typography, Stack, Grid, IconButton, Divider, useTheme, 
-  useMediaQuery, LinearProgress, Tabs, Tab, Drawer 
+import {
+  Box, Typography, Stack, Grid, IconButton, Divider, useTheme,
+  useMediaQuery, LinearProgress, Tabs, Tab, Drawer
 } from '@mui/material';
 // Framer Motion for high-fidelity entrance and state-change animations
 import { motion, AnimatePresence } from 'framer-motion';
 // Icons for technical navigation and status identifiers
-import { 
+import {
   Book, Terminal, Cpu, Hash, Activity, ChevronRight, Layout, Layers,
   Zap, ShieldCheck, Github, Globe, Search, Command, RefreshCw, Copy, Check, Menu
 } from 'lucide-react';
@@ -96,7 +96,7 @@ const Documentation = ({ profile }) => {
     { name: 'Project Gallery', path: '/projects', type: 'page', icon: <Cpu size={16} /> },
   ];
 
-  const filteredNav = navItems.filter(item => 
+  const filteredNav = navItems.filter(item =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -135,7 +135,7 @@ const Documentation = ({ profile }) => {
 
   /**
    * [Markdown Content Hydration]
-   * Synchronizes the documentation state with the profile object or fetches 
+   * Synchronizes the documentation state with the profile object or fetches
    * static fallback files from the public directory.
    */
   useEffect(() => {
@@ -154,7 +154,7 @@ const Documentation = ({ profile }) => {
           fetch(`${process.env.PUBLIC_URL}/docs/README.md?t=${timestamp}`),
           fetch(`${process.env.PUBLIC_URL}/docs/PROJECT_EXPLANATION.md?t=${timestamp}`)
         ]);
-        
+
         const readmeText = await readmeRes.text();
         const projectText = await projectRes.text();
 
@@ -168,7 +168,6 @@ const Documentation = ({ profile }) => {
     };
     fetchDocs();
   }, [profile]);
-
 
   /**
    * [Dynamic Translation Engine]
@@ -264,7 +263,7 @@ const Documentation = ({ profile }) => {
   return (
     <Box sx={{ bgcolor: '#02040a', minHeight: '100vh', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
       <SEO title="Engineering Documentation | A. Mohamed Yasar" description="Full technical documentation portal for the MERN Stack application." />
-      
+
       {/* ── [SEARCH OVERLAY GATEWAY] ── */}
       <AnimatePresence>
         {isSearching && (
@@ -310,7 +309,7 @@ const Documentation = ({ profile }) => {
              <Stack spacing={1.5}>
                 {navItems.slice(0, 5).map((item) => (
                   <Box key={item.path} onClick={() => setActiveSection(item.path)}
-                    sx={{ 
+                    sx={{
                       p: 2, borderRadius: 3, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 2.5,
                       bgcolor: activeSection === item.path ? 'rgba(51, 204, 255, 0.08)' : 'transparent',
                       color: activeSection === item.path ? '#33ccff' : '#64748b'

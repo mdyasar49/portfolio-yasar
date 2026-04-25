@@ -1,8 +1,8 @@
 /**
  * Language: JavaScript (React.js)
- * Purpose: 
- * This component acts as a high-tier interactive gateway for viewing and 
- * downloading the professional engineering resume. It utilizes a 3D parallax 
+ * Purpose:
+ * This component acts as a high-tier interactive gateway for viewing and
+ * downloading the professional engineering resume. It utilizes a 3D parallax
  * engine for visual depth and orchestrates secure asset delivery via iFrame.
  */
 
@@ -25,7 +25,7 @@ const Resume = () => {
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   // Optimization: Disable heavy 3D calculations on mobile or if the user prefers reduced motion
   const disableHeavyMotion = isMobile || prefersReducedMotion;
-  
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [isDispatching, setIsDispatching] = useState(false);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
@@ -75,7 +75,7 @@ const Resume = () => {
       setIsDispatching(true);
       const dispatchTimer = setTimeout(() => {
         handleDownload();
-      }, 2500); 
+      }, 2500);
       return () => { clearTimeout(timer); clearTimeout(dispatchTimer); };
     }
 
@@ -84,7 +84,7 @@ const Resume = () => {
 
   /**
    * [handleDownload]
-   * Triggers the asset extraction protocol. Communicates with the internal iframe 
+   * Triggers the asset extraction protocol. Communicates with the internal iframe
    * to generate a high-resolution PDF.
    */
   const handleDownload = () => {
@@ -122,17 +122,17 @@ const Resume = () => {
 
   /**
    * [executeAssetExtraction]
-   * High-tier extraction protocol utilizing the experimental Web Share API 
+   * High-tier extraction protocol utilizing the experimental Web Share API
    * for native mobile delivery or direct blob download for desktop.
    */
   const executeAssetExtraction = async () => {
     setIsSelectorOpen(false);
-    setIsDispatching(true); 
+    setIsDispatching(true);
 
     try {
       const frame = document.getElementById('resume-frame');
       let pdfBlob;
-      
+
       // 1. Generate PDF snapshot from the index.html content rendered inside the iframe.
       if (frame && frame.contentWindow.getPDFBlob) {
         pdfBlob = await frame.contentWindow.getPDFBlob();
@@ -165,16 +165,16 @@ const Resume = () => {
   };
 
   return (
-    <Box 
+    <Box
       onMouseMove={handleMouseMove}
-      sx={{ 
+      sx={{
         minHeight: '100vh', bgcolor: '#02040a', position: 'relative', overflow: 'hidden',
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         perspective: '2000px', pt: { xs: 14, md: 5 }, pb: 10, px: { xs: 2, md: 0 }
       }}
     >
       <SEO title="Elite Resume | A. Mohamed Yasar" description="Access the high-tier professional resume and architecture profile of A. Mohamed Yasar." />
-      
+
       {/* ── [ASSET_DISPATCH_OVERLAY] ── */}
       {/* Visual feedback shown during the PDF generation and download process */}
       <AnimatePresence>
@@ -189,8 +189,8 @@ const Resume = () => {
           >
             <Stack spacing={4} alignItems="center">
               <Box sx={{ width: 100, height: 100, position: 'relative' }}>
-                 <Box sx={{ 
-                   position: 'absolute', inset: 0, borderRadius: '50%', 
+                 <Box sx={{
+                   position: 'absolute', inset: 0, borderRadius: '50%',
                    border: '2px solid rgba(51, 204, 255, 0.1)',
                    borderTop: '2px solid #33ccff',
                    animation: 'spin 1s linear infinite'
@@ -218,7 +218,7 @@ const Resume = () => {
         <Fade in={isSelectorOpen}>
           <Box sx={{
             position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
-            width: { xs: '95%', sm: 350 }, 
+            width: { xs: '95%', sm: 350 },
             bgcolor: 'rgba(13, 17, 23, 0.95)', backdropFilter: 'blur(20px)',
             border: '1px solid rgba(51, 204, 255, 0.3)',
             borderRadius: 3, p: { xs: 2.5, sm: 3.5 }, outline: 'none'
@@ -230,9 +230,9 @@ const Resume = () => {
               </Box>
 
               <Stack spacing={2}>
-                <Button 
+                <Button
                    fullWidth onClick={executeEmailDispatch}
-                   sx={{ 
+                   sx={{
                      py: 2, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)',
                      color: 'white', borderRadius: 2, display: 'flex', flexDirection: 'column',
                      alignItems: 'flex-start', px: 3,
@@ -245,9 +245,9 @@ const Resume = () => {
                   <Typography variant="caption" sx={{ color: '#555', ml: 3.2 }}>Direct browser-bound sharing via Gmail</Typography>
                 </Button>
 
-                <Button 
+                <Button
                    fullWidth onClick={executeAssetExtraction}
-                   sx={{ 
+                   sx={{
                      py: 2, bgcolor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)',
                      color: 'white', borderRadius: 2, display: 'flex', flexDirection: 'column',
                      alignItems: 'flex-start', px: 3,
@@ -291,11 +291,11 @@ const Resume = () => {
       {/* ── [CENTRAL_ASSET_GRID] ── */}
       <Container maxWidth="lg" sx={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
         <motion.div
-           style={{ 
+           style={{
              // Applying the calculated 3D rotation
-             rotateX: disableHeavyMotion ? '0deg' : rotateX, 
-             rotateY: disableHeavyMotion ? '0deg' : rotateY, 
-             zIndex: 10, transformStyle: "preserve-3d", position: 'relative' 
+             rotateX: disableHeavyMotion ? '0deg' : rotateX,
+             rotateY: disableHeavyMotion ? '0deg' : rotateY,
+             zIndex: 10, transformStyle: "preserve-3d", position: 'relative'
            }}
            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.2 }}
         >
@@ -305,25 +305,25 @@ const Resume = () => {
 
           {/* ── [IFRAME CONTAINER] ── */}
           {/* Renders the HTML version of the resume which is used for the interactive view and PDF generation */}
-          <Box className="holographic-border animate-cyber-reveal" sx={{ 
-            width: { xs: '95vw', sm: '85vw', md: '210mm' }, 
-            height: { xs: '135vw', sm: '120vh', md: '297mm' }, 
+          <Box className="holographic-border animate-cyber-reveal" sx={{
+            width: { xs: '95vw', sm: '85vw', md: '210mm' },
+            height: { xs: '135vw', sm: '120vh', md: '297mm' },
             backgroundColor: 'white', position: 'relative', overflow: 'hidden', border: '2px solid rgba(255,255,255,0.05)',
             boxShadow: '0 80px 160px rgba(0,0,0,0.9), 0 0 100px rgba(51, 204, 255, 0.15)'
           }}>
-            <iframe 
+            <iframe
                id="resume-frame" src={iframeSrc} title="Professional Resume Architecture"
                width="100%" height="100%" style={{ border: 'none', background: 'white' }}
             />
           </Box>
-          
+
           {/* Main Action Button */}
           <Box sx={{ mt: 4, textAlign: 'center' }}>
-             <Button 
+             <Button
                 variant="contained" size="large" onClick={() => setIsSelectorOpen(true)}
                 startIcon={<Download size={22} />}
-                sx={{ 
-                    px: 6, py: 2, borderRadius: 10, bgcolor: '#33ccff', color: '#000', 
+                sx={{
+                    px: 6, py: 2, borderRadius: 10, bgcolor: '#33ccff', color: '#000',
                     fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.8rem',
                     '&:hover': { bgcolor: '#00ffcc', transform: 'scale(1.05)' }
                 }}

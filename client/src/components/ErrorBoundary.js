@@ -45,8 +45,8 @@ class ErrorBoundary extends React.Component {
           <Typography variant="body1" sx={{ color: '#64748b', mb: 4, maxWidth: 500 }}>
             A component has experienced an unhandled exception. The containment protocol has isolated the error to prevent a full system shutdown.
           </Typography>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             onClick={() => window.location.reload()}
             startIcon={<RefreshCcw size={18} />}
             sx={{
@@ -67,7 +67,7 @@ class ErrorBoundary extends React.Component {
       );
     }
 
-    return this.props.children; 
+    return this.props.children;
   }
 }
 

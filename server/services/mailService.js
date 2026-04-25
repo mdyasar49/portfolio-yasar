@@ -1,6 +1,6 @@
 /**
  * Language: JavaScript (Node.js)
- * Purpose of this file: 
+ * Purpose of this file:
  * This file is a backend service module responsible for handling automated email dispatch.
  * It uses the 'nodemailer' library to connect to a Gmail account and send out email
  * notifications (specifically contact inquiries) to the administrator.
@@ -39,7 +39,7 @@ const sendEmail = async (contactData) => {
                 <h1 style="color: #33ccff; font-size: 24px; margin: 0; letter-spacing: 2px;">[ CONTACT_INQUIRY_RECEIVED ]</h1>
                 <p style="color: #64748b; font-size: 12px; margin-top: 5px;">MERN PORTFOLIO CORE v4.0.5</p>
             </div>
-            
+
             <div style="margin-bottom: 25px;">
                 <label style="color: #33ccff; font-weight: bold; font-size: 10px; text-transform: uppercase;">Sender Name</label>
                 <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 6px; border-left: 3px solid #33ccff; margin-top: 5px;">${name}</div>
@@ -84,4 +84,3 @@ const sendEmail = async (contactData) => {
 
 // Export the sendEmail function so it can be imported and used in other files
 module.exports = { sendEmail };
-

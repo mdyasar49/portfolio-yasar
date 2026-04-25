@@ -21,12 +21,12 @@ const RecruiterHUD = ({ profile }) => {
     return (
         <>
             {/* The Floating Vertical Tab Trigger */}
-            <Box sx={{ 
-                position: 'fixed', left: 0, top: '50%', transform: 'translateY(-50%)', 
-                zIndex: 10001, display: 'flex', alignItems: 'center' 
+            <Box sx={{
+                position: 'fixed', left: 0, top: '50%', transform: 'translateY(-50%)',
+                zIndex: 10001, display: 'flex', alignItems: 'center'
             }}>
-                <motion.div 
-                    whileHover={{ x: 10 }} 
+                <motion.div
+                    whileHover={{ x: 10 }}
                     style={{
                         background: 'linear-gradient(180deg, #6366f1 0%, #4f46e5 100%)',
                         color: 'white',
@@ -47,15 +47,14 @@ const RecruiterHUD = ({ profile }) => {
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <Briefcase size={18} style={{ transform: 'rotate(90deg)', marginBottom: 10 }} />
-                    <Typography sx={{ 
-                        fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.6rem', 
-                        letterSpacing: 2, textTransform: 'uppercase' 
+                    <Typography sx={{
+                        fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.6rem',
+                        letterSpacing: 2, textTransform: 'uppercase'
                     }}>
                         {isOpen ? 'CLOSE_CONSOLE' : 'FOR_RECRUITERS'}
                     </Typography>
                 </motion.div>
             </Box>
-
 
             {/* The Dashboard Panel */}
             <AnimatePresence>
@@ -65,14 +64,14 @@ const RecruiterHUD = ({ profile }) => {
                         animate={{ opacity: 1, x: 0, scale: 1 }}
                         exit={{ opacity: 0, x: -100, scale: 0.9 }}
                         style={{
-                            position: 'fixed', left: 60, top: '50%', transform: 'translateY(-50%)', 
+                            position: 'fixed', left: 60, top: '50%', transform: 'translateY(-50%)',
                             zIndex: 10000,
                             width: 340, pointerEvents: 'auto'
                         }}
                     >
 
-                        <Paper sx={{ 
-                            p: 3, borderRadius: 4, 
+                        <Paper sx={{
+                            p: 3, borderRadius: 4,
                             background: 'rgba(15, 23, 42, 0.95)',
                             backdropFilter: 'blur(20px)',
                             border: '1px solid rgba(99, 102, 241, 0.3)',
@@ -81,8 +80,8 @@ const RecruiterHUD = ({ profile }) => {
                             overflowY: 'auto',
                             '&::-webkit-scrollbar': { width: '4px' },
                             '&::-webkit-scrollbar-track': { background: 'transparent' },
-                            '&::-webkit-scrollbar-thumb': { 
-                                background: 'rgba(99, 102, 241, 0.3)', 
+                            '&::-webkit-scrollbar-thumb': {
+                                background: 'rgba(99, 102, 241, 0.3)',
                                 borderRadius: '10px',
                                 '&:hover': { background: '#6366f1' }
                             }
@@ -91,7 +90,7 @@ const RecruiterHUD = ({ profile }) => {
                             <Typography sx={{ color: '#6366f1', fontWeight: 900, fontFamily: 'Syncopate', fontSize: '0.7rem', mb: 2 }}>
                                 QUICK_SUMMARY
                             </Typography>
-                            
+
                             <Stack spacing={2.5}>
                                 <Typography variant="body2" sx={{ color: '#cbd5e1', lineHeight: 1.6 }}>
                                     {pitch}
@@ -109,16 +108,16 @@ const RecruiterHUD = ({ profile }) => {
                                 </Stack>
 
                                 <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
-                                    <Button 
-                                        variant="contained" 
+                                    <Button
+                                        variant="contained"
                                         fullWidth
                                         startIcon={<Download size={16} />}
                                         sx={{ bgcolor: '#6366f1', borderRadius: 2, fontSize: '0.7rem', fontWeight: 900, fontFamily: 'Syncopate' }}
                                     >
                                         RESUME
                                     </Button>
-                                    <Button 
-                                        variant="outlined" 
+                                    <Button
+                                        variant="outlined"
                                         fullWidth
                                         href="#contact"
                                         onClick={() => setIsOpen(false)}

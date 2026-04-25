@@ -19,7 +19,7 @@ export const AdminProvider = ({ children }) => {
             try {
                 // Set default authorization header for all future API calls
                 api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-                
+
                 const response = await api.get('/auth/me');
                 if (response.data.success) {
                     setAdmin(response.data.data);

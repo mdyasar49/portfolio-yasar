@@ -21,8 +21,8 @@ const Contact = ({ profile }) => {
     // Detect mobile devices for adjusting notification position
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    // State to store the form inputs (name, email, subject, message)
-    const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+    // State to store the form inputs (name, email, profession, subject, message)
+    const [formData, setFormData] = useState({ name: '', email: '', profession: '', subject: '', message: '' });
     // State to track if the form is currently being submitted to the server
     const [loading, setLoading] = useState(false);
     // State to store the success or error message from the server
@@ -48,21 +48,22 @@ const Contact = ({ profile }) => {
         e.preventDefault();
         // Show the loading spinner
         setLoading(true);
-        
+
         // Call the external API service function
         const result = await dispatchCommunication(formData);
-        
+
         // Hide the loading spinner
         setLoading(false);
         // If the message was sent successfully
         if (result.success) {
             // Set a positive status message
-            setStatus({ type: 'success', message: 'Message sent successfully. I will get back to you soon!' });
+            setStatus({ type: 'success', message: result.message || 'Message sent successfully. I will get back to you soon!' });
             // Clear the form fields
-            setFormData({ name: '', email: '', subject: '', message: '' });
+            setFormData({ name: '', email: '', profession: '', subject: '', message: '' });
         } else {
-            // If it failed, set an error message with the specific error detail
-            setStatus({ type: 'error', message: `Failed to send message: ${result.error}` });
+            // Check for spam protection specific message
+            const errorMsg = result.message || result.error || 'CRITICAL_TRANSMISSION_FAILURE';
+            setStatus({ type: 'error', message: `Communication Failure: ${errorMsg}` });
         }
         // Open the notification snackbar
         setOpen(true);
@@ -103,9 +104,9 @@ const Contact = ({ profile }) => {
                     </Typography>
                     <Box sx={{ width: 40, height: 1, bgcolor: 'rgba(51, 204, 255, 0.3)' }} />
                 </Box>
-                <Typography variant="h2" sx={{ 
-                    fontFamily: 'Syncopate', 
-                    fontWeight: 900, 
+                <Typography variant="h2" sx={{
+                    fontFamily: 'Syncopate',
+                    fontWeight: 900,
                     letterSpacing: -2,
                     fontSize: { xs: '2.5rem', md: '4.5rem' },
                     textShadow: '0 0 40px rgba(255,255,255,0.05)'
@@ -115,7 +116,7 @@ const Contact = ({ profile }) => {
             </Stack>
 
             <Grid container spacing={8} alignItems="center">
-                
+
                 {/* Left Column: Technical Contact Data */}
                 <Grid item xs={12} md={5}>
                     <motion.div
@@ -139,17 +140,16 @@ const Contact = ({ profile }) => {
                                 { icon: <ShieldCheck size={22} />, label: 'Availability Status', val: profile.additionalInfo?.availability || 'Ready to Join', color: '#00ffcc' }
                             ].map((item, i) => (
 
-
-                                <Stack 
-                                    key={i} 
-                                    direction="row" 
-                                    spacing={3} 
+                                <Stack
+                                    key={i}
+                                    direction="row"
+                                    spacing={3}
                                     alignItems="center"
                                     // If it's the email, make it clickable
                                     component={item.isLink ? 'a' : 'div'}
                                     href={item.isLink ? `mailto:${item.val}` : undefined}
-                                    sx={{ 
-                                        textDecoration: 'none', 
+                                    sx={{
+                                        textDecoration: 'none',
                                         cursor: item.isLink ? 'pointer' : 'default',
                                         transition: 'transform 0.3s ease',
                                         '&:hover': item.isLink ? { transform: 'translateX(8px)' } : {}
@@ -176,73 +176,101 @@ const Contact = ({ profile }) => {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                     >
-                        {/* Semi-transparent Glassmorphic Form Card */}
-                        <Box component="form" onSubmit={handleSubmit} sx={{ 
-                            p: { xs: 4, md: 6 }, 
-                            borderRadius: 4, 
-                            background: 'linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%)',
-                            backdropFilter: 'blur(20px)',
-                            border: '1px solid rgba(255,255,255,0.08)',
-                            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
-                            position: 'relative', 
-                            overflow: 'hidden'
-                        }}>
-                            {/* Decorative background blurs inside the card */}
-                            <Box sx={{ position: 'absolute', top: '-20%', right: '-20%', width: '60%', height: '60%', background: 'radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)', filter: 'blur(40px)', zIndex: 0 }} />
-                            <Box sx={{ position: 'absolute', bottom: '-20%', left: '-20%', width: '60%', height: '60%', background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, transparent 70%)', filter: 'blur(40px)', zIndex: 0 }} />
-                            
-                            <Box sx={{ position: 'relative', zIndex: 1 }}>
-                                <Grid container spacing={2}>
-                                    {/* Name Input */}
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="Full Name" name="name" value={formData.name} onChange={handleChange} required sx={inputStyles} />
-                                    </Grid>
-                                    {/* Email Input */}
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} required sx={inputStyles} />
-                                    </Grid>
-                                    {/* Subject Input */}
-                                    <Grid item xs={12}>
-                                        <TextField fullWidth label="Inquiry Subject" name="subject" value={formData.subject} onChange={handleChange} sx={inputStyles} />
-                                    </Grid>
-                                    {/* Message Input (Multi-line) */}
-                                    <Grid item xs={12}>
-                                        <TextField fullWidth label="Message Details" name="message" multiline rows={5} value={formData.message} onChange={handleChange} required sx={inputStyles} />
-                                    </Grid>
-                                </Grid>
+                        {/* [SECURITY_SHIELD_CONTAINER] */}
+                        <Box sx={{ position: 'relative' }}>
+                            {/* Ambient Glow Orbs behind the form */}
+                            <Box sx={{ position: 'absolute', top: '-10%', right: '-5%', width: '300px', height: '300px', background: 'radial-gradient(circle, rgba(51, 204, 255, 0.15), transparent 70%)', filter: 'blur(60px)', zIndex: 0, animation: 'float 10s ease-in-out infinite' }} />
+                            <Box sx={{ position: 'absolute', bottom: '-10%', left: '-5%', width: '250px', height: '250px', background: 'radial-gradient(circle, rgba(255, 51, 102, 0.1), transparent 70%)', filter: 'blur(50px)', zIndex: 0, animation: 'float 8s ease-in-out infinite reverse' }} />
 
-                                {/* Submit Button */}
-                                <Button 
-                                    type="submit" 
-                                    fullWidth 
-                                    disabled={loading}
-                                    variant="contained"
-                                    endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Send size={20} />}
-                                    sx={{ 
-                                        py: 2.5, 
-                                        mt: 2, 
-                                        background: 'linear-gradient(135deg, #00ffcc 0%, #33ccff 100%)',
-                                        color: '#000', 
-                                        fontWeight: 900, 
-                                        fontFamily: 'Syncopate',
-                                        fontSize: '0.8rem',
-                                        letterSpacing: 2,
-                                        borderRadius: 2,
-                                        textTransform: 'none',
-                                        boxShadow: '0 0 30px rgba(0, 255, 204, 0.2)',
-                                        transition: 'all 0.3s ease',
-                                        '&:hover': { 
-                                            background: '#00ffcc',
-                                            transform: 'translateY(-2px)',
-                                            boxShadow: '0 0 50px rgba(0, 255, 204, 0.4)' 
-                                        },
-                                        '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.05)', color: '#444' }
-                                    }}
-                                >
-                                    {loading ? 'SENDING...' : 'SEND MESSAGE'}
-                                </Button>
+                            {/* Semi-transparent Glassmorphic Form Card */}
+                            <Box component="form" onSubmit={handleSubmit} sx={{
+                                p: { xs: 4, md: 6 },
+                                borderRadius: 4,
+                                background: 'rgba(15, 23, 42, 0.4)',
+                                backdropFilter: 'blur(30px) saturate(180%)',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                zIndex: 1
+                            }}>
+                                {/* Holographic Scanline Overlay */}
+                                <Box sx={{
+                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '2px',
+                                    background: 'linear-gradient(90deg, transparent, rgba(0, 255, 204, 0.3), transparent)',
+                                    animation: 'scanLineMove 4s linear infinite',
+                                    zIndex: 2, pointerEvents: 'none'
+                                }} />
 
+                                <Box sx={{ position: 'relative', zIndex: 1 }}>
+                                    {/* Sub-Header: System Telemetry */}
+                                    <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4, opacity: 0.6 }}>
+                                        <Typography sx={{ fontSize: '0.65rem', fontFamily: 'monospace', color: '#00ffcc', letterSpacing: 1 }}>
+                                            [ DISPATCH_PROTOCOL_V4 ]
+                                        </Typography>
+                                        <Typography sx={{ fontSize: '0.65rem', fontFamily: 'monospace', color: '#fff' }}>
+                                            SECURE_ENCRYPTION: AES_256
+                                        </Typography>
+                                    </Stack>
 
+                                    <Grid container spacing={2}>
+                                        {/* Name Input */}
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleChange} required sx={inputStyles} />
+                                        </Grid>
+                                        {/* Profession Input */}
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField fullWidth label="Profession / Role" name="profession" value={formData.profession} onChange={handleChange} sx={inputStyles} />
+                                        </Grid>
+                                        {/* Email Input */}
+                                        <Grid item xs={12}>
+                                            <TextField fullWidth label="Email Address" name="email" type="email" value={formData.email} onChange={handleChange} required sx={inputStyles} />
+                                        </Grid>
+                                        {/* Subject Input */}
+                                        <Grid item xs={12}>
+                                            <TextField fullWidth label="Inquiry Subject" name="subject" value={formData.subject} onChange={handleChange} sx={inputStyles} />
+                                        </Grid>
+                                        {/* Message Input (Multi-line) */}
+                                        <Grid item xs={12}>
+                                            <TextField fullWidth label="Message Details" name="message" multiline rows={5} value={formData.message} onChange={handleChange} required sx={inputStyles} />
+                                        </Grid>
+                                    </Grid>
+
+                                    {/* Submit Button */}
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        disabled={loading}
+                                        variant="contained"
+                                        endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <Send size={20} />}
+                                        sx={{
+                                            py: 2.5,
+                                            mt: 2,
+                                            background: 'linear-gradient(135deg, #00ffcc 0%, #33ccff 100%)',
+                                            color: '#000',
+                                            fontWeight: 900,
+                                            fontFamily: 'Syncopate',
+                                            fontSize: '0.8rem',
+                                            letterSpacing: 2,
+                                            borderRadius: 2,
+                                            textTransform: 'none',
+                                            boxShadow: '0 0 30px rgba(0, 255, 204, 0.2)',
+                                            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                                            '&:hover': {
+                                                background: '#00ffcc',
+                                                transform: 'translateY(-3px) scale(1.01)',
+                                                boxShadow: '0 15px 40px rgba(0, 255, 204, 0.4)'
+                                            },
+                                            '&.Mui-disabled': { bgcolor: 'rgba(255,255,255,0.05)', color: '#444' }
+                                        }}
+                                    >
+                                        {loading ? 'INITIALIZING DISPATCH...' : 'ESTABLISH CONNECTION'}
+                                    </Button>
+
+                                    <Typography sx={{ mt: 3, textAlign: 'center', fontSize: '0.6rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' }}>
+                                        * BY INITIATING THIS TRANSMISSION, YOU AGREE TO AUTHENTICATED LOGGING OF YOUR IP AND METADATA.
+                                    </Typography>
+                                </Box>
                             </Box>
                         </Box>
                     </motion.div>
@@ -250,24 +278,24 @@ const Contact = ({ profile }) => {
             </Grid>
 
             {/* Notification Popup (Snackbar) shown after submission */}
-            <Snackbar 
-                open={open} 
-                autoHideDuration={6000} 
-                onClose={handleClose} 
-                anchorOrigin={{ 
-                    vertical: isMobile ? 'top' : 'bottom', 
-                    horizontal: isMobile ? 'center' : 'right' 
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: isMobile ? 'top' : 'bottom',
+                    horizontal: isMobile ? 'center' : 'right'
                 }}
             >
-                <Alert 
-                    onClose={handleClose} 
-                    severity={status.type} 
-                    sx={{ 
-                        width: '100%', 
-                        bgcolor: 'rgba(15, 23, 42, 0.9)', 
-                        color: 'white', 
+                <Alert
+                    onClose={handleClose}
+                    severity={status.type}
+                    sx={{
+                        width: '100%',
+                        bgcolor: 'rgba(15, 23, 42, 0.9)',
+                        color: 'white',
                         // Green border for success, red for error
-                        border: `1px solid ${status.type === 'success' ? '#10b981' : '#ef4444'}`, 
+                        border: `1px solid ${status.type === 'success' ? '#10b981' : '#ef4444'}`,
                         borderRadius: 3,
                         backdropFilter: 'blur(10px)',
                         fontFamily: '"Inter", sans-serif'

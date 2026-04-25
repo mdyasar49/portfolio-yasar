@@ -25,6 +25,11 @@ const contactSchema = new mongoose.Schema({
         // This field is mandatory
         required: true
     },
+    // The sender's professional title or company
+    profession: {
+        type: String,
+        default: 'Not Specified'
+    },
     // The subject line of the message
     subject: {
         // Must be a text string

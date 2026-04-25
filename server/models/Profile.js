@@ -2,7 +2,7 @@
  * Language: JavaScript (Node.js/Mongoose)
  * Purpose of this file:
  * This file establishes the structural blueprint (Schema) for the main portfolio data.
- * Mongoose uses this to enforce data integrity and structure for all your skills, 
+ * Mongoose uses this to enforce data integrity and structure for all your skills,
  * projects, experience, and personal information before it gets saved to MongoDB.
  */
 
@@ -24,7 +24,7 @@ const ExperienceSchema = new mongoose.Schema({
   // The time duration worked there
   period: String,
   // An array of text strings representing bullet points of what was done
-  description: [String] 
+  description: [String]
 });
 
 /**
@@ -40,17 +40,17 @@ const ProjectSchema = new mongoose.Schema({
   // Array of technologies used
   technologies: [String],
   // URL or path to the project's thumbnail image
-  image: String, 
+  image: String,
   // URL to the live deployment
-  link: String,  
+  link: String,
   // URL to the GitHub repository
-  github: String, 
+  github: String,
   // Array of text strings describing the project
   description: [String],
   // Array of key features or highlights
   highlights: [String],
   // A dynamic key-value map for custom statistics (e.g., "Performance": "99%")
-  stats: { type: Map, of: String } 
+  stats: { type: Map, of: String }
 });
 
 /**
@@ -71,7 +71,7 @@ const ProfileSchema = new mongoose.Schema({
   location: String,
   // Short professional summary
   summary: String,
-  
+
   // Categorized Skills Storage object containing arrays of strings
   technicalSkills: {
     frontend: [String],
@@ -81,11 +81,11 @@ const ProfileSchema = new mongoose.Schema({
     aiTools: [String],
     other: [String]
   },
-  
+
   // Embed the previously defined sub-schemas as arrays
   experience: [ExperienceSchema],
   projects: [ProjectSchema],
-  
+
   // Inline sub-schema for education history
   education: [
     {
@@ -95,19 +95,19 @@ const ProfileSchema = new mongoose.Schema({
       year: String
     }
   ],
-  
+
   // Array of certifications
   certifications: [String],
   // Array of soft skills
   softSkills: [String],
-  
+
   // Grouped additional info
   additionalInfo: {
     availability: String,
     workPreference: String,
     languages: [String]
   },
-  
+
   // Grouped social media links
   socials: {
     linkedin: String,
@@ -116,9 +116,9 @@ const ProfileSchema = new mongoose.Schema({
     instagram: String,
     facebook: String
   },
-  
+
   // Raw markdown support for the /architecture or readme page
-  readme: String, 
+  readme: String,
   // Detailed explanation of projects
   projectExplanation: String
 });

@@ -1,8 +1,8 @@
 /**
  * Language: JavaScript (React.js)
- * Purpose: 
- * This context provides a global state for the "Code Live" mode. 
- * It manages whether the code overlay is visible and which module's 
+ * Purpose:
+ * This context provides a global state for the "Code Live" mode.
+ * It manages whether the code overlay is visible and which module's
  * source code should be displayed.
  */
 
@@ -40,7 +40,6 @@ export const CodeLiveProvider = ({ children }) => {
         else if (path.includes('/admin/management')) setActiveModule('management');
         else if (path.includes('/admin')) setActiveModule('admin');
     }, [location]);
-
 
     const toggleCodeLive = () => setIsCodeLive(prev => !prev);
 

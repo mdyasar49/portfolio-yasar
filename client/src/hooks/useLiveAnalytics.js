@@ -16,7 +16,7 @@ const useLiveAnalytics = () => {
 
         const refreshVisitors = async () => {
             const requestStartedAt = Date.now();
-            const data = await fetchSystemAnalytics(false); 
+            const data = await fetchSystemAnalytics(false);
 
             if (
                 mounted &&

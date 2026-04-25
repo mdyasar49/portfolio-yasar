@@ -1,16 +1,16 @@
 /**
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This component renders the "Code Live" panel. It now features a custom 
- * syntax highlighter, line numbers, and a professional "Integrated Development Environment" 
+ * This component renders the "Code Live" panel. It now features a custom
+ * syntax highlighter, line numbers, and a professional "Integrated Development Environment"
  * (IDE) aesthetic for 100% architectural transparency.
  */
 
 import React, { useState, useEffect, useMemo } from 'react';
 // Material UI components for the panel UI and tabbed layout
-import { 
-  Box, Typography, IconButton, Stack, Tab, Tabs, 
-  CircularProgress, Fade, Tooltip 
+import {
+  Box, Typography, IconButton, Stack, Tab, Tabs,
+  CircularProgress, Fade, Tooltip
 } from '@mui/material';
 // Icons for technical aesthetics and actions
 import { X, Cpu, Terminal, Copy, Check, Hash, FileCode, Monitor } from 'lucide-react';
@@ -27,7 +27,7 @@ import { motion } from 'framer-motion';
  */
 const highlightCode = (code) => {
     if (!code) return '';
-    
+
     // Escaping HTML characters
     let html = code
         .replace(/&/g, '&amp;')
@@ -104,8 +104,8 @@ const CodeLiveOverlay = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            style={{ 
-                width: '100%', height: '100%', 
+            style={{
+                width: '100%', height: '100%',
                 display: 'flex', flexDirection: 'column',
                 background: '#0d1117',
                 borderLeft: '1px solid rgba(255,255,255,0.08)',
@@ -129,21 +129,21 @@ const CodeLiveOverlay = () => {
 
             {/* ── [IDE TABBED NAVIGATION] ── */}
             <Box sx={{ borderBottom: '1px solid rgba(255,255,255,0.05)', px: { xs: 0, sm: 2 }, bgcolor: 'rgba(0,0,0,0.2)' }}>
-                <Tabs 
-                    value={tab} 
+                <Tabs
+                    value={tab}
                     onChange={(e, v) => setTab(v)}
                     variant="fullWidth"
-                    sx={{ 
+                    sx={{
                         minHeight: 45,
                         '& .MuiTabs-indicator': { bgcolor: '#ff3366', height: 2 },
-                        '& .MuiTab-root': { 
-                            color: '#444', 
-                            fontWeight: 900, 
-                            fontFamily: 'Syncopate', 
-                            fontSize: { xs: '0.55rem', sm: '0.6rem' }, 
-                            minWidth: 'auto', 
-                            px: { xs: 1, sm: 3 }, 
-                            py: 1.5, 
+                        '& .MuiTab-root': {
+                            color: '#444',
+                            fontWeight: 900,
+                            fontFamily: 'Syncopate',
+                            fontSize: { xs: '0.55rem', sm: '0.6rem' },
+                            minWidth: 'auto',
+                            px: { xs: 1, sm: 3 },
+                            py: 1.5,
                             transition: 'all 0.3s',
                             '&.Mui-selected': { color: 'white' },
                             '&:hover': { color: '#888' }
@@ -172,13 +172,13 @@ const CodeLiveOverlay = () => {
                                 </Typography>
                                 <CopyAction content={activeContent} />
                             </Stack>
-                            
+
                             {/* Code Content with Line Numbers */}
                             <Box sx={{ flexGrow: 1, overflowY: 'auto', display: 'flex', p: 0 }}>
                                 {/* Line Number Column */}
-                                <Box sx={{ 
-                                    py: 3, px: 2, borderRight: '1px solid rgba(255,255,255,0.03)', 
-                                    bgcolor: 'rgba(0,0,0,0.3)', textAlign: 'right', userSelect: 'none' 
+                                <Box sx={{
+                                    py: 3, px: 2, borderRight: '1px solid rgba(255,255,255,0.03)',
+                                    bgcolor: 'rgba(0,0,0,0.3)', textAlign: 'right', userSelect: 'none'
                                 }}>
                                     {activeContent.split('\n').map((_, i) => (
                                         <Typography key={i} sx={{ color: '#1e293b', fontSize: '0.75rem', fontFamily: 'monospace', lineHeight: 1.7 }}>
@@ -186,12 +186,12 @@ const CodeLiveOverlay = () => {
                                         </Typography>
                                     ))}
                                 </Box>
-                                
+
                                 {/* Code Area */}
                                 <Box sx={{ p: 3, width: '100%' }}>
-                                    <Typography component="pre" sx={{ 
-                                        color: '#8b949e', fontSize: '0.75rem', fontFamily: 'monospace', 
-                                        lineHeight: 1.7, whiteSpace: 'pre', 
+                                    <Typography component="pre" sx={{
+                                        color: '#8b949e', fontSize: '0.75rem', fontFamily: 'monospace',
+                                        lineHeight: 1.7, whiteSpace: 'pre',
                                         '& .code-comment': { color: '#484f58', fontStyle: 'italic' },
                                         '& .code-keyword': { color: '#ff7b72' },
                                         '& .code-hook': { color: '#d2a8ff' },

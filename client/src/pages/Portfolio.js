@@ -1,8 +1,8 @@
 /**
  * Language: JavaScript (React.js)
  * Purpose of this file:
- * This component is the primary Page Assembler (The Home Page). 
- * It orchestrates all the individual sections of the portfolio (Hero, About, Projects, etc.) 
+ * This component is the primary Page Assembler (The Home Page).
+ * It orchestrates all the individual sections of the portfolio (Hero, About, Projects, etc.)
  * and initializes global decorative effects like the particle background and scanning light.
  */
 
@@ -38,11 +38,11 @@ const Portfolio = memo(({ profile, loading }) => {
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', scrollBehavior: 'smooth', position: 'relative', overflowX: 'hidden' }}>
       {/* Update browser tab title and description based on fetched profile data */}
-      <SEO 
-        title="Portfolio" 
-        description={profile?.summary || "Full Stack Engineer Portfolio"} 
+      <SEO
+        title="Portfolio"
+        description={profile?.summary || "Full Stack Engineer Portfolio"}
       />
-      
+
       {/* ── [ATMOSPHERIC PARTICLE BACKGROUND] ── */}
       {/* High-performance canvas-based particle system that floats in the background */}
       <Box sx={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
@@ -51,10 +51,10 @@ const Portfolio = memo(({ profile, loading }) => {
 
       {/* ── [GLOBAL SCANNING LIGHT EFFECT] ── */}
       {/* A faint horizontal light beam that moves up and down across the entire site */}
-      <Box sx={{ 
-        position: 'fixed', top: 0, left: 0, right: 0, height: '4px', 
-        background: 'linear-gradient(90deg, transparent, rgba(51, 204, 255, 0.4), transparent)', 
-        zIndex: 2000, opacity: 0.1, 
+      <Box sx={{
+        position: 'fixed', top: 0, left: 0, right: 0, height: '4px',
+        background: 'linear-gradient(90deg, transparent, rgba(51, 204, 255, 0.4), transparent)',
+        zIndex: 2000, opacity: 0.1,
         animation: 'scan-optimized 10s linear infinite',
         pointerEvents: 'none',
         willChange: 'transform'
@@ -68,15 +68,15 @@ const Portfolio = memo(({ profile, loading }) => {
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             let particles = [];
-            
+
             function resize() {
               canvas.width = window.innerWidth;
               canvas.height = window.innerHeight;
             }
-            
+
             window.addEventListener('resize', resize);
             resize();
-            
+
             // Individual particle class definition
             class Particle {
               constructor() {
@@ -102,10 +102,10 @@ const Portfolio = memo(({ profile, loading }) => {
                 ctx.fill();
               }
             }
-            
+
             // Create 50 initial particles
             for(let i=0; i<50; i++) particles.push(new Particle());
-            
+
             // Animation loop
             function animate() {
               ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -120,9 +120,9 @@ const Portfolio = memo(({ profile, loading }) => {
       {/* Global CSS keyframes for the scanner effect */}
       <style>
         {`
-          @keyframes scan-optimized { 
-            0% { transform: translateY(-100vh); } 
-            100% { transform: translateY(100vh); } 
+          @keyframes scan-optimized {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
           }
         `}
       </style>
@@ -136,12 +136,15 @@ const Portfolio = memo(({ profile, loading }) => {
         {profile.technicalSkills && <Skills skills={profile.technicalSkills} />}
         {profile.performanceData && <TechnicalInsight profile={profile} />}
 
-        {profile.experience && <CareerTrajectory experience={profile.experience} />}
         {profile.projects && <Projects projects={profile.projects} />}
-        {profile.education && <ScholasticHistory education={profile.education} />}
 
-        {profile.readme && <ProfessionalDossier profile={profile} />}
-        {profile.name && <SystemLogStream profile={profile} />}
+        <Box id="experience-dossier">
+          {profile.experience && <CareerTrajectory experience={profile.experience} />}
+          {profile.education && <ScholasticHistory education={profile.education} />}
+        </Box>
+
+        {profile.resumeConfig && <ProfessionalDossier profile={profile} />}
+        {(profile.engineeringObjective || profile.telemetryConfig) && <SystemLogStream profile={profile} />}
 
         {profile.email && <Contact profile={profile} />}
       </Container>
@@ -153,4 +156,3 @@ const Portfolio = memo(({ profile, loading }) => {
 });
 
 export default Portfolio;
-

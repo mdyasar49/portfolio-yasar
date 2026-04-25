@@ -14,10 +14,10 @@ const seedAdmin = async () => {
     try {
         console.log('📡 [Database] Connecting to infrastructure...');
         await mongoose.connect(process.env.MONGO_URI);
-        
+
         // Configuration: [CHANGE THESE LOCALLY OR DURING PROMPT]
-        const username = 'admin'; 
-        const password = 'admin'; 
+        const username = 'admin';
+        const password = 'admin';
 
         const exists = await Admin.findOne({ username });
         if (exists) {

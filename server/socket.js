@@ -26,7 +26,7 @@ const initSocket = (server) => {
     io.on("connection", (socket) => {
         activeUsers++;
         console.log(`📡 [Real-time] Node Connected. Total Active: ${activeUsers}`);
-        
+
         // Broadcast new count to all clients
         io.emit("visitorCountUpdate", activeUsers);
 

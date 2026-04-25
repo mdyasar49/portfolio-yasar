@@ -36,7 +36,7 @@ const ProposalSchema = new mongoose.Schema({
         // Automatically set to the current date and time
         default: Date.now,
         // MongoDB TTL Index: Automatically delete this document after 604800 seconds (7 days)
-        expires: 604800 
+        expires: 604800
     }
 });
 

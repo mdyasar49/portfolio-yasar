@@ -7,12 +7,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 const CustomCursor = () => {
     const cursorRef = useRef(null);
     const trailRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
+    const [hexData, setHexData] = useState('0x00');
 
     useEffect(() => {
         const cursor = cursorRef.current;
@@ -27,7 +28,7 @@ const CustomCursor = () => {
         const handleMouseMove = (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            
+
             // Immediate update for the primary dot
             cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
         };
@@ -41,9 +42,14 @@ const CustomCursor = () => {
             // Smooth interpolation for the trail
             trailX += (mouseX - trailX) * 0.15;
             trailY += (mouseY - trailY) * 0.15;
-            
+
             trail.style.transform = `translate3d(${trailX}px, ${trailY}px, 0)`;
             
+            // Generate periodic hex data for aesthetic "scanning" effect
+            if (Math.random() > 0.95) {
+                setHexData(`0x${Math.floor(Math.random() * 255).toString(16).toUpperCase()}`);
+            }
+
             requestAnimationFrame(animate);
         };
 
@@ -58,60 +64,109 @@ const CustomCursor = () => {
         };
     }, []);
 
+    const themeColor = isHovered ? '#ff3366' : '#00ffcc';
+    const accentColor = isHovered ? '#ff3366' : '#33ccff';
+
     return (
-        <Box sx={{ 
-            position: 'fixed', top: 0, left: 0, zIndex: 10002, 
-            pointerEvents: 'none', display: { xs: 'none', md: 'block' } 
+        <Box sx={{
+            position: 'fixed', top: 0, left: 0, zIndex: 10002,
+            pointerEvents: 'none', display: { xs: 'none', md: 'block' }
         }}>
             {/* Primary Sharp Dot */}
             <div
                 ref={cursorRef}
                 style={{
-                    width: 8, height: 8,
+                    width: 6, height: 6,
                     borderRadius: '50%',
-                    backgroundColor: '#00ffcc',
-                    boxShadow: '0 0 15px #00ffcc',
+                    backgroundColor: themeColor,
+                    boxShadow: `0 0 15px ${themeColor}`,
                     position: 'absolute',
-                    top: -4, left: -4,
-                    willChange: 'transform'
+                    top: -3, left: -3,
+                    willChange: 'transform',
+                    zIndex: 10
                 }}
             />
 
-            {/* Trailing Scanner Ring */}
+            {/* Trailing Scanner Ring System */}
             <div
                 ref={trailRef}
                 style={{
-                    width: isHovered ? 60 : 30,
-                    height: isHovered ? 60 : 30,
-                    borderRadius: '50%',
-                    border: '1px solid rgba(51, 204, 255, 0.4)',
-                    boxShadow: isHovered ? '0 0 20px rgba(51, 204, 255, 0.3)' : 'none',
+                    width: isHovered ? 80 : 40,
+                    height: isHovered ? 80 : 40,
                     position: 'absolute',
-                    top: isHovered ? -30 : -15, 
-                    left: isHovered ? -30 : -15,
-                    transition: 'width 0.3s, height 0.3s, top 0.3s, left 0.3s',
+                    top: isHovered ? -40 : -20,
+                    left: isHovered ? -40 : -20,
+                    transition: 'width 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.4s, top 0.4s, left 0.4s',
                     willChange: 'transform'
                 }}
             >
-                <Box sx={{ 
-                    position: 'absolute', top: '50%', left: 0, right: 0, 
-                    height: '1px', background: 'rgba(51, 204, 255, 0.2)',
-                    animation: 'cursorScan 2s linear infinite'
+                {/* [HUD LAYER 1] Main Rotating Border */}
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    borderRadius: '50%',
+                    border: `1px dashed ${accentColor}`,
+                    opacity: 0.4,
+                    animation: 'spin-ccw 8s linear infinite'
                 }} />
+
+                {/* [HUD LAYER 2] Secondary Fast Ring */}
+                <div style={{
+                    position: 'absolute', inset: 4,
+                    borderRadius: '50%',
+                    border: `1px solid ${accentColor}`,
+                    opacity: isHovered ? 0.8 : 0.2,
+                    borderTopColor: 'transparent',
+                    borderBottomColor: 'transparent',
+                    animation: 'spin-cw 2s linear infinite'
+                }} />
+
+                {/* [HUD LAYER 3] Corner Brackets (Visible on Hover) */}
+                {isHovered && (
+                    <Box sx={{ position: 'absolute', inset: -10, opacity: 0.8 }}>
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: 8, height: 8, borderTop: `2px solid ${themeColor}`, borderLeft: `2px solid ${themeColor}` }} />
+                        <div style={{ position: 'absolute', top: 0, right: 0, width: 8, height: 8, borderTop: `2px solid ${themeColor}`, borderRight: `2px solid ${themeColor}` }} />
+                        <div style={{ position: 'absolute', bottom: 0, left: 0, width: 8, height: 8, borderBottom: `2px solid ${themeColor}`, borderLeft: `2px solid ${themeColor}` }} />
+                        <div style={{ position: 'absolute', bottom: 0, right: 0, width: 8, height: 8, borderBottom: `2px solid ${themeColor}`, borderRight: `2px solid ${themeColor}` }} />
+                    </Box>
+                )}
+
+                {/* [HUD LAYER 4] Scanning Line */}
+                <Box sx={{
+                    position: 'absolute', top: '50%', left: 0, right: 0,
+                    height: '1px', background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+                    animation: 'cursorScan 3s ease-in-out infinite'
+                }} />
+
+                {/* [HUD LAYER 5] Telemetry Data Display */}
+                <Typography sx={{
+                    position: 'absolute', bottom: -20, left: '110%',
+                    color: accentColor, fontFamily: 'monospace', fontSize: '0.6rem',
+                    fontWeight: 900, whiteSpace: 'nowrap', opacity: 0.6,
+                    letterSpacing: 1
+                }}>
+                    {hexData}
+                </Typography>
             </div>
 
             <style>
                 {`
                     @keyframes cursorScan {
                         0% { top: 0%; opacity: 0; }
-                        50% { opacity: 1; }
+                        50% { opacity: 0.5; }
                         100% { top: 100%; opacity: 0; }
+                    }
+                    @keyframes spin-cw {
+                        from { transform: rotate(0deg); }
+                        to { transform: rotate(360deg); }
+                    }
+                    @keyframes spin-ccw {
+                        from { transform: rotate(360deg); }
+                        to { transform: rotate(0deg); }
                     }
                 `}
             </style>
         </Box>
     );
 };
-
 
 export default CustomCursor;

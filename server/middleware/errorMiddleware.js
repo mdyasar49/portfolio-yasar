@@ -28,7 +28,7 @@ const errorHandler = (err, req, res, next) => {
 
     // In Production: Hide detailed error messages for a [Premium/Clean] experience
     const isProduction = process.env.NODE_ENV === 'production';
-    
+
     res.status(error.statusCode || 500).json({
         success: false,
         error: isProduction ? 'An unexpected error occurred. Please try again later.' : (error.message || 'Server Error')
