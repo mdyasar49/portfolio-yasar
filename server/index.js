@@ -44,18 +44,18 @@ initSocket(server);
  * 2. Start the HTTP server regardless of DB status (Enables Portable Mode).
  */
 const startServer = async () => {
-    try {
-        await connectDB();
-    } catch (error) {
-        // Fallback warning if the cloud database is unreachable
-        console.warn("⚠️  MongoDB could not start. Server is running in PORTABLE MODE.");
-    } finally {
-        server.listen(PORT, () => {
-            console.log(`🚀 [Node.js] Runtime environment active.`);
-            console.log(`🌐 [Express.js] API Layer: http://localhost:${PORT}/api`);
-            console.log(`📡 [Socket.io] Persistence Layer: Active`);
-        });
-    }
+  try {
+    await connectDB();
+  } catch (error) {
+    // Fallback warning if the cloud database is unreachable
+    console.warn('⚠️  MongoDB could not start. Server is running in PORTABLE MODE.');
+  } finally {
+    server.listen(PORT, () => {
+      console.log(`🚀 [Node.js] Runtime environment active.`);
+      console.log(`🌐 [Express.js] API Layer: http://localhost:${PORT}/api`);
+      console.log(`📡 [Socket.io] Persistence Layer: Active`);
+    });
+  }
 };
 
 startServer();

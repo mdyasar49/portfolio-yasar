@@ -13,7 +13,7 @@ const theme = createTheme({
       sm: 600,
       md: 960,
       lg: 1280,
-      xl: 1920,   // Standard Desktop
+      xl: 1920, // Standard Desktop
       '2xl': 2560, // 2K/4K Monitors
       '3xl': 3840, // 8K/16K Extreme Displays
     },

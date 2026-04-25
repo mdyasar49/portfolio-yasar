@@ -1,10 +1,6 @@
 const normalizeOrigin = (value = '') => value.trim().replace(/\/+$/, '');
 
-const splitOrigins = (value = '') =>
-  value
-    .split(',')
-    .map(normalizeOrigin)
-    .filter(Boolean);
+const splitOrigins = (value = '') => value.split(',').map(normalizeOrigin).filter(Boolean);
 
 const getAllowedOrigins = () => {
   const defaults = [
@@ -13,12 +9,12 @@ const getAllowedOrigins = () => {
     'http://localhost:3000',
     'http://localhost:3001',
     'http://localhost:5173',
-    'https://mern-portfolio-yasar-1.onrender.com'
+    'https://mern-portfolio-yasar-1.onrender.com',
   ];
 
   const fromEnv = [
     ...splitOrigins(process.env.CLIENT_URL || ''),
-    ...splitOrigins(process.env.CLIENT_URLS || '')
+    ...splitOrigins(process.env.CLIENT_URLS || ''),
   ];
 
   return [...new Set([...defaults, ...fromEnv].map(normalizeOrigin).filter(Boolean))];
@@ -49,16 +45,18 @@ const createCorsOptions = () => {
         if (!origin || isAllowedOrigin(origin, allowedOrigins)) {
           callback(null, true);
         } else {
-          console.error(`🔴 [CORS_BLOCKED] Origin "${origin}" is not in whitelist:`, allowedOrigins);
+          console.error(
+            `🔴 [CORS_BLOCKED] Origin "${origin}" is not in whitelist:`,
+            allowedOrigins,
+          );
           callback(new Error(`CORS policy blocked access from origin ${origin}.`));
         }
       },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
       credentials: true,
-      optionsSuccessStatus: 204
-    }
-
+      optionsSuccessStatus: 204,
+    },
   };
 };
 
@@ -66,5 +64,5 @@ module.exports = {
   normalizeOrigin,
   getAllowedOrigins,
   createCorsOptions,
-  isAllowedOrigin
+  isAllowedOrigin,
 };

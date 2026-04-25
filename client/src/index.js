@@ -31,5 +31,5 @@ root.render(
         <App />
       </AdminProvider>
     </ErrorBoundary>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

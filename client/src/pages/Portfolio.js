@@ -30,19 +30,36 @@ const Portfolio = memo(({ profile, loading }) => {
   // Display the loader only until the core (navigation/name) is available.
   const isCoreLoaded = profile?.name || profile?.menuItems;
 
-  if (loading && !isCoreLoaded) return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', bgcolor: 'background.default', color: 'white' }}>
-       <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>INITIALIZING_SYSTEM_CORE...</Typography>
-    </Box>
-  );
+  if (loading && !isCoreLoaded)
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          bgcolor: 'background.default',
+          color: 'white',
+        }}
+      >
+        <Typography variant="h6" sx={{ fontFamily: 'Syncopate', fontWeight: 900 }}>
+          INITIALIZING_SYSTEM_CORE...
+        </Typography>
+      </Box>
+    );
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', scrollBehavior: 'smooth', position: 'relative', overflowX: 'hidden' }}>
+    <Box
+      sx={{
+        bgcolor: 'background.default',
+        minHeight: '100vh',
+        scrollBehavior: 'smooth',
+        position: 'relative',
+        overflowX: 'hidden',
+      }}
+    >
       {/* Update browser tab title and description based on fetched profile data */}
-      <SEO
-        title="Portfolio"
-        description={profile?.summary || "Full Stack Engineer Portfolio"}
-      />
+      <SEO title="Portfolio" description={profile?.summary || 'Full Stack Engineer Portfolio'} />
 
       {/* ── [YASAR SYSTEM HUD OVERLAY] ── */}
       <YasarSystemHUD />
@@ -55,14 +72,21 @@ const Portfolio = memo(({ profile, loading }) => {
 
       {/* ── [GLOBAL SCANNING LIGHT EFFECT] ── */}
       {/* A faint horizontal light beam that moves up and down across the entire site */}
-      <Box sx={{
-        position: 'fixed', top: 0, left: 0, right: 0, height: '4px',
-        background: 'linear-gradient(90deg, transparent, rgba(51, 204, 255, 0.4), transparent)',
-        zIndex: 2000, opacity: 0.1,
-        animation: 'scan-optimized 10s linear infinite',
-        pointerEvents: 'none',
-        willChange: 'transform'
-      }} />
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '4px',
+          background: 'linear-gradient(90deg, transparent, rgba(51, 204, 255, 0.4), transparent)',
+          zIndex: 2000,
+          opacity: 0.1,
+          animation: 'scan-optimized 10s linear infinite',
+          pointerEvents: 'none',
+          willChange: 'transform',
+        }}
+      />
 
       {/* Logic for the background particle animation */}
       <script>
@@ -131,7 +155,6 @@ const Portfolio = memo(({ profile, loading }) => {
         `}
       </style>
 
-
       {/* ── MAIN CONTENT CONTAINER ── */}
       <Container maxWidth="xl" sx={{ pt: 12, pb: 10 }}>
         {/* Sections are rendered as soon as their specific data arrives */}
@@ -148,7 +171,9 @@ const Portfolio = memo(({ profile, loading }) => {
         </Box>
 
         {profile.resumeConfig && <ProfessionalDossier profile={profile} />}
-        {(profile.engineeringObjective || profile.telemetryConfig) && <SystemLogStream profile={profile} />}
+        {(profile.engineeringObjective || profile.telemetryConfig) && (
+          <SystemLogStream profile={profile} />
+        )}
 
         {profile.email && <Contact profile={profile} />}
       </Container>

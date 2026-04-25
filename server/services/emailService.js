@@ -13,24 +13,26 @@ const nodemailer = require('nodemailer');
 // Create a reusable transporter object using the default SMTP transport
 // This configures how nodemailer will connect to the email server (Gmail in this case)
 const transporter = nodemailer.createTransport({
-    // Specify the email service provider
-    service: 'gmail',
-    // Provide authentication credentials
-    auth: {
-        // The sender's email address, securely loaded from environment variables
-        user: process.env.EMAIL_USER,
-        // The sender's app password or regular password, securely loaded from environment variables
-        pass: process.env.EMAIL_PASS
-    }
+  // Specify the email service provider
+  service: 'gmail',
+  // Provide authentication credentials
+  auth: {
+    // The sender's email address, securely loaded from environment variables
+    user: process.env.EMAIL_USER,
+    // The sender's app password or regular password, securely loaded from environment variables
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 // [DIAGNOSTIC] Verify SMTP connection on startup
 transporter.verify((error, success) => {
-    if (error) {
-        console.warn('⚠️  [EMAIL_SERVICE] Configuration invalid or SMTP unreachable. Emails will not be sent.');
-    } else {
-        console.log('✅ [EMAIL_SERVICE] Ready for secure dispatch.');
-    }
+  if (error) {
+    console.warn(
+      '⚠️  [EMAIL_SERVICE] Configuration invalid or SMTP unreachable. Emails will not be sent.',
+    );
+  } else {
+    console.log('✅ [EMAIL_SERVICE] Ready for secure dispatch.');
+  }
 });
 
 /**
@@ -40,26 +42,26 @@ transporter.verify((error, success) => {
  */
 // Export the sendProposalAlert function so it can be used in other files
 exports.sendProposalAlert = async (proposalId) => {
-    // Start a try-catch block to handle any potential errors during the email sending process
-    try {
-        // Construct the Secure Approval Link
-        // Fetch the client URL from environment variables, splitting by comma in case multiple exist, and taking the first one
-        const clientBase = (process.env.CLIENT_URL || '').split(',')[0];
-        // Create the direct link that the admin can click to approve the proposal
-        const approveLink = `${clientBase}/admin/management?tab=5&approve=${proposalId}`;
-        // Create the direct link that the admin can click to reject the proposal
-        const rejectLink = `${clientBase}/admin/management?tab=5&reject=${proposalId}`;
+  // Start a try-catch block to handle any potential errors during the email sending process
+  try {
+    // Construct the Secure Approval Link
+    // Fetch the client URL from environment variables, splitting by comma in case multiple exist, and taking the first one
+    const clientBase = (process.env.CLIENT_URL || '').split(',')[0];
+    // Create the direct link that the admin can click to approve the proposal
+    const approveLink = `${clientBase}/admin/management?tab=5&approve=${proposalId}`;
+    // Create the direct link that the admin can click to reject the proposal
+    const rejectLink = `${clientBase}/admin/management?tab=5&reject=${proposalId}`;
 
-        // Define the configuration options for this specific email
-        const mailOptions = {
-            // Set the sender's display name and actual email address
-            from: `"ARCHITECTURAL_LOGISTICS" <${process.env.EMAIL_USER}>`,
-            // Set the recipient's email address (the admin's email)
-            to: process.env.RECEIVER_EMAIL,
-            // Set the subject line of the email
-            subject: '🚨 NEW_ARCHITECTURAL_PROPOSAL_DISPATCHED',
-            // Set the actual HTML content/body of the email
-            html: `
+    // Define the configuration options for this specific email
+    const mailOptions = {
+      // Set the sender's display name and actual email address
+      from: `"ARCHITECTURAL_LOGISTICS" <${process.env.EMAIL_USER}>`,
+      // Set the recipient's email address (the admin's email)
+      to: process.env.RECEIVER_EMAIL,
+      // Set the subject line of the email
+      subject: '🚨 NEW_ARCHITECTURAL_PROPOSAL_DISPATCHED',
+      // Set the actual HTML content/body of the email
+      html: `
                 <div style="background:#0f172a; color:#f8fafc; padding:40px; font-family:'Inter', sans-serif; border:1px solid #334155; border-radius:12px; max-width:600px; margin:0 auto;">
                     <h2 style="color:#a78bfa; margin-bottom:20px; font-weight:600;">✨ New System Proposal</h2>
                     <p style="color:#94a3b8; line-height:1.6;">A visitor has submitted an architectural refinement for your portfolio system.</p>
@@ -76,22 +78,22 @@ exports.sendProposalAlert = async (proposalId) => {
 
                     <p style="margin-top:40px; font-size:12px; color:#475569; border-top:1px solid #1e293b; padding-top:20px;">This is an automated notification from your Portfolio System.</p>
                 </div>
-            `
-        };
+            `,
+    };
 
-        // Asynchronously send the email using the transporter and wait for the result
-        const info = await transporter.sendMail(mailOptions);
-        // Log a success message to the server console with the email's unique message ID
-        console.log(`📧 [EMAIL_SERVICE] Proposal alert dispatched: ${info.messageId}`);
-        // Return true to indicate the email was successfully sent
-        return true;
+    // Asynchronously send the email using the transporter and wait for the result
+    const info = await transporter.sendMail(mailOptions);
+    // Log a success message to the server console with the email's unique message ID
+    console.log(`📧 [EMAIL_SERVICE] Proposal alert dispatched: ${info.messageId}`);
+    // Return true to indicate the email was successfully sent
+    return true;
     // Catch any errors that occur during the try block
-    } catch (error) {
-        // Log the error message to the server console for debugging
-        console.error('❌ [EMAIL_SERVICE_FAILURE]:', error);
-        // Return false to indicate the email sending failed
-        return false;
-    }
+  } catch (error) {
+    // Log the error message to the server console for debugging
+    console.error('❌ [EMAIL_SERVICE_FAILURE]:', error);
+    // Return false to indicate the email sending failed
+    return false;
+  }
 };
 
 /**
@@ -101,21 +103,21 @@ exports.sendProposalAlert = async (proposalId) => {
  */
 // Export the sendContactAlert function so it can be called from route controllers
 exports.sendContactAlert = async (contactData) => {
-    // Start a try-catch block to handle email dispatch safely
-    try {
-        // Extract the name, email, subject, and message variables from the provided contactData object
-        const { name, email, profession, subject, message } = contactData;
+  // Start a try-catch block to handle email dispatch safely
+  try {
+    // Extract the name, email, subject, and message variables from the provided contactData object
+    const { name, email, profession, subject, message } = contactData;
 
-        // Define the configuration options for the contact email
-        const mailOptions = {
-            // Set the sender's display name and actual email address
-            from: `"CONTACT_LOGISTICS" <${process.env.EMAIL_USER}>`,
-            // Set the recipient's email address (the admin)
-            to: process.env.RECEIVER_EMAIL,
-            // Dynamically set the subject line including the user's name and their specific subject
-            subject: `🌐 PORTFOLIO_INQUIRY: ${name} [${profession || 'PRO'}]`,
-            // Set the HTML content/body containing the user's message
-            html: `
+    // Define the configuration options for the contact email
+    const mailOptions = {
+      // Set the sender's display name and actual email address
+      from: `"CONTACT_LOGISTICS" <${process.env.EMAIL_USER}>`,
+      // Set the recipient's email address (the admin)
+      to: process.env.RECEIVER_EMAIL,
+      // Dynamically set the subject line including the user's name and their specific subject
+      subject: `🌐 PORTFOLIO_INQUIRY: ${name} [${profession || 'PRO'}]`,
+      // Set the HTML content/body containing the user's message
+      html: `
                 <div style="background:#020617; color:#f8fafc; padding:40px; font-family:'Segoe UI', Roboto, Helvetica, sans-serif; border:1px solid #1e293b; border-radius:16px; max-width:600px; margin:0 auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
                     <!-- Header Section -->
                     <div style="border-bottom:1px solid #1e293b; padding-bottom:20px; margin-bottom:30px;">
@@ -163,20 +165,20 @@ exports.sendContactAlert = async (contactData) => {
                         </p>
                     </div>
                 </div>
-            `
-        };
+            `,
+    };
 
-        // Asynchronously send the email using the transporter and wait for the result
-        const info = await transporter.sendMail(mailOptions);
-        // Log a success message to the server console with the email's unique message ID
-        console.log(`📧 [EMAIL_SERVICE] Contact alert dispatched: ${info.messageId}`);
-        // Return true to indicate the contact message was sent successfully
-        return true;
+    // Asynchronously send the email using the transporter and wait for the result
+    const info = await transporter.sendMail(mailOptions);
+    // Log a success message to the server console with the email's unique message ID
+    console.log(`📧 [EMAIL_SERVICE] Contact alert dispatched: ${info.messageId}`);
+    // Return true to indicate the contact message was sent successfully
+    return true;
     // Catch any errors that occur during the email dispatch process
-    } catch (error) {
-        // Log the error details to the server console for debugging purposes
-        console.error('❌ [CONTACT_ALERT_FAILURE]:', error);
-        // Return false to indicate that the email sending failed
-        return false;
-    }
+  } catch (error) {
+    // Log the error details to the server console for debugging purposes
+    console.error('❌ [CONTACT_ALERT_FAILURE]:', error);
+    // Return false to indicate that the email sending failed
+    return false;
+  }
 };

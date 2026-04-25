@@ -22,21 +22,23 @@ const TechOrbit = () => {
     { name: 'Redux', color: '#764abc' },
     { name: 'Python', color: '#3776ab' },
     { name: 'Java', color: '#007396' },
-    { name: 'SQL', color: '#00758f' }
+    { name: 'SQL', color: '#00758f' },
   ];
 
   return (
-    <Box sx={{
-      position: 'relative',
-      height: 400,
-      width: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      perspective: '1000px',
-      mb: 10,
-      overflow: 'hidden'
-    }}>
+    <Box
+      sx={{
+        position: 'relative',
+        height: 400,
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        perspective: '1000px',
+        mb: 10,
+        overflow: 'hidden',
+      }}
+    >
       {/* Central Core */}
       <motion.div
         animate={{
@@ -45,10 +47,10 @@ const TechOrbit = () => {
           boxShadow: [
             '0 0 20px rgba(51, 204, 255, 0.2)',
             '0 0 60px rgba(51, 204, 255, 0.5)',
-            '0 0 20px rgba(51, 204, 255, 0.2)'
-          ]
+            '0 0 20px rgba(51, 204, 255, 0.2)',
+          ],
         }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
         style={{
           width: 80,
           height: 80,
@@ -58,29 +60,37 @@ const TechOrbit = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: '2px solid rgba(255,255,255,0.2)'
+          border: '2px solid rgba(255,255,255,0.2)',
         }}
       >
-        <Typography sx={{ fontWeight: 900, color: 'white', fontSize: '0.8rem', fontFamily: 'Syncopate' }}>CORE</Typography>
+        <Typography
+          sx={{ fontWeight: 900, color: 'white', fontSize: '0.8rem', fontFamily: 'Syncopate' }}
+        >
+          CORE
+        </Typography>
       </motion.div>
 
       {/* Orbiting Tech Rings */}
-      <Box sx={{
-        position: 'absolute',
-        width: 300,
-        height: 300,
-        borderRadius: '50%',
-        border: '1px dashed rgba(51, 204, 255, 0.1)',
-        animation: `${float} 6s ease-in-out infinite`
-      }} />
-      <Box sx={{
-        position: 'absolute',
-        width: 450,
-        height: 450,
-        borderRadius: '50%',
-        border: '1px dashed rgba(255, 51, 102, 0.05)',
-        animation: `${float} 8s ease-in-out infinite reverse`
-      }} />
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 300,
+          height: 300,
+          borderRadius: '50%',
+          border: '1px dashed rgba(51, 204, 255, 0.1)',
+          animation: `${float} 6s ease-in-out infinite`,
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          width: 450,
+          height: 450,
+          borderRadius: '50%',
+          border: '1px dashed rgba(255, 51, 102, 0.05)',
+          animation: `${float} 8s ease-in-out infinite reverse`,
+        }}
+      />
 
       {technologies.map((tech, i) => {
         const delay = i * 0.5;
@@ -92,7 +102,7 @@ const TechOrbit = () => {
               position: 'absolute',
               animation: `${orbit} ${20 + i * 2}s linear infinite`,
               animationDelay: `-${delay}s`,
-              zIndex: 5
+              zIndex: 5,
             }}
           >
             <motion.div
@@ -109,7 +119,7 @@ const TechOrbit = () => {
                 fontSize: '0.7rem',
                 fontFamily: 'Syncopate',
                 whiteSpace: 'nowrap',
-                cursor: 'pointer'
+                cursor: 'pointer',
               }}
             >
               {tech.name.toUpperCase()}
@@ -132,7 +142,7 @@ const TechOrbit = () => {
               bgcolor: i % 2 === 0 ? '#33ccff' : '#ff3366',
               borderRadius: '50%',
               boxShadow: `0 0 10px ${i % 2 === 0 ? '#33ccff' : '#ff3366'}`,
-              animation: `${float} ${3 + Math.random() * 5}s ease-in-out infinite`
+              animation: `${float} ${3 + Math.random() * 5}s ease-in-out infinite`,
             }}
           />
         ))}

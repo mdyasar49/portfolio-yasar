@@ -25,11 +25,13 @@ const app = express();
  * [LAYER 0] Performance Telemetry
  * Measures the internal processing time for every request to ensure optimal latency.
  */
-app.use(responseTime((req, res, time) => {
+app.use(
+  responseTime((req, res, time) => {
     if (req.path.startsWith('/api')) {
-        console.log(`⏱️  [Latency] ${req.method} ${req.path} -> ${time.toFixed(3)}ms`);
+      console.log(`⏱️  [Latency] ${req.method} ${req.path} -> ${time.toFixed(3)}ms`);
     }
-}));
+  }),
+);
 
 /**
  * [LAYER 0] Performance Optimization
@@ -50,32 +52,45 @@ app.options('*', cors(corsOptions)); // Handle pre-flight requests globally
  * [LAYER 2] Security Headers (Helmet)
  * Injects 15+ automated security headers (Content-Security-Policy, X-Frame-Options, etc.).
  */
-app.use(helmet({
+app.use(
+  helmet({
     crossOriginResourcePolicy: { policy: 'cross-origin' },
     contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-            styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-            imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://plus.unsplash.com", "https://i.ibb.co"],
-            fontSrc: ["'self'", "https://fonts.gstatic.com"],
-            connectSrc: ["'self'", "https://mern-portfolio-yasar.onrender.com", "https://mern-portfolio-yasar-backend.onrender.com", "http://localhost:5001"],
-            objectSrc: ["'none'"],
-            upgradeInsecureRequests: [],
-        },
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net'],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'https://images.unsplash.com',
+          'https://plus.unsplash.com',
+          'https://i.ibb.co',
+        ],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        connectSrc: [
+          "'self'",
+          'https://mern-portfolio-yasar.onrender.com',
+          'https://mern-portfolio-yasar-backend.onrender.com',
+          'http://localhost:5001',
+        ],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
     },
-    xFrameOptions: { action: "deny" }, // Prevents Clickjacking
+    xFrameOptions: { action: 'deny' }, // Prevents Clickjacking
     hidePoweredBy: true, // Hides "X-Powered-By: Express" header
-}));
+  }),
+);
 
 /**
  * [LAYER 3] Protection & Telemetry
  * Implements rate limiting to prevent brute-force attacks and logs incoming traffic.
  */
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 500,
-    message: { success: false, message: 'Too many requests from this IP.' }
+  windowMs: 15 * 60 * 1000,
+  max: 500,
+  message: { success: false, message: 'Too many requests from this IP.' },
 });
 
 app.use(logger); // Visualizes incoming traffic in the terminal
@@ -87,34 +102,37 @@ app.use('/api', limiter); // Applies general rate limiting to all API endpoints
  * Prevents direct browser access to the API and ensures strict JSON payloads.
  */
 app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    const referer = req.headers.referer;
-    const accept = req.headers.accept || '';
-    const contentType = req.headers['content-type'] || '';
+  const origin = req.headers.origin;
+  const referer = req.headers.referer;
+  const accept = req.headers.accept || '';
+  const contentType = req.headers['content-type'] || '';
 
-    const isApiRequest = req.path.startsWith('/api');
+  const isApiRequest = req.path.startsWith('/api');
 
-    // Strict JSON check for POST requests
-    if (req.method === 'POST' && isApiRequest && !contentType.includes('application/json')) {
-        return res.status(415).json({ success: false, message: 'Unsupported Media Type: application/json required.' });
-    }
+  // Strict JSON check for POST requests
+  if (req.method === 'POST' && isApiRequest && !contentType.includes('application/json')) {
+    return res
+      .status(415)
+      .json({ success: false, message: 'Unsupported Media Type: application/json required.' });
+  }
 
-    const hasReferer = req.headers.referer;
-    const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
+  const hasReferer = req.headers.referer;
+  const isAjax = req.xhr || req.headers['x-requested-with'] === 'XMLHttpRequest';
 
-    // Allow local development and cross-origin requests with proper referer
-    const isLocal = req.headers.host?.includes('localhost') || req.headers.host?.includes('127.0.0.1');
+  // Allow local development and cross-origin requests with proper referer
+  const isLocal =
+    req.headers.host?.includes('localhost') || req.headers.host?.includes('127.0.0.1');
 
-    if (isApiRequest && !hasReferer && !isAjax && !isLocal) {
-        return res.status(403).send(`
+  if (isApiRequest && !hasReferer && !isAjax && !isLocal) {
+    return res.status(403).send(`
             <div style="background:#010409; color:#ff3366; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:monospace; text-align:center;">
                 <h1 style="font-size:5rem;">🚫 ACCESS_DENIED</h1>
                 <p style="font-size:1.2rem; opacity:0.8;">Direct API access via browser is restricted to maintain system integrity.</p>
                 <a href="/" style="color:#00ffcc; text-decoration:none; margin-top:20px; border:1px solid #00ffcc; padding:10px 20px; border-radius:5px;">RETURN_TO_PORTFOLIO</a>
             </div>
         `);
-    }
-    next();
+  }
+  next();
 });
 
 /**
@@ -129,7 +147,7 @@ app.use('/api', portfolioRoutes);
 
 // JSON 404 Handler for undefined API paths
 app.use('/api', (req, res) => {
-    res.status(404).json({ success: false, message: 'API Endpoint not found' });
+  res.status(404).json({ success: false, message: 'API Endpoint not found' });
 });
 
 // Final Error Handling Middleware
@@ -140,22 +158,22 @@ app.use(errorHandler);
  * In production mode, Express serves the compiled React build and handles SPA routing.
  */
 if (process.env.NODE_ENV === 'production') {
-    const buildPath = path.join(__dirname, '../client/build');
-    app.use(express.static(buildPath));
+  const buildPath = path.join(__dirname, '../client/build');
+  app.use(express.static(buildPath));
 
-    // Wildcard route to deliver index.html (SPA support)
-    app.get('*', (req, res) => {
-        if (!req.path.startsWith('/api')) {
-            res.sendFile(path.join(buildPath, 'index.html'));
-        } else {
-            res.status(404).json({ success: false, message: 'API Endpoint not found' });
-        }
-    });
+  // Wildcard route to deliver index.html (SPA support)
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(buildPath, 'index.html'));
+    } else {
+      res.status(404).json({ success: false, message: 'API Endpoint not found' });
+    }
+  });
 }
 
 // Health Check Endpoint
 app.get('/', (req, res) => {
-    res.status(200).json({ status: 'Online', timestamp: new Date() });
+  res.status(200).json({ status: 'Online', timestamp: new Date() });
 });
 
 module.exports = app;

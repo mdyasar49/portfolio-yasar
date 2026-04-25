@@ -6,7 +6,8 @@ const options = {
     info: {
       title: 'MERN Portfolio Engineering API',
       version: '1.0.0',
-      description: 'Production-grade API documentation for the A. Mohamed Yasar Portfolio Ecosystem. This API handles professional data delivery, system health monitoring, and administrative terminal orchestration.',
+      description:
+        'Production-grade API documentation for the A. Mohamed Yasar Portfolio Ecosystem. This API handles professional data delivery, system health monitoring, and administrative terminal orchestration.',
       contact: {
         name: 'A. Mohamed Yasar',
         url: 'https://github.com/mdyasar49',

@@ -11,7 +11,7 @@ import {
   Terminal,
   Activity,
   ShieldAlert,
-  Unplug
+  Unplug,
 } from 'lucide-react';
 
 // ─── Constants & Config ──────────────────────────────────────
@@ -23,11 +23,7 @@ const ERROR_CONFIG = {
     title: 'CONNECTION LOST',
     subtitle: 'System is currently offline. Please check your internet connection.',
     code: 'ERR_CONNECTION_OFFLINE',
-    diagnostics: [
-      'IP_STACK_UNREACHABLE',
-      'DNS_RESOLUTION_FAILURE',
-      'LOCAL_ADAPTER_INACTIVE'
-    ]
+    diagnostics: ['IP_STACK_UNREACHABLE', 'DNS_RESOLUTION_FAILURE', 'LOCAL_ADAPTER_INACTIVE'],
   },
   server: {
     icon: ServerCrash,
@@ -35,11 +31,7 @@ const ERROR_CONFIG = {
     title: 'SERVER UNAVAILABLE',
     subtitle: 'The server is not responding. Please try again in a moment.',
     code: 'ERR_BACKEND_UNAVAILABLE',
-    diagnostics: [
-      'CLUSTER_PROTOCOL_HANG',
-      'DB_GATEWAY_TIMEOUT',
-      'RESOURCE_SLEEP_DETECTION'
-    ]
+    diagnostics: ['CLUSTER_PROTOCOL_HANG', 'DB_GATEWAY_TIMEOUT', 'RESOURCE_SLEEP_DETECTION'],
   },
   notfound: {
     icon: SearchX,
@@ -47,11 +39,7 @@ const ERROR_CONFIG = {
     title: 'PAGE NOT FOUND',
     subtitle: "The page you're looking for doesn't exist or has been moved.",
     code: 'ERR_ENTRY_NOT_FOUND',
-    diagnostics: [
-      'NODE_ADDR_MISMATCH',
-      'MANIFEST_ENTRY_VOID',
-      'URI_DECODE_EXCEPTION'
-    ]
+    diagnostics: ['NODE_ADDR_MISMATCH', 'MANIFEST_ENTRY_VOID', 'URI_DECODE_EXCEPTION'],
   },
   unknown: {
     icon: AlertOctagon,
@@ -59,12 +47,8 @@ const ERROR_CONFIG = {
     title: 'SOMETHING WENT WRONG',
     subtitle: 'An unexpected error occurred. Our engineers have been notified.',
     code: 'ERR_UNKNOWN_OVERFLOW',
-    diagnostics: [
-      'STACK_OVERFLOW_RISK',
-      'KERNEL_SYNC_ERROR',
-      'BUFFER_FLOW_INTERRUPT'
-    ]
-  }
+    diagnostics: ['STACK_OVERFLOW_RISK', 'KERNEL_SYNC_ERROR', 'BUFFER_FLOW_INTERRUPT'],
+  },
 };
 
 const normalizeErrorType = (type) => {
@@ -91,18 +75,17 @@ const GlitchText = ({ children, color }) => (
     </Typography>
     <motion.div
       animate={{
-        clipPath: [
-          'inset(80% 0 0 0)',
-          'inset(10% 0 80% 0)',
-          'inset(80% 0 0 0)'
-        ],
-        x: [-2, 2, -2]
+        clipPath: ['inset(80% 0 0 0)', 'inset(10% 0 80% 0)', 'inset(80% 0 0 0)'],
+        x: [-2, 2, -2],
       }}
-      transition={{ repeat: Infinity, duration: 0.2, ease: "linear" }}
+      transition={{ repeat: Infinity, duration: 0.2, ease: 'linear' }}
       style={{
         position: 'absolute',
-        top: 0, left: 0, width: '100%',
-        color: color, opacity: 0.5,
+        top: 0,
+        left: 0,
+        width: '100%',
+        color: color,
+        opacity: 0.5,
         zIndex: 1,
         fontFamily: 'Syncopate',
         fontWeight: 900,
@@ -134,7 +117,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
         duration: 2 + Math.random() * 4,
         delay: Math.random() * 5,
       })),
-    []
+    [],
   );
 
   // Simulate terminal output
@@ -144,12 +127,12 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       `INITIALIZING RECOVERY...`,
       `SCANNING NETWORK... COMPLETE.`,
       `REACHING GATEWAY... TIMEOUT.`,
-      `SYSTEM STATUS: ${safeErrorType.toUpperCase()}_OFFLINE`
+      `SYSTEM STATUS: ${safeErrorType.toUpperCase()}_OFFLINE`,
     ];
     let i = 0;
     const interval = setInterval(() => {
       if (i < lines.length) {
-        setTerminalLines(prev => [...prev, lines[i]]);
+        setTerminalLines((prev) => [...prev, lines[i]]);
         i++;
       } else {
         clearInterval(interval);
@@ -165,7 +148,7 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
     }
     setIsRetrying(true);
     // Visual delay for "Cyber" feel
-    await new Promise(r => setTimeout(r, 1200));
+    await new Promise((r) => setTimeout(r, 1200));
     try {
       await onRetry();
     } finally {
@@ -190,13 +173,17 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       {/* Background Animated Elements */}
       <Box sx={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         {/* Dynamic Scanlines */}
-        <Box sx={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
-          backgroundSize: '100% 4px, 3px 100%',
-          pointerEvents: 'none',
-          opacity: 0.3
-        }} />
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage:
+              'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+            backgroundSize: '100% 4px, 3px 100%',
+            pointerEvents: 'none',
+            opacity: 0.3,
+          }}
+        />
 
         {/* Pulsing Radial Gradient */}
         <motion.div
@@ -204,8 +191,10 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             position: 'absolute',
-            top: '50%', left: '50%',
-            width: '800px', height: '800px',
+            top: '50%',
+            left: '50%',
+            width: '800px',
+            height: '800px',
             borderRadius: '50%',
             background: `radial-gradient(circle, ${config.color}33 0%, transparent 70%)`,
             transform: 'translate(-50%, -50%)',
@@ -220,18 +209,19 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
             animate={{
               y: [-20, -120],
               x: particle.xDrift,
-              opacity: [0, 1, 0]
+              opacity: [0, 1, 0],
             }}
             transition={{
               duration: particle.duration,
               repeat: Infinity,
-              delay: particle.delay
+              delay: particle.delay,
             }}
             style={{
               position: 'absolute',
               bottom: '10%',
               left: particle.left,
-              width: '2px', height: '2px',
+              width: '2px',
+              height: '2px',
               backgroundColor: config.color,
               borderRadius: '50%',
               boxShadow: `0 0 10px ${config.color}`,
@@ -243,7 +233,6 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
       {/* Main Container */}
       <Container maxWidth="md" sx={{ position: 'relative', zIndex: 1 }}>
         <Stack spacing={6} alignItems="center" textAlign="center">
-
           {/* Header Section */}
           <Box>
             <motion.div
@@ -254,30 +243,38 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
               <Box sx={{ position: 'relative', mb: 4 }}>
                 <Box
                   sx={{
-                    width: 120, height: 120,
+                    width: 120,
+                    height: 120,
                     borderRadius: '30%',
                     border: `1px solid ${config.color}44`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     bgcolor: `${config.color}05`,
                     backdropFilter: 'blur(10px)',
                     position: 'relative',
                     mx: 'auto',
-                    boxShadow: `inset 0 0 20px ${config.color}22, 0 0 40px ${config.color}11`
+                    boxShadow: `inset 0 0 20px ${config.color}22, 0 0 40px ${config.color}11`,
                   }}
                 >
                   <ErrorIcon size={64} color={config.color} strokeWidth={1.5} />
 
                   {/* Decorative corner accents */}
                   {[0, 90, 180, 270].map((angle) => (
-                    <Box key={angle} sx={{
-                      position: 'absolute',
-                      width: 15, height: 15,
-                      borderTop: `2px solid ${config.color}`,
-                      borderLeft: `2px solid ${config.color}`,
-                      top: -2, left: -2,
-                      transform: `rotate(${angle}deg)`,
-                      transformOrigin: '61px 61px'
-                    }} />
+                    <Box
+                      key={angle}
+                      sx={{
+                        position: 'absolute',
+                        width: 15,
+                        height: 15,
+                        borderTop: `2px solid ${config.color}`,
+                        borderLeft: `2px solid ${config.color}`,
+                        top: -2,
+                        left: -2,
+                        transform: `rotate(${angle}deg)`,
+                        transformOrigin: '61px 61px',
+                      }}
+                    />
                   ))}
                 </Box>
               </Box>
@@ -285,35 +282,58 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
 
             <GlitchText color={config.color}>{config.title}</GlitchText>
 
-            <Typography variant="h6" sx={{
-              mt: 2,
-              color: 'rgba(255,255,255,0.7)',
-              fontWeight: 300,
-              maxWidth: 600,
-              mx: 'auto',
-              letterSpacing: 1
-            }}>
+            <Typography
+              variant="h6"
+              sx={{
+                mt: 2,
+                color: 'rgba(255,255,255,0.7)',
+                fontWeight: 300,
+                maxWidth: 600,
+                mx: 'auto',
+                letterSpacing: 1,
+              }}
+            >
               {config.subtitle}
             </Typography>
           </Box>
 
           {/* Diagnostics Panel */}
-          <Box sx={{
-            width: '100%',
-            maxWidth: 500,
-            p: 3,
-            bgcolor: 'rgba(10, 12, 18, 0.4)',
-            backdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.05)',
-            borderRadius: 4,
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: 500,
+              p: 3,
+              bgcolor: 'rgba(10, 12, 18, 0.4)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.05)',
+              borderRadius: 4,
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
             {/* Top Bar */}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2, pb: 2, borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mb: 2,
+                pb: 2,
+                borderBottom: '1px solid rgba(255,255,255,0.05)',
+              }}
+            >
               <Stack direction="row" spacing={1} alignItems="center">
                 <Terminal size={14} color={config.color} />
-                <Typography sx={{ fontSize: '0.7rem', fontWeight: 900, letterSpacing: 2, color: config.color }}>DIAGNOSTIC_LOG</Typography>
+                <Typography
+                  sx={{
+                    fontSize: '0.7rem',
+                    fontWeight: 900,
+                    letterSpacing: 2,
+                    color: config.color,
+                  }}
+                >
+                  DIAGNOSTIC_LOG
+                </Typography>
               </Stack>
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: '#ff5f56' }} />
@@ -324,14 +344,18 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
 
             <Stack spacing={1} textAlign="left">
               {terminalLines.map((line, idx) => (
-                <Typography key={idx} sx={{
-                  fontFamily: '"JetBrains Mono", monospace',
-                  fontSize: '0.75rem',
-                  color: idx === terminalLines.length - 1 ? config.color : 'rgba(255,255,255,0.5)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1
-                }}>
+                <Typography
+                  key={idx}
+                  sx={{
+                    fontFamily: '"JetBrains Mono", monospace',
+                    fontSize: '0.75rem',
+                    color:
+                      idx === terminalLines.length - 1 ? config.color : 'rgba(255,255,255,0.5)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
                   <span style={{ opacity: 0.3 }}>&gt;</span> {line}
                   {idx === terminalLines.length - 1 && (
                     <motion.span
@@ -345,18 +369,24 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
             </Stack>
 
             {/* Error Code Tag */}
-            <Box sx={{
-              mt: 3,
-              p: '4px 12px',
-              bgcolor: `${config.color}11`,
-              border: `1px solid ${config.color}33`,
-              borderRadius: 1,
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 1
-            }}>
+            <Box
+              sx={{
+                mt: 3,
+                p: '4px 12px',
+                bgcolor: `${config.color}11`,
+                border: `1px solid ${config.color}33`,
+                borderRadius: 1,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
               <ShieldAlert size={12} color={config.color} />
-              <Typography sx={{ fontSize: '0.65rem', fontWeight: 900, color: config.color, letterSpacing: 1 }}>{config.code}</Typography>
+              <Typography
+                sx={{ fontSize: '0.65rem', fontWeight: 900, color: config.color, letterSpacing: 1 }}
+              >
+                {config.code}
+              </Typography>
             </Box>
           </Box>
 
@@ -370,7 +400,8 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
               sx={{
                 bgcolor: config.color,
                 color: '#fff',
-                px: 6, py: 1.5,
+                px: 6,
+                py: 1.5,
                 borderRadius: '50px',
                 fontFamily: 'Syncopate',
                 fontSize: '0.8rem',
@@ -385,8 +416,8 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                 },
                 '&:disabled': {
                   bgcolor: 'rgba(255,255,255,0.05)',
-                  color: 'rgba(255,255,255,0.2)'
-                }
+                  color: 'rgba(255,255,255,0.2)',
+                },
               }}
             >
               {isRetrying ? (
@@ -399,17 +430,22 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                   </motion.div>
                   <span>RECONNECTING</span>
                 </Stack>
-              ) : hasRetryHandler ? 'RETRY_SERVER' : 'RELOAD_PAGE'}
+              ) : hasRetryHandler ? (
+                'RETRY_SERVER'
+              ) : (
+                'RELOAD_PAGE'
+              )}
             </Button>
 
             <Button
               variant="outlined"
-              onClick={() => window.location.href = '/'}
+              onClick={() => (window.location.href = '/')}
               startIcon={<Home size={18} />}
               sx={{
                 borderColor: 'rgba(255,255,255,0.1)',
                 color: 'rgba(255,255,255,0.6)',
-                px: 4, py: 1.5,
+                px: 4,
+                py: 1.5,
                 borderRadius: '50px',
                 fontFamily: 'Syncopate',
                 fontSize: '0.8rem',
@@ -421,8 +457,8 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
                   borderColor: '#fff',
                   color: '#fff',
                   bgcolor: 'rgba(255,255,255,0.05)',
-                  transform: 'translateY(-2px)'
-                }
+                  transform: 'translateY(-2px)',
+                },
               }}
             >
               RETURN_TO_HOME
@@ -430,22 +466,46 @@ const NetworkErrorScreen = ({ errorType = 'unknown', onRetry }) => {
           </Stack>
 
           {/* Footer Branding */}
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Activity size={14} />
-              <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>STATUS: OFFLINE</Typography>
-            </Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Unplug size={14} />
-              <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>UPLINK: DISCONNECTED</Typography>
-            </Stack>
-
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Activity size={14} />
+            <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>
+              STATUS: OFFLINE
+            </Typography>
+          </Stack>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Unplug size={14} />
+            <Typography sx={{ fontSize: '0.6rem', fontWeight: 900, letterSpacing: 2 }}>
+              UPLINK: DISCONNECTED
+            </Typography>
+          </Stack>
         </Stack>
       </Container>
 
       {/* Extreme border accents */}
-      <Box sx={{ position: 'absolute', top: 40, left: 40, width: 100, height: 100, borderLeft: '1px solid rgba(255,255,255,0.05)', borderTop: '1px solid rgba(255,255,255,0.05)', opacity: 0.5 }} />
-      <Box sx={{ position: 'absolute', bottom: 40, right: 40, width: 100, height: 100, borderRight: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', opacity: 0.5 }} />
-
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 40,
+          left: 40,
+          width: 100,
+          height: 100,
+          borderLeft: '1px solid rgba(255,255,255,0.05)',
+          borderTop: '1px solid rgba(255,255,255,0.05)',
+          opacity: 0.5,
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: 40,
+          right: 40,
+          width: 100,
+          height: 100,
+          borderRight: '1px solid rgba(255,255,255,0.05)',
+          borderBottom: '1px solid rgba(255,255,255,0.05)',
+          opacity: 0.5,
+        }}
+      />
     </Box>
   );
 };

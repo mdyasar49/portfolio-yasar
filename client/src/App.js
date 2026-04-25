@@ -57,7 +57,9 @@ const ScrollToTop = () => {
   // Get the current URL path
   const { pathname } = useLocation();
   // Whenever the path changes, scroll to coordinate 0,0
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   // This component doesn't render anything visible
   return null;
 };
@@ -110,7 +112,14 @@ const PublicApp = () => {
   // Get current location for animation tracking
   const location = useLocation();
   // Fetch profile data and status flags from the backend
-  const { profile, loading: profileLoading, error, errorType, maintenanceMode, retry } = useProfile();
+  const {
+    profile,
+    loading: profileLoading,
+    error,
+    errorType,
+    maintenanceMode,
+    retry,
+  } = useProfile();
 
   // ── [Elite System Boot Sequence Check] ──
   // If data is still loading, show a high-end futuristic loading screen
@@ -151,35 +160,51 @@ const PublicApp = () => {
       {/* HUD overlay elements (borders, scanlines, etc.) */}
       <SystemInterfaceHUD />
 
-      <Box sx={{
-        display: 'flex',
-        height: '100vh',
-        pt: 10,
-        overflow: 'hidden',
-        transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
-      }}>
-        {/* ── [UI_STREAM_CONTAINER] ── */}
-        <Box id="main-scroll-container" sx={{
-          flexGrow: 1,
-          height: '100%',
-          overflowY: 'auto',
+      <Box
+        sx={{
+          display: 'flex',
+          height: '100vh',
+          pt: 10,
+          overflow: 'hidden',
           transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          width: '100%'
-        }}>
-
+        }}
+      >
+        {/* ── [UI_STREAM_CONTAINER] ── */}
+        <Box
+          id="main-scroll-container"
+          sx={{
+            flexGrow: 1,
+            height: '100%',
+            overflowY: 'auto',
+            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+            width: '100%',
+          }}
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
+              transition={{ duration: 0.4, ease: 'easeInOut' }}
             >
-              <Suspense fallback={<Box sx={{ py: 20, textAlign: 'center' }}><Typography>MODULE_LOADING...</Typography></Box>}>
+              <Suspense
+                fallback={
+                  <Box sx={{ py: 20, textAlign: 'center' }}>
+                    <Typography>MODULE_LOADING...</Typography>
+                  </Box>
+                }
+              >
                 <Routes location={location}>
-                  <Route path="/"             element={<Portfolio profile={profile} loading={profileLoading} />} />
-                  <Route path="/resume"       element={<Resume profile={profile} />} />
-                  <Route path="*"             element={<Portfolio profile={profile} loading={profileLoading} />} />
+                  <Route
+                    path="/"
+                    element={<Portfolio profile={profile} loading={profileLoading} />}
+                  />
+                  <Route path="/resume" element={<Resume profile={profile} />} />
+                  <Route
+                    path="*"
+                    element={<Portfolio profile={profile} loading={profileLoading} />}
+                  />
                 </Routes>
               </Suspense>
             </motion.div>
@@ -214,14 +239,16 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     // Step 1: Remove the static loader from the original index.html file
     // This makes the transition from HTML loading to React rendering feel smooth.
     const loader = document.getElementById('initial-loader');
     if (loader) {
       loader.style.opacity = '0'; // Fade out
       // Completely remove it after the fade animation finishes
-      setTimeout(() => { loader.remove(); document.body.style.overflow = 'auto'; }, 800);
+      setTimeout(() => {
+        loader.remove();
+        document.body.style.overflow = 'auto';
+      }, 800);
     } else {
       document.body.style.overflow = 'auto'; // Ensure scrolling is enabled
     }
@@ -253,54 +280,89 @@ const App = () => {
             <div id="vignette" />
 
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <>
+                {/* Reset scroll on page change */}
+                <ScrollToTop />
+                {/* Handle hash links (like #contact) */}
+                <ScrollToHash />
+                {/* Global Cinematic Frame */}
+                <Box
+                  sx={{
+                    position: 'fixed',
+                    inset: { xs: 8, md: 20 },
+                    border: '1px solid rgba(51, 204, 255, 0.1)',
+                    pointerEvents: 'none',
+                    zIndex: 9999,
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      top: -1,
+                      left: -1,
+                      width: 20,
+                      height: 20,
+                      borderTop: '2px solid #33ccff',
+                      borderLeft: '2px solid #33ccff',
+                    },
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -1,
+                      right: -1,
+                      width: 20,
+                      height: 20,
+                      borderBottom: '2px solid #ff3366',
+                      borderRight: '2px solid #ff3366',
+                    },
+                    display: { xs: 'none', lg: 'block' },
+                  }}
+                />
 
-        <>
-          {/* Reset scroll on page change */}
-          <ScrollToTop />
-          {/* Handle hash links (like #contact) */}
-          <ScrollToHash />
-          {/* Global Cinematic Frame */}
-          <Box sx={{
-            position: 'fixed', inset: { xs: 8, md: 20 },
-            border: '1px solid rgba(51, 204, 255, 0.1)',
-            pointerEvents: 'none', zIndex: 9999,
-            '&::before': { content: '""', position: 'absolute', top: -1, left: -1, width: 20, height: 20, borderTop: '2px solid #33ccff', borderLeft: '2px solid #33ccff' },
-            '&::after': { content: '""', position: 'absolute', bottom: -1, right: -1, width: 20, height: 20, borderBottom: '2px solid #ff3366', borderRight: '2px solid #ff3366' },
-            display: { xs: 'none', lg: 'block' }
-          }} />
+                {/* Floating Section Navigation HUD (Right Side) */}
+                <Box
+                  sx={{
+                    position: 'fixed',
+                    right: 40,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    zIndex: 9999,
+                    display: { xs: 'none', xl: 'flex' },
+                    flexDirection: 'column',
+                    gap: 3,
+                  }}
+                >
+                  {['hero', 'about', 'skills', 'projects', 'contact'].map((section) => (
+                    <Box
+                      key={section}
+                      component="a"
+                      href={`#${section}`}
+                      sx={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: '50%',
+                        border: '1px solid rgba(255,255,255,0.3)',
+                        transition: '0.3s',
+                        '&:hover': {
+                          scale: 1.5,
+                          borderColor: '#33ccff',
+                          boxShadow: '0 0 10px #33ccff',
+                        },
+                      }}
+                    />
+                  ))}
+                </Box>
 
-          {/* Floating Section Navigation HUD (Right Side) */}
-          <Box sx={{
-            position: 'fixed', right: 40, top: '50%', transform: 'translateY(-50%)',
-            zIndex: 9999, display: { xs: 'none', xl: 'flex' }, flexDirection: 'column', gap: 3
-          }}>
-            {['hero', 'about', 'skills', 'projects', 'contact'].map((section) => (
-              <Box
-                key={section}
-                component="a"
-                href={`#${section}`}
-                sx={{
-                  width: 12, height: 12, borderRadius: '50%',
-                  border: '1px solid rgba(255,255,255,0.3)',
-                  transition: '0.3s',
-                  '&:hover': { scale: 1.5, borderColor: '#33ccff', boxShadow: '0 0 10px #33ccff' }
-                }}
-              />
-            ))}
-          </Box>
-
-          {/* Floating Technical Status HUD */}
-          {/* StatusHUD, CustomCursor, RecruiterHUD, and DocumentationHUD
+                {/* Floating Technical Status HUD */}
+                {/* StatusHUD, CustomCursor, RecruiterHUD, and DocumentationHUD
               are now handled inside PublicApp to receive live data */}
 
-          {/* Render the actual page routes */}
-          <AppRoutes />
-        </>
-        </Router>
-      </Box>
-    )}
-  </AnimatePresence>
-</ThemeProvider>
+                {/* Render the actual page routes */}
+                <AppRoutes />
+              </>
+            </Router>
+          </Box>
+        )}
+      </AnimatePresence>
+    </ThemeProvider>
   );
 };
 

@@ -2,13 +2,7 @@
   {
     "name": "Job Planner Enterprise",
     "type": "Production Environment (Bytes and Binaries)",
-    "technologies": [
-      "React.js",
-      "Redux",
-      "Material UI",
-      "REST APIs",
-      "MySQL"
-    ],
+    "technologies": ["React.js", "Redux", "Material UI", "REST APIs", "MySQL"],
     "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
     "link": "https://jobplanner.com.au/",
     "github": "#",

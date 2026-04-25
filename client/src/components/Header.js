@@ -9,12 +9,24 @@
 
 import React, { useState } from 'react';
 // Material UI components for the layout, buttons, and mobile drawer
-import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, ListItemButton, ListItemText, useScrollTrigger, Container } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Button,
+  IconButton,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  useScrollTrigger,
+  Container,
+} from '@mui/material';
 // Icons for mobile menu toggle and close
 import { Menu as MenuIcon, X } from 'lucide-react';
 // React Router hooks for navigation and location tracking
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-
 
 const Header = ({ profile }) => {
   // State to manage the visibility of the mobile side drawer
@@ -70,7 +82,6 @@ const Header = ({ profile }) => {
     }
   };
 
-
   /**
    * [renderNavButton]
    * Dynamically renders either an anchor link or a router link based on item type.
@@ -80,7 +91,10 @@ const Header = ({ profile }) => {
     const isAnchor = item.type === 'anchor';
     const isTerminal = item.name === 'Terminal';
     // Check if the current button matches the active section/page
-    const isActive = item.path ? (location.hash === item.path.replace('/', '') || (location.pathname === item.path && !isAnchor)) : false;
+    const isActive = item.path
+      ? location.hash === item.path.replace('/', '') ||
+        (location.pathname === item.path && !isAnchor)
+      : false;
 
     // Render logic for Homepage Anchors
     if (isAnchor && location.pathname === '/') {
@@ -90,17 +104,31 @@ const Header = ({ profile }) => {
           onClick={() => scrollToSection(item.name.toLowerCase())}
           sx={{
             color: isActive ? (isTerminal ? '#00ffcc' : '#ff3366') : 'white',
-            px: 2, mx: 0.5, fontSize: '0.7rem', fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: 1,
-            transition: '0.3s ease', position: 'relative',
+            px: 2,
+            mx: 0.5,
+            fontSize: '0.7rem',
+            fontFamily: 'Syncopate',
+            fontWeight: 900,
+            letterSpacing: 1,
+            transition: '0.3s ease',
+            position: 'relative',
             // Animated bottom underline
             '&::after': {
-                content: '""', position: 'absolute', bottom: 12, left: '25%',
-                width: isActive ? '50%' : 0, height: '1.5px',
-                bgcolor: isTerminal ? '#00ffcc' : '#ff3366',
-                boxShadow: `0 0 12px ${isTerminal ? '#00ffcc' : '#ff3366'}`,
-                transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+              content: '""',
+              position: 'absolute',
+              bottom: 12,
+              left: '25%',
+              width: isActive ? '50%' : 0,
+              height: '1.5px',
+              bgcolor: isTerminal ? '#00ffcc' : '#ff3366',
+              boxShadow: `0 0 12px ${isTerminal ? '#00ffcc' : '#ff3366'}`,
+              transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
             },
-            '&:hover': { color: isTerminal ? '#00ffcc' : '#ff3366', bgcolor: 'transparent', '&::after': { width: '50%' } }
+            '&:hover': {
+              color: isTerminal ? '#00ffcc' : '#ff3366',
+              bgcolor: 'transparent',
+              '&::after': { width: '50%' },
+            },
           }}
         >
           {item.name}
@@ -117,16 +145,30 @@ const Header = ({ profile }) => {
         onClick={() => setMobileOpen(false)}
         sx={{
           color: location.pathname === item.path ? (isTerminal ? '#00ffcc' : '#ff3366') : 'white',
-          px: 2, mx: 0.5, fontSize: '0.7rem', fontFamily: 'Syncopate', fontWeight: 900, letterSpacing: 1,
-          position: 'relative', transition: '0.3s ease',
+          px: 2,
+          mx: 0.5,
+          fontSize: '0.7rem',
+          fontFamily: 'Syncopate',
+          fontWeight: 900,
+          letterSpacing: 1,
+          position: 'relative',
+          transition: '0.3s ease',
           '&::after': {
-              content: '""', position: 'absolute', bottom: 12, left: '25%',
-              width: location.pathname === item.path ? '50%' : 0, height: '1.5px',
-              bgcolor: isTerminal ? '#00ffcc' : '#ff3366',
-              boxShadow: `0 0 12px ${isTerminal ? '#00ffcc' : '#ff3366'}`,
-              transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            content: '""',
+            position: 'absolute',
+            bottom: 12,
+            left: '25%',
+            width: location.pathname === item.path ? '50%' : 0,
+            height: '1.5px',
+            bgcolor: isTerminal ? '#00ffcc' : '#ff3366',
+            boxShadow: `0 0 12px ${isTerminal ? '#00ffcc' : '#ff3366'}`,
+            transition: '0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           },
-          '&:hover': { color: isTerminal ? '#00ffcc' : '#ff3366', bgcolor: 'transparent', '&::after': { width: '50%' } }
+          '&:hover': {
+            color: isTerminal ? '#00ffcc' : '#ff3366',
+            bgcolor: 'transparent',
+            '&::after': { width: '50%' },
+          },
         }}
       >
         {item.name}
@@ -157,18 +199,26 @@ const Header = ({ profile }) => {
         }}
         elevation={0}
       >
-        <Container maxWidth={trigger ? false : "lg"} sx={{ width: '100%', px: trigger ? 4 : 2 }}>
-          <Toolbar sx={{ justifyContent: 'space-between', height: trigger ? 64 : 80, width: '100%', gap: trigger ? 4 : 2 }}>
-
+        <Container maxWidth={trigger ? false : 'lg'} sx={{ width: '100%', px: trigger ? 4 : 2 }}>
+          <Toolbar
+            sx={{
+              justifyContent: 'space-between',
+              height: trigger ? 64 : 80,
+              width: '100%',
+              gap: trigger ? 4 : 2,
+            }}
+          >
             {/* [BRANDING] Logo with hover lift effect */}
             <Box
               component={RouterLink}
               to="/"
               onClick={handleLogoClick}
               sx={{
-                textDecoration: 'none', display: 'flex', alignItems: 'center',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
                 transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                '&:hover': { transform: 'scale(1.05)' }
+                '&:hover': { transform: 'scale(1.05)' },
               }}
             >
               <Box
@@ -176,20 +226,31 @@ const Header = ({ profile }) => {
                 src="/logo.png"
                 alt="Mohamed Yasar"
                 sx={{
-                  height: { xs: 35, sm: 40, md: 45 }, width: 'auto',
-                  filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.3))'
+                  height: { xs: 35, sm: 40, md: 45 },
+                  width: 'auto',
+                  filter: 'drop-shadow(0 0 10px rgba(51, 204, 255, 0.3))',
                 }}
               />
             </Box>
 
             {/* [DESKTOP NAVIGATION] Hidden on small screens */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', whiteSpace: 'nowrap', gap: 2 }}>
+            <Box
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                alignItems: 'center',
+                whiteSpace: 'nowrap',
+                gap: 2,
+              }}
+            >
               {menuItems.map((item) => renderNavButton(item))}
             </Box>
 
-
             {/* [MOBILE MENU TOGGLE] Visible only on mobile */}
-            <IconButton color="inherit" onClick={handleDrawerToggle} sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              color="inherit"
+              onClick={handleDrawerToggle}
+              sx={{ display: { xs: 'flex', md: 'none' } }}
+            >
               <MenuIcon />
             </IconButton>
           </Toolbar>
@@ -203,33 +264,49 @@ const Header = ({ profile }) => {
         onClose={handleDrawerToggle}
         PaperProps={{
           sx: {
-            bgcolor: 'rgba(3, 7, 18, 0.95)', width: 280,
+            bgcolor: 'rgba(3, 7, 18, 0.95)',
+            width: 280,
             backdropFilter: 'blur(20px) saturate(180%)',
-            borderLeft: '1px solid rgba(255,255,255,0.08)'
-          }
+            borderLeft: '1px solid rgba(255,255,255,0.08)',
+          },
         }}
       >
         <Box sx={{ p: 4 }}>
           {/* Close Button */}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 4 }}>
-            <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}><X /></IconButton>
+            <IconButton onClick={handleDrawerToggle} sx={{ color: 'white' }}>
+              <X />
+            </IconButton>
           </Box>
           {/* Menu List */}
           <List>
             {menuItems.map((item) => (
-
               <ListItem key={item.name} disablePadding sx={{ mb: 1 }}>
                 <ListItemButton
-                  onClick={() => item.type === 'anchor' ? scrollToSection(item.name.toLowerCase()) : setMobileOpen(false)}
-                  component={item.type === 'anchor' && location.pathname === '/' ? 'div' : RouterLink}
-                  {...(item.type === 'anchor' && location.pathname === '/' ? {} : { to: item.path })}
+                  onClick={() =>
+                    item.type === 'anchor'
+                      ? scrollToSection(item.name.toLowerCase())
+                      : setMobileOpen(false)
+                  }
+                  component={
+                    item.type === 'anchor' && location.pathname === '/' ? 'div' : RouterLink
+                  }
+                  {...(item.type === 'anchor' && location.pathname === '/'
+                    ? {}
+                    : { to: item.path })}
                   sx={{
                     borderRadius: 2,
                     '&:hover': { bgcolor: 'rgba(99, 102, 241, 0.1)' },
-                    '&.Mui-focusVisible': { outline: '2px solid rgba(51, 204, 255, 0.5)', outlineOffset: '2px' }
+                    '&.Mui-focusVisible': {
+                      outline: '2px solid rgba(51, 204, 255, 0.5)',
+                      outlineOffset: '2px',
+                    },
                   }}
                 >
-                  <ListItemText primary={item.name} sx={{ '& .MuiTypography-root': { fontWeight: 600, color: 'white' } }} />
+                  <ListItemText
+                    primary={item.name}
+                    sx={{ '& .MuiTypography-root': { fontWeight: 600, color: 'white' } }}
+                  />
                 </ListItemButton>
               </ListItem>
             ))}

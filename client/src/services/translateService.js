@@ -47,7 +47,7 @@ export const translateText = async (text, targetLang) => {
         }
 
         return `${prefix}${translatedContent}`;
-      })
+      }),
     );
 
     const result = translatedLines.join('\n');
@@ -65,7 +65,7 @@ const fetchTranslation = async (text, targetLang) => {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
     const response = await fetch(url);
     const data = await response.json();
-    return data[0].map(item => item[0]).join('');
+    return data[0].map((item) => item[0]).join('');
   } catch (err) {
     return text;
   }
@@ -76,35 +76,84 @@ const fetchTranslation = async (text, targetLang) => {
  * Converts Tamil unicode characters into English phonetic script.
  */
 export const transliterateToThanglish = (tamilText) => {
-  if (!tamilText) return "";
+  if (!tamilText) return '';
 
   // 1. Technical Term Preservation (Words already in English script)
-  const technicalTerms = ['Node.js', 'React', 'MongoDB', 'Express', 'API', 'UI', 'UX', 'JSON', 'JWT', 'CORS', 'Client', 'Server'];
+  const technicalTerms = [
+    'Node.js',
+    'React',
+    'MongoDB',
+    'Express',
+    'API',
+    'UI',
+    'UX',
+    'JSON',
+    'JWT',
+    'CORS',
+    'Client',
+    'Server',
+  ];
 
   // 2. Comprehensive Phonetic Mapping
   // Vowels
   const vowels = {
-    'அ': 'a', 'ஆ': 'aa', 'இ': 'i', 'ஈ': 'ee', 'உ': 'u', 'ஊ': 'oo',
-    'எ': 'e', 'ஏ': 'ae', 'ஐ': 'ai', 'ஒ': 'o', 'ஓ': 'oe', 'ஔ': 'au', 'ஃ': 'h'
+    அ: 'a',
+    ஆ: 'aa',
+    இ: 'i',
+    ஈ: 'ee',
+    உ: 'u',
+    ஊ: 'oo',
+    எ: 'e',
+    ஏ: 'ae',
+    ஐ: 'ai',
+    ஒ: 'o',
+    ஓ: 'oe',
+    ஔ: 'au',
+    ஃ: 'h',
   };
 
   // Consonants + Vowel signs
   const consonants = {
-    'க': 'ka', 'ங': 'nga', 'ச': 'cha', 'ஞ': 'gna', 'ட': 'ta', 'ண': 'na',
-    'த': 'tha', 'ந': 'na', 'ப': 'pa', 'ம': 'ma', 'ய': 'ya', 'ர': 'ra',
-    'ல': 'la', 'வ': 'va', 'ழ': 'zha', 'ள': 'la', 'ற': 'ra', 'ன': 'na'
+    க: 'ka',
+    ங: 'nga',
+    ச: 'cha',
+    ஞ: 'gna',
+    ட: 'ta',
+    ண: 'na',
+    த: 'tha',
+    ந: 'na',
+    ப: 'pa',
+    ம: 'ma',
+    ய: 'ya',
+    ர: 'ra',
+    ல: 'la',
+    வ: 'va',
+    ழ: 'zha',
+    ள: 'la',
+    ற: 'ra',
+    ன: 'na',
   };
 
   const signs = {
-    'ா': 'aa', 'ி': 'i', 'ீ': 'ee', 'ு': 'u', 'ூ': 'oo',
-    'ெ': 'e', 'ே': 'ae', 'ை': 'ai', 'ொ': 'o', 'ோ': 'oe', 'ௌ': 'au', '்': ''
+    'ா': 'aa',
+    'ி': 'i',
+    'ீ': 'ee',
+    'ு': 'u',
+    'ூ': 'oo',
+    'ெ': 'e',
+    'ே': 'ae',
+    'ை': 'ai',
+    'ொ': 'o',
+    'ோ': 'oe',
+    'ௌ': 'au',
+    '்': '',
   };
 
   // 3. Transformation Logic
   let result = tamilText;
 
   // Preserve technical terms by wrapping them
-  technicalTerms.forEach(term => {
+  technicalTerms.forEach((term) => {
     const reg = new RegExp(term, 'gi');
     result = result.replace(reg, ` __${term}__ `);
   });
@@ -112,23 +161,23 @@ export const transliterateToThanglish = (tamilText) => {
   // Basic Phonetic Replacement (Approximation)
   // This is a simplified engine for real-time display
   const tamilToEnglish = (text) => {
-    let output = "";
+    let output = '';
     for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const nextChar = text[i+1];
+      const char = text[i];
+      const nextChar = text[i + 1];
 
-        if (consonants[char]) {
-            if (signs[nextChar] !== undefined) {
-                output += consonants[char].slice(0, -1) + signs[nextChar];
-                i++;
-            } else {
-                output += consonants[char];
-            }
-        } else if (vowels[char]) {
-            output += vowels[char];
+      if (consonants[char]) {
+        if (signs[nextChar] !== undefined) {
+          output += consonants[char].slice(0, -1) + signs[nextChar];
+          i++;
         } else {
-            output += char;
+          output += consonants[char];
         }
+      } else if (vowels[char]) {
+        output += vowels[char];
+      } else {
+        output += char;
+      }
     }
     return output;
   };
@@ -140,15 +189,15 @@ export const transliterateToThanglish = (tamilText) => {
 
   // 4. Common Word Polish (Native Thanglish feel)
   const polishMap = {
-    'kaaranamaaga': 'kaaranama',
-    'irukkirathu': 'irukku',
-    'therikirathu': 'theriyuthu',
-    'seyyavum': 'pannunga',
-    'seithu': 'panni',
-    'nanri': 'Thanks'
+    kaaranamaaga: 'kaaranama',
+    irukkirathu: 'irukku',
+    therikirathu: 'theriyuthu',
+    seyyavum: 'pannunga',
+    seithu: 'panni',
+    nanri: 'Thanks',
   };
 
-  Object.keys(polishMap).forEach(key => {
+  Object.keys(polishMap).forEach((key) => {
     const reg = new RegExp(key, 'g');
     result = result.replace(reg, polishMap[key]);
   });

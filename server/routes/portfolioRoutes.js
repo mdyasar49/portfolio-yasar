@@ -23,12 +23,12 @@ const rateLimit = require('express-rate-limit');
  * Creates a middleware that blocks users from sending too many messages.
  */
 const contactLimiter = rateLimit({
-    // Set the time window to 1 Hour (in milliseconds)
-    windowMs: 60 * 60 * 1000,
-    // Limit each IP to exactly 5 requests per hour window
-    max: 5,
-    // Custom error message sent when the limit is exceeded
-    message: { success: false, message: 'Spam protection active. Please try again later.' }
+  // Set the time window to 1 Hour (in milliseconds)
+  windowMs: 60 * 60 * 1000,
+  // Limit each IP to exactly 5 requests per hour window
+  max: 5,
+  // Custom error message sent when the limit is exceeded
+  message: { success: false, message: 'Spam protection active. Please try again later.' },
 });
 
 /**

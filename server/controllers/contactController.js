@@ -30,37 +30,38 @@ const contactsFile = path.join(__dirname, '../contacts.json');
  */
 // Define a helper function to save a contact to the local JSON file
 const saveLocalContact = (contact) => {
-    // Start a try block to gracefully catch any errors while reading or writing the file
-    try {
-        // Initialize an empty array to hold our contacts
-        let contacts = [];
-        // Check if the contacts.json file already exists on the disk
-        if (fs.existsSync(contactsFile)) {
-            // Read the contents of the existing JSON file
-            const content = fs.readFileSync(contactsFile, 'utf-8');
-            // Parse the JSON string back into a JavaScript array (or empty array if empty)
-            contacts = JSON.parse(content || '[]');
-        }
-
-        // Create a new entry object making sure it has a unique ID and proper date format
-        const localEntry = {
-            // Copy all existing properties from the incoming contact object
-            ...contact,
-            // Use the existing ID or generate a fallback unique local ID using timestamp and random string
-            _id: contact._id || `LOCAL_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-            // Ensure the creation date is stored as a standard ISO string
-            createdAt: contact.createdAt instanceof Date ? contact.createdAt.toISOString() : contact.createdAt
-        };
-
-        // Add the new contact entry to the VERY BEGINNING of the array (most recent first)
-        contacts.unshift(localEntry);
-        // Write the updated array back to the JSON file, keeping only the 100 most recent entries to prevent massive files
-        fs.writeFileSync(contactsFile, JSON.stringify(contacts.slice(0, 100), null, 2));
-    // Catch any errors during the file operations
-    } catch (e) {
-        // Log the error to the console if local backup fails
-        console.error('LOCAL_CONTACT_SYNC_ERROR:', e.message);
+  // Start a try block to gracefully catch any errors while reading or writing the file
+  try {
+    // Initialize an empty array to hold our contacts
+    let contacts = [];
+    // Check if the contacts.json file already exists on the disk
+    if (fs.existsSync(contactsFile)) {
+      // Read the contents of the existing JSON file
+      const content = fs.readFileSync(contactsFile, 'utf-8');
+      // Parse the JSON string back into a JavaScript array (or empty array if empty)
+      contacts = JSON.parse(content || '[]');
     }
+
+    // Create a new entry object making sure it has a unique ID and proper date format
+    const localEntry = {
+      // Copy all existing properties from the incoming contact object
+      ...contact,
+      // Use the existing ID or generate a fallback unique local ID using timestamp and random string
+      _id: contact._id || `LOCAL_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+      // Ensure the creation date is stored as a standard ISO string
+      createdAt:
+        contact.createdAt instanceof Date ? contact.createdAt.toISOString() : contact.createdAt,
+    };
+
+    // Add the new contact entry to the VERY BEGINNING of the array (most recent first)
+    contacts.unshift(localEntry);
+    // Write the updated array back to the JSON file, keeping only the 100 most recent entries to prevent massive files
+    fs.writeFileSync(contactsFile, JSON.stringify(contacts.slice(0, 100), null, 2));
+    // Catch any errors during the file operations
+  } catch (e) {
+    // Log the error to the console if local backup fails
+    console.error('LOCAL_CONTACT_SYNC_ERROR:', e.message);
+  }
 };
 
 /**
@@ -69,10 +70,10 @@ const saveLocalContact = (contact) => {
  * incoming user strings to prevent cross-site scripting (XSS) attacks.
  */
 const cleanse = (str = '') => {
-    if (typeof str !== 'string') return '';
-    return str
-        .replace(/<[^>]*>?/gm, '') // Remove HTML tags
-        .trim();
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/<[^>]*>?/gm, '') // Remove HTML tags
+    .trim();
 };
 
 /**
@@ -83,43 +84,43 @@ const cleanse = (str = '') => {
  */
 // Export the submitContactForm controller wrapped in the asyncHandler
 exports.submitContactForm = asyncHandler(async (req, res, next) => {
-    // Extract and CLEANSE the necessary fields from the request body
-    const name = cleanse(req.body.name);
-    const email = cleanse(req.body.email);
-    const profession = cleanse(req.body.profession || 'Independent Professional');
-    const subject = cleanse(req.body.subject || 'No Subject');
-    const message = cleanse(req.body.message);
+  // Extract and CLEANSE the necessary fields from the request body
+  const name = cleanse(req.body.name);
+  const email = cleanse(req.body.email);
+  const profession = cleanse(req.body.profession || 'Independent Professional');
+  const subject = cleanse(req.body.subject || 'No Subject');
+  const message = cleanse(req.body.message);
 
-    // Validate that the required fields are provided
-    if (!name || !email || !message) {
-        return res.status(400).json({ success: false, error: 'Incomplete dispatch payload.' });
-    }
+  // Validate that the required fields are provided
+  if (!name || !email || !message) {
+    return res.status(400).json({ success: false, error: 'Incomplete dispatch payload.' });
+  }
 
-    // Package the cleansed data
-    const contactData = { name, email, profession, subject, message, createdAt: new Date() };
+  // Package the cleansed data
+  const contactData = { name, email, profession, subject, message, createdAt: new Date() };
 
-    // Step 1. Persist to MongoDB if connected
-    if (mongoose.connection && mongoose.connection.readyState === 1) {
-        try {
-            await Contact.create(contactData);
-        } catch (e) {
-            console.error('DB_SAVE_FAIL:', e.message);
-        }
-    }
-
-    // Step 2. Persist to Local JSON backup
-    saveLocalContact(contactData);
-
-    // Step 3. Dispatch Email Alert
+  // Step 1. Persist to MongoDB if connected
+  if (mongoose.connection && mongoose.connection.readyState === 1) {
     try {
-        await sendContactAlert(contactData);
-    } catch (error) {
-        console.error('MAIL_DISPATCH_ERROR:', error);
+      await Contact.create(contactData);
+    } catch (e) {
+      console.error('DB_SAVE_FAIL:', e.message);
     }
+  }
 
-    // Respond back to the frontend
-    res.status(200).json({
-        success: true,
-        message: 'Your correspondence has been securely logged and dispatched.'
-    });
+  // Step 2. Persist to Local JSON backup
+  saveLocalContact(contactData);
+
+  // Step 3. Dispatch Email Alert
+  try {
+    await sendContactAlert(contactData);
+  } catch (error) {
+    console.error('MAIL_DISPATCH_ERROR:', error);
+  }
+
+  // Respond back to the frontend
+  res.status(200).json({
+    success: true,
+    message: 'Your correspondence has been securely logged and dispatched.',
+  });
 });

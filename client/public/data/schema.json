@@ -16,11 +16,15 @@
       "jobTitle": "MERN Stack Engineer & UI Architect",
       "url": "https://mern-portfolio-yasar-1.onrender.com/",
       "image": "https://mern-portfolio-yasar-1.onrender.com/logo.png",
-      "sameAs": [
-        "https://linkedin.com/in/mohamedyasar",
-        "https://github.com/mdyasar49"
-      ],
-      "knowsAbout": ["React.js", "Node.js", "MongoDB", "Express.js", "Cloud Architecture", "UI/UX Design"]
+      "sameAs": ["https://linkedin.com/in/mohamedyasar", "https://github.com/mdyasar49"],
+      "knowsAbout": [
+        "React.js",
+        "Node.js",
+        "MongoDB",
+        "Express.js",
+        "Cloud Architecture",
+        "UI/UX Design"
+      ]
     }
   ]
 }

@@ -25,19 +25,19 @@ body {
 
 /* Global Scanline Overlay */
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.05) 0px,
-        rgba(0, 0, 0, 0.05) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.3;
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.3;
 }
 
 *,
@@ -48,7 +48,7 @@ body::before {
 
 /* Subtle animated grid background */
 body::before {
-  content: "";
+  content: '';
   position: fixed;
   top: 0;
   left: 0;
@@ -58,7 +58,10 @@ body::before {
     linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 1) 100%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
     linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 52px 52px, 52px 52px;
+  background-size:
+    100% 100%,
+    52px 52px,
+    52px 52px;
   transform: perspective(500px) rotateX(58deg) scale(2.2) translateY(-40px);
   animation: gridMove 26s linear infinite;
   z-index: -2;
@@ -68,13 +71,18 @@ body::before {
 
 /* Deep ambient glow */
 body::after {
-  content: "";
+  content: '';
   position: fixed;
   top: -50%;
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 50% 50%, rgba(51, 204, 255, 0.05), rgba(255, 51, 102, 0.02), transparent 70%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(51, 204, 255, 0.05),
+    rgba(255, 51, 102, 0.02),
+    transparent 70%
+  );
   animation: pulseGlow 20s ease-in-out infinite alternate;
   z-index: -1;
   pointer-events: none;
@@ -82,13 +90,23 @@ body::after {
 }
 
 @keyframes gridMove {
-  0% { transform: perspective(500px) rotateX(58deg) scale(2.2) translateZ(0) translateY(0); }
-  100% { transform: perspective(500px) rotateX(58deg) scale(2.2) translateZ(0) translateY(40px); }
+  0% {
+    transform: perspective(500px) rotateX(58deg) scale(2.2) translateZ(0) translateY(0);
+  }
+  100% {
+    transform: perspective(500px) rotateX(58deg) scale(2.2) translateZ(0) translateY(40px);
+  }
 }
 
 @keyframes pulseGlow {
-  0% { transform: scale(1) translateZ(0); opacity: 0.6; }
-  100% { transform: scale(1.1) translateZ(0); opacity: 0.8; }
+  0% {
+    transform: scale(1) translateZ(0);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.1) translateZ(0);
+    opacity: 0.8;
+  }
 }
 
 /* Liquid gradient text */
@@ -105,18 +123,42 @@ body::after {
 }
 
 @keyframes liquidGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes glitch {
-  0% { clip-path: inset(40% 0 61% 0); transform: translate(-20px, -10px); }
-  20% { clip-path: inset(92% 0 1% 0); transform: translate(20px, 10px); }
-  40% { clip-path: inset(43% 0 1% 0); transform: translate(-20px, -10px); }
-  60% { clip-path: inset(25% 0 58% 0); transform: translate(20px, 10px); }
-  80% { clip-path: inset(54% 0 7% 0); transform: translate(-20px, -10px); }
-  100% { clip-path: inset(58% 0 43% 0); transform: translate(20px, 10px); }
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-20px, -10px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(20px, 10px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-20px, -10px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(20px, 10px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-20px, -10px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(20px, 10px);
+  }
 }
 
 .glass-panel {
@@ -134,18 +176,13 @@ body::after {
 }
 
 .glass-panel::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.05),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
   transition: 0.5s;
 }
 
@@ -163,8 +200,13 @@ body::after {
 }
 
 /* Scrollbar + selection */
-::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, rgba(51, 204, 255, 0.4), rgba(255, 51, 102, 0.4));
   border-radius: 999px;
@@ -180,18 +222,26 @@ body::after {
 }
 
 /* Accessible focus outline */
-:where(a, button, [role="button"], input, textarea, select, [tabindex]):focus-visible {
+:where(a, button, [role='button'], input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid rgba(51, 204, 255, 0.55);
   outline-offset: 3px;
 }
 
 /* Custom Cursor - High End Engineering Feel */
 * {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="%2333ccff" opacity="0.8"/><circle cx="10" cy="10" r="8" fill="none" stroke="%2333ccff" stroke-width="1" opacity="0.3"/></svg>') 10 10, auto;
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3" fill="%2333ccff" opacity="0.8"/><circle cx="10" cy="10" r="8" fill="none" stroke="%2333ccff" stroke-width="1" opacity="0.3"/></svg>')
+      10 10,
+    auto;
 }
 
-a, button, .clickable {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="%23ff3366" opacity="0.9"/><circle cx="12" cy="12" r="10" fill="none" stroke="%23ff3366" stroke-width="1" opacity="0.4"/></svg>') 12 12, pointer !important;
+a,
+button,
+.clickable {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" fill="%23ff3366" opacity="0.9"/><circle cx="12" cy="12" r="10" fill="none" stroke="%23ff3366" stroke-width="1" opacity="0.4"/></svg>')
+      12 12,
+    pointer !important;
 }
 
 /* Global Spotlight Effect */
@@ -218,7 +268,7 @@ a, button, .clickable {
   z-index: 9997;
   pointer-events: none;
   opacity: 0.04;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  background-image: url('https://grainy-gradients.vercel.app/noise.svg');
 }
 
 #vignette {
@@ -231,7 +281,9 @@ a, button, .clickable {
   background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
 }
 
-img, video, canvas {
+img,
+video,
+canvas {
   max-width: 100%;
   height: auto;
 }
@@ -239,7 +291,10 @@ img, video, canvas {
 @media (max-width: 900px) {
   body::before {
     transform: none;
-    background-size: 100% 100%, 40px 40px, 40px 40px;
+    background-size:
+      100% 100%,
+      40px 40px,
+      40px 40px;
     animation-duration: 34s;
   }
 
@@ -269,8 +324,12 @@ img, video, canvas {
 }
 
 @media print {
-  body::before { display: none !important; }
-  .no-print { display: none !important; }
+  body::before {
+    display: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
 }
 
 /* Premium Scrollbar - Engineering Blue & Crimson Accents */
@@ -315,18 +374,38 @@ img, video, canvas {
 
 /* 1. Cyber-Reveal: Materializes text with a digital glitch feel */
 @keyframes cyberReveal {
-  0% { opacity: 0; filter: blur(10px); transform: translateY(20px) skewX(-10deg); }
-  70% { opacity: 0.5; filter: blur(5px); transform: translateY(-5px) skewX(2deg); }
-  100% { opacity: 1; filter: blur(0); transform: translateY(0) skewX(0); }
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px) skewX(-10deg);
+  }
+  70% {
+    opacity: 0.5;
+    filter: blur(5px);
+    transform: translateY(-5px) skewX(2deg);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) skewX(0);
+  }
 }
 
-.animate-cyber-reveal { animation: cyberReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-cyber-reveal {
+  animation: cyberReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
 /* 2. Kinetic Pulse: Adds a liquid-energy glow to interactive components */
 @keyframes kineticPulse {
-  0% { box-shadow: 0 0 0 0 rgba(51, 204, 255, 0.4); }
-  70% { box-shadow: 0 0 25px 15px rgba(51, 204, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(51, 204, 255, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(51, 204, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 25px 15px rgba(51, 204, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(51, 204, 255, 0);
+  }
 }
 
 .kinetic-button {
@@ -342,9 +421,17 @@ img, video, canvas {
 
 /* 3. Holographic Scanline: A vertical scanning beam for the UI */
 @keyframes scanLineMove {
-  0% { top: 0%; opacity: 0; }
-  50% { opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
 .holographic-border {
@@ -354,7 +441,7 @@ img, video, canvas {
 }
 
 .holographic-border::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -368,10 +455,22 @@ img, video, canvas {
 
 /* 4. Text Scramble: A digital materialization effect */
 @keyframes textScramble {
-  0% { opacity: 0; filter: blur(10px); }
-  25% { opacity: 0.5; filter: blur(5px); }
-  50% { opacity: 0.8; filter: blur(2px); }
-  100% { opacity: 1; filter: blur(0); }
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  25% {
+    opacity: 0.5;
+    filter: blur(5px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
 }
 
 .text-glitch-hover:hover {

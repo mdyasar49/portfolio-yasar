@@ -1,41 +1,41 @@
 # Exported from Render on 2026-04-08T15:46:34Z
-version: "1"
+version: '1'
 projects:
-- name: My project
-  environments:
-  - name: Production
-    services:
-    - type: web
-      name: mern-portfolio-yasar-1
-      runtime: static
-      repo: https://github.com/mdyasar49/mern-portfolio-yasar
-      buildCommand: npm run build
-      staticPublishPath: build
-      autoDeployTrigger: commit
-      rootDir: client
-      envVars:
-      - key: REACT_APP_API_BASE_URL
-        value: https://mern-portfolio-yasar.onrender.com/api
-      routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    - type: web
-      name: mern-portfolio-yasar
-      runtime: node
-      repo: https://github.com/mdyasar49/mern-portfolio-yasar
-      plan: free
-      envVars:
-      - key: MONGO_URI
-        sync: false
-      - key: PORT
-        value: 10000
-      - key: NODE_ENV
-        value: production
-      - key: CLIENT_URL
-        value: https://mern-portfolio-yasar-1.onrender.com
-      region: oregon
-      buildCommand: npm install
-      startCommand: npm start
-      autoDeployTrigger: commit
-      rootDir: server
+  - name: My project
+    environments:
+      - name: Production
+        services:
+          - type: web
+            name: mern-portfolio-yasar-1
+            runtime: static
+            repo: https://github.com/mdyasar49/mern-portfolio-yasar
+            buildCommand: npm run build
+            staticPublishPath: build
+            autoDeployTrigger: commit
+            rootDir: client
+            envVars:
+              - key: REACT_APP_API_BASE_URL
+                value: https://mern-portfolio-yasar.onrender.com/api
+            routes:
+              - type: rewrite
+                source: /*
+                destination: /index.html
+          - type: web
+            name: mern-portfolio-yasar
+            runtime: node
+            repo: https://github.com/mdyasar49/mern-portfolio-yasar
+            plan: free
+            envVars:
+              - key: MONGO_URI
+                sync: false
+              - key: PORT
+                value: 10000
+              - key: NODE_ENV
+                value: production
+              - key: CLIENT_URL
+                value: https://mern-portfolio-yasar-1.onrender.com
+            region: oregon
+            buildCommand: npm install
+            startCommand: npm start
+            autoDeployTrigger: commit
+            rootDir: server

@@ -14,7 +14,7 @@ const ICON_MAP = {
   Globe: <Globe size={14} />,
   Database: <Database size={14} />,
   Server: <Server size={14} />,
-  Activity: <Activity size={14} />
+  Activity: <Activity size={14} />,
 };
 
 const SystemLogStream = ({ profile }) => {
@@ -23,7 +23,10 @@ const SystemLogStream = ({ profile }) => {
 
   useEffect(() => {
     // Determine which configuration object to use for log templates
-    const templates = profile?.engineeringObjective?.telemetryConfig?.logTemplates || profile?.telemetryConfig?.logTemplates || [];
+    const templates =
+      profile?.engineeringObjective?.telemetryConfig?.logTemplates ||
+      profile?.telemetryConfig?.logTemplates ||
+      [];
     const version = profile?.resumeConfig?.version || 'v1.0.0';
 
     if (templates.length === 0) return;
@@ -40,10 +43,10 @@ const SystemLogStream = ({ profile }) => {
         type: randomLog.type,
         message: message,
         icon: ICON_MAP[randomLog.icon] || <Activity size={14} />,
-        color: randomLog.color
+        color: randomLog.color,
       };
       // Keep only the most recent 10 logs in the stream
-      setLogs(prev => [...prev.slice(-9), newLog]);
+      setLogs((prev) => [...prev.slice(-9), newLog]);
     }, 4000);
 
     return () => clearInterval(interval);
@@ -59,7 +62,19 @@ const SystemLogStream = ({ profile }) => {
   return (
     <Box id="systemlog" sx={{ py: 10 }}>
       <Container maxWidth="md">
-        <Typography variant="overline" sx={{ color: '#64748b', fontWeight: 900, letterSpacing: 5, mb: 2, display: 'block', textAlign: 'center', fontFamily: 'Syncopate', fontSize: '0.65rem' }}>
+        <Typography
+          variant="overline"
+          sx={{
+            color: '#64748b',
+            fontWeight: 900,
+            letterSpacing: 5,
+            mb: 2,
+            display: 'block',
+            textAlign: 'center',
+            fontFamily: 'Syncopate',
+            fontSize: '0.65rem',
+          }}
+        >
           REALTIME_TELEMETRY_ENGINE
         </Typography>
 
@@ -70,21 +85,77 @@ const SystemLogStream = ({ profile }) => {
             borderRadius: 6,
             overflow: 'hidden',
             boxShadow: '0 40px 100px rgba(0,0,0,0.8), 0 0 40px rgba(0, 255, 204, 0.05)',
-            backdropFilter: 'blur(20px)'
+            backdropFilter: 'blur(20px)',
           }}
         >
           {/* Header with High-Fidelity Online Status Design */}
-          <Box sx={{ p: 3, borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 2, bgcolor: 'rgba(255,255,255,0.02)' }}>
+          <Box
+            sx={{
+              p: 3,
+              borderBottom: '1px solid rgba(255,255,255,0.05)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              bgcolor: 'rgba(255,255,255,0.02)',
+            }}
+          >
             <Terminal size={20} color="#00ffcc" />
-            <Typography variant="caption" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 2, fontSize: '0.75rem' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'white',
+                fontWeight: 900,
+                fontFamily: 'Syncopate',
+                letterSpacing: 2,
+                fontSize: '0.75rem',
+              }}
+            >
               SYSTEM_LIVE_FEED
             </Typography>
-            <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2, px: 2, py: 0.8, borderRadius: 10, bgcolor: 'rgba(0, 255, 204, 0.05)', border: '1px solid rgba(0, 255, 204, 0.2)' }}>
-              <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Box
+              sx={{
+                ml: 'auto',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                px: 2,
+                py: 0.8,
+                borderRadius: 10,
+                bgcolor: 'rgba(0, 255, 204, 0.05)',
+                border: '1px solid rgba(0, 255, 204, 0.2)',
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00ffcc' }} />
-                <Box sx={{ position: 'absolute', width: 8, height: 8, borderRadius: '50%', bgcolor: '#00ffcc', animation: 'pulse-neon-small 2s infinite' }} />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    bgcolor: '#00ffcc',
+                    animation: 'pulse-neon-small 2s infinite',
+                  }}
+                />
               </Box>
-              <Typography sx={{ color: '#00ffcc', fontSize: '0.65rem', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 1 }}>SYSTEM_ONLINE</Typography>
+              <Typography
+                sx={{
+                  color: '#00ffcc',
+                  fontSize: '0.65rem',
+                  fontWeight: 900,
+                  fontFamily: 'Syncopate',
+                  letterSpacing: 1,
+                }}
+              >
+                SYSTEM_ONLINE
+              </Typography>
             </Box>
           </Box>
 
@@ -98,7 +169,11 @@ const SystemLogStream = ({ profile }) => {
               fontFamily: 'monospace',
               '&::-webkit-scrollbar': { width: 5 },
               '&::-webkit-scrollbar-track': { background: 'rgba(255,255,255,0.02)' },
-              '&::-webkit-scrollbar-thumb': { bgcolor: 'rgba(0, 255, 204, 0.2)', borderRadius: 10, '&:hover': { bgcolor: 'rgba(0, 255, 204, 0.4)' } }
+              '&::-webkit-scrollbar-thumb': {
+                bgcolor: 'rgba(0, 255, 204, 0.2)',
+                borderRadius: 10,
+                '&:hover': { bgcolor: 'rgba(0, 255, 204, 0.4)' },
+              },
             }}
           >
             <AnimatePresence mode="popLayout">
@@ -110,20 +185,60 @@ const SystemLogStream = ({ profile }) => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <Stack direction="row" spacing={3} sx={{ mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <Typography sx={{ color: '#444', fontSize: '0.75rem', fontWeight: 900, fontFamily: 'monospace' }}>[{log.time}]</Typography>
+                  <Stack
+                    direction="row"
+                    spacing={3}
+                    sx={{ mb: 2, alignItems: 'center', flexWrap: 'wrap' }}
+                  >
+                    <Typography
+                      sx={{
+                        color: '#444',
+                        fontSize: '0.75rem',
+                        fontWeight: 900,
+                        fontFamily: 'monospace',
+                      }}
+                    >
+                      [{log.time}]
+                    </Typography>
                     <Box sx={{ color: log.color, display: 'flex', alignItems: 'center', gap: 1.5 }}>
                       {log.icon}
-                      <Typography sx={{ fontSize: '0.75rem', fontWeight: 900, letterSpacing: 1.5, fontFamily: 'Syncopate' }}>{log.type}:</Typography>
+                      <Typography
+                        sx={{
+                          fontSize: '0.75rem',
+                          fontWeight: 900,
+                          letterSpacing: 1.5,
+                          fontFamily: 'Syncopate',
+                        }}
+                      >
+                        {log.type}:
+                      </Typography>
                     </Box>
-                    <Typography sx={{ color: '#94a3b8', fontSize: '0.85rem', fontWeight: 500, fontFamily: 'Outfit' }}>{log.message}</Typography>
+                    <Typography
+                      sx={{
+                        color: '#94a3b8',
+                        fontSize: '0.85rem',
+                        fontWeight: 500,
+                        fontFamily: 'Outfit',
+                      }}
+                    >
+                      {log.message}
+                    </Typography>
                   </Stack>
                 </motion.div>
               ))}
             </AnimatePresence>
             {/* Fallback state when no logs are present */}
             {logs.length === 0 && (
-              <Typography sx={{ color: '#444', fontSize: '0.85rem', textAlign: 'center', mt: 10, fontFamily: 'monospace', letterSpacing: 2 }}>
+              <Typography
+                sx={{
+                  color: '#444',
+                  fontSize: '0.85rem',
+                  textAlign: 'center',
+                  mt: 10,
+                  fontFamily: 'monospace',
+                  letterSpacing: 2,
+                }}
+              >
                 WAITING_FOR_DATA_STREAM...
               </Typography>
             )}

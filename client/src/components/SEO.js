@@ -40,7 +40,6 @@ const SEO = ({ title, description, image }) => {
     updateMeta('twitter:title', finalTitle);
     updateMeta('twitter:description', finalDesc);
     updateMeta('twitter:image', finalImage);
-
   }, [title, description, image]);
 
   return null;

@@ -24,7 +24,7 @@ const ExperienceSchema = new mongoose.Schema({
   // The time duration worked there
   period: String,
   // An array of text strings representing bullet points of what was done
-  description: [String]
+  description: [String],
 });
 
 /**
@@ -50,7 +50,7 @@ const ProjectSchema = new mongoose.Schema({
   // Array of key features or highlights
   highlights: [String],
   // A dynamic key-value map for custom statistics (e.g., "Performance": "99%")
-  stats: { type: Map, of: String }
+  stats: { type: Map, of: String },
 });
 
 /**
@@ -79,7 +79,7 @@ const ProfileSchema = new mongoose.Schema({
     database: [String],
     tools: [String],
     aiTools: [String],
-    other: [String]
+    other: [String],
   },
 
   // Embed the previously defined sub-schemas as arrays
@@ -92,8 +92,8 @@ const ProfileSchema = new mongoose.Schema({
       degree: String,
       institution: String,
       institutionUrl: String,
-      year: String
-    }
+      year: String,
+    },
   ],
 
   // Array of certifications
@@ -105,7 +105,7 @@ const ProfileSchema = new mongoose.Schema({
   additionalInfo: {
     availability: String,
     workPreference: String,
-    languages: [String]
+    languages: [String],
   },
 
   // Grouped social media links
@@ -114,13 +114,13 @@ const ProfileSchema = new mongoose.Schema({
     github: String,
     twitter: String,
     instagram: String,
-    facebook: String
+    facebook: String,
   },
 
   // Raw markdown support for the /architecture or readme page
   readme: String,
   // Detailed explanation of projects
-  projectExplanation: String
+  projectExplanation: String,
 });
 
 // Compile and export the main schema as a usable Mongoose model named 'Profile'

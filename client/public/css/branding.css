@@ -1,34 +1,42 @@
 :root {
   --brand-bg: #000000;
-  --brand-primary: #00F2FE;
+  --brand-primary: #00f2fe;
   --brand-accent: #ff3366;
   --brand-surface: #0a0a0a;
 }
 
 /* Global Reset for Loader Phase */
-body { 
-  background: var(--brand-bg); 
-  margin: 0; padding: 0; 
-  font-family: 'Outfit', sans-serif; 
-  overflow: hidden; 
-  color: #ffffff; 
+body {
+  background: var(--brand-bg);
+  margin: 0;
+  padding: 0;
+  font-family: 'Outfit', sans-serif;
+  overflow: hidden;
+  color: #ffffff;
 }
 
 /* Elite System Boot Splash */
 #initial-loader {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: radial-gradient(circle at center, var(--brand-surface) 0%, var(--brand-bg) 100%);
-  z-index: 9999; 
+  z-index: 9999;
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.loader-branding { 
-  position: relative; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  margin-bottom: 40px; 
+.loader-branding {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
 }
 
 .brand-logo {
@@ -41,7 +49,9 @@ body {
 
 .scan-line {
   position: absolute;
-  top: 0; left: -20px; right: -20px;
+  top: 0;
+  left: -20px;
+  right: -20px;
   height: 3px;
   background: var(--brand-primary);
   box-shadow: 0 0 20px var(--brand-primary);
@@ -51,10 +61,10 @@ body {
 }
 
 .system-status {
-  font-family: 'Space Mono', monospace; 
-  font-size: 0.75rem; 
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
   letter-spacing: 3px;
-  color: var(--brand-primary); 
+  color: var(--brand-primary);
   text-transform: uppercase;
   position: relative;
   opacity: 0.8;
@@ -62,19 +72,34 @@ body {
 }
 
 @keyframes hologramScan {
-  0% { top: 0%; opacity: 0; }
-  50% { top: 50%; opacity: 1; }
-  100% { top: 100%; opacity: 0; }
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  50% {
+    top: 50%;
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }
 
 @keyframes blink {
-  0% { opacity: 0.4; transform: scale(0.98); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0.4;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Animated Background Noise */
 #initial-loader::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
