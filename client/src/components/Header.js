@@ -14,10 +14,6 @@ import { AppBar, Toolbar, Button, IconButton, Box, Drawer, List, ListItem, ListI
 import { Menu as MenuIcon, X } from 'lucide-react';
 // React Router hooks for navigation and location tracking
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-// Icons for code live mode
-import { Code2, Zap } from 'lucide-react';
-// Context for code live state
-import { useCodeLive } from '../context/CodeLiveContext';
 
 
 const Header = ({ profile }) => {
@@ -25,8 +21,6 @@ const Header = ({ profile }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  // Access global Code Live state and toggle function
-  const { isCodeLive, toggleCodeLive } = useCodeLive();
 
   // Extraction Logic: Fallback to an empty list if backend data is not yet loaded
   const menuItems = profile?.menuItems || [];
@@ -191,26 +185,6 @@ const Header = ({ profile }) => {
             {/* [DESKTOP NAVIGATION] Hidden on small screens */}
             <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', whiteSpace: 'nowrap', gap: 2 }}>
               {menuItems.map((item) => renderNavButton(item))}
-
-              {/* ── [CODE_LIVE TOGGLE] ── */}
-              <Box sx={{ ml: 4, pl: 4, borderLeft: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center' }}>
-                <Button
-                  onClick={toggleCodeLive}
-                  sx={{
-                    bgcolor: isCodeLive ? 'rgba(255, 51, 102, 0.1)' : 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid',
-                    borderColor: isCodeLive ? '#ff3366' : 'rgba(255, 255, 255, 0.08)',
-                    borderRadius: '12px', px: 2, py: 1, color: isCodeLive ? '#ff3366' : '#64748b',
-                    fontSize: '0.6rem', fontWeight: 900, fontFamily: 'Syncopate', letterSpacing: 1,
-                    backdropFilter: 'blur(10px)', transition: 'all 0.4s',
-                    boxShadow: isCodeLive ? '0 0 20px rgba(255, 51, 102, 0.2)' : 'none',
-                    '&:hover': { bgcolor: 'rgba(255, 51, 102, 0.05)', borderColor: '#ff3366', color: '#ff3366' }
-                  }}
-                  startIcon={<Code2 size={14} />}
-                >
-                  CODE_LIVE: {isCodeLive ? 'ON' : 'OFF'}
-                </Button>
-              </Box>
             </Box>
 
 
@@ -242,21 +216,6 @@ const Header = ({ profile }) => {
           </Box>
           {/* Menu List */}
           <List>
-            {/* Mobile Code Live Toggle */}
-            <ListItem sx={{ mb: 4, borderBottom: '1px solid rgba(255,255,255,0.05)', pb: 2 }}>
-               <Button
-                  fullWidth onClick={() => { toggleCodeLive(); setMobileOpen(false); }}
-                  sx={{
-                    bgcolor: isCodeLive ? 'rgba(255, 51, 102, 0.1)' : 'transparent',
-                    color: isCodeLive ? '#ff3366' : 'white', borderRadius: 2, py: 1.5,
-                    fontFamily: 'Syncopate', fontWeight: 900, fontSize: '0.7rem'
-                  }}
-                  startIcon={<Zap size={14} />}
-               >
-                  CODE_LIVE: {isCodeLive ? 'ON' : 'OFF'}
-               </Button>
-            </ListItem>
-
             {menuItems.map((item) => (
 
               <ListItem key={item.name} disablePadding sx={{ mb: 1 }}>

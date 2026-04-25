@@ -14,7 +14,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 // React Router link for internal page navigation
 import { Link as RouterLink } from 'react-router-dom';
 // Icons for a technical aesthetic
-import { Terminal, ShieldCheck, Activity } from 'lucide-react';
+import { Terminal, ShieldCheck } from 'lucide-react';
 
 /**
  * [Hero Component]

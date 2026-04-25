@@ -14,7 +14,6 @@ const router = express.Router();
 // Import the controllers that contain the actual business logic for each feature
 const portfolioController = require('../controllers/portfolioController');
 const contactController = require('../controllers/contactController');
-const codeController = require('../controllers/codeController');
 
 // Import express-rate-limit to prevent spam attacks
 const rateLimit = require('express-rate-limit');
@@ -75,9 +74,6 @@ router.post('/contact', contactLimiter, contactController.submitContactForm);
 
 // [GET /fragments/:type] - Public route to fetch specific data modules
 router.get('/fragments/:type', portfolioController.getFragment);
-
-// [GET /code] - Public route to fetch module source code for "Code Live" mode
-router.get('/code', codeController.getModuleCode);
 
 // Export the router so it can be mounted in the main server file
 module.exports = router;

@@ -34,9 +34,7 @@ import SystemInterfaceHUD from './components/SystemInterfaceHUD';
 import MaintenancePage from './pages/MaintenancePage';
 // Background with dynamic particles/effects
 import DynamicBackground from './components/DynamicBackground';
-// [CODE_LIVE] Feature components for live source viewing
-import { CodeLiveProvider, useCodeLive } from './context/CodeLiveContext';
-import CodeLiveOverlay from './components/CodeLiveOverlay';
+// Feature components
 import StatusHUD from './components/StatusHUD';
 import CustomCursor from './components/CustomCursor';
 import RecruiterHUD from './components/RecruiterHUD';
@@ -113,8 +111,6 @@ const PublicApp = () => {
   const location = useLocation();
   // Fetch profile data and status flags from the backend
   const { profile, loading: profileLoading, error, errorType, maintenanceMode, retry } = useProfile();
-  // Access global Code Live state
-  const { isCodeLive } = useCodeLive();
 
   // ── [Elite System Boot Sequence Check] ──
   // If data is still loading, show a high-end futuristic loading screen
@@ -163,50 +159,35 @@ const PublicApp = () => {
         transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
       }}>
         {/* ── [UI_STREAM_CONTAINER] ── */}
-        {/* Hidden when CODE_LIVE is ON as per USER request */}
-        {!isCodeLive && (
-          <Box id="main-scroll-container" sx={{
-            flexGrow: 1,
-            height: '100%',
-            overflowY: 'auto',
-            transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-            width: '100%'
-          }}>
-
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-              >
-                <Suspense fallback={<Box sx={{ py: 20, textAlign: 'center' }}><Typography>MODULE_LOADING...</Typography></Box>}>
-                  <Routes location={location}>
-                    <Route path="/"             element={<Portfolio profile={profile} loading={profileLoading} />} />
-                    <Route path="/resume"       element={<Resume profile={profile} />} />
-                    <Route path="*"             element={<Portfolio profile={profile} loading={profileLoading} />} />
-                  </Routes>
-                </Suspense>
-              </motion.div>
-            </AnimatePresence>
-          </Box>
-        )}
-
-        {/* ── [CODE_STREAM_PANEL] ── */}
-        {/* Takes full screen width when active */}
-        <Box sx={{
-          width: isCodeLive ? '100%' : 0,
+        <Box id="main-scroll-container" sx={{
+          flexGrow: 1,
           height: '100%',
+          overflowY: 'auto',
           transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-          position: 'relative',
-          top: 0, right: 0, zIndex: 2000
+          width: '100%'
         }}>
-          <CodeLiveOverlay />
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+            >
+              <Suspense fallback={<Box sx={{ py: 20, textAlign: 'center' }}><Typography>MODULE_LOADING...</Typography></Box>}>
+                <Routes location={location}>
+                  <Route path="/"             element={<Portfolio profile={profile} loading={profileLoading} />} />
+                  <Route path="/resume"       element={<Resume profile={profile} />} />
+                  <Route path="*"             element={<Portfolio profile={profile} loading={profileLoading} />} />
+                </Routes>
+              </Suspense>
+            </motion.div>
+          </AnimatePresence>
         </Box>
       </Box>
 
-      {/* Global Interface HUDs - Now receiving live data from backend */}
+      {/* Global Interface HUDs */}
       <StatusHUD />
       <CustomCursor />
       <RecruiterHUD profile={profile} />
@@ -273,7 +254,7 @@ const App = () => {
 
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
 
-        <CodeLiveProvider>
+        <>
           {/* Reset scroll on page change */}
           <ScrollToTop />
           {/* Handle hash links (like #contact) */}
@@ -314,7 +295,7 @@ const App = () => {
 
           {/* Render the actual page routes */}
           <AppRoutes />
-          </CodeLiveProvider>
+        </>
         </Router>
       </Box>
     )}

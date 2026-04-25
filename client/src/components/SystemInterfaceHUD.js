@@ -4,7 +4,7 @@ import { Cpu, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useLiveAnalytics from '../hooks/useLiveAnalytics';
-import { useCodeLive } from '../context/CodeLiveContext';
+
 
 
 const SystemInterfaceHUD = () => {
@@ -12,7 +12,7 @@ const SystemInterfaceHUD = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const { activeSessions } = useLiveAnalytics();
-  const { isCodeLive } = useCodeLive();
+
 
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const SystemInterfaceHUD = () => {
       clearInterval(timer);
       clearTimeout(showTimer);
     };
-  }, [isCodeLive]);
+  }, []);
 
   const formatUptime = (s) => {
     const min = Math.floor(s / 60);
