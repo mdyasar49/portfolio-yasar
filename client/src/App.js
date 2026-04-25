@@ -269,6 +269,7 @@ const App = () => {
           <Box key="content" sx={{ position: 'relative' }}>
             <div id="spotlight" />
             <div id="noise-overlay" />
+            <div id="vignette" />
 
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
 

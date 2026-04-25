@@ -14,6 +14,7 @@ const CustomCursor = () => {
     const trailRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
     const [hexData, setHexData] = useState('0x00');
+    const [magneticActive, setMagneticActive] = useState(false);
 
     useEffect(() => {
         const cursor = cursorRef.current;
@@ -24,6 +25,9 @@ const CustomCursor = () => {
         let mouseY = 0;
         let trailX = 0;
         let trailY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let isMagnetic = false;
 
         const handleMouseMove = (e) => {
             mouseX = e.clientX;
@@ -31,6 +35,27 @@ const CustomCursor = () => {
 
             // Immediate update for the primary dot
             cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+
+            // Magnetic Pull Detection
+            const hoveredEl = document.elementFromPoint(mouseX, mouseY);
+            const clickable = hoveredEl?.closest('button, a, [role="button"], .interactive');
+            
+            if (clickable) {
+                const rect = clickable.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                // If close enough to center, snap target to center
+                targetX = centerX;
+                targetY = centerY;
+                isMagnetic = true;
+                setMagneticActive(true);
+            } else {
+                targetX = mouseX;
+                targetY = mouseY;
+                isMagnetic = false;
+                setMagneticActive(false);
+            }
         };
 
         const handleMouseOver = (e) => {
@@ -40,8 +65,13 @@ const CustomCursor = () => {
 
         const animate = () => {
             // Smooth interpolation for the trail
-            trailX += (mouseX - trailX) * 0.15;
-            trailY += (mouseY - trailY) * 0.15;
+            // If magnetic is active, trail follows the target (center of element)
+            // otherwise it follows the raw mouse position
+            const finalTargetX = isMagnetic ? targetX : mouseX;
+            const finalTargetY = isMagnetic ? targetY : mouseY;
+
+            trailX += (finalTargetX - trailX) * 0.15;
+            trailY += (finalTargetY - trailY) * 0.15;
 
             trail.style.transform = `translate3d(${trailX}px, ${trailY}px, 0)`;
             
@@ -144,7 +174,7 @@ const CustomCursor = () => {
                     fontWeight: 900, whiteSpace: 'nowrap', opacity: 0.6,
                     letterSpacing: 1
                 }}>
-                    {hexData}
+                    {magneticActive ? 'LOCK_ENGAGED' : hexData}
                 </Typography>
             </div>
 

@@ -159,6 +159,7 @@ const Header = ({ profile }) => {
           border: trigger ? '1px solid rgba(255,255,255,0.06)' : 'none',
           transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
           boxShadow: trigger ? '0 15px 35px rgba(0,0,0,0.4)' : 'none',
+          zIndex: 11000,
         }}
         elevation={0}
       >

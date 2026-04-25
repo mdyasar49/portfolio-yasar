@@ -21,6 +21,7 @@ import Projects from '../components/Projects';
 import ScholasticHistory from '../components/ScholasticHistory';
 import ProfessionalDossier from '../components/ProfessionalDossier';
 import SystemLogStream from '../components/SystemLogStream';
+import YasarSystemHUD from '../components/YasarSystemHUD';
 import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
@@ -42,6 +43,9 @@ const Portfolio = memo(({ profile, loading }) => {
         title="Portfolio"
         description={profile?.summary || "Full Stack Engineer Portfolio"}
       />
+
+      {/* ── [YASAR SYSTEM HUD OVERLAY] ── */}
+      <YasarSystemHUD />
 
       {/* ── [ATMOSPHERIC PARTICLE BACKGROUND] ── */}
       {/* High-performance canvas-based particle system that floats in the background */}

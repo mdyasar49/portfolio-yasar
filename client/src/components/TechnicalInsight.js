@@ -3,10 +3,10 @@
  * Technologies: React.js, Material UI (Grid, Paper, Stack), Recharts (ResponsiveContainer, AreaChart, BarChart), Framer Motion
  * Purpose: This component visualizes technical throughput and skill distribution using interactive charts.
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Container, Typography, Grid, Paper, Stack } from '@mui/material';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, Cell } from 'recharts';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Zap, Activity, Cpu, Database } from 'lucide-react';
 
 /**
@@ -19,17 +19,32 @@ const TechnicalInsight = ({ profile }) => {
   const skillDistribution = profile?.skillDistribution || [];
   const systemStats = profile?.systemStats || [];
 
+  const [activeLog, setActiveLog] = useState(null);
+
+  // Helper to handle chart interactions
+  const handleChartHover = (data) => {
+    if (data && data.activePayload) {
+       setActiveLog(`[METRIC_SCAN]: ${data.activeLabel} -> VAL_${data.activePayload[0].value}%`);
+    }
+  };
+
   return (
     <Box id="insights" sx={{ py: { xs: 10, md: 20 }, position: 'relative', bgcolor: 'rgba(2, 4, 10, 0.5)' }}>
       <Container maxWidth="xl">
 
         {/* Section Header: Metric Definitions */}
         <Stack spacing={2} sx={{ mb: 12, textAlign: 'center' }}>
-          <Typography variant="overline" sx={{ color: '#00ffcc', fontWeight: 900, letterSpacing: 8, fontFamily: 'Syncopate' }}>
-            ENGINEERING_METRICS
-          </Typography>
-          <Typography variant="h2" sx={{ fontFamily: 'Syncopate', fontWeight: 900, fontSize: { xs: '2rem', md: '4rem' } }}>
-            SYSTEM <span style={{ color: '#ff3366' }}>INTELLIGENCE</span>
+          <motion.div
+             initial={{ opacity: 0, letterSpacing: '20px' }}
+             whileInView={{ opacity: 1, letterSpacing: '8px' }}
+             viewport={{ once: true }}
+          >
+            <Typography variant="overline" sx={{ color: '#00ffcc', fontWeight: 900, fontFamily: 'Syncopate' }}>
+                ENGINEERING_METRICS
+            </Typography>
+          </motion.div>
+          <Typography variant="h2" sx={{ fontFamily: 'Syncopate', fontWeight: 900, fontSize: { xs: '2rem', md: '4rem' }, textShadow: '0 0 30px rgba(51, 204, 255, 0.2)' }}>
+            SYSTEM <span style={{ color: '#ff3366', textShadow: '0 0 30px rgba(255, 51, 102, 0.4)' }}>INTELLIGENCE</span>
           </Typography>
         </Stack>
 
@@ -41,12 +56,16 @@ const TechnicalInsight = ({ profile }) => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <Paper className="glass-panel" sx={{ p: 4, height: 450, display: 'flex', flexDirection: 'column' }}>
+              <Paper className="glass-panel" sx={{ 
+                p: 4, height: 450, display: 'flex', flexDirection: 'column',
+                border: '1px solid rgba(51, 204, 255, 0.1)',
+                '&:hover': { borderColor: '#00ffcc44' }
+              }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 4 }}>
                   <Typography variant="h6" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Activity color="#00ffcc" size={24} /> PERFORMANCE_OPTIMIZATION_THROUGHPUT
                   </Typography>
-                  <Box sx={{ p: 1, borderRadius: 2, bgcolor: 'rgba(0, 255, 204, 0.1)', color: '#00ffcc' }}>
+                  <Box sx={{ p: 1, borderRadius: 2, bgcolor: 'rgba(0, 255, 204, 0.1)', color: '#00ffcc', border: '1px solid #00ffcc44' }}>
                     <Typography variant="caption" sx={{ fontWeight: 900 }}>+45.2% ACCELERATION</Typography>
                   </Box>
                 </Stack>
@@ -58,7 +77,7 @@ const TechnicalInsight = ({ profile }) => {
                 */}
                 <Box sx={{ flexGrow: 1, width: '100%', minWidth: 0, position: 'relative' }}>
                   <ResponsiveContainer width="99.9%" height={300}>
-                    <AreaChart data={performanceData}>
+                    <AreaChart data={performanceData} onMouseMove={handleChartHover} onMouseLeave={() => setActiveLog(null)}>
                       <defs>
                         <linearGradient id="colorOpt" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="5%" stopColor="#00ffcc" stopOpacity={0.3}/>
@@ -69,8 +88,8 @@ const TechnicalInsight = ({ profile }) => {
                       <XAxis dataKey="name" stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
                       <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} tickLine={false} axisLine={false} />
                       <Tooltip
-                        contentStyle={{ backgroundColor: '#02040a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                        itemStyle={{ color: '#00ffcc' }}
+                        contentStyle={{ backgroundColor: 'rgba(2, 4, 10, 0.95)', border: '1px solid #00ffcc33', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
+                        itemStyle={{ color: '#00ffcc', fontFamily: 'monospace' }}
                       />
                       <Area type="monotone" dataKey="optimization" stroke="#00ffcc" strokeWidth={3} fillOpacity={1} fill="url(#colorOpt)" />
                     </AreaChart>
@@ -87,7 +106,11 @@ const TechnicalInsight = ({ profile }) => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <Paper className="glass-panel" sx={{ p: 4, height: 450, display: 'flex', flexDirection: 'column' }}>
+              <Paper className="glass-panel" sx={{ 
+                p: 4, height: 450, display: 'flex', flexDirection: 'column',
+                border: '1px solid rgba(255, 51, 102, 0.1)',
+                '&:hover': { borderColor: '#ff336644' }
+              }}>
                 <Typography variant="h6" sx={{ color: 'white', fontWeight: 900, fontFamily: 'Syncopate', mb: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                   <Zap color="#ff3366" size={24} /> TECH_STACK_MASTERY
                 </Typography>
@@ -97,8 +120,8 @@ const TechnicalInsight = ({ profile }) => {
                       <XAxis type="number" hide />
                       <YAxis dataKey="name" type="category" stroke="white" fontSize={11} width={80} tickLine={false} axisLine={false} />
                       <Tooltip
-                        cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                        contentStyle={{ backgroundColor: '#02040a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                        cursor={{ fill: 'rgba(255,51,102,0.05)' }}
+                        contentStyle={{ backgroundColor: 'rgba(2, 4, 10, 0.95)', border: '1px solid #ff336633', borderRadius: '12px', backdropFilter: 'blur(10px)' }}
                       />
                       <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={20}>
                         {skillDistribution.map((entry, index) => (
@@ -109,9 +132,18 @@ const TechnicalInsight = ({ profile }) => {
                   </ResponsiveContainer>
                 </Box>
                 <Stack spacing={2} sx={{ mt: 2 }}>
-                  <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', fontFamily: 'monospace' }}>
-                    >_ ANALYZING_SYSTEM_COMPETENCY... [COMPLETED]
-                  </Typography>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                       key={activeLog || 'idle'}
+                       initial={{ opacity: 0, y: 5 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       exit={{ opacity: 0, y: -5 }}
+                    >
+                      <Typography variant="caption" sx={{ color: activeLog ? '#00ffcc' : 'rgba(255,255,255,0.3)', fontFamily: 'monospace', fontWeight: 700 }}>
+                        {activeLog || '>_ STANDBY: SCANNING_SYSTEM_RESOURCES...'}
+                      </Typography>
+                    </motion.div>
+                  </AnimatePresence>
                 </Stack>
               </Paper>
             </motion.div>
@@ -126,15 +158,19 @@ const TechnicalInsight = ({ profile }) => {
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Paper className="glass-panel" sx={{ p: 3, textAlign: 'center', borderBottom: `4px solid ${stat.color}` }}>
+                <Paper className="glass-panel" sx={{ 
+                  p: 3, textAlign: 'center', borderBottom: `4px solid ${stat.color}`,
+                  background: `linear-gradient(to bottom, rgba(255,255,255,0.02), ${stat.color}05)`,
+                  '&:hover': { transform: 'scale(1.05) translateY(-5px)', boxShadow: `0 20px 40px ${stat.color}11` }
+                }}>
                   <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
                      {stat.label === 'API_STABILITY' && <Database color={stat.color} />}
                      {stat.label === 'CODE_COVERAGE' && <ShieldCheck color={stat.color} />}
                      {stat.label === 'COMPUTE_EFFICIENCY' && <Cpu color={stat.color} />}
                      {stat.label === 'DEPLOYMENT_FREQUENCY' && <Zap color={stat.color} />}
                   </Box>
-                  <Typography variant="h4" sx={{ fontWeight: 900, mb: 0.5 }}>{stat.value}</Typography>
-                  <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', fontWeight: 900, letterSpacing: 2 }}>{stat.label}</Typography>
+                  <Typography variant="h4" sx={{ fontWeight: 900, mb: 0.5, fontFamily: 'Outfit' }}>{stat.value}</Typography>
+                  <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', fontWeight: 900, letterSpacing: 2, fontFamily: 'Syncopate', fontSize: '0.6rem' }}>{stat.label}</Typography>
                 </Paper>
               </motion.div>
             </Grid>
@@ -145,7 +181,10 @@ const TechnicalInsight = ({ profile }) => {
   );
 };
 
-// Internal icon for Security Certification badge
+/**
+ * [Internal Utility Component]
+ * ShieldCheck icon for Security Certification badge
+ */
 const ShieldCheck = ({ color, size = 24 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />

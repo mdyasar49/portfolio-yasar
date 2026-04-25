@@ -14,7 +14,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 // React Router link for internal page navigation
 import { Link as RouterLink } from 'react-router-dom';
 // Icons for a technical aesthetic
-import { Terminal, ShieldCheck } from 'lucide-react';
+import { Terminal, ShieldCheck, Activity } from 'lucide-react';
 
 /**
  * [Hero Component]
@@ -131,7 +131,7 @@ const Hero = memo(({ profile }) => {
         >
           <Stack spacing={4} alignItems="center">
 
-            {/* Availability Badge (Top Chip) */}
+            {/* Availability Badge (Top Chip) - SYSTEM_STATUS: ONLINE */}
             <motion.div
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -139,16 +139,25 @@ const Hero = memo(({ profile }) => {
             >
               <Box sx={{
                 display: 'inline-flex', alignItems: 'center', gap: 2,
-                px: 3, py: 1.2, borderRadius: 50,
-                background: 'rgba(255, 255, 255, 0.02)',
-                border: '1px solid rgba(0, 255, 204, 0.2)',
-                boxShadow: '0 0 20px rgba(0, 255, 204, 0.1)'
+                px: 3, py: 1.5, borderRadius: '12px',
+                background: 'rgba(0, 255, 204, 0.03)',
+                border: '1px solid rgba(0, 255, 204, 0.3)',
+                boxShadow: '0 0 30px rgba(0, 255, 204, 0.1)',
+                backdropFilter: 'blur(10px)'
               }}>
-                {/* Green pulsating dot for "Live" status */}
-                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#00ffcc', animation: 'pulse 1.5s infinite' }} />
-                <Typography sx={{ color: '#00ffcc', fontWeight: 700, fontSize: '0.85rem', letterSpacing: 1, fontFamily: 'Outfit' }}>
-                  Available to join immediately
-                </Typography>
+                {/* Dual Pulsing Status Indicator */}
+                <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: '#00ffcc' }} />
+                    <Box sx={{ position: 'absolute', width: 10, height: 10, borderRadius: '50%', bgcolor: '#00ffcc', animation: 'pulse-neon 2s infinite' }} />
+                </Box>
+                <Stack direction="row" spacing={1} divider={<Box sx={{ width: 1, height: 12, bgcolor: 'rgba(0,255,204,0.3)', alignSelf: 'center' }} />}>
+                    <Typography sx={{ color: '#00ffcc', fontWeight: 900, fontSize: '0.75rem', letterSpacing: 2, fontFamily: 'Syncopate' }}>
+                        SYSTEM_STATUS: ONLINE
+                    </Typography>
+                    <Typography sx={{ color: 'white', fontWeight: 700, fontSize: '0.75rem', letterSpacing: 1, fontFamily: 'Outfit', opacity: 0.8 }}>
+                        AVAILABLE_FOR_HIRE
+                    </Typography>
+                </Stack>
               </Box>
             </motion.div>
 
@@ -161,6 +170,7 @@ const Hero = memo(({ profile }) => {
                 >
                     <Typography
                       variant="h1"
+                      className="text-glitch-hover"
                       sx={{
                         fontSize: { xs: '2.5rem', sm: '4rem', md: '6.5rem', lg: '8.5rem' },
                         lineHeight: 0.85,
@@ -170,9 +180,8 @@ const Hero = memo(({ profile }) => {
                         color: 'white',
                         filter: 'drop-shadow(0 0 30px rgba(51, 204, 255, 0.2))',
                         position: 'relative',
-                        '&:hover': {
-                            animation: 'glitch 0.5s infinite linear alternate-reverse'
-                        }
+                        cursor: 'default',
+                        transition: 'all 0.3s ease'
                     }}
                   >
                     {/* The name itself with gradient styling */}
@@ -200,8 +209,6 @@ const Hero = memo(({ profile }) => {
                 </Typography>
               </Box>
             </Box>
-
-
 
             {/* Secondary Tagline with glow effect */}
             <motion.div
@@ -318,11 +325,14 @@ const Hero = memo(({ profile }) => {
             75% { transform: translate(-2px, -2px); text-shadow: 2px 0 #ff3366, -2px 2px #33ccff; }
             100% { transform: translate(0); text-shadow: -2px 0 #ff3366, 2px 2px #33ccff; }
           }
+          @keyframes pulse-neon {
+            0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0px rgba(0,255,204,0.4); }
+            100% { transform: scale(3); opacity: 0; box-shadow: 0 0 0 20px rgba(0,255,204,0); }
+          }
         `}
       </style>
     </Box>
   );
 });
-
 
 export default Hero;
