@@ -20,6 +20,9 @@ const { createCorsOptions } = require('./config/cors');
 
 const app = express();
 
+// Trust reverse proxy (Render, Cloudflare, etc.) to accurately determine client IP
+app.set('trust proxy', 1);
+
 // Health Check
 app.get('/', (req, res) => {
   res.status(200).json({ status: 'Online', timestamp: new Date() });
@@ -89,6 +92,9 @@ const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 500,
   message: { success: false, message: 'Too many requests from this IP.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
 });
 
 app.use(requestLogger);

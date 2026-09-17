@@ -24,6 +24,9 @@ const contactLimiter = rateLimit({
   max: 5,
   // Custom error message sent when the limit is exceeded
   message: { success: false, message: 'Too many requests. Please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { xForwardedForHeader: false },
 });
 
 // Core profile routes
