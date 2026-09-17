@@ -1,5 +1,24 @@
 [
   {
+    "name": "StreamPulse | Enterprise Live IPTV & Cinema VOD Suite",
+    "type": "Full-Stack Media Streaming Platform",
+    "technologies": ["Python", "Django REST", "React.js 18", "Vite", "Material UI", "HLS.js", "WebSockets", "Xtream Codes API", "Cloudflare Pages"],
+    "image": "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?auto=format&fit=crop&q=80&w=800",
+    "link": "https://streampulse-iptv.pages.dev",
+    "github": "https://github.com/mdyasar49/streampulse-iptv",
+    "description": [
+      "Architected an enterprise-grade Live TV & VOD platform streaming 1,360+ live channels and 230+ 1080p Cinema Movies with sub-second buffer latency.",
+      "Engineered built-in CORS Stream Shield proxy, automated M3U playlist export engine for VLC/Kodi, and Xtream Codes API server compatible with TiviMate & Smart TV apps."
+    ],
+    "highlights": ["Adaptive HLS Streaming", "1,360+ Live Channels", "CORS Stream Shield", "Xtream Codes API Server"],
+    "stats": {
+      "Channels": "1,360+ Live",
+      "VOD": "230+ 1080p FHD",
+      "Latency": "Sub-second",
+      "Status": "Live on Cloudflare"
+    }
+  },
+  {
     "name": "Infogenx AI Voice & Multimodal Agent Platform",
     "type": "Production AI System (Infogenx)",
     "technologies": ["Python", "FastAPI", "Google Gemini Live API", "WebSockets", "Twilio Voice & SMS", "Zoho CRM", "Docker"],
