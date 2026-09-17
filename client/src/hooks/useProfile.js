@@ -48,23 +48,33 @@ const useProfile = () => {
         { key: 'additional', fetcher: fetchAdditionalInfo },
       ];
 
-      // Progressively hydrate the profile state
-      for (const frag of fragments) {
-        try {
+      // Progressively hydrate the profile state in parallel
+      const results = await Promise.allSettled(
+        fragments.map(async (frag) => {
           const data = await frag.fetcher();
-          if (data) {
-            const fragmentToMerge =
-              Array.isArray(data) || frag.key === 'documentation' ? { [frag.key]: data } : data;
-            hydrateFragment(fragmentToMerge);
+          return { key: frag.key, data };
+        })
+      );
+
+      const merged = {};
+      results.forEach((res) => {
+        if (res.status === 'fulfilled' && res.value?.data) {
+          const { key, data } = res.value;
+          if (Array.isArray(data) || key === 'documentation') {
+            merged[key] = data;
+          } else if (typeof data === 'object') {
+            Object.assign(merged, data);
           }
-        } catch (err) {
-          console.warn(`Fragment [${frag.key}] fetch warning:`, err.message);
         }
+      });
+
+      if (Object.keys(merged).length > 0) {
+        setProfile((prev) => ({ ...prev, ...merged }));
       }
     } catch (err) {
       console.warn('API sync warning (using fallback profile data):', err.message);
     }
-  }, [hydrateFragment]);
+  }, []);
 
   useEffect(() => {
     // 1. Initial REST API sync
