@@ -1,24 +1,31 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { Box } from '@mui/material';
-import { motion } from 'framer-motion';
 
-const DynamicBackground = () => {
+const DynamicBackground = memo(() => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
 
-    let particles = [];
+    let animationFrameId;
+    let isVisible = true;
+    let lastTime = 0;
+    const targetFPS = 45; // Smooth 45-60 FPS while keeping CPU/GPU near 0%
+    const frameInterval = 1000 / targetFPS;
+
     const isMobile = window.innerWidth < 900;
-    const particleCount = isMobile ? 15 : 55; // Significantly reduce overhead on mobile
-    const connectionDistance = isMobile ? 80 : 140;
-    let mouse = { x: null, y: null };
+    const particleCount = isMobile ? 12 : 28; // Optimized particle budget
+    const connectionDistance = isMobile ? 70 : 120;
+    const connectionDistanceSq = connectionDistance * connectionDistance;
+    let particles = [];
+    let mouse = { x: -9999, y: -9999 };
 
     const resizeCanvas = () => {
+      if (!canvas) return;
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
@@ -29,13 +36,13 @@ const DynamicBackground = () => {
       }
 
       reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.4;
-        this.color = Math.random() > 0.5 ? '#33ccff' : '#ff3366';
-        this.opacity = Math.random() * 0.5 + 0.2;
+        this.x = Math.random() * (canvas?.width || window.innerWidth);
+        this.y = Math.random() * (canvas?.height || window.innerHeight);
+        this.size = Math.random() * 1.5 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.color = Math.random() > 0.5 ? '#f97316' : '#e11d48';
+        this.opacity = Math.random() * 0.4 + 0.15;
       }
 
       update() {
@@ -45,15 +52,13 @@ const DynamicBackground = () => {
         if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
         if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
 
-        // Mouse avoidance but subtle
-        if (mouse.x && mouse.y) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance < 100) {
-            this.x -= dx * 0.01;
-            this.y -= dy * 0.01;
-          }
+        // Subtle mouse push
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < 10000 && distSq > 0) {
+          this.x -= dx * 0.01;
+          this.y -= dy * 0.01;
         }
       }
 
@@ -63,7 +68,6 @@ const DynamicBackground = () => {
         ctx.fillStyle = this.color;
         ctx.globalAlpha = this.opacity;
         ctx.fill();
-        ctx.globalAlpha = 1;
       }
     }
 
@@ -75,50 +79,83 @@ const DynamicBackground = () => {
     };
 
     const drawLines = () => {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+      const len = particles.length;
+      for (let i = 0; i < len; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < len; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const distSq = dx * dx + dy * dy;
 
-          if (distance < connectionDistance) {
+          if (distSq < connectionDistanceSq) {
+            const dist = Math.sqrt(distSq);
             ctx.beginPath();
-            ctx.strokeStyle = particles[i].color;
-            ctx.lineWidth = 0.2;
-            ctx.globalAlpha = 1 - distance / connectionDistance;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = p1.color;
+            ctx.lineWidth = 0.4;
+            ctx.globalAlpha = (1 - dist / connectionDistance) * 0.35;
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
-            ctx.globalAlpha = 1;
           }
         }
       }
+      ctx.globalAlpha = 1;
     };
 
-    const animate = () => {
+    const animate = (currentTime) => {
+      animationFrameId = requestAnimationFrame(animate);
+
+      if (!isVisible) return;
+
+      const elapsed = currentTime - lastTime;
+      if (elapsed < frameInterval) return;
+      lastTime = currentTime - (elapsed % frameInterval);
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
 
       drawLines();
-      animationFrameId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
+    let resizeTimeout;
+    const handleResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resizeCanvas, 150);
+    };
+
+    let mouseMovePending = false;
+    const handleMouseMove = (e) => {
+      if (!mouseMovePending) {
+        mouseMovePending = true;
+        requestAnimationFrame(() => {
+          mouse.x = e.clientX;
+          mouse.y = e.clientY;
+          mouseMovePending = false;
+        });
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      isVisible = document.visibilityState === 'visible';
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     resizeCanvas();
     init();
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -133,122 +170,67 @@ const DynamicBackground = () => {
         height: '100%',
         zIndex: -1,
         pointerEvents: 'none',
-        background: '#020204',
+        background: '#030712',
+        overflow: 'hidden',
       }}
     >
-      {/* Grid Overlay */}
+      {/* Precision Grid Pattern */}
       <Box
         sx={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
-                           linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-          maskImage: 'radial-gradient(circle at 50% 50%, black, transparent 80%)',
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), 
+                           linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)`,
+          backgroundSize: '48px 48px',
+          maskImage: 'radial-gradient(circle at 50% 40%, black 20%, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(circle at 50% 40%, black 20%, transparent 80%)',
           pointerEvents: 'none',
         }}
       />
+
+      {/* GPU Accelerated Ambient Glows (Zero CPU Composition Lag) */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '-15%',
+          left: '-10%',
+          width: '50vw',
+          height: '50vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(225, 29, 72, 0.12) 0%, rgba(225, 29, 72, 0) 70%)',
+          pointerEvents: 'none',
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
+      />
+      <Box
+        sx={{
+          position: 'absolute',
+          bottom: '-15%',
+          right: '-10%',
+          width: '55vw',
+          height: '55vw',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0) 70%)',
+          pointerEvents: 'none',
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
+      />
+
+      {/* Optimized Canvas Layer */}
       <canvas
         ref={canvasRef}
         style={{
           display: 'block',
           width: '100%',
           height: '100%',
-          opacity: 0.6,
-        }}
-      />
-      {/* Soft background glow effects */}
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: -2,
-          opacity: 0.4,
-          filter: 'blur(100px)',
-          overflow: 'hidden',
+          opacity: 0.85,
           pointerEvents: 'none',
         }}
-      >
-        <motion.div
-          animate={{
-            x: [0, 100, -100, 0],
-            y: [0, -100, 100, 0],
-            scale: [1, 1.2, 0.9, 1],
-          }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute',
-            top: '-10%',
-            left: '-10%',
-            width: '60%',
-            height: '60%',
-            background: 'radial-gradient(circle, rgba(225, 29, 72, 0.15) 0%, transparent 70%)',
-          }}
-        />
-        <motion.div
-          animate={{
-            x: [0, -150, 150, 0],
-            y: [0, 100, -100, 0],
-            scale: [1, 0.8, 1.3, 1],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 5 }}
-          style={{
-            position: 'absolute',
-            bottom: '-10%',
-            right: '-10%',
-            width: '70%',
-            height: '70%',
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%)',
-          }}
-        />
-        <motion.div
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute',
-            top: '20%',
-            left: '30%',
-            width: '40%',
-            height: '40%',
-            background: 'radial-gradient(circle, rgba(51, 204, 255, 0.1) 0%, transparent 70%)',
-          }}
-        />
-      </Box>
-
-      {/* Subtle floating elements */}
-      {[...Array(10)].map((_, i) => (
-        <motion.div
-          key={i}
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: 0,
-          }}
-          animate={{
-            y: [null, Math.random() * -500],
-            opacity: [0, 0.2, 0],
-          }}
-          transition={{
-            duration: 20 + Math.random() * 20,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          style={{
-            position: 'absolute',
-            color: '#33ccff',
-            fontFamily: 'monospace',
-            fontSize: '0.6rem',
-            pointerEvents: 'none',
-            zIndex: -1,
-          }}
-        >
-          {Math.random().toString(16).toUpperCase().slice(2, 10)}
-        </motion.div>
-      ))}
+      />
     </Box>
   );
-};
+});
 
 export default DynamicBackground;

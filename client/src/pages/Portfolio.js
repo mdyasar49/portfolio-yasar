@@ -1,20 +1,19 @@
 /**
  * Portfolio Home Page.
- * Assembles all sections and handles loading states.
+ * Assembles all sections and handles loading states with modern freelance positioning.
  */
 
 import React, { memo } from 'react';
-// Material UI components for global layout and loading state
 import { Box, Container, Typography } from '@mui/material';
-// SEO component for dynamic meta tags
 import SEO from '../components/SEO';
-// All page sections (Components)
 import Hero from '../components/Hero';
+import FreelanceServices from '../components/FreelanceServices';
 import About from '../components/About';
 import Skills from '../components/Skills';
 import TechnicalInsight from '../components/TechnicalInsight';
-import WorkExperience from '../components/WorkExperience';
 import Projects from '../components/Projects';
+import Testimonials from '../components/Testimonials';
+import WorkExperience from '../components/WorkExperience';
 import EducationHistory from '../components/EducationHistory';
 import ProfessionalResume from '../components/ProfessionalResume';
 import SystemLogStream from '../components/SystemLogStream';
@@ -22,7 +21,6 @@ import Contact from '../components/Contact';
 import Footer from '../components/Footer';
 
 const Portfolio = memo(({ profile, loading }) => {
-  // Loading state
   const isCoreLoaded = profile?.name || profile?.menuItems;
 
   if (loading && !isCoreLoaded)
@@ -38,7 +36,7 @@ const Portfolio = memo(({ profile, loading }) => {
         }}
       >
         <Typography variant="h6" sx={{ fontWeight: 700 }}>
-          Loading...
+          Initializing Platform...
         </Typography>
       </Box>
     );
@@ -53,20 +51,33 @@ const Portfolio = memo(({ profile, loading }) => {
         overflowX: 'hidden',
       }}
     >
-      {/* Update browser tab title and description based on fetched profile data */}
-      <SEO title="Portfolio" description={profile?.summary || 'Full Stack Engineer Portfolio'} />
+      {/* Update browser tab title and description */}
+      <SEO
+        title="A. Mohamed Yasar | Freelance Full Stack & AI Voice Engineer"
+        description={profile?.summary || 'Freelance Full Stack Engineer & Automation Specialist'}
+      />
 
       {/* Content */}
-
-      <Container maxWidth="xl" sx={{ pt: 4, pb: 4 }}>
-        {/* Sections are rendered as soon as their specific data arrives */}
+      <Container maxWidth="xl" sx={{ pt: 2, pb: 4 }}>
         {(profile.name || profile.summary) && <Hero profile={profile} />}
-        {profile.summary && <About profile={profile} />}
+        
+        {/* Core Freelance Services Section */}
+        <FreelanceServices profile={profile} />
+
+        {/* Featured Projects Showcase */}
+        {profile.projects && <Projects profile={profile} projects={profile.projects} />}
+
+        {/* Client Testimonials & Trust Badges */}
+        <Testimonials profile={profile} />
+
+        {/* Technical Skills & Growth Insights */}
         {profile.technicalSkills && <Skills profile={profile} skills={profile.technicalSkills} />}
         {profile.performanceData && <TechnicalInsight profile={profile} />}
 
-        {profile.projects && <Projects profile={profile} projects={profile.projects} />}
+        {/* About & Core Competencies */}
+        {profile.summary && <About profile={profile} />}
 
+        {/* Track Record & Experience */}
         <Box id="professional-experience">
           {profile.experience && (
             <WorkExperience profile={profile} experience={profile.experience} />

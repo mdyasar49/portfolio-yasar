@@ -1,8 +1,10 @@
 {
   "menuItems": [
+    { "name": "Services", "path": "/services", "type": "route" },
+    { "name": "Projects", "path": "/projects", "type": "route" },
     { "name": "About", "path": "/#about", "type": "anchor" },
     { "name": "Skills", "path": "/#skills", "type": "anchor" },
-    { "name": "Projects", "path": "/#projects", "type": "anchor" },
+    { "name": "Testimonials", "path": "/#testimonials", "type": "anchor" },
     { "name": "Resume", "path": "/resume", "type": "route" },
     { "name": "Docs", "path": "/documentation", "type": "route" },
     { "name": "Contact", "path": "/#contact", "type": "anchor" }

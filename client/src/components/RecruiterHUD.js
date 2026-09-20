@@ -1,26 +1,32 @@
 /**
- * Quick view dashboard for recruiters.
+ * Quick View HUD for Freelance Clients and Recruiters.
  */
 
-import React, { useState } from 'react';
-import { Box, Typography, Stack, Button, Divider } from '@mui/material';
+import React, { useState, memo } from 'react';
+import { Box, Typography, Stack, Button, Divider, Chip } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, CheckCircle2, Download, Send, X } from 'lucide-react';
+import { Sparkles, CheckCircle2, MessageCircle, Calculator, X } from 'lucide-react';
+import ProjectEstimatorModal from './ProjectEstimatorModal';
+import { Link as RouterLink } from 'react-router-dom';
 
-const RecruiterHUD = ({ profile }) => {
+const RecruiterHUD = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
+  const [estimatorOpen, setEstimatorOpen] = useState(false);
 
-  // Dynamic Data Fallbacks
-  const pitch = profile?.recruiterPitch || 'Ready to deliver production-grade MERN solutions.';
-  const bullets = profile?.recruiterBullets || ['Full Stack Expert', 'Immediate Availability'];
+  const bullets = [
+    '3+ Years Full-Stack (MERN / Python)',
+    'Immediate Joiner (Full-Time Roles)',
+    '100% On-Time Delivery Guarantee',
+    '30 Days Free Post-Launch Support',
+  ];
 
   return (
     <>
-      {/* Floating pill trigger — Responsive positioning */}
+      {/* Floating Pill Trigger */}
       <Box
         sx={{
           position: 'fixed',
-          bottom: { xs: 20, md: 130 },
+          bottom: { xs: 20, md: 32 },
           left: { xs: 16, md: 32 },
           zIndex: 1000,
         }}
@@ -33,46 +39,49 @@ const RecruiterHUD = ({ profile }) => {
               alignItems: 'center',
               gap: 1.5,
               px: { xs: 2, md: 2.5 },
-              py: { xs: 1, md: 1.5 },
-              bgcolor: 'rgba(99,102,241,0.15)',
-              border: '1px solid rgba(99,102,241,0.35)',
+              py: { xs: 1, md: 1.3 },
+              bgcolor: 'rgba(225, 29, 72, 0.15)',
+              border: '1px solid rgba(225, 29, 72, 0.4)',
               borderRadius: '100px',
               cursor: 'pointer',
-              backdropFilter: 'blur(12px)',
+              backdropFilter: 'blur(16px)',
+              boxShadow: '0 8px 25px rgba(225, 29, 72, 0.25)',
               transition: '0.3s',
               '&:hover': {
-                bgcolor: 'rgba(99,102,241,0.25)',
+                bgcolor: 'rgba(225, 29, 72, 0.25)',
+                borderColor: '#e11d48',
               },
             }}
           >
-            {isOpen ? <X size={16} color="#e11d48" /> : <Briefcase size={16} color="#e11d48" />}
+            {isOpen ? <X size={16} color="#e11d48" /> : <Sparkles size={16} color="#f97316" />}
             <Typography
               sx={{
-                color: '#a5b4fc',
+                color: 'white',
                 fontWeight: 800,
-                fontSize: { xs: '0.6rem', md: '0.7rem' },
+                fontSize: { xs: '0.65rem', md: '0.72rem' },
                 letterSpacing: 1.5,
                 textTransform: 'uppercase',
+                fontFamily: 'Outfit',
               }}
             >
-              {isOpen ? 'Close' : 'Quick View'}
+              {isOpen ? 'Close' : 'Hire / Fast Quote'}
             </Typography>
           </Box>
         </motion.div>
 
-        {/* The Dashboard Panel — slides up from the trigger */}
+        {/* HUD Slide-Up Card */}
         <AnimatePresence>
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
               style={{
                 position: 'absolute',
-                bottom: '60px',
+                bottom: '55px',
                 left: 0,
-                width: window.innerWidth < 600 ? 'calc(100vw - 32px)' : 320,
+                width: window.innerWidth < 600 ? 'calc(100vw - 32px)' : 330,
                 pointerEvents: 'auto',
               }}
             >
@@ -80,96 +89,136 @@ const RecruiterHUD = ({ profile }) => {
                 sx={{
                   p: { xs: 2.5, md: 3 },
                   borderRadius: '20px',
-                  bgcolor: 'rgba(8,8,18,0.98)',
+                  bgcolor: 'rgba(6, 9, 18, 0.98)',
                   backdropFilter: 'blur(30px)',
-                  border: '1px solid rgba(99,102,241,0.2)',
-                  boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
+                  border: '1px solid rgba(225, 29, 72, 0.3)',
+                  boxShadow: '0 25px 60px rgba(0,0,0,0.8)',
                 }}
               >
                 {/* Header */}
-                <Typography
-                  sx={{
-                    color: '#e11d48',
-                    fontWeight: 800,
-                    fontSize: '0.6rem',
-                    letterSpacing: 3,
-                    textTransform: 'uppercase',
-                    mb: 2,
-                  }}
-                >
-                  Quick Summary
-                </Typography>
-
-                <Stack spacing={2.5}>
-                  {/* Pitch */}
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                   <Typography
                     sx={{
-                      color: '#cbd5e1',
-                      fontSize: { xs: '0.8rem', md: '0.85rem' },
-                      lineHeight: 1.7,
+                      color: '#f97316',
+                      fontWeight: 900,
+                      fontSize: '0.65rem',
+                      letterSpacing: 2,
+                      textTransform: 'uppercase',
                     }}
                   >
-                    {pitch}
+                    AVAILABILITY STATUS
                   </Typography>
+                  <Chip
+                    label="Immediate Joiner / Open"
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(34, 197, 94, 0.15)',
+                      color: '#22c55e',
+                      fontWeight: 800,
+                      fontSize: '0.62rem',
+                      height: 20,
+                    }}
+                  />
+                </Stack>
 
-                  <Divider sx={{ borderColor: 'rgba(255,255,255,0.05)' }} />
-
+                <Stack spacing={2}>
                   {/* Bullets */}
-                  <Stack spacing={1.5}>
+                  <Stack spacing={1}>
                     {bullets.map((item) => (
-                      <Stack key={item} direction="row" spacing={1.5} alignItems="center">
-                        <CheckCircle2 size={14} color="#e11d48" />
-                        <Typography
-                          sx={{
-                            color: 'white',
-                            fontSize: { xs: '0.75rem', md: '0.8rem' },
-                            fontWeight: 600,
-                          }}
-                        >
+                      <Stack key={item} direction="row" spacing={1.2} alignItems="center">
+                        <CheckCircle2 size={14} color="#22c55e" style={{ flexShrink: 0 }} />
+                        <Typography sx={{ color: '#cbd5e1', fontSize: '0.78rem', fontWeight: 600 }}>
                           {item}
                         </Typography>
                       </Stack>
                     ))}
                   </Stack>
 
-                  {/* CTA buttons */}
-                  <Stack direction="row" spacing={1.5} sx={{ pt: 0.5 }}>
+                  <Divider sx={{ borderColor: 'rgba(255,255,255,0.06)' }} />
+
+                  {/* Primary Actions */}
+                  <Stack spacing={1}>
                     <Button
                       variant="contained"
                       fullWidth
-                      href="/resume"
-                      startIcon={<Download size={14} />}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setEstimatorOpen(true);
+                      }}
+                      startIcon={<Calculator size={15} />}
                       sx={{
                         bgcolor: '#e11d48',
-                        borderRadius: '100px',
-                        fontSize: '0.65rem',
+                        color: 'white',
                         fontWeight: 800,
-                        textTransform: 'none',
+                        borderRadius: '10px',
                         py: 1,
-                        '&:hover': { bgcolor: '#4f46e5' },
+                        fontSize: '0.75rem',
+                        textTransform: 'none',
+                        '&:hover': { bgcolor: '#f97316' },
                       }}
                     >
-                      Resume
+                      Calculate Project Estimate
                     </Button>
+
                     <Button
                       variant="outlined"
                       fullWidth
-                      href="#contact"
-                      onClick={() => setIsOpen(false)}
-                      startIcon={<Send size={14} />}
+                      href="https://wa.me/919025943184?text=Hi%20Mohamed,%20I%20would%20like%20to%20discuss%20a%20full-time%20role%20/%20freelance%20project."
+                      target="_blank"
+                      startIcon={<MessageCircle size={15} />}
                       sx={{
-                        borderColor: 'rgba(255,255,255,0.15)',
-                        color: 'white',
-                        borderRadius: '100px',
-                        fontSize: '0.65rem',
+                        borderColor: 'rgba(34, 197, 94, 0.5)',
+                        color: '#22c55e',
                         fontWeight: 800,
+                        borderRadius: '10px',
+                        py: 0.9,
+                        fontSize: '0.75rem',
                         textTransform: 'none',
-                        py: 1,
-                        '&:hover': { borderColor: '#e11d48', bgcolor: 'rgba(99,102,241,0.05)' },
+                        bgcolor: 'rgba(34, 197, 94, 0.05)',
+                        '&:hover': { borderColor: '#22c55e', bgcolor: 'rgba(34, 197, 94, 0.15)' },
                       }}
                     >
-                      Hire
+                      WhatsApp +91-9025943184
                     </Button>
+
+                    <Stack direction="row" spacing={1}>
+                      <Button
+                        component={RouterLink}
+                        to="/resume"
+                        onClick={() => setIsOpen(false)}
+                        sx={{
+                          flex: 1,
+                          color: '#cbd5e1',
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          textTransform: 'none',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          py: 0.5,
+                          '&:hover': { color: 'white', borderColor: '#e11d48' },
+                        }}
+                      >
+                        View Resume
+                      </Button>
+                      <Button
+                        component={RouterLink}
+                        to="/services"
+                        onClick={() => setIsOpen(false)}
+                        sx={{
+                          flex: 1,
+                          color: '#cbd5e1',
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          textTransform: 'none',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          py: 0.5,
+                          '&:hover': { color: 'white', borderColor: '#e11d48' },
+                        }}
+                      >
+                        All Services
+                      </Button>
+                    </Stack>
                   </Stack>
                 </Stack>
               </Box>
@@ -177,8 +226,14 @@ const RecruiterHUD = ({ profile }) => {
           )}
         </AnimatePresence>
       </Box>
+
+      {/* Estimator Modal */}
+      <ProjectEstimatorModal
+        open={estimatorOpen}
+        onClose={() => setEstimatorOpen(false)}
+      />
     </>
   );
-};
+});
 
 export default RecruiterHUD;

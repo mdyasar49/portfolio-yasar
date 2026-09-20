@@ -31,26 +31,22 @@ import DocumentationHUD from './components/DocumentationHUD';
 import { Toaster, toast } from 'react-hot-toast';
 import socket from './services/socket';
 
-
 // ─── Lazy Loaded Modules (Optimization) ──────────────────────────────────
 // These pages are only downloaded when the user actually navigates to them,
 // which makes the initial website loading much faster.
+const Services = lazy(() => import('./pages/Services'));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage'));
 const Resume = lazy(() => import('./pages/Resume'));
 const Documentation = lazy(() => import('./pages/Documentation'));
-
-// ─── Animations (CSS-in-JS) ───────────────────────────────────────────
 
 /**
  * Resets scroll position on route change.
  */
 const ScrollToTop = () => {
-  // Get the current URL path
   const { pathname } = useLocation();
-  // Whenever the path changes, scroll to coordinate 0,0
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  // This component doesn't render anything visible
   return null;
 };
 
@@ -58,34 +54,25 @@ const ScrollToTop = () => {
  * Handles scrolling to hash links (e.g. #contact).
  */
 const ScrollToHash = () => {
-  // Extract hash (e.g., #contact) and current path from the URL
   const { hash, pathname } = useLocation();
 
   useEffect(() => {
-    // If no hash is present, do nothing
     if (!hash) return;
-    // Remove the '#' symbol to get the plain ID string
     const id = hash.replace('#', '');
     let attempts = 0;
     const maxAttempts = 20;
 
-    // Retry function because elements might not be fully rendered yet
     const tryScroll = () => {
-      // Look for the HTML element with the matching ID
       const element = document.getElementById(id);
       if (element) {
-        // Scroll smoothly to that element
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         return;
       }
-      // If element not found, increment attempt counter
       attempts += 1;
-      // Retry every 150ms up to 20 times
       if (attempts < maxAttempts) {
         setTimeout(tryScroll, 150);
       }
     };
-    // Initial trigger with a small delay
     setTimeout(tryScroll, 100);
   }, [hash, pathname]);
   return null;
@@ -95,9 +82,7 @@ const ScrollToHash = () => {
  * Main container for public-facing pages.
  */
 const PublicApp = () => {
-  // Get current location for animation tracking
   const location = useLocation();
-  // Fetch profile data and status flags from the backend
   const {
     profile,
     loading: profileLoading,
@@ -106,22 +91,15 @@ const PublicApp = () => {
     retry,
   } = useProfile();
 
-  // Show loading screen initially
-
-
-  // ── Error Handling Check ──
-  // If there was an error fetching data or the profile is missing, show the error screen
   if (error || !profile) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {/* Pass the error type and a retry function to the error screen */}
         <NetworkErrorScreen errorType={errorType || 'unknown'} onRetry={retry} />
       </ThemeProvider>
     );
   }
 
-  // Main Portfolio Layout
   return (
     <>
       <Header profile={profile} />
@@ -149,12 +127,14 @@ const PublicApp = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
+              transition={{ duration: 0.35, ease: 'easeInOut' }}
             >
               <Suspense
                 fallback={
-                  <Box sx={{ py: 20, textAlign: 'center' }}>
-                    <Typography>Loading...</Typography>
+                  <Box sx={{ py: 25, textAlign: 'center' }}>
+                    <Typography sx={{ color: 'white', fontWeight: 700, fontFamily: 'Outfit' }}>
+                      Loading Experience...
+                    </Typography>
                   </Box>
                 }
               >
@@ -163,6 +143,8 @@ const PublicApp = () => {
                     path="/"
                     element={<Portfolio profile={profile} loading={profileLoading} />}
                   />
+                  <Route path="/services" element={<Services profile={profile} />} />
+                  <Route path="/projects" element={<ProjectsPage profile={profile} />} />
                   <Route path="/resume" element={<Resume profile={profile} />} />
                   <Route path="/documentation" element={<Documentation profile={profile} />} />
                   <Route
@@ -180,31 +162,31 @@ const PublicApp = () => {
       <Box
         sx={{
           position: 'fixed',
-          right: 40,
+          right: 32,
           top: '50%',
           transform: 'translateY(-50%)',
           zIndex: 9999,
           display: { xs: 'none', xl: 'flex' },
           flexDirection: 'column',
-          gap: 3,
+          gap: 2.5,
         }}
       >
-        {['hero', 'about', 'skills', 'projects', 'contact'].map((section) => (
+        {['hero', 'services', 'projects', 'testimonials', 'skills', 'about', 'contact'].map((section) => (
           <Box
             key={section}
             component="a"
             href={`#${section}`}
             sx={{
-              width: 10,
-              height: 10,
+              width: 9,
+              height: 9,
               borderRadius: '50%',
-              border: '1px solid rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.15)',
               bgcolor: location.hash === `#${section}` ? '#e11d48' : 'transparent',
-              transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+              transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
               '&:hover': {
-                scale: 1.5,
+                scale: 1.6,
                 borderColor: '#e11d48',
-                bgcolor: 'rgba(225, 29, 72, 0.2)',
+                bgcolor: 'rgba(225, 29, 72, 0.4)',
               },
               cursor: 'pointer',
             }}
@@ -234,32 +216,24 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Step 1: Remove the static loader from the original index.html file
-    // This makes the transition from HTML loading to React rendering feel smooth.
     const loader = document.getElementById('initial-loader');
     if (loader) {
-      loader.style.opacity = '0'; // Fade out
-      // Completely remove it after the fade animation finishes
+      loader.style.opacity = '0';
       setTimeout(() => {
         loader.remove();
         document.body.style.overflow = 'auto';
-      }, 800);
+      }, 600);
     } else {
-      document.body.style.overflow = 'auto'; // Ensure scrolling is enabled
+      document.body.style.overflow = 'auto';
     }
 
-    // Step 2: Global Spotlight Cursor Tracking
     const handleMouseMove = (e) => {
       document.documentElement.style.setProperty('--x', `${e.clientX}px`);
       document.documentElement.style.setProperty('--y', `${e.clientY}px`);
     };
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
-    // Global Socket Connection Monitoring
-    // We use the shared socket instance
-    
     socket.on('connect', () => {
-      // Don't show toast on initial connect, only on reconnect
       if (socket.recovered || (window.sc_count > 0)) {
         toast.success('System reconnected', {
           style: { background: '#0f172a', color: '#00ffcc', border: '1px solid #00ffcc33' },
@@ -269,22 +243,12 @@ const App = () => {
       window.sc_count = (window.sc_count || 0) + 1;
     });
 
-    socket.on('disconnect', (reason) => {
-      console.log('Socket disconnected:', reason);
-    });
-
-    socket.on('connect_error', () => {
-      // Silence persistent error toasts to avoid spam, just log
-      console.warn('Socket connection error');
-    });
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
   return (
-    // Wrap the entire app in the Material UI theme provider
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Toaster position="bottom-right" reverseOrder={false} />
@@ -298,11 +262,8 @@ const App = () => {
 
             <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
               <>
-                {/* Reset scroll on page change */}
                 <ScrollToTop />
                 <ScrollToHash />
-
-                {/* Render the actual page routes */}
                 <AppRoutes />
               </>
             </Router>
