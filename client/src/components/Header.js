@@ -227,7 +227,7 @@ const Header = ({ profile }) => {
                       textTransform: 'uppercase',
                     }}
                   >
-                    Freelance Engineer
+                    Full Stack & Software Engineer
                   </Typography>
                 </Box>
               </Box>
@@ -323,7 +323,7 @@ const Header = ({ profile }) => {
                   fontFamily: 'Outfit',
                 }}
               >
-                FREELANCE PLATFORM
+                SOFTWARE & FULL STACK PORTFOLIO
               </Typography>
             </Box>
             <IconButton
@@ -406,7 +406,7 @@ const Header = ({ profile }) => {
               letterSpacing: 1,
             }}
           >
-            © 2026 A. MOHAMED YASAR · FREELANCE
+            © 2026 A. MOHAMED YASAR · SOFTWARE ENGINEER
           </Typography>
         </Box>
       </Drawer>

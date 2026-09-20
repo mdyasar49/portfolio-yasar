@@ -74,7 +74,7 @@ const FreelanceServices = memo(({ profile }) => {
                 fontFamily: 'Outfit',
               }}
             >
-              FREELANCE SOLUTIONS & CAPABILITIES
+              ENGINEERING SOLUTIONS & CAPABILITIES
             </Typography>
             <Typography
               variant="h2"
@@ -135,7 +135,7 @@ const FreelanceServices = memo(({ profile }) => {
                   '&:hover': { bgcolor: '#f97316' },
                 }}
               >
-                Instant Project Estimator
+                Configure Project Scope
               </Button>
               <Button
                 component={RouterLink}
@@ -157,7 +157,7 @@ const FreelanceServices = memo(({ profile }) => {
                   },
                 }}
               >
-                View Pricing & Process
+                View Solutions & Roadmap
               </Button>
             </Stack>
           </motion.div>
@@ -289,7 +289,7 @@ const FreelanceServices = memo(({ profile }) => {
                           variant="caption"
                           sx={{ color: '#f97316', fontWeight: 900, fontSize: '0.85rem' }}
                         >
-                          From {service.startingPrice}
+                          Custom Scope / Proposal
                         </Typography>
                       </Stack>
 

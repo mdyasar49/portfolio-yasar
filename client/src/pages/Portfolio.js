@@ -12,7 +12,6 @@ import About from '../components/About';
 import Skills from '../components/Skills';
 import TechnicalInsight from '../components/TechnicalInsight';
 import Projects from '../components/Projects';
-import Testimonials from '../components/Testimonials';
 import WorkExperience from '../components/WorkExperience';
 import EducationHistory from '../components/EducationHistory';
 import ProfessionalResume from '../components/ProfessionalResume';
@@ -53,22 +52,19 @@ const Portfolio = memo(({ profile, loading }) => {
     >
       {/* Update browser tab title and description */}
       <SEO
-        title="A. Mohamed Yasar | Freelance Full Stack & AI Voice Engineer"
-        description={profile?.summary || 'Freelance Full Stack Engineer & Automation Specialist'}
+        title="A. Mohamed Yasar | Full Stack & Software Engineer"
+        description={profile?.summary || 'Full Stack & Software Engineer | React, Python, REST APIs'}
       />
 
       {/* Content */}
       <Container maxWidth="xl" sx={{ pt: 2, pb: 4 }}>
         {(profile.name || profile.summary) && <Hero profile={profile} />}
         
-        {/* Core Freelance Services Section */}
+        {/* Core Solutions & Services Section */}
         <FreelanceServices profile={profile} />
 
         {/* Featured Projects Showcase */}
         {profile.projects && <Projects profile={profile} projects={profile.projects} />}
-
-        {/* Client Testimonials & Trust Badges */}
-        <Testimonials profile={profile} />
 
         {/* Technical Skills & Growth Insights */}
         {profile.technicalSkills && <Skills profile={profile} skills={profile.technicalSkills} />}

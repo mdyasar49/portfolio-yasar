@@ -1,6 +1,6 @@
 /**
- * Interactive Freelance Project Estimator & Scope Calculator Modal.
- * Enables prospective clients to configure project needs and get an instant quote / send brief.
+ * Interactive Project Scope & Requirements Planner Modal.
+ * Enables prospective clients to configure project needs and request a tailored quote directly without fixed prices.
  */
 
 import React, { useState } from 'react';
@@ -16,30 +16,29 @@ import {
   Divider,
   TextField,
 } from '@mui/material';
-import { X, Calculator, Send, CheckCircle2, MessageCircle, Sparkles, Clock, ShieldCheck } from 'lucide-react';
+import { X, Layers, Send, CheckCircle2, MessageCircle, Sparkles, Clock, ShieldCheck } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const PROJECT_TYPES = [
-  { id: 'mern_saas', label: 'MERN SaaS / Web App', basePrice: 28000, baseUsd: 380, days: 14 },
-  { id: 'ai_voice', label: 'AI Voice & Telephony Bot', basePrice: 35000, baseUsd: 480, days: 10 },
-  { id: 'web_scraper', label: 'Python Scraper & Automation', basePrice: 18000, baseUsd: 250, days: 5 },
-  { id: 'backend_api', label: 'REST API & Database Backend', basePrice: 22000, baseUsd: 300, days: 7 },
-  { id: 'speed_audit', label: 'Speed (Lighthouse 95+) & QA', basePrice: 15000, baseUsd: 200, days: 4 },
+  { id: 'mern_saas', label: 'Full-Stack MERN / React Web App', timeline: '1 - 3 Weeks', desc: 'Custom SaaS products, admin portals, and modern responsive web apps.' },
+  { id: 'ai_voice', label: 'Real-Time AI Voice & Telephony Suite', timeline: '1 - 2 Weeks', desc: 'Gemini Live Voice AI, Twilio web dialer, and automated CRM webhooks.' },
+  { id: 'web_scraper', label: 'Python Automation & Lead Scraper', timeline: '3 - 7 Days', desc: 'High-volume proxy scraping, deduplication, and Google Sheets/DB sync.' },
+  { id: 'backend_api', label: 'REST / GraphQL API & Database Backend', timeline: '1 - 2 Weeks', desc: 'Node.js or Django APIs, SQLite WAL/MySQL tuning, and token security.' },
+  { id: 'speed_audit', label: 'Speed (Lighthouse 95+) & Security Audit', timeline: '3 - 5 Days', desc: 'Core Web Vitals optimization, SonarQube audit, and memory leak fixes.' },
 ];
 
 const ADDON_FEATURES = [
-  { id: 'auth_jwt', label: 'Role Auth & User Portal', price: 4000, usd: 55 },
-  { id: 'payments', label: 'Payment Gateway (Stripe/Razorpay)', price: 5000, usd: 70 },
-  { id: 'crm_sync', label: 'CRM & Webhook Sync (Zoho/HubSpot)', price: 6000, usd: 80 },
-  { id: 'telegram_bot', label: 'Telegram/WhatsApp Instant Alerts', price: 4500, usd: 60 },
-  { id: 'admin_dashboard', label: 'Advanced Analytics Dashboard', price: 7000, usd: 95 },
-  { id: 'priority_speed', label: 'Expedited Express Delivery (48h/Rapid)', price: 8000, usd: 110 },
+  { id: 'auth_jwt', label: 'Role-Based Auth & User Dashboard', desc: 'Secure JWT authentication with granular permission levels.' },
+  { id: 'payments', label: 'Payment Gateway Integration', desc: 'Stripe, PayPal, or Razorpay automated checkout flows.' },
+  { id: 'crm_sync', label: 'CRM & Webhook Sync (Zoho/HubSpot)', desc: 'Instant two-way synchronization into sales pipelines.' },
+  { id: 'telegram_bot', label: 'Telegram / WhatsApp Instant Alerts', desc: 'Real-time push notifications for critical system events.' },
+  { id: 'admin_dashboard', label: 'Analytics & Reporting Charts', desc: 'Custom KPI metrics visualization and data exports.' },
+  { id: 'priority_speed', label: 'Expedited Express Delivery', desc: 'Priority milestone turnaround for urgent project deadlines.' },
 ];
 
 const ProjectEstimatorModal = ({ open, onClose, defaultProjectType = 'mern_saas' }) => {
   const [selectedType, setSelectedType] = useState(defaultProjectType);
   const [selectedAddons, setSelectedAddons] = useState(['auth_jwt', 'crm_sync']);
-  const [currency, setCurrency] = useState('INR'); // 'INR' or 'USD'
   const [clientName, setClientName] = useState('');
   const [clientContact, setClientContact] = useState('');
   const [projectNote, setProjectNote] = useState('');
@@ -52,42 +51,23 @@ const ProjectEstimatorModal = ({ open, onClose, defaultProjectType = 'mern_saas'
     );
   };
 
-  const calculateTotal = () => {
-    let totalInr = currentType.basePrice;
-    let totalUsd = currentType.baseUsd;
-
-    selectedAddons.forEach((addonId) => {
-      const addon = ADDON_FEATURES.find((a) => a.id === addonId);
-      if (addon) {
-        totalInr += addon.price;
-        totalUsd += addon.usd;
-      }
-    });
-
-    return { inr: totalInr, usd: totalUsd };
-  };
-
-  const total = calculateTotal();
-
   const handleSendViaWhatsApp = () => {
     const selectedAddonLabels = selectedAddons
       .map((id) => ADDON_FEATURES.find((a) => a.id === id)?.label)
       .filter(Boolean)
       .join(', ');
 
-    const priceString = currency === 'INR' ? `₹${total.inr.toLocaleString('en-IN')}` : `$${total.usd}`;
-
-    const text = `*New Freelance Project Inquiry from Portfolio Estimator*
-👤 Name: ${clientName || 'Prospective Client'}
-📞 Contact: ${clientContact || 'Not specified'}
-🚀 Project Type: ${currentType.label}
-🧩 Selected Features: ${selectedAddonLabels || 'Standard package'}
-💰 Estimated Budget: ${priceString}
-📝 Notes: ${projectNote || 'Looking forward to discussing project timeline and next steps.'}`;
+    const text = `*New Project Scope Inquiry from Portfolio Planner*
+👤 *Client Name:* ${clientName || 'Prospective Client'}
+📞 *Contact Details:* ${clientContact || 'Not specified'}
+🚀 *Architecture:* ${currentType.label}
+⏱️ *Timeline:* ${currentType.timeline}
+🧩 *Selected Features:* ${selectedAddonLabels || 'Standard architecture'}
+📝 *Project Requirements:* ${projectNote || 'Looking forward to discussing project timeline, scope, and customized quote.'}`;
 
     const waUrl = `https://wa.me/919025943184?text=${encodeURIComponent(text)}`;
     window.open(waUrl, '_blank');
-    toast.success('Opening WhatsApp with your configured project brief!');
+    toast.success('Opening WhatsApp with your project requirements!');
     onClose();
   };
 
@@ -97,27 +77,25 @@ const ProjectEstimatorModal = ({ open, onClose, defaultProjectType = 'mern_saas'
       .filter(Boolean)
       .join(', ');
 
-    const priceString = currency === 'INR' ? `₹${total.inr.toLocaleString('en-IN')}` : `$${total.usd}`;
-
-    const subject = `Freelance Inquiry: ${currentType.label} [${clientName || 'New Client'}]`;
+    const subject = `Project Scope Inquiry: ${currentType.label} [${clientName || 'New Client'}]`;
     const body = `Hi Mohamed Yasar,
 
-I used your portfolio project calculator to estimate my project requirements:
+I used your portfolio project requirements planner to configure my project scope:
 
-• Project Type: ${currentType.label}
-• Selected Features: ${selectedAddonLabels || 'Standard package'}
-• Estimated Investment: ${priceString}
-• Name: ${clientName || 'N/A'}
-• Contact (Phone/Email): ${clientContact || 'N/A'}
+• Architecture / Type: ${currentType.label}
+• Estimated Timeline: ${currentType.timeline}
+• Selected Features: ${selectedAddonLabels || 'Standard architecture'}
+• Client Name: ${clientName || 'N/A'}
+• Contact (Phone / WhatsApp / Email): ${clientContact || 'N/A'}
 
 Project Details & Requirements:
-${projectNote || 'Please share your availability and official proposal.'}
+${projectNote || 'Please share your availability to discuss scope and provide a custom proposal.'}
 
-Looking forward to your response.`;
+Looking forward to connecting with you.`;
 
     const mailUrl = `mailto:mohamedyasar081786@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailUrl;
-    toast.success('Opening your email client with your project brief!');
+    toast.success('Opening email client with your project brief!');
     onClose();
   };
 
@@ -161,69 +139,21 @@ Looking forward to your response.`;
               display: 'flex',
             }}
           >
-            <Calculator size={20} />
+            <Layers size={20} />
           </Box>
           <Box>
             <Typography variant="h6" sx={{ fontWeight: 900, fontFamily: 'Outfit', lineHeight: 1.1 }}>
-              Interactive Project Estimator
+              Project Scope & Requirements Planner
             </Typography>
             <Typography variant="caption" sx={{ color: '#94a3b8', fontSize: '0.75rem' }}>
-              Select requirements to get an instant timeline & estimate
+              Select your features & send requirements for a tailored proposal
             </Typography>
           </Box>
         </Stack>
 
-        <Stack direction="row" spacing={1} alignItems="center">
-          {/* Currency Toggle */}
-          <Box
-            sx={{
-              display: 'flex',
-              bgcolor: 'rgba(255,255,255,0.05)',
-              borderRadius: '8px',
-              p: 0.5,
-              border: '1px solid rgba(255,255,255,0.1)',
-            }}
-          >
-            <Button
-              size="small"
-              onClick={() => setCurrency('INR')}
-              sx={{
-                minWidth: 42,
-                py: 0.2,
-                px: 1,
-                fontSize: '0.7rem',
-                fontWeight: 800,
-                borderRadius: '6px',
-                color: currency === 'INR' ? 'white' : '#64748b',
-                bgcolor: currency === 'INR' ? '#e11d48' : 'transparent',
-                '&:hover': { bgcolor: currency === 'INR' ? '#e11d48' : 'rgba(255,255,255,0.05)' },
-              }}
-            >
-              INR (₹)
-            </Button>
-            <Button
-              size="small"
-              onClick={() => setCurrency('USD')}
-              sx={{
-                minWidth: 42,
-                py: 0.2,
-                px: 1,
-                fontSize: '0.7rem',
-                fontWeight: 800,
-                borderRadius: '6px',
-                color: currency === 'USD' ? 'white' : '#64748b',
-                bgcolor: currency === 'USD' ? '#e11d48' : 'transparent',
-                '&:hover': { bgcolor: currency === 'USD' ? '#e11d48' : 'rgba(255,255,255,0.05)' },
-              }}
-            >
-              USD ($)
-            </Button>
-          </Box>
-
-          <IconButton onClick={onClose} sx={{ color: '#94a3b8', '&:hover': { color: 'white' } }}>
-            <X size={20} />
-          </IconButton>
-        </Stack>
+        <IconButton onClick={onClose} sx={{ color: '#94a3b8', '&:hover': { color: 'white' } }}>
+          <X size={20} />
+        </IconButton>
       </Box>
 
       <DialogContent sx={{ p: { xs: 3, md: 4 } }}>
@@ -235,7 +165,7 @@ Looking forward to your response.`;
               variant="overline"
               sx={{ color: '#f97316', fontWeight: 800, letterSpacing: 2, display: 'block', mb: 1.5 }}
             >
-              1. Choose Core Project Type
+              1. Choose Project Architecture
             </Typography>
             <Stack spacing={1.2} sx={{ mb: 3 }}>
               {PROJECT_TYPES.map((pt) => {
@@ -273,13 +203,15 @@ Looking forward to your response.`;
                           transition: '0.2s',
                         }}
                       />
-                      <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: isSelected ? 'white' : '#cbd5e1' }}>
-                        {pt.label}
-                      </Typography>
+                      <Box>
+                        <Typography sx={{ fontWeight: 700, fontSize: '0.9rem', color: isSelected ? 'white' : '#cbd5e1' }}>
+                          {pt.label}
+                        </Typography>
+                        <Typography sx={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                          {pt.desc}
+                        </Typography>
+                      </Box>
                     </Stack>
-                    <Typography sx={{ fontWeight: 800, color: '#f97316', fontSize: '0.85rem' }}>
-                      {currency === 'INR' ? `₹${pt.basePrice.toLocaleString('en-IN')}` : `$${pt.baseUsd}`}
-                    </Typography>
                   </Box>
                 );
               })}
@@ -290,9 +222,9 @@ Looking forward to your response.`;
               variant="overline"
               sx={{ color: '#f97316', fontWeight: 800, letterSpacing: 2, display: 'block', mb: 1.5 }}
             >
-              2. Add Desired Integrations & Features
+              2. Select Required Features & Integrations
             </Typography>
-            <Grid container spacing={1} sx={{ mb: 3 }}>
+            <Grid container spacing={1.2} sx={{ mb: 3 }}>
               {ADDON_FEATURES.map((addon) => {
                 const isSelected = selectedAddons.includes(addon.id);
                 return (
@@ -323,13 +255,15 @@ Looking forward to your response.`;
                           color={isSelected ? '#22c55e' : '#475569'}
                           style={{ flexShrink: 0 }}
                         />
-                        <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: isSelected ? 'white' : '#94a3b8' }}>
-                          {addon.label}
-                        </Typography>
+                        <Box>
+                          <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: isSelected ? 'white' : '#cbd5e1' }}>
+                            {addon.label}
+                          </Typography>
+                          <Typography sx={{ fontSize: '0.68rem', color: '#64748b' }}>
+                            {addon.desc}
+                          </Typography>
+                        </Box>
                       </Stack>
-                      <Typography sx={{ fontSize: '0.7rem', fontWeight: 800, color: '#f97316' }}>
-                        +{currency === 'INR' ? `₹${addon.price}` : `$${addon.usd}`}
-                      </Typography>
                     </Box>
                   </Grid>
                 );
@@ -341,13 +275,13 @@ Looking forward to your response.`;
               variant="overline"
               sx={{ color: '#f97316', fontWeight: 800, letterSpacing: 2, display: 'block', mb: 1.5 }}
             >
-              3. Your Project Info (Optional)
+              3. Contact & Project Requirements
             </Typography>
             <Stack spacing={1.5}>
               <Grid container spacing={1.5}>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    placeholder="Your Name / Company"
+                    placeholder="Your Name / Organization"
                     size="small"
                     fullWidth
                     value={clientName}
@@ -365,7 +299,7 @@ Looking forward to your response.`;
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
-                    placeholder="Email or Phone / WhatsApp"
+                    placeholder="Phone / WhatsApp / Email"
                     size="small"
                     fullWidth
                     value={clientContact}
@@ -383,7 +317,7 @@ Looking forward to your response.`;
                 </Grid>
               </Grid>
               <TextField
-                placeholder="Briefly describe your project goals or specific requirements..."
+                placeholder="Briefly describe your goals, required pages/APIs, or specific milestones..."
                 size="small"
                 multiline
                 rows={2}
@@ -403,7 +337,7 @@ Looking forward to your response.`;
             </Stack>
           </Grid>
 
-          {/* Right Column: Estimate Summary & CTA */}
+          {/* Right Column: Scope Summary & Direct Actions */}
           <Grid item xs={12} md={5}>
             <Box
               sx={{
@@ -419,26 +353,26 @@ Looking forward to your response.`;
                 variant="overline"
                 sx={{ color: '#94a3b8', fontWeight: 800, letterSpacing: 2, display: 'block', mb: 1 }}
               >
-                ESTIMATED INVESTMENT
+                PROPOSAL SCOPE
               </Typography>
 
               <Box sx={{ mb: 2 }}>
                 <Typography
-                  variant="h3"
+                  variant="h4"
                   sx={{
                     fontWeight: 900,
                     color: 'white',
                     fontFamily: 'Outfit',
-                    letterSpacing: -1,
+                    letterSpacing: -0.5,
                     background: 'linear-gradient(135deg, #ffffff 0%, #f97316 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  {currency === 'INR' ? `₹${total.inr.toLocaleString('en-IN')}` : `$${total.usd}`}
+                  Custom Proposal
                 </Typography>
                 <Typography variant="caption" sx={{ color: '#22c55e', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
-                  <Sparkles size={13} /> Fixed-Price Milestone Guarantee
+                  <Sparkles size={13} /> Milestone-Based Delivery Guarantee
                 </Typography>
               </Box>
 
@@ -448,7 +382,7 @@ Looking forward to your response.`;
               <Stack spacing={1.5} sx={{ mb: 3 }}>
                 <Stack direction="row" justifyContent="space-between">
                   <Typography variant="caption" sx={{ color: '#94a3b8' }}>
-                    Core Architecture:
+                    Core Stack:
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'white', fontWeight: 700 }}>
                     {currentType.label}
@@ -456,10 +390,10 @@ Looking forward to your response.`;
                 </Stack>
                 <Stack direction="row" justifyContent="space-between">
                   <Typography variant="caption" sx={{ color: '#94a3b8' }}>
-                    Est. Turnaround:
+                    Target Turnaround:
                   </Typography>
                   <Typography variant="caption" sx={{ color: '#f97316', fontWeight: 800, display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                    <Clock size={12} /> {currentType.days} - {currentType.days + 5} Days
+                    <Clock size={12} /> {currentType.timeline}
                   </Typography>
                 </Stack>
                 <Stack direction="row" justifyContent="space-between">
@@ -467,7 +401,7 @@ Looking forward to your response.`;
                     Selected Features:
                   </Typography>
                   <Typography variant="caption" sx={{ color: 'white', fontWeight: 700 }}>
-                    {selectedAddons.length} Selected
+                    {selectedAddons.length} Components
                   </Typography>
                 </Stack>
                 <Stack direction="row" justifyContent="space-between">
@@ -475,7 +409,7 @@ Looking forward to your response.`;
                     Post-Launch Support:
                   </Typography>
                   <Typography variant="caption" sx={{ color: '#22c55e', fontWeight: 700 }}>
-                    30 Days Included
+                    30 Days Free Support
                   </Typography>
                 </Stack>
               </Stack>
@@ -530,7 +464,7 @@ Looking forward to your response.`;
               <Box sx={{ mt: 2.5, display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center' }}>
                 <ShieldCheck size={14} color="#38bdf8" />
                 <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem' }}>
-                  100% NDA & IP Protection Guaranteed
+                  100% NDA & Source Code Ownership Guaranteed
                 </Typography>
               </Box>
             </Box>

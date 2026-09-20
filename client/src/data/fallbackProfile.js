@@ -5,13 +5,13 @@
 
 export const fallbackProfile = {
   name: "A. MOHAMED YASAR",
-  title: "Full Stack & AI Engineer | React.js | Python & Django | Real-Time Voice AI | Web Automation",
+  title: "Full Stack & Software Engineer | React.js | Python & Django | Real-Time Voice AI | Scalable Systems",
   email: "mohamedyasar081786@gmail.com",
   phone: "+91-9025943184",
   whatsapp: "+919025943184",
   location: "Chennai, TN, India (Open to Relocation & Remote Roles Globally)",
-  summary: "Results-driven Full Stack Engineer with 3+ years of proven experience building high-performance web applications, real-time AI Voice agents (Google Gemini Live & WebSockets), Twilio telephony suites, automated web scrapers, and scalable REST APIs. Skilled in React.js, Node.js, Python (Django/FastAPI), SQL (MySQL/SQLite WAL), SonarQube security audits, and automated cloud deployments. Actively available for Immediate Joining in Full-Time Engineering roles and taking on high-impact Freelance client projects.",
-  availabilityStatus: "Immediate Joiner (Full-Time) & Available for Freelance",
+  summary: "Results-driven Full Stack Engineer with 3+ years of proven experience building high-performance web applications, real-time AI Voice agents (Google Gemini Live & WebSockets), Twilio telephony suites, automated web scrapers, and scalable REST APIs. Skilled in React.js, Node.js, Python (Django/FastAPI), SQL (MySQL/SQLite WAL), SonarQube security audits, and automated cloud deployments. Actively available for Immediate Joining in Full-Time Engineering roles and taking on high-impact client projects.",
+  availabilityStatus: "Immediate Joiner (Full-Time) & Open for Projects",
   freelanceHighlights: {
     deliveryRate: "100% On-Time",
     clientSatisfaction: "5.0 ★ Rating",
@@ -33,12 +33,12 @@ export const fallbackProfile = {
     languages: ["English (Fluent Professional)", "Tamil (Native)"],
     softSkills: ["Problem Solving", "Analytical Thinking", "Client-First Communication", "Team Collaboration", "Clean Code Architecture"]
   },
-  heroTagline: "Architecting High-Performance Web Apps, AI Voice Portals & Scalable Automation Systems",
+  heroTagline: "Architecting High-Performance Web Apps, AI Voice Portals & Scalable Backend Systems",
   heroMetrics: [
     { label: "EXPERIENCE", val: "3+ Years", color: "#f97316" },
     { label: "STACK", val: "React / Python / MERN", color: "#e11d48" },
     { label: "STATUS", val: "Immediate Joiner", color: "#22c55e" },
-    { label: "FREELANCE", val: "Open for Hire", color: "#00e5ff" }
+    { label: "PROJECTS", val: "Open for Work", color: "#00e5ff" }
   ],
   menuItems: [
     { name: "Services", path: "/services", type: "route" },
@@ -47,7 +47,6 @@ export const fallbackProfile = {
     { name: "Skills", path: "/#skills", type: "anchor" },
     { name: "Experience", path: "/#experience", type: "anchor" },
     { name: "Education", path: "/#education", type: "anchor" },
-    { name: "Testimonials", path: "/#testimonials", type: "anchor" },
     { name: "Contact", path: "/#contact", type: "anchor" },
     { name: "Resume", path: "/resume", type: "route" },
     { name: "Docs", path: "/documentation", type: "route" }
@@ -68,7 +67,7 @@ export const fallbackProfile = {
         "Optimized for SEO, high speed & mobile devices"
       ],
       turnaround: "1 - 3 Weeks",
-      startingPrice: "₹25,000 / $350"
+      startingPrice: "Custom Quote / Milestone-Based"
     },
     {
       id: "ai-voice",
@@ -85,7 +84,7 @@ export const fallbackProfile = {
         "Custom knowledge-base prompt engineering"
       ],
       turnaround: "1 - 2 Weeks",
-      startingPrice: "₹35,000 / $450"
+      startingPrice: "Custom Quote / Milestone-Based"
     },
     {
       id: "scraping-automation",
@@ -102,7 +101,7 @@ export const fallbackProfile = {
         "CRM & Email sequence auto-enrichment"
       ],
       turnaround: "3 - 7 Days",
-      startingPrice: "₹18,000 / $250"
+      startingPrice: "Custom Quote / Milestone-Based"
     },
     {
       id: "api-backend",
@@ -119,7 +118,7 @@ export const fallbackProfile = {
         "Complete API documentation & Postman collections"
       ],
       turnaround: "1 - 2 Weeks",
-      startingPrice: "₹20,000 / $300"
+      startingPrice: "Custom Quote / Milestone-Based"
     },
     {
       id: "speed-optimization",
@@ -136,7 +135,7 @@ export const fallbackProfile = {
         "Detailed before/after speed report"
       ],
       turnaround: "3 - 5 Days",
-      startingPrice: "₹15,000 / $200"
+      startingPrice: "Custom Quote / Milestone-Based"
     }
   ],
   processSteps: [
@@ -166,35 +165,7 @@ export const fallbackProfile = {
       desc: "Seamless zero-downtime deployment to your hosting/cloud server with complete documentation and 30 days of free post-launch support."
     }
   ],
-  testimonials: [
-    {
-      name: "Ashwin Kumar",
-      role: "Founder & CTO",
-      company: "NextGen Media Labs",
-      content: "Mohamed built our IPTV streaming suite with sub-second latency and custom proxy shields. His attention to code quality and speed is phenomenal. Delivered 3 days ahead of schedule!",
-      rating: 5,
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150",
-      project: "Live Media Streaming Suite"
-    },
-    {
-      name: "David Miller",
-      role: "Operations Director",
-      company: "Apex Telecom Solutions (UK)",
-      content: "The AI Voice agent and Twilio integration Mohamed developed completely automated our lead qualification pipeline. Saved us 20+ manual calling hours every week. Highly recommended!",
-      rating: 5,
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
-      project: "AI Voice & Telephony Bot"
-    },
-    {
-      name: "Suresh Sundaram",
-      role: "Senior Legal Practitioner",
-      company: "Sundaram & Associates",
-      content: "Exceptional work on our legal consultation web application. Clean design, instant loading on mobile phones, and automated appointment scheduling. Very communicative and professional.",
-      rating: 5,
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150",
-      project: "Legal Client Portal"
-    }
-  ],
+  testimonials: [],
   faqs: [
     {
       q: "How do we get started on a freelance project?",
@@ -215,7 +186,7 @@ export const fallbackProfile = {
   ],
   experience: [
     {
-      role: "Lead Full Stack & Freelance Engineer",
+      role: "Lead Full Stack & Software Engineer",
       company: "Infogenx Pvt. Ltd.",
       companyUrl: "https://infogenx.com",
       companyLinkedIn: "https://www.linkedin.com/company/infogenx/",
@@ -406,16 +377,16 @@ export const fallbackProfile = {
   socials: {
     linkedin: "https://linkedin.com/in/mohamed-yasar-4674ba223",
     github: "https://github.com/mdyasar49",
-    whatsapp: "https://wa.me/919025943184?text=Hi%20Mohamed,%20I%20am%20interested%20in%20discussing%20a%20full-time%20role%20/%20freelance%20project%20with%20you.",
-    email: "mailto:mohamedyasar081786@gmail.com?subject=Job%20Opportunity%20/%20Freelance%20Inquiry"
+    whatsapp: "https://wa.me/919025943184?text=Hi%20Mohamed,%20I%20am%20interested%20in%20discussing%20a%20project%20/%20role%20with%20you.",
+    email: "mailto:mohamedyasar081786@gmail.com?subject=Software%20Engineering%20Opportunity"
   },
   customData: {
     availabilityLabel: "STATUS",
-    availabilityStatus: "IMMEDIATE JOINER / OPEN FOR FREELANCE",
+    availabilityStatus: "IMMEDIATE JOINER / OPEN TO WORK",
     versionLabel: "EDITION",
     versionValue: "v4.5.0 Pro",
-    heroOverline: "FULL-STACK & AI ENGINEER",
-    heroActionLabel: "EXPLORE WORK & SERVICES",
+    heroOverline: "FULL-STACK & SOFTWARE ENGINEER",
+    heroActionLabel: "EXPLORE WORK & SOLUTIONS",
     aboutOverline: "ABOUT ME",
     aboutHeadline: "Building High-Impact Web Apps & Automation Systems for Your Business",
     expertiseLabel: "Expertise",
@@ -424,7 +395,7 @@ export const fallbackProfile = {
     portfolioLabel: "Delivered",
     competenciesTitle: "Core Competencies",
     navLabel: "NAVIGATION",
-    copyrightText: "© 2026 A. MOHAMED YASAR · FULL STACK & FREELANCE ENGINEER",
+    copyrightText: "© 2026 A. MOHAMED YASAR · FULL STACK & SOFTWARE ENGINEER",
     contactOverline: "GET IN TOUCH",
     contactHeadline: "Let's Build Something Exceptional Together",
     contactActionLabel: "SEND MESSAGE",

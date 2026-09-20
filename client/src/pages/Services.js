@@ -64,8 +64,8 @@ const Services = ({ profile }) => {
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pt: { xs: 12, md: 16 } }}>
       <SEO
-        title="Freelance Services & Pricing"
-        description="Hire A. Mohamed Yasar for Custom Full-Stack MERN Web Apps, Real-Time AI Voice Portals, Web Scraping Pipelines, and Speed Optimization."
+        title="Solutions & Capabilities | A. Mohamed Yasar"
+        description="Engineering high-performance Full-Stack MERN Web Apps, Real-Time AI Voice Portals, Web Scraping Pipelines, and Scalable Backend Systems."
       />
 
       <Container maxWidth="xl" sx={{ pb: 8 }}>
@@ -87,7 +87,7 @@ const Services = ({ profile }) => {
                 fontFamily: 'Outfit',
               }}
             >
-              FREELANCE SOLUTIONS & CAPABILITIES
+              ENGINEERING SOLUTIONS & CAPABILITIES
             </Typography>
             <Typography
               variant="h1"
@@ -123,7 +123,7 @@ const Services = ({ profile }) => {
                 mb: 4,
               }}
             >
-              Transparent pricing, milestone-based execution, and guaranteed code quality. Delivering production-grade software on time, every time.
+              Milestone-based delivery, tailored architecture proposals, and guaranteed code quality. Delivering production-grade software on time, every time.
             </Typography>
 
             <Stack direction="row" spacing={2} justifyContent="center" flexWrap="wrap" gap={2}>
@@ -148,7 +148,7 @@ const Services = ({ profile }) => {
                   '&:hover': { bgcolor: '#f97316' },
                 }}
               >
-                Launch Project Estimator
+                Launch Scope & Requirements Planner
               </Button>
               <Button
                 variant="outlined"
@@ -319,9 +319,9 @@ const Services = ({ profile }) => {
                         </Stack>
                         <Typography
                           variant="h6"
-                          sx={{ color: '#f97316', fontWeight: 900, fontFamily: 'Outfit' }}
+                          sx={{ color: '#f97316', fontWeight: 900, fontFamily: 'Outfit', fontSize: '1rem' }}
                         >
-                          From {service.startingPrice}
+                          Custom Scope / Proposal
                         </Typography>
                       </Stack>
 
@@ -340,7 +340,7 @@ const Services = ({ profile }) => {
                           '&:hover': { bgcolor: '#e11d48' },
                         }}
                       >
-                        Calculate Scope & Get Quote
+                        Configure Scope & Request Proposal
                       </Button>
                     </Box>
                   </Card>
