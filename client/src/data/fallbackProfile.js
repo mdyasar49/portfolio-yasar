@@ -233,6 +233,38 @@ export const fallbackProfile = {
       stats: { Channels: "1,360+ Live", VOD: "230+ 1080p FHD", Latency: "Sub-second", Status: "Live on Cloudflare" }
     },
     {
+      id: "omnireach-engine",
+      name: "OmniReach Engine | Autonomous B2B Cold Outreach & Automation Platform",
+      type: "Open-Source Outreach Platform",
+      category: "Automation",
+      technologies: ["React.js 18", "Node.js", "Express.js", "Python Engine", "SMTP / IMAP Multi-Account", "DNS MX Pre-flight Check", "Cloudflare Pages"],
+      image: "https://images.unsplash.com/photo-1557200134-90327ee9fafa?auto=format&fit=crop&q=80&w=800",
+      link: "https://omni-reach-engine.pages.dev/",
+      github: "https://github.com/mdyasar49/infonix-outreach-engine",
+      description: [
+        "Architected high-throughput cold email distribution platform featuring zero-bounce pre-flight MX verification, dynamic spreadsheet parsing, and multi-tab lead routing.",
+        "Engineered visual email template designer with merge tags, staggered send queues, multi-account rotation, and real-time delivery tracking analytics."
+      ],
+      highlights: ["Zero-Bounce MX Validator", "Multi-SMTP Load Balancing", "Multi-Tab Sheet Parser", "Cloudflare Deployed"],
+      stats: { "Bounce Rate": "0% (Pre-flight)", Speed: "Automated", Platform: "Open Source", Status: "Live on Cloudflare" }
+    },
+    {
+      id: "infogenx-australia",
+      name: "Infogenx Australia Enterprise Digital Platform (infogenx.com.au)",
+      type: "Production Web Platform (Infogenx Australia)",
+      category: "MERN & React",
+      technologies: ["React.js 18", "Material UI", "Node.js", "SEO Prerender Engine", "Core Web Vitals 95+", "WebP Pipeline", "WCAG AA"],
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800",
+      link: "https://www.infogenx.com.au/",
+      github: "https://github.com/mdyasar49/infogenx.com.au",
+      description: [
+        "Engineered and optimized the corporate digital portal for Infogenx Australia across 61+ static pre-rendered routes with zero CLS layout locking.",
+        "Achieved stellar Lighthouse 95+ performance scores (Mobile Performance 95, Accessibility 100, Best Practices 100, SEO 100) under rigorous 4G throttling tests."
+      ],
+      highlights: ["61+ Pre-rendered Routes", "Lighthouse 95+ Scores", "WCAG AA Compliant", "Zero CLS Layout"],
+      stats: { Performance: "95/100", Accessibility: "100/100", SEO: "100/100", Status: "Live Production" }
+    },
+    {
       id: "ai-voice-sarah",
       name: "Infogenx AI Voice & Multimodal Agent Platform",
       type: "Production AI System (Infogenx)",
